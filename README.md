@@ -135,7 +135,7 @@ For enhanced convenience, the advancements window has been expanded to fill the 
 
 - [BACAP Language Pack](https://modrinth.com/resourcepack/bacap-language-pack)
 - Better Banner Pattern [[PMC](https://www.planetminecraft.com/texture-pack/banner-pattern-new)]
-- Better Waxed Copper [[PMC](https://www.planetminecraft.com/texture-pack/better-waxed-copper)]
+- Better Waxed Copper [[CurseForge](https://www.curseforge.com/minecraft/texture-packs/better-waxed-copper)]
 - [Centered Crosshair Fix](https://modrinth.com/resourcepack/centered-crosshair-fix)
 - [Centered Stone Bricks](https://modrinth.com/resourcepack/centered-stone-bricks)
 - [Colorful Sheared Sheep](https://modrinth.com/resourcepack/colorful-sheared-sheep)
@@ -154,7 +154,7 @@ For enhanced convenience, the advancements window has been expanded to fill the 
 - Visual Fish Buckets [[CurseForge](https://www.curseforge.com/minecraft/texture-packs/visual-fish-buckets)]
 - Visual Goat Horns [[CurseForge](https://www.curseforge.com/minecraft/texture-packs/visual-goat-horns)]
 - [Visual Potions](https://modrinth.com/resourcepack/visualpotions) [[GitHub](https://github.com/diskree/VisualPotions)]
-- What Painting I'm Looking At? [[PMC](https://www.planetminecraft.com/texture-pack/what-painting-i-m-looking-at)]
+- What Painting I'm Looking At? [[CurseForge](https://www.curseforge.com/minecraft/texture-packs/wpila)]
 - [YetAnotherGlint](https://modrinth.com/resourcepack/yetanotherglint) [[GitHub](https://github.com/diskree/YetAnotherGlint)]
 
 # Acknowledgments
