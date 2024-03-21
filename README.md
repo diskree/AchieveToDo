@@ -121,13 +121,13 @@ For enhanced convenience, the advancements window has been expanded to fill the 
 - BlazeandCave's Advancements Pack Terralith version [[PMC](https://www.planetminecraft.com/data-pack/blazeandcave-s-advancements-pack-terralith-version)]
 - BlazeandCave's Advancements Pack Amplified Nether version [[PMC](https://www.planetminecraft.com/data-pack/blazeandcave-s-advancements-pack-terralith-version)]
 - BlazeandCave's Advancements Pack Nullscape version [[PMC](https://www.planetminecraft.com/data-pack/blazeandcave-s-advancements-pack-terralith-version)]
-- [Terralith](https://modrinth.com/mod/terralith) [[GitHub](https://github.com/Stardust-Labs-MC/Terralith)] [[PMC](https://www.planetminecraft.com/data-pack/terralith-overworld-evolved-100-biomes-caves-and-more)]
-- [Amplified Nether](https://modrinth.com/mod/amplified-nether) [[GitHub](https://github.com/Stardust-Labs-MC/Amplified-Nether)] [[PMC](https://www.planetminecraft.com/data-pack/amplified-nether-1-18)]
-- [Nullscape](https://modrinth.com/mod/nullscape) [[GitHub](https://github.com/Stardust-Labs-MC/Nullscape)] [[PMC](https://www.planetminecraft.com/data-pack/nullscape)]
+- [Terralith](https://modrinth.com/mod/terralith) [[GitHub](https://github.com/Stardust-Labs-MC/Terralith)]
+- [Amplified Nether](https://modrinth.com/mod/amplified-nether) [[GitHub](https://github.com/Stardust-Labs-MC/Amplified-Nether)]
+- [Nullscape](https://modrinth.com/mod/nullscape) [[GitHub](https://github.com/Stardust-Labs-MC/Nullscape)]
 
 ## Shaders
 
-- [BSL Shaders](https://www.curseforge.com/minecraft/customization/bsl-shaders)
+- [BSL Shaders](https://modrinth.com/shader/bsl-shaders)
 - [Complementary Shaders - Reimagined](https://www.curseforge.com/minecraft/customization/complementary-reimagined) [[GitHub](https://github.com/ComplementaryDevelopment/ComplementaryReimagined)]
 - [Complementary Shaders - Unbound](https://modrinth.com/shader/complementary-unbound) [[GitHub](https://github.com/ComplementaryDevelopment/ComplementaryReimagined)]
 
