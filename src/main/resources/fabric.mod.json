@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "${modId}",
+	"version": "${modVersion}",
+	"name": "${modName}",
+	"description": "A mod that makes advancements a part of the gameplay.",
+	"authors": [
+		"${author}"
+	],
+	"contact": {
+		"sources": "${repoUrl}"
+	},
+	"license": "CC-BY-4.0",
+	"icon": "assets/achievetodo/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-datagen": [
+			"com.diskree.achievetodo.blocked_actions.datagen.BlockedActionsGenerator"
+		],
+		"main": [
+			"com.diskree.achievetodo.AchieveToDo"
+		],
+		"client": [
+			"com.diskree.achievetodo.AchieveToDoClient"
+		]
+	},
+	"mixins": [
+		"achievetodo.mixins.json"
+	],
+	"depends": {
+		"java": ">=${minJavaVersion}",
+		"minecraft": ">=${minMinecraftVersion} <=${maxMinecraftVersion}",
+		"fabricloader": ">=${minLoaderVersion}",
+		"fabric-api": "*"
+	},
+	"accessWidener": "achievetodo.accesswidener"
+}

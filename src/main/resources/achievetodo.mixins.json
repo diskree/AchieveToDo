@@ -1,0 +1,50 @@
+{
+  "required": true,
+  "package": "com.diskree.achievetodo.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AbstractFurnaceBlockMixin",
+    "AdvancementVisibilityEvaluatorMixin",
+    "AliasedBlockItemMixin",
+    "AnvilBlockMixin",
+    "AxeItemMixin",
+    "BeaconBlockMixin",
+    "BedBlockMixin",
+    "BeehiveBlockMixin",
+    "BrewingStandBlockMixin",
+    "BrushItemMixin",
+    "CartographyTableBlockMixin",
+    "ChestBlockMixin",
+    "CraftingTableBlockMixin",
+    "DoorBlockMixin",
+    "EnchantedTableBlockMixin",
+    "EnderChestBlockMixin",
+    "EntityMixin",
+    "GrindstoneBlockMixin",
+    "HoeItemMixin",
+    "LoomBlockMixin",
+    "PlacedAdvancementMixin",
+    "PlayerAdvancementTrackerMixin",
+    "PlayerEntityMixin",
+    "PumpkinBlockMixin",
+    "ServerPlayerEntityMixin",
+    "ShearsItemMixin",
+    "ShovelItemMixin",
+    "ShulkerBoxBlockMixin",
+    "SmithingTableBlockMixin",
+    "StonecutterBlockMixin"
+  ],
+  "client": [
+    "client.AdvancementProgressMixin",
+    "client.AdvancementToastMixin",
+    "client.AdvancementWidgetMixin",
+    "client.ClientPlayerEntityMixin",
+    "client.CreateWorldScreenMixin",
+    "client.MinecraftClientMixin",
+    "client.PlayerScreenHandlerMixin",
+    "client.WorldCreatorMixin"
+  ]
+}

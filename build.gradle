@@ -1,0 +1,94 @@
+plugins {
+    id 'fabric-loom' version "${loomVersion}-SNAPSHOT"
+}
+
+def modId = project.modName.toLowerCase()
+def repoUrl = "https://github.com/${author}/${modName}"
+
+version = "mc${minMinecraftVersion}+${modVersion}"
+group = "com." + project.author
+
+base {
+    archivesName = modId
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minMinecraftVersion}"
+    mappings "net.fabricmc:yarn:${minMinecraftVersion}+build.${mappingsBuild}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${minLoaderVersion}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${apiVersion}"
+}
+
+processResources {
+    def propertyMap = [
+            'modId'              : modId,
+            'modVersion'         : modVersion,
+            'modName'            : modName,
+            'author'             : author,
+            'repoUrl'            : repoUrl,
+            'minJavaVersion'     : minJavaVersion,
+            'minMinecraftVersion': minMinecraftVersion,
+            'maxMinecraftVersion': maxMinecraftVersion,
+            'minLoaderVersion'   : minLoaderVersion
+    ]
+    inputs.properties(propertyMap)
+    filesMatching("fabric.mod.json") {
+        expand(propertyMap)
+    }
+}
+
+sourceSets {
+    main {
+        resources.srcDirs += ['src/main/generated']
+        java.srcDirs += ['src/main/generated/java']
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = 'UTF-8'
+    it.options.release.set(minJavaVersion.toInteger())
+}
+
+tasks.register('generateBuildConfig', DefaultTask) {
+    doLast {
+        def templateFile = file("$projectDir/gradle/BuildConfig.java.txt")
+        def configFile = file("$projectDir/src/main/generated/java/com/${author}/${modId}/BuildConfig.java")
+        configFile.getParentFile().mkdirs()
+
+        configFile.text = templateFile.text
+                .replace('${author}', author)
+                .replace('${modId}', modId)
+                .replace('${modName}', modName)
+    }
+}
+
+java {
+    sourceCompatibility = targetCompatibility = minJavaVersion.toInteger()
+}
+
+jar {
+    from('LICENSE') {
+        rename { "${it}_${modId}" }
+    }
+    compileJava.dependsOn(generateBuildConfig)
+}
+
+loom {
+    accessWidenerPath.set(file("src/main/resources/${modId}.accesswidener"))
+
+    runs {
+        datagen {
+            inherit server
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.modid=${modId}"
+
+            runDir "build/datagen"
+        }
+    }
+}

@@ -1,0 +1,6 @@
+package com.${author}.${modId};
+
+public class BuildConfig {
+    public static final String MOD_NAME = "${modName}";
+    public static final String MOD_ID = "${modId}";
+}

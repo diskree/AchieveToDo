@@ -1,0 +1,123 @@
+package com.diskree.achievetodo.blocked_actions.datagen;
+
+import com.diskree.achievetodo.blocked_actions.BlockedActionType;
+import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingOutputStream;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.data.DataOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataWriter;
+import net.minecraft.util.Util;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
+
+public class FunctionsGenerator implements DataProvider {
+
+    protected final FabricDataOutput dataOutput;
+
+    protected FunctionsGenerator(FabricDataOutput dataOutput) {
+        this.dataOutput = dataOutput;
+    }
+
+    private static @NotNull String getFunction(@NotNull BlockedActionType blockedAction) {
+        String function = """
+            tellraw @a {
+                "translate":"%1$s has unblocked %2$s%3$s%4$s",
+                "with":[
+                    {
+                        "selector":"@s"
+                    },
+                    {
+                        "color":"yellow",
+                        "text":"["
+                    },
+                    {
+                        "color":"yellow",
+                        "translate":"blocked.{NAME}.title",
+                        "clickEvent":{
+                            "action":"run_command",
+                            "value":"/advancementssearch highlight {ADVANCEMENT_ID} obtained_status"
+                        },
+                        "hoverEvent":{
+                            "action":"show_text",
+                            "contents":{
+                                "color":"yellow",
+                                "translate":"blocked.{NAME}.title",
+                                "extra":[
+                                    {
+                                        "text":"\\n"
+                                    },
+                                    {
+                                        "color":"yellow",
+                                        "translate":"blocked.{NAME}.description"
+                                    },
+                                    {
+                                        "text":"\\n\\n"
+                                    },
+                                    {
+                                        "color":"gray",
+                                        "italic":true,
+                                        "translate":"%1$s tab",
+                                        "with":[
+                                            {
+                                                "translate":"advancement.root.blocked_actions.title"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "color":"yellow",
+                        "text":"]"
+                    }
+                ]
+            }
+            """
+            .replace("{NAME}", blockedAction.getName())
+            .replace("{ADVANCEMENT_ID}", AdvancementsGenerator.buildAdvancementId(blockedAction).toString());
+        return String.join("", Arrays.stream(function.split("\\R")).map(String::trim).toArray(String[]::new));
+    }
+
+    @Override
+    public CompletableFuture<?> run(DataWriter writer) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                createFunctions(writer);
+            } catch (IOException ignored) {
+            }
+        }, Util.getMainWorkerExecutor());
+    }
+
+    @Override
+    public String getName() {
+        return getClass().getSimpleName();
+    }
+
+    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
+    private void createFunctions(DataWriter dataWriter) throws IOException {
+        for (BlockedActionType blockedAction : BlockedActionType.values()) {
+            String function = getFunction(blockedAction);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            HashingOutputStream hashingOutputStream = new HashingOutputStream(Hashing.sha1(), byteArrayOutputStream);
+            try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new OutputStreamWriter(hashingOutputStream, StandardCharsets.UTF_8))
+            ) {
+                bufferedWriter.write(function);
+            }
+            Path functionsPath = dataOutput
+                .getResolver(DataOutput.OutputType.DATA_PACK, "functions")
+                .resolve(AdvancementsGenerator.buildAdvancementId(blockedAction), "mcfunction");
+            dataWriter.write(functionsPath, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
+        }
+    }
+}
