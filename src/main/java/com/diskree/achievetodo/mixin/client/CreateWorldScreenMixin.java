@@ -118,31 +118,31 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
         if (dataConfiguration != null) {
             DataPackSettings dataPackSettings = dataConfiguration.dataPacks();
             if (dataPackSettings != null) {
-                List<String> enabledDataPacks = dataPackSettings.getEnabled();
-                if (enabledDataPacks != null) {
+                List<String> enabledPacks = dataPackSettings.getEnabled();
+                if (enabledPacks != null) {
                     WorldCreator worldCreator = createWorldScreen.getWorldCreator();
                     if (worldCreator instanceof WorldCreatorImpl worldCreatorImpl) {
                         worldCreatorImpl.achievetodo$setTerralithEnabled(
-                            enabledDataPacks.contains(ExternalPack.BACAP_TERRALITH.getDatapackName())
+                            enabledPacks.contains(ExternalPack.BACAP_TERRALITH.getDatapackName())
                         );
                         worldCreatorImpl.achievetodo$setAmplifiedNetherEnabled(
-                            enabledDataPacks.contains(ExternalPack.BACAP_AMPLIFIED_NETHER.getDatapackName())
+                            enabledPacks.contains(ExternalPack.BACAP_AMPLIFIED_NETHER.getDatapackName())
                         );
                         worldCreatorImpl.achievetodo$setNullscapeEnabled(
-                            enabledDataPacks.contains(ExternalPack.BACAP_NULLSCAPE.getDatapackName())
+                            enabledPacks.contains(ExternalPack.BACAP_NULLSCAPE.getDatapackName())
                         );
 
                         worldCreatorImpl.achievetodo$setItemRewardsEnabled(
-                            enabledDataPacks.contains(InternalPack.BACAP_REWARDS_ITEM.getDatapackName())
+                            enabledPacks.contains(InternalPack.BACAP_REWARDS_ITEM.getDatapackName())
                         );
                         worldCreatorImpl.achievetodo$setExperienceRewardsEnabled(
-                            enabledDataPacks.contains(InternalPack.BACAP_REWARDS_EXPERIENCE.getDatapackName())
+                            enabledPacks.contains(InternalPack.BACAP_REWARDS_EXPERIENCE.getDatapackName())
                         );
                         worldCreatorImpl.achievetodo$setTrophyRewardsEnabled(
-                            enabledDataPacks.contains(InternalPack.BACAP_REWARDS_TROPHY.getDatapackName())
+                            enabledPacks.contains(InternalPack.BACAP_REWARDS_TROPHY.getDatapackName())
                         );
                         worldCreatorImpl.achievetodo$setCooperativeModeEnabled(
-                            enabledDataPacks.contains(InternalPack.BACAP_COOPERATIVE_MODE.getDatapackName())
+                            enabledPacks.contains(InternalPack.BACAP_COOPERATIVE_MODE.getDatapackName())
                         );
                     }
                 }
@@ -165,7 +165,7 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
         boolean isAmplifiedNetherEnabled = worldCreatorImpl.achievetodo$isAmplifiedNetherEnabled();
         boolean isNullscapeEnabled = worldCreatorImpl.achievetodo$isNullscapeEnabled();
 
-        Path globalPacksDir = new File(client.runDirectory, "datapacks").toPath();
+        Path globalPacksDirectory = new File(client.runDirectory, "datapacks").toPath();
         List<ExternalPack> requiredPacks = new ArrayList<>();
         requiredPacks.add(ExternalPack.BACAP);
         if (isHardcoreEnabled) {
@@ -190,28 +190,28 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
             requiredPacks.add(ExternalPack.NULLSCAPE);
         }
         for (ExternalPack requiredPack : requiredPacks) {
-            if (Files.exists(globalPacksDir.resolve(requiredPack.getFileName()))) {
+            if (Files.exists(globalPacksDirectory.resolve(requiredPack.getFileName()))) {
                 continue;
             }
             client.setScreen(new DownloadExternalPackScreen(createWorldScreen, requiredPack, exitWithCreateLevel -> {
                 if (exitWithCreateLevel) {
                     createLevel();
                 }
-            }));
+            }, false));
             ci.cancel();
             return;
         }
 
         if (!isWaitingDatapacks) {
-            Path worldPacksDir = getOrCreateDataPackTempDir();
-            if (worldPacksDir == null) {
+            Path worldPacksTempDirectory = getOrCreateDataPackTempDir();
+            if (worldPacksTempDirectory == null) {
                 ci.cancel();
                 return;
             }
             try {
                 for (ExternalPack pack : requiredPacks) {
-                    Path globalPack = globalPacksDir.resolve(pack.getFileName());
-                    Path worldPack = worldPacksDir.resolve(globalPack.getFileName());
+                    Path globalPack = globalPacksDirectory.resolve(pack.getFileName());
+                    Path worldPack = worldPacksTempDirectory.resolve(globalPack.getFileName());
                     Files.copy(globalPack, worldPack, StandardCopyOption.REPLACE_EXISTING);
                 }
             } catch (IOException ignored) {

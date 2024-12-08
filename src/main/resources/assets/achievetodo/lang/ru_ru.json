@@ -18,6 +18,30 @@
   "achievetodo.world_creation_tab.lan.cooperative_mode": "Кооперативный режим",
   "achievetodo.world_creation_tab.lan.cooperative_mode.info": "Каждое полученное достижение одного игрока автоматически выдаётся всем игрокам.",
 
+  "achievetodo.external_pack.required_prefix": "Для игры необходимо загрузить ",
+  "achievetodo.external_pack.help": "Скачайте файл, затем перетащите его сюда или выберите из своих файлов",
+
+  "achievetodo.external_pack.download": "Загрузить",
+  "achievetodo.external_pack.download_tooltip": "Файл будет загружен через ваш браузер.",
+  "achievetodo.external_pack.select_file": "Выбрать файл",
+  "achievetodo.external_pack.learn_more": "Узнать больше…",
+  "achievetodo.external_pack.learn_more_tooltip": "Посетите страницу проекта, чтобы поддержать авторов!",
+
+  "achievetodo.file_picker.reason.bacap": "Основной датапак с достижениями",
+  "achievetodo.file_picker.reason.bacap_hardcore": "Поддерживает режим хардкора в BACAP",
+  "achievetodo.file_picker.reason.bacap_terralith": "Поддерживает функции Terralith в BACAP",
+  "achievetodo.file_picker.reason.bacap_amplified_nether": "Поддерживает функции Amplified Nether в BACAP",
+  "achievetodo.file_picker.reason.bacap_nullscape": "Поддерживает функции Nullscape в BACAP",
+  "achievetodo.file_picker.reason.terralith": "Требуется для игры с Terralith",
+  "achievetodo.file_picker.reason.amplified_nether": "Требуется для игры с Amplified Nether",
+  "achievetodo.file_picker.reason.nullscape": "Требуется для игры с Nullscape",
+  "achievetodo.file_picker.reason.outdated": "В выбранном мире используется устаревшая версия требуемого пакета данных.",
+
+  "achievetodo.error.title": "Упс!",
+  "achievetodo.error.wrong_datapack_file": "Этот файл неверный. Пожалуйста, убедитесь, что вы загрузили файл с помощью кнопки «Загрузить» и повторите попытку.",
+  "achievetodo.error.integrity_check_failed": "Этот мир невозможно загрузить так как он не прошёл проверку целостности датапаков.",
+  "achievetodo.error.unknown": "Неизвестная ошибка. Проверьте свободное место на диске или перезагрузите компьютер и повторите попытку.",
+
   "achievetodo.blocked_message.food": "Эта еда сейчас недоступна",
   "achievetodo.blocked_message.jump": "Вы сейчас не можете прыгать",
   "achievetodo.blocked_message.break_blocks_in_positive_y": "Вы сейчас не можете ломать блоки",

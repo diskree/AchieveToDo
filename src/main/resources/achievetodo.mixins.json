@@ -48,6 +48,7 @@
     "client.CreateWorldScreenMixin",
     "client.MinecraftClientMixin",
     "client.PackScreenMixin",
-    "client.WorldCreatorMixin"
+    "client.WorldCreatorMixin",
+    "client.WorldListWidgetMixin"
   ]
 }

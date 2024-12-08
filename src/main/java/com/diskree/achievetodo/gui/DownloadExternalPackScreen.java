@@ -1,11 +1,13 @@
 package com.diskree.achievetodo.gui;
 
 import com.diskree.achievetodo.ExternalPack;
+import com.diskree.achievetodo.Utils;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -22,8 +24,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -41,11 +41,17 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
     private final BooleanConsumer exitCallback;
     private boolean exitWithCreateLevel;
 
-    public DownloadExternalPackScreen(Screen parent, ExternalPack externalPack, BooleanConsumer exitCallback) {
+    public DownloadExternalPackScreen(Screen parent, ExternalPack externalPack, BooleanConsumer exitCallback, boolean isOutdatedVersion) {
         super(
-                null,
-                Text.translatable("achievetodo.external_pack.required_prefix").append(Text.of(externalPack.getName()).copy().formatted(externalPack.getColor(), Formatting.ITALIC)),
-                Text.translatable("achievetodo.external_pack.help").copy().formatted(Formatting.YELLOW)
+            null,
+            Text.translatable("achievetodo.external_pack.required_prefix").append(Text.of(externalPack.getName()).copy().formatted(externalPack.getColor(), Formatting.ITALIC)),
+            Text.translatable(isOutdatedVersion ? "achievetodo.file_picker.reason.outdated" : "achievetodo.file_picker.reason." + externalPack.name().toLowerCase())
+                .append(ScreenTexts.LINE_BREAK)
+                .append(ScreenTexts.LINE_BREAK)
+                .append(ScreenTexts.LINE_BREAK)
+                .append(ScreenTexts.LINE_BREAK)
+                .append(ScreenTexts.LINE_BREAK)
+                .append(Text.translatable("achievetodo.external_pack.help").copy().formatted(Formatting.YELLOW))
         );
         this.parent = parent;
         this.externalPack = externalPack;
@@ -64,41 +70,61 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
     protected void addButtons(int y) {
         int selectFileButtonX = (width - BUTTON_WIDTH) / 2;
 
-        addDrawableChild(ButtonWidget.builder(
-                Text.translatable("achievetodo.external_pack.download"),
-                button -> Util.getOperatingSystem().open(externalPack.getDownloadUrl())
-        ).dimensions(selectFileButtonX - BUTTON_MARGIN - BUTTON_WIDTH, y, BUTTON_WIDTH, BUTTON_HEIGHT).build());
+        addDrawableChild(
+            ButtonWidget.builder(
+                    Text.translatable("achievetodo.external_pack.download"),
+                    button -> Util.getOperatingSystem().open(externalPack.getDownloadUrl())
+                )
+                .tooltip(Tooltip.of(Text.translatable("achievetodo.external_pack.download_tooltip")))
+                .dimensions(
+                    selectFileButtonX - BUTTON_MARGIN - BUTTON_WIDTH,
+                    y,
+                    BUTTON_WIDTH,
+                    BUTTON_HEIGHT
+                )
+                .build()
+        );
 
         addDrawableChild(ButtonWidget.builder(
-                Text.translatable("achievetodo.external_pack.select_file"),
-                button -> {
-                    try (MemoryStack stack = MemoryStack.stackPush()) {
-                        PointerBuffer filters = stack.mallocPointer(1);
-                        filters.put(0, stack.UTF8("*.zip"));
+            Text.translatable("achievetodo.external_pack.select_file"),
+            button -> {
+                try (MemoryStack stack = MemoryStack.stackPush()) {
+                    PointerBuffer filters = stack.mallocPointer(1);
+                    filters.put(0, stack.UTF8("*.zip"));
 
-                        String selectedFilePath = TinyFileDialogs.tinyfd_openFileDialog(
-                                Text.translatable("achievetodo.external_pack.picker").getString(),
-                                System.getProperty("user.home"),
-                                filters,
-                                null,
-                                false
-                        );
-                        if (selectedFilePath != null) {
-                            handleDatapackFile(Paths.get(selectedFilePath));
-                        }
+                    String selectedFilePath = TinyFileDialogs.tinyfd_openFileDialog(
+                        Text.translatable("achievetodo.external_pack.select_file").getString(),
+                        System.getProperty("user.home"),
+                        filters,
+                        null,
+                        false
+                    );
+                    if (selectedFilePath != null) {
+                        handleDatapackFile(Paths.get(selectedFilePath));
                     }
                 }
+            }
         ).dimensions(selectFileButtonX, y, BUTTON_WIDTH, BUTTON_HEIGHT).build());
 
         addDrawableChild(ButtonWidget.builder(
-                Text.translatable("achievetodo.external_pack.open_page"),
-                button -> Util.getOperatingSystem().open(externalPack.getPageUrl())
+            ScreenTexts.BACK,
+            button -> close()
         ).dimensions(selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN, y, BUTTON_WIDTH, BUTTON_HEIGHT).build());
 
-        addDrawableChild(ButtonWidget.builder(
-                ScreenTexts.CANCEL,
-                button -> close()
-        ).dimensions(selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN, y + BUTTON_HEIGHT + BUTTON_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT).build());
+        addDrawableChild(
+            ButtonWidget.builder(
+                    Text.translatable("achievetodo.external_pack.learn_more"),
+                    button -> Util.getOperatingSystem().open(externalPack.getPageUrl())
+                )
+                .tooltip(Tooltip.of(Text.translatable("achievetodo.external_pack.learn_more_tooltip")))
+                .dimensions(
+                    selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN,
+                    y + BUTTON_HEIGHT + BUTTON_MARGIN,
+                    BUTTON_WIDTH,
+                    BUTTON_HEIGHT
+                )
+                .build()
+        );
     }
 
     @Override
@@ -125,31 +151,28 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
         }
         boolean isWrapper;
         try {
-            String sha1 = calculateSHA1(path);
+            String sha1 = Utils.calculateSHA1(path);
             if (sha1 == null) {
                 return;
             }
             isWrapper = sha1.equals(externalPack.getWrapperSha1());
             if (!isWrapper && !sha1.equalsIgnoreCase(externalPack.getSha1())) {
-                client.setScreen(new ErrorScreen(
-                        DownloadExternalPackScreen.this,
-                        Text.translatable("achievetodo.external_pack.error")
-                ));
+                client.setScreen(new ErrorScreen(this, "achievetodo.error.wrong_datapack_file"));
                 return;
             }
         } catch (Exception e) {
             return;
         }
-        Path globalPacksDir = new File(client.runDirectory, "datapacks").toPath();
+        Path globalPacksDirectory = new File(client.runDirectory, "datapacks").toPath();
         try {
-            if (Files.notExists(globalPacksDir)) {
-                Files.createDirectory(globalPacksDir);
+            if (Files.notExists(globalPacksDirectory)) {
+                Files.createDirectory(globalPacksDirectory);
             }
             if (isWrapper) {
-                Path extractedArchive = unzip(path, globalPacksDir);
-                Files.move(extractedArchive, globalPacksDir.resolve(externalPack.getFileName()));
+                Path extractedArchive = unzip(path, globalPacksDirectory);
+                Files.move(extractedArchive, globalPacksDirectory.resolve(externalPack.getFileName()));
             } else {
-                Files.copy(path, globalPacksDir.resolve(externalPack.getFileName()));
+                Files.copy(path, globalPacksDirectory.resolve(externalPack.getFileName()));
             }
         } catch (IOException e) {
             return;
@@ -183,29 +206,5 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
             }
         }
         return firstExtractedFile;
-    }
-
-    private String calculateSHA1(Path path) throws NoSuchAlgorithmException, IOException {
-        if (path == null || Files.notExists(path)) {
-            return null;
-        }
-        MessageDigest sha1Digest = MessageDigest.getInstance("SHA-1");
-        try (InputStream is = Files.newInputStream(path)) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                sha1Digest.update(buffer, 0, bytesRead);
-            }
-            byte[] bytes = sha1Digest.digest();
-            return bytesToHex(bytes);
-        }
-    }
-
-    private String bytesToHex(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(String.format("%02x", b));
-        }
-        return sb.toString().toLowerCase();
     }
 }
