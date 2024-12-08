@@ -59,9 +59,9 @@ public abstract class AdvancementWidgetMixin {
         method = "renderWidgets",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"
+            target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIII)V"
         ),
-        index = 0
+        index = 1
     )
     private Identifier renderWidgetsModifyIcon(Identifier texture) {
         return isMystifiedBlockedActionAdvancement() ? MYSTIFIED_TEXTURE : texture;

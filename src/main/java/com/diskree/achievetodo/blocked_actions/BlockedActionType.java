@@ -1,13 +1,19 @@
 package com.diskree.achievetodo.blocked_actions;
 
 import com.diskree.achievetodo.AchieveToDo;
+import com.diskree.achievetodo.injection.ArmorItemImpl;
+import com.diskree.achievetodo.injection.MiningToolItemImpl;
+import com.diskree.achievetodo.injection.SwordItemImpl;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.block.*;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.item.equipment.ArmorMaterial;
+import net.minecraft.item.equipment.ArmorMaterials;
+import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -253,22 +259,22 @@ public enum BlockedActionType {
     ),
 
     USING_GOLDEN_TOOLS(
-        41, ToolMaterials.GOLD
+        41, ToolMaterial.GOLD
     ),
     USING_WOODEN_TOOLS(
-        63, ToolMaterials.WOOD
+        63, ToolMaterial.WOOD
     ),
     USING_STONE_TOOLS(
-        97, ToolMaterials.STONE
+        97, ToolMaterial.STONE
     ),
     USING_IRON_TOOLS(
-        122, ToolMaterials.IRON
+        122, ToolMaterial.IRON
     ),
     USING_DIAMOND_TOOLS(
-        358, ToolMaterials.DIAMOND
+        358, ToolMaterial.DIAMOND
     ),
     USING_NETHERITE_TOOLS(
-        504, ToolMaterials.NETHERITE
+        504, ToolMaterial.NETHERITE
     ),
 
     EQUIP_GOLDEN_ARMOR(
@@ -341,8 +347,8 @@ public enum BlockedActionType {
 
     private final Item item;
     private final Block block;
-    private final ToolMaterials toolMaterial;
-    private final RegistryEntry<ArmorMaterial> equipmentMaterial;
+    private final ToolMaterial toolMaterial;
+    private final ArmorMaterial equipmentMaterial;
     private final Class<? extends Portal> portal;
     private final VillagerProfession villager;
 
@@ -358,11 +364,11 @@ public enum BlockedActionType {
         this(unblockAdvancementsCount, null, block, null, null, null, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, ToolMaterials materials) {
+    BlockedActionType(int unblockAdvancementsCount, ToolMaterial materials) {
         this(unblockAdvancementsCount, null, null, materials, null, null, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, RegistryEntry<ArmorMaterial> materials) {
+    BlockedActionType(int unblockAdvancementsCount, ArmorMaterial materials) {
         this(unblockAdvancementsCount, null, null, null, materials, null, null);
     }
 
@@ -378,8 +384,8 @@ public enum BlockedActionType {
         int unblockAdvancementsCount,
         Item item,
         Block block,
-        ToolMaterials toolMaterial,
-        RegistryEntry<ArmorMaterial> equipmentMaterial,
+        ToolMaterial toolMaterial,
+        ArmorMaterial equipmentMaterial,
         Class<? extends Portal> portal,
         VillagerProfession villager
     ) {
@@ -422,7 +428,7 @@ public enum BlockedActionType {
             return CrossbowItem.isCharged(stack) ? BlockedActionType.USING_CROSSBOW : null;
         }
         if (stack.isOf(Items.FIREWORK_ROCKET)) {
-            return player.isFallFlying() ? BlockedActionType.FLY : null;
+            return player.isGliding() ? BlockedActionType.FLY : null;
         }
         for (BlockedActionType blockedAction : BlockedActionType.values()) {
             Item item = stack.getItem();
@@ -463,9 +469,16 @@ public enum BlockedActionType {
         if (item == null) {
             return null;
         }
-        if (item instanceof ToolItem toolItem) {
+        if (item instanceof MiningToolItemImpl toolItem) {
             for (BlockedActionType blockedAction : BlockedActionType.values()) {
-                if (toolItem.getMaterial() == blockedAction.toolMaterial) {
+                if (toolItem.achievetodo$getToolMaterial() == blockedAction.toolMaterial) {
+                    return blockedAction;
+                }
+            }
+        }
+        if (item instanceof SwordItemImpl toolItem) {
+            for (BlockedActionType blockedAction : BlockedActionType.values()) {
+                if (toolItem.achievetodo$getSwordMaterial() == blockedAction.toolMaterial) {
                     return blockedAction;
                 }
             }
@@ -481,9 +494,9 @@ public enum BlockedActionType {
         if (item == Items.ELYTRA) {
             return EQUIP_ELYTRA;
         }
-        if (item instanceof ArmorItem armorItem) {
+        if (item instanceof ArmorItemImpl armorItem) {
             for (BlockedActionType blockedAction : BlockedActionType.values()) {
-                if (armorItem.getMaterial() == blockedAction.equipmentMaterial) {
+                if (armorItem.achievetodo$getMaterial() == blockedAction.equipmentMaterial) {
                     return blockedAction;
                 }
             }
@@ -544,18 +557,21 @@ public enum BlockedActionType {
 
     public @NotNull Text getBlockedMessage() {
         if (item != null && item.getComponents().contains(DataComponentTypes.FOOD)) {
-            return Text.translatable("blocked.food");
+            return Text.translatable("achievetodo.blocked_message.food");
         }
         if (villager != null) {
-            return Text.translatable("blocked.villager");
+            return Text.translatable("achievetodo.blocked_message.villager");
         }
-        return Text.translatable("blocked." + getName());
+        return Text.translatable("achievetodo.blocked_message." + getName());
     }
 
     public Text buildBlockedDescription(PlayerEntity player) {
         int leftAdvancementsCount = unblockAdvancementsCount - AchieveToDo.getScore(player);
-        return Text.of(getBlockedMessage().getString() + Text.translatable("unblock.amount").getString() + leftAdvancementsCount)
+        boolean isMultiLineActionBarInstalled = FabricLoader.getInstance().isModLoaded("multilineactionbar");
+        return Text.of(getBlockedMessage().getString() + "." + (isMultiLineActionBarInstalled ? "\n" : " "))
             .copy()
+            .append(Text.translatable("achievetodo.blocked_message.left"))
+            .append(Text.of(String.valueOf(leftAdvancementsCount)))
             .formatted(Formatting.YELLOW);
     }
 
@@ -581,15 +597,18 @@ public enum BlockedActionType {
         }
         if (toolMaterial != null) {
             return Registries.ITEM.stream()
-                .filter(item -> item instanceof PickaxeItem pickaxeItem && pickaxeItem.getMaterial() == toolMaterial)
+                .filter(item -> item instanceof PickaxeItem &&
+                    item instanceof MiningToolItemImpl miningToolItem &&
+                    miningToolItem.achievetodo$getToolMaterial() == toolMaterial
+                )
                 .findFirst()
                 .orElse(null);
         }
         if (equipmentMaterial != null) {
             return Registries.ITEM.stream()
-                .filter(item -> item instanceof ArmorItem chestPlateItem &&
-                    chestPlateItem.getType() == ArmorItem.Type.CHESTPLATE &&
-                    chestPlateItem.getMaterial() == equipmentMaterial
+                .filter(item -> item instanceof ArmorItemImpl chestPlateItem &&
+                    chestPlateItem.achievetodo$getEquipmentType() == EquipmentType.CHESTPLATE &&
+                    chestPlateItem.achievetodo$getMaterial() == equipmentMaterial
                 )
                 .findFirst()
                 .orElse(null);
@@ -623,10 +642,10 @@ public enum BlockedActionType {
     }
 
     public @NotNull Text getTitle() {
-        return Text.translatable("blocked." + getName() + ".title");
+        return Text.translatable("achievetodo.blocked_message." + getName() + ".title");
     }
 
     public @NotNull Text getDescription() {
-        return Text.translatable("blocked." + getName() + ".description");
+        return Text.translatable("achievetodo.blocked_message." + getName() + ".description");
     }
 }

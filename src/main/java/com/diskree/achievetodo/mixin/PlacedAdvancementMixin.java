@@ -31,7 +31,11 @@ public abstract class PlacedAdvancementMixin {
     @Shadow
     public abstract Advancement getAdvancement();
 
-    @Inject(method = "getChildren", at = @At("HEAD"), cancellable = true)
+    @Inject(
+        method = "getChildren",
+        at = @At("HEAD"),
+        cancellable = true
+    )
     public void getChildrenInject(CallbackInfoReturnable<Iterable<PlacedAdvancement>> cir) {
         Identifier advancementId = getAdvancementEntry().id();
         if (advancementId.getNamespace().equals(BuildConfig.MOD_ID) && getAdvancement().isRoot()) {

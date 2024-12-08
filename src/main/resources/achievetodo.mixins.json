@@ -8,8 +8,8 @@
   "mixins": [
     "AbstractFurnaceBlockMixin",
     "AdvancementVisibilityEvaluatorMixin",
-    "AliasedBlockItemMixin",
     "AnvilBlockMixin",
+    "ArmorItemMixin",
     "AxeItemMixin",
     "BeaconBlockMixin",
     "BedBlockMixin",
@@ -25,7 +25,9 @@
     "EntityMixin",
     "GrindstoneBlockMixin",
     "HoeItemMixin",
+    "LivingEntityMixin",
     "LoomBlockMixin",
+    "MiningToolItemMixin",
     "PlacedAdvancementMixin",
     "PlayerAdvancementTrackerMixin",
     "PlayerEntityMixin",
@@ -35,16 +37,17 @@
     "ShovelItemMixin",
     "ShulkerBoxBlockMixin",
     "SmithingTableBlockMixin",
-    "StonecutterBlockMixin"
+    "StonecutterBlockMixin",
+    "SwordItemMixin"
   ],
   "client": [
     "client.AdvancementProgressMixin",
     "client.AdvancementToastMixin",
     "client.AdvancementWidgetMixin",
-    "client.ClientPlayerEntityMixin",
+    "client.ArmorSlotMixin",
     "client.CreateWorldScreenMixin",
     "client.MinecraftClientMixin",
-    "client.PlayerScreenHandlerMixin",
+    "client.PackScreenMixin",
     "client.WorldCreatorMixin"
   ]
 }

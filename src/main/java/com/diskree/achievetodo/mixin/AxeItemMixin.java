@@ -62,7 +62,8 @@ public abstract class AxeItemMixin implements UsableItem {
         @Nullable PlayerEntity player,
         BlockState state,
         CallbackInfoReturnable<Optional<BlockState>> cir,
-        @Local(ordinal = 0) Optional<BlockState> blockState) {
+        @Local(ordinal = 0) Optional<BlockState> blockState
+    ) {
         if (isCanUseChecking) {
             cir.setReturnValue(blockState);
         }

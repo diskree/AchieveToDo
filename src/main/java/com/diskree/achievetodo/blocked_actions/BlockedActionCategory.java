@@ -15,7 +15,7 @@ public enum BlockedActionCategory {
     VILLAGER;
 
     public @NotNull Text getUnblockPopupTitle() {
-        return Text.translatable("unblock." + getName());
+        return Text.translatable("achievetodo.unblocked." + getName()).append("!");
     }
 
     public @NotNull String getName() {

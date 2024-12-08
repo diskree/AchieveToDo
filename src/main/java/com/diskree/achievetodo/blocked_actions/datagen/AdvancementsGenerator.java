@@ -181,12 +181,10 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
             .createUntelemetered()
             .display(
                 Items.BARRIER,
-                Text.translatable("advancement.root." + BLOCKED_ACTIONS + ".title"),
-                Text.translatable("advancement.root." + BLOCKED_ACTIONS + ".description"),
+                Text.of(BuildConfig.MOD_NAME),
+                Text.translatable(BuildConfig.MOD_ID + ".root.description"),
                 Identifier.ofVanilla(
-                    "textures/block/" +
-                        Registries.BLOCK.getId(Blocks.CYAN_SHULKER_BOX).getPath() +
-                        ".png"
+                    "textures/block/" + Registries.BLOCK.getId(Blocks.PALE_OAK_PLANKS).getPath() + ".png"
                 ),
                 AdvancementFrame.TASK,
                 false,

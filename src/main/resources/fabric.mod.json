@@ -29,7 +29,7 @@
 	],
 	"depends": {
 		"java": ">=${minJavaVersion}",
-		"minecraft": ">=${minMinecraftVersion} <=${maxMinecraftVersion}",
+		"minecraft": ">=${minMinecraftVersion}",
 		"fabricloader": ">=${minLoaderVersion}",
 		"fabric-api": "*"
 	},

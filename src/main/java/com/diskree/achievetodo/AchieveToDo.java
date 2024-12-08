@@ -30,7 +30,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,16 +39,16 @@ import java.util.UUID;
 
 public class AchieveToDo implements ModInitializer {
 
-    private static final Map<UUID, Integer> playersByScore = new HashMap<>();
+    private static final Map<UUID, Integer> scoresByPlayers = new HashMap<>();
 
-    public static void initScore(ServerPlayerEntity serverPlayer) {
+    public static void initScore(ServerPlayerEntity player) {
         int score = 0;
-        for (Map.Entry<AdvancementEntry, AdvancementProgress> entry : serverPlayer.getAdvancementTracker().progress.entrySet()) {
+        for (Map.Entry<AdvancementEntry, AdvancementProgress> entry : player.getAdvancementTracker().progress.entrySet()) {
             if (entry.getValue().isDone() && checkAdvancement(entry.getKey())) {
                 score++;
             }
         }
-        setScore(serverPlayer, score);
+        setScore(player, score);
     }
 
     public static boolean checkAdvancement(AdvancementEntry advancementEntry) {
@@ -57,10 +56,7 @@ public class AchieveToDo implements ModInitializer {
         if (advancement.display().isEmpty()) {
             return false;
         }
-        if (advancementEntry.id().getNamespace().equals(BuildConfig.MOD_ID)) {
-            return false;
-        }
-        return true;
+        return !advancementEntry.id().getNamespace().equals(BuildConfig.MOD_ID);
     }
 
     public static void onAdvancementGranted(ServerPlayerEntity serverPlayer, AdvancementEntry advancementEntry) {
@@ -80,15 +76,15 @@ public class AchieveToDo implements ModInitializer {
             return AchieveToDoClient.advancementsCount;
         }
         if (player instanceof ServerPlayerEntity) {
-            return playersByScore.get(player.getUuid());
+            return scoresByPlayers.get(player.getUuid());
         }
         return 0;
     }
 
     private static void setScore(ServerPlayerEntity serverPlayer, int score) {
         UUID playerUuid = serverPlayer.getUuid();
-        int oldScore = playersByScore.getOrDefault(playerUuid, 0);
-        playersByScore.put(playerUuid, score);
+        int oldScore = scoresByPlayers.getOrDefault(playerUuid, 0);
+        scoresByPlayers.put(playerUuid, score);
         if (oldScore != 0) {
             for (BlockedActionType blockedAction : BlockedActionType.values()) {
                 if (score >= blockedAction.getUnblockAdvancementsCount() &&
@@ -154,22 +150,22 @@ public class AchieveToDo implements ModInitializer {
                 grantBlockedAction(context.player(), payload.blockedAction(), true)
             )
         );
-        ServerWorldEvents.LOAD.register((server, world) -> playersByScore.clear());
+        ServerWorldEvents.LOAD.register((server, world) -> scoresByPlayers.clear());
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> initScore(handler.player));
 
         UseItemCallback.EVENT.register((player, world, hand) -> {
             ItemStack stack = player.getStackInHand(hand);
             Item item = stack.getItem();
             if (item == Items.SHEARS || item == Items.BRUSH) {
-                return TypedActionResult.pass(ItemStack.EMPTY);
+                return ActionResult.PASS;
             }
             if (isActionBlocked(player, BlockedActionType.findBlockedItem(player, stack))) {
-                return TypedActionResult.fail(ItemStack.EMPTY);
+                return ActionResult.FAIL;
             }
             if (isActionBlocked(player, BlockedActionType.findBlockedEquipment(item))) {
-                return TypedActionResult.fail(ItemStack.EMPTY);
+                return ActionResult.FAIL;
             }
-            return TypedActionResult.pass(ItemStack.EMPTY);
+            return ActionResult.PASS;
         });
         UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
             ItemStack stack = player.getStackInHand(hand);

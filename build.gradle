@@ -20,7 +20,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${minMinecraftVersion}"
     mappings "net.fabricmc:yarn:${minMinecraftVersion}+build.${mappingsBuild}:v2"
     modImplementation "net.fabricmc:fabric-loader:${minLoaderVersion}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${apiVersion}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${apiVersion}+${minMinecraftVersion}"
 }
 
 processResources {
@@ -32,7 +32,6 @@ processResources {
             'repoUrl'            : repoUrl,
             'minJavaVersion'     : minJavaVersion,
             'minMinecraftVersion': minMinecraftVersion,
-            'maxMinecraftVersion': maxMinecraftVersion,
             'minLoaderVersion'   : minLoaderVersion
     ]
     inputs.properties(propertyMap)

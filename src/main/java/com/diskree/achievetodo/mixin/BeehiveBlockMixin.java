@@ -6,8 +6,8 @@ import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -41,7 +41,7 @@ public abstract class BeehiveBlockMixin implements UsableItemOnBlock {
     }
 
     @Shadow
-    protected abstract ItemActionResult onUseWithItem(
+    protected abstract ActionResult onUseWithItem(
         ItemStack stack,
         BlockState state,
         World world,
@@ -68,7 +68,7 @@ public abstract class BeehiveBlockMixin implements UsableItemOnBlock {
         PlayerEntity player,
         Hand hand,
         BlockHitResult hit,
-        CallbackInfoReturnable<ItemActionResult> cir
+        CallbackInfoReturnable<ActionResult> cir
     ) {
         if (isCanUseChecking) {
             cir.setReturnValue(null);
@@ -79,9 +79,9 @@ public abstract class BeehiveBlockMixin implements UsableItemOnBlock {
         method = "onUseWithItem",
         at = @At("RETURN")
     )
-    public ItemActionResult skipClientCheck(ItemActionResult original) {
+    public ActionResult skipClientCheck(ActionResult original) {
         if (isCanUseChecking) {
-            return ItemActionResult.SUCCESS;
+            return ActionResult.SUCCESS;
         }
         return original;
     }

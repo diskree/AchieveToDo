@@ -41,7 +41,7 @@ public class FunctionsGenerator implements DataProvider {
                     },
                     {
                         "color":"yellow",
-                        "translate":"blocked.{NAME}.title",
+                        "translate":"achievetodo.blocked_message.{NAME}.title",
                         "clickEvent":{
                             "action":"run_command",
                             "value":"/advancementssearch highlight {ADVANCEMENT_ID} obtained_status"
@@ -50,14 +50,14 @@ public class FunctionsGenerator implements DataProvider {
                             "action":"show_text",
                             "contents":{
                                 "color":"yellow",
-                                "translate":"blocked.{NAME}.title",
+                                "translate":"achievetodo.blocked_message.{NAME}.title",
                                 "extra":[
                                     {
                                         "text":"\\n"
                                     },
                                     {
                                         "color":"yellow",
-                                        "translate":"blocked.{NAME}.description"
+                                        "translate":"achievetodo.blocked_message.{NAME}.description"
                                     },
                                     {
                                         "text":"\\n\\n"
@@ -68,7 +68,7 @@ public class FunctionsGenerator implements DataProvider {
                                         "translate":"%1$s tab",
                                         "with":[
                                             {
-                                                "translate":"advancement.root.blocked_actions.title"
+                                                "text":"AchieveToDo"
                                             }
                                         ]
                                     }
@@ -115,7 +115,7 @@ public class FunctionsGenerator implements DataProvider {
                 bufferedWriter.write(function);
             }
             Path functionsPath = dataOutput
-                .getResolver(DataOutput.OutputType.DATA_PACK, "functions")
+                .getResolver(DataOutput.OutputType.DATA_PACK, "function")
                 .resolve(AdvancementsGenerator.buildAdvancementId(blockedAction), "mcfunction");
             dataWriter.write(functionsPath, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
         }
