@@ -205,7 +205,6 @@ public class AchieveToDo implements ModInitializer {
             }
             if (entity instanceof VillagerEntity villagerEntity &&
                 !villagerEntity.isBaby() &&
-                !villagerEntity.getOffers().isEmpty() &&
                 isActionBlocked(player, BlockedActionType.findBlockedVillager(
                     villagerEntity.getVillagerData().getProfession()
                 ))
