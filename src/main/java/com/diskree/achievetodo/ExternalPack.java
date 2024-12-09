@@ -138,7 +138,7 @@ public enum ExternalPack {
     }
 
     public @NotNull String getReasonKey() {
-        return "achievetodo.file_picker.reason." + name().toLowerCase();
+        return "achievetodo.downloader.reason." + name().toLowerCase();
     }
 
     public static ExternalPack mapFromFileName(String fileName) {

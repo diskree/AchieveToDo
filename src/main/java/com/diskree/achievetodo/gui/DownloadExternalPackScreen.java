@@ -13,6 +13,7 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -21,11 +22,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -39,30 +46,38 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
     private final Screen parent;
     private final ExternalPack externalPack;
     private final BooleanConsumer exitCallback;
-    private boolean exitWithCreateLevel;
+    private boolean isFileDownloaded;
 
-    public DownloadExternalPackScreen(Screen parent, ExternalPack externalPack, BooleanConsumer exitCallback, boolean isOutdatedVersion) {
+    private final boolean inGameDownloadSupported;
+    private ButtonWidget downloadButton;
+    private ButtonWidget backButton;
+    private static final AtomicBoolean isDownloadingCanceled = new AtomicBoolean(true);
+
+    public DownloadExternalPackScreen(Screen parent, @NotNull ExternalPack externalPack, BooleanConsumer exitCallback, boolean isOutdatedVersion) {
         super(
             null,
-            Text.translatable("achievetodo.external_pack.required_prefix").append(Text.of(externalPack.getName()).copy().formatted(externalPack.getColor(), Formatting.ITALIC)),
-            Text.translatable(isOutdatedVersion ? "achievetodo.file_picker.reason.outdated" : "achievetodo.file_picker.reason." + externalPack.name().toLowerCase())
+            Text.translatable("achievetodo.downloader.title_prefix").append(Text.of(externalPack.getName()).copy().formatted(externalPack.getColor(), Formatting.ITALIC)),
+            Text.translatable(isOutdatedVersion ? "achievetodo.downloader.reason.outdated" : "achievetodo.downloader.reason." + externalPack.name().toLowerCase())
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
-                .append(Text.translatable("achievetodo.external_pack.help").copy().formatted(Formatting.YELLOW))
+                .append(Text.translatable(externalPack.isInGameDownloadSupported() ? "achievetodo.downloader.automatically_info" : "achievetodo.downloader.manually_info")
+                    .copy().formatted(Formatting.YELLOW)
+                )
         );
         this.parent = parent;
         this.externalPack = externalPack;
         this.exitCallback = exitCallback;
+        inGameDownloadSupported = externalPack.isInGameDownloadSupported();
     }
 
     @Override
     public void close() {
         if (client != null) {
             client.setScreen(parent);
-            exitCallback.accept(exitWithCreateLevel);
+            exitCallback.accept(isFileDownloaded);
         }
     }
 
@@ -70,53 +85,77 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
     protected void addButtons(int y) {
         int selectFileButtonX = (width - BUTTON_WIDTH) / 2;
 
-        addDrawableChild(
+        downloadButton = addDrawableChild(
             ButtonWidget.builder(
-                    Text.translatable("achievetodo.external_pack.download"),
-                    button -> Util.getOperatingSystem().open(externalPack.getDownloadUrl())
+                    Text.translatable("achievetodo.downloader.download"),
+                    button -> {
+                        if (inGameDownloadSupported) {
+                            backButton.setMessage(ScreenTexts.CANCEL);
+                            button.active = false;
+                            startDownload();
+                        } else {
+                            Util.getOperatingSystem().open(externalPack.getDownloadUrl());
+                        }
+                    }
                 )
-                .tooltip(Tooltip.of(Text.translatable("achievetodo.external_pack.download_tooltip")))
+                .tooltip(inGameDownloadSupported ? null : Tooltip.of(Text.translatable("achievetodo.downloader.download_tooltip")))
                 .dimensions(
                     selectFileButtonX - BUTTON_MARGIN - BUTTON_WIDTH,
                     y,
-                    BUTTON_WIDTH,
+                    inGameDownloadSupported ? BUTTON_WIDTH * 2 + BUTTON_MARGIN : BUTTON_WIDTH,
                     BUTTON_HEIGHT
                 )
                 .build()
         );
 
-        addDrawableChild(ButtonWidget.builder(
-            Text.translatable("achievetodo.external_pack.select_file"),
-            button -> {
-                try (MemoryStack stack = MemoryStack.stackPush()) {
-                    PointerBuffer filters = stack.mallocPointer(1);
-                    filters.put(0, stack.UTF8("*.zip"));
+        if (!inGameDownloadSupported) {
+            addDrawableChild(
+                ButtonWidget.builder(
+                        Text.translatable("achievetodo.downloader.select_file"),
+                        button -> {
+                            try (MemoryStack stack = MemoryStack.stackPush()) {
+                                PointerBuffer filters = stack.mallocPointer(1);
+                                filters.put(0, stack.UTF8("*.zip"));
 
-                    String selectedFilePath = TinyFileDialogs.tinyfd_openFileDialog(
-                        Text.translatable("achievetodo.external_pack.select_file").getString(),
-                        System.getProperty("user.home"),
-                        filters,
-                        null,
-                        false
-                    );
-                    if (selectedFilePath != null) {
-                        handleDatapackFile(Paths.get(selectedFilePath));
+                                String selectedFilePath = TinyFileDialogs.tinyfd_openFileDialog(
+                                    Text.translatable("achievetodo.downloader.select_file").getString(),
+                                    System.getProperty("user.home"),
+                                    filters,
+                                    null,
+                                    false
+                                );
+                                if (selectedFilePath != null) {
+                                    handleDatapackFile(Paths.get(selectedFilePath));
+                                }
+                            }
+                        }
+                    )
+                    .dimensions(selectFileButtonX, y, BUTTON_WIDTH, BUTTON_HEIGHT)
+                    .build()
+            );
+        }
+
+        backButton = addDrawableChild(
+            ButtonWidget.builder(
+                    ScreenTexts.BACK,
+                    button -> {
+                        if (!isDownloadingCanceled.get()) {
+                            isDownloadingCanceled.set(true);
+                        } else {
+                            close();
+                        }
                     }
-                }
-            }
-        ).dimensions(selectFileButtonX, y, BUTTON_WIDTH, BUTTON_HEIGHT).build());
-
-        addDrawableChild(ButtonWidget.builder(
-            ScreenTexts.BACK,
-            button -> close()
-        ).dimensions(selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN, y, BUTTON_WIDTH, BUTTON_HEIGHT).build());
+                )
+                .dimensions(selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN, y, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .build()
+        );
 
         addDrawableChild(
             ButtonWidget.builder(
-                    Text.translatable("achievetodo.external_pack.learn_more"),
+                    Text.translatable("achievetodo.downloader.learn_more"),
                     button -> Util.getOperatingSystem().open(externalPack.getPageUrl())
                 )
-                .tooltip(Tooltip.of(Text.translatable("achievetodo.external_pack.learn_more_tooltip")))
+                .tooltip(Tooltip.of(Text.translatable("achievetodo.downloader.learn_more_tooltip")))
                 .dimensions(
                     selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN,
                     y + BUTTON_HEIGHT + BUTTON_MARGIN,
@@ -129,7 +168,7 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 256) {
+        if (isDownloadingCanceled.get() && keyCode == 256) {
             close();
             return true;
         }
@@ -177,7 +216,7 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
         } catch (IOException e) {
             return;
         }
-        exitWithCreateLevel = true;
+        isFileDownloaded = true;
         close();
     }
 
@@ -206,5 +245,93 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
             }
         }
         return firstExtractedFile;
+    }
+
+    private void startDownload() {
+        if (client == null) {
+            return;
+        }
+        isDownloadingCanceled.set(false);
+        String url = externalPack.getDownloadUrl();
+        Path downloadTempDirectory = new File(client.runDirectory, ".datapacks_temp").toPath();
+        if (Files.notExists(downloadTempDirectory)) {
+            try {
+                Files.createDirectory(downloadTempDirectory);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Path tempFile = downloadTempDirectory.resolve(String.valueOf(UUID.randomUUID()));
+        CompletableFuture.runAsync(() -> {
+            HttpURLConnection connection = null;
+
+            try {
+                URI uri = URI.create(url);
+                connection = (HttpURLConnection) uri.toURL().openConnection();
+                connection.setDoInput(true);
+                connection.setDoOutput(false);
+                connection.connect();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode / 100 != 2) {
+                    throw new IOException("Failed to open " + url + ", HTTP error code: " + responseCode);
+                }
+
+                int totalBytes = connection.getContentLength();
+                if (totalBytes == -1) {
+                    throw new IOException("Unable to determine file size for " + url);
+                }
+
+                try (InputStream in = connection.getInputStream();
+                     OutputStream out = Files.newOutputStream(tempFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
+                    int downloadedBytes = 0;
+
+                    while ((bytesRead = in.read(buffer)) != -1) {
+                        if (isDownloadingCanceled.get()) {
+                            System.out.println("Download cancelled.");
+                            hideDownloadingUI();
+                            break;
+                        }
+                        out.write(buffer, 0, bytesRead);
+                        downloadedBytes += bytesRead;
+
+                        int progress = (downloadedBytes * 100) / totalBytes;
+                        client.execute(() -> downloadButton.setMessage(
+                            Text.translatable("mco.download.downloading").append(Text.of(": " + progress + "%")))
+                        );
+                    }
+
+                    if (isDownloadingCanceled.get()) {
+                        Files.deleteIfExists(tempFile);
+                        hideDownloadingUI();
+                    }
+                    client.execute(() -> {
+                        handleDatapackFile(tempFile);
+                        try {
+                            Files.deleteIfExists(tempFile);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                } catch (IOException e) {
+                    Files.deleteIfExists(tempFile);
+                    throw e;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to download file: " + e.getMessage(), e);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        });
+    }
+
+    private void hideDownloadingUI() {
+        backButton.setMessage(ScreenTexts.BACK);
+        downloadButton.active = true;
     }
 }

@@ -42,6 +42,7 @@
   ],
   "client": [
     "client.AdvancementProgressMixin",
+    "client.AdvancementTabMixin",
     "client.AdvancementToastMixin",
     "client.AdvancementWidgetMixin",
     "client.ArmorSlotMixin",

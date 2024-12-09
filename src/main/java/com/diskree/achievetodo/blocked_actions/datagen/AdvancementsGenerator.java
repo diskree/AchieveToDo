@@ -12,6 +12,7 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.advancement.criterion.TickCriterion;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.screen.advancement.AdvancementTabType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
@@ -27,6 +28,49 @@ import static com.diskree.achievetodo.blocked_actions.BlockedActionType.*;
 public class AdvancementsGenerator extends FabricAdvancementProvider {
 
     public static final String BLOCKED_ACTION_DEMYSTIFIED_CRITERION_PREFIX = "demystified_";
+
+    public enum Tab {
+        BIOMES(AdvancementTabType.LEFT),
+        ADVENTURE(AdvancementTabType.LEFT),
+        WEAPONRY(AdvancementTabType.LEFT),
+        HUSBANDRY(AdvancementTabType.LEFT),
+        MONSTERS(AdvancementTabType.LEFT),
+        MINING(AdvancementTabType.ABOVE),
+        BUILDING(AdvancementTabType.ABOVE),
+        FARMING(AdvancementTabType.ABOVE),
+        NETHER(AdvancementTabType.ABOVE),
+        END(AdvancementTabType.ABOVE),
+        BLOCKED_ACTIONS(AdvancementTabType.RIGHT),
+        STATISTICS(AdvancementTabType.RIGHT),
+        BACAP(AdvancementTabType.RIGHT),
+        REDSTONE(AdvancementTabType.BELOW),
+        POTION(AdvancementTabType.BELOW),
+        ENCHANTING(AdvancementTabType.BELOW),
+        CHALLENGES(AdvancementTabType.BELOW);
+
+        private final AdvancementTabType position;
+
+        Tab(AdvancementTabType position) {
+            this.position = position;
+        }
+
+        public AdvancementTabType getPosition() {
+            return position;
+        }
+
+        public int getOrder() {
+            int order = 0;
+            for (Tab tab : Tab.values()) {
+                if (tab.position == position) {
+                    if (tab == this) {
+                        break;
+                    }
+                    order++;
+                }
+            }
+            return order;
+        }
+    }
 
     public static final BlockedActionType[][] TREE = new BlockedActionType[][]{
         {

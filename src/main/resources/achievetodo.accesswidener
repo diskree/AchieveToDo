@@ -3,6 +3,7 @@ accessWidener v2 named
 accessible class net/minecraft/advancement/AdvancementDisplays$Status
 accessible class net/minecraft/client/gui/screen/world/WorldScreenOptionGrid
 accessible class net/minecraft/screen/slot/ArmorSlot
+accessible class net/minecraft/client/gui/screen/advancement/AdvancementTabType
 
 accessible method net/minecraft/entity/vehicle/AbstractBoatEntity canAddPassenger (Lnet/minecraft/entity/Entity;)Z
 accessible method net/minecraft/entity/passive/VillagerEntity sayNo ()V

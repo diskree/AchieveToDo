@@ -115,6 +115,7 @@ public abstract class WorldListWidgetMixin {
             } catch (IOException e) {
                 showUnknownError();
                 ci.cancel();
+                return;
             }
         }
         for (ExternalPack externalPack : externalPacksToCheck) {
@@ -129,18 +130,14 @@ public abstract class WorldListWidgetMixin {
                 } catch (IOException ignored) {
                     showUnknownError();
                     ci.cancel();
+                    return;
                 }
                 play();
                 ci.cancel();
                 continue;
             }
-            try {
-                Files.delete(globalPack);
-            } catch (IOException e) {
-                showUnknownError();
-            }
-            client.setScreen(new DownloadExternalPackScreen(screen, externalPack, exitWithCreateLevel -> {
-                if (exitWithCreateLevel) {
+            client.setScreen(new DownloadExternalPackScreen(screen, externalPack, isFileDownloaded -> {
+                if (isFileDownloaded) {
                     try {
                         Files.copy(globalPack, worldPack, StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException e) {
