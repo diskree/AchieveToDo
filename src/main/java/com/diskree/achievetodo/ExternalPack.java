@@ -16,7 +16,7 @@ public enum ExternalPack {
         "https://modrinth.com/datapack/blazeandcaves-advancements-pack",
         "https://cdn.modrinth.com/data/VoVJ47kN/versions/i8N5hYLH/BlazeandCave%27s%20Advancements%20Pack%201.18.1.zip",
         null,
-        "ecdde0fa0f5b0cda52ba07cf611a04b3517f53df",
+        "45b8bb0076bbf5b92fde7dc9590c6686937abbc0",
         true
     ),
     BACAP_HARDCORE(
