@@ -18,6 +18,7 @@
     "BrushItemMixin",
     "CartographyTableBlockMixin",
     "ChestBlockMixin",
+    "ConsumableComponentMixin",
     "CraftingTableBlockMixin",
     "DoorBlockMixin",
     "EnchantedTableBlockMixin",

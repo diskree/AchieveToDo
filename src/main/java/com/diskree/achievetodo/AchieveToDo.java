@@ -245,9 +245,6 @@ public class AchieveToDo implements ModInitializer {
             if (isActionBlocked(player, BlockedActionType.findBlockedTool(item))) {
                 return ActionResult.CONSUME;
             }
-            if (item == Items.SHEARS && isActionBlocked(player, BlockedActionType.USING_SHEARS)) {
-                return ActionResult.CONSUME;
-            }
             return ActionResult.PASS;
         });
     }

@@ -10,6 +10,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.block.*;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
+import net.minecraft.component.type.FoodComponents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.item.equipment.ArmorMaterial;
@@ -94,124 +96,124 @@ public enum BlockedActionType {
     ),
 
     EAT_SALMON(
-        3, Items.SALMON
+        3, FoodComponents.SALMON
     ),
     EAT_COD(
-        4, Items.COD
+        4, FoodComponents.COD
     ),
     EAT_TROPICAL_FISH(
-        5, Items.TROPICAL_FISH
+        5, FoodComponents.TROPICAL_FISH
     ),
     EAT_ROTTEN_FLESH(
-        10, Items.ROTTEN_FLESH
+        10, FoodComponents.ROTTEN_FLESH
     ),
     EAT_SPIDER_EYE(
-        12, Items.SPIDER_EYE
+        12, FoodComponents.SPIDER_EYE
     ),
     EAT_SWEET_BERRIES(
-        14, Items.SWEET_BERRIES
+        14, FoodComponents.SWEET_BERRIES
     ),
     EAT_GLOW_BERRIES(
-        16, Items.GLOW_BERRIES
+        16, FoodComponents.GLOW_BERRIES
     ),
     EAT_PUFFERFISH(
-        18, Items.PUFFERFISH
+        18, FoodComponents.PUFFERFISH
     ),
     EAT_POISONOUS_POTATO(
-        22, Items.POISONOUS_POTATO
+        22, FoodComponents.POISONOUS_POTATO
     ),
     EAT_CHORUS_FRUIT(
-        27, Items.CHORUS_FRUIT
+        27, FoodComponents.CHORUS_FRUIT
     ),
     EAT_SUSPICIOUS_STEW(
-        32, Items.SUSPICIOUS_STEW
+        32, FoodComponents.SUSPICIOUS_STEW
     ),
     EAT_BEETROOT(
-        38, Items.BEETROOT
+        38, FoodComponents.BEETROOT
     ),
     EAT_CARROT(
-        43, Items.CARROT
+        43, FoodComponents.CARROT
     ),
     EAT_CHICKEN(
-        47, Items.CHICKEN
+        47, FoodComponents.CHICKEN
     ),
     EAT_DRIED_KELP(
-        51, Items.DRIED_KELP
+        51, FoodComponents.DRIED_KELP
     ),
     EAT_BEETROOT_SOUP(
-        68, Items.BEETROOT_SOUP
+        68, FoodComponents.BEETROOT_SOUP
     ),
     EAT_POTATO(
-        71, Items.POTATO
+        71, FoodComponents.POTATO
     ),
     EAT_APPLE(
-        83, Items.APPLE
+        83, FoodComponents.APPLE
     ),
     EAT_MELON_SLICE(
-        95, Items.MELON_SLICE
+        95, FoodComponents.MELON_SLICE
     ),
     EAT_COOKIE(
-        102, Items.COOKIE
+        102, FoodComponents.COOKIE
     ),
     EAT_MUSHROOM_STEW(
-        114, Items.MUSHROOM_STEW
+        114, FoodComponents.MUSHROOM_STEW
     ),
     EAT_RABBIT_STEW(
-        127, Items.RABBIT_STEW
+        127, FoodComponents.RABBIT_STEW
     ),
     EAT_HONEY_BOTTLE(
-        132, Items.HONEY_BOTTLE
+        132, FoodComponents.HONEY_BOTTLE
     ),
     EAT_PUMPKIN_PIE(
-        141, Items.PUMPKIN_PIE
+        141, FoodComponents.PUMPKIN_PIE
     ),
     EAT_GOLDEN_APPLE(
-        155, Items.GOLDEN_APPLE
+        155, FoodComponents.GOLDEN_APPLE
     ),
     EAT_ENCHANTED_GOLDEN_APPLE(
-        166, Items.ENCHANTED_GOLDEN_APPLE
+        166, FoodComponents.ENCHANTED_GOLDEN_APPLE
     ),
     EAT_RABBIT(
-        182, Items.RABBIT
+        182, FoodComponents.RABBIT
     ),
     EAT_MUTTON(
-        212, Items.MUTTON
+        212, FoodComponents.MUTTON
     ),
     EAT_PORKCHOP(
-        226, Items.PORKCHOP
+        226, FoodComponents.PORKCHOP
     ),
     EAT_BEEF(
-        249, Items.BEEF
+        249, FoodComponents.BEEF
     ),
     EAT_BAKED_POTATO(
-        252, Items.BAKED_POTATO
+        252, FoodComponents.BAKED_POTATO
     ),
     EAT_COOKED_SALMON(
-        312, Items.COOKED_SALMON
+        312, FoodComponents.COOKED_SALMON
     ),
     EAT_COOKED_COD(
-        373, Items.COOKED_COD
+        373, FoodComponents.COOKED_COD
     ),
     EAT_COOKED_RABBIT(
-        432, Items.COOKED_RABBIT
+        432, FoodComponents.COOKED_RABBIT
     ),
     EAT_COOKED_CHICKEN(
-        459, Items.COOKED_CHICKEN
+        459, FoodComponents.COOKED_CHICKEN
     ),
     EAT_COOKED_MUTTON(
-        524, Items.COOKED_MUTTON
+        524, FoodComponents.COOKED_MUTTON
     ),
     EAT_COOKED_PORKCHOP(
-        550, Items.COOKED_PORKCHOP
+        550, FoodComponents.COOKED_PORKCHOP
     ),
     EAT_COOKED_BEEF(
-        603, Items.COOKED_BEEF
+        603, FoodComponents.COOKED_BEEF
     ),
     EAT_BREAD(
-        654, Items.BREAD
+        654, FoodComponents.BREAD
     ),
     EAT_GOLDEN_CARROT(
-        702, Items.GOLDEN_CARROT
+        702, FoodComponents.GOLDEN_CARROT
     ),
 
     OPEN_CHEST(
@@ -348,6 +350,7 @@ public enum BlockedActionType {
     private final int unblockAdvancementsCount;
 
     private final Item item;
+    private final FoodComponent food;
     private final Block block;
     private final ToolMaterial toolMaterial;
     private final ArmorMaterial equipmentMaterial;
@@ -355,36 +358,41 @@ public enum BlockedActionType {
     private final VillagerProfession villager;
 
     BlockedActionType(int unblockAdvancementsCount) {
-        this(unblockAdvancementsCount, null, null, null, null, null, null);
+        this(unblockAdvancementsCount, null, null, null, null, null, null, null);
     }
 
     BlockedActionType(int unblockAdvancementsCount, Item item) {
-        this(unblockAdvancementsCount, item, null, null, null, null, null);
+        this(unblockAdvancementsCount, item, null, null, null, null, null, null);
+    }
+
+    BlockedActionType(int unblockAdvancementsCount, FoodComponent food) {
+        this(unblockAdvancementsCount, null, food, null, null, null, null, null);
     }
 
     BlockedActionType(int unblockAdvancementsCount, Block block) {
-        this(unblockAdvancementsCount, null, block, null, null, null, null);
+        this(unblockAdvancementsCount, null, null, block, null, null, null, null);
     }
 
     BlockedActionType(int unblockAdvancementsCount, ToolMaterial materials) {
-        this(unblockAdvancementsCount, null, null, materials, null, null, null);
+        this(unblockAdvancementsCount, null, null, null, materials, null, null, null);
     }
 
     BlockedActionType(int unblockAdvancementsCount, ArmorMaterial materials) {
-        this(unblockAdvancementsCount, null, null, null, materials, null, null);
+        this(unblockAdvancementsCount, null, null, null, null, materials, null, null);
     }
 
     BlockedActionType(int unblockAdvancementsCount, Class<? extends Portal> portal) {
-        this(unblockAdvancementsCount, null, null, null, null, portal, null);
+        this(unblockAdvancementsCount, null, null, null, null, null, portal, null);
     }
 
     BlockedActionType(int unblockAdvancementsCount, VillagerProfession villager) {
-        this(unblockAdvancementsCount, null, null, null, null, null, villager);
+        this(unblockAdvancementsCount, null, null, null, null, null, null, villager);
     }
 
     BlockedActionType(
         int unblockAdvancementsCount,
         Item item,
+        FoodComponent food,
         Block block,
         ToolMaterial toolMaterial,
         ArmorMaterial equipmentMaterial,
@@ -393,6 +401,7 @@ public enum BlockedActionType {
     ) {
         this.unblockAdvancementsCount = unblockAdvancementsCount;
         this.item = item;
+        this.food = food;
         this.block = block;
         this.toolMaterial = toolMaterial;
         this.equipmentMaterial = equipmentMaterial;
@@ -441,6 +450,23 @@ public enum BlockedActionType {
         for (BlockedActionType blockedAction : BlockedActionType.values()) {
             Item item = stack.getItem();
             if (item == blockedAction.item) {
+                return blockedAction;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static BlockedActionType findBlockedFood(ItemStack stack) {
+        if (stack == null) {
+            return null;
+        }
+        FoodComponent foodComponent = stack.get(DataComponentTypes.FOOD);
+        if (foodComponent == null) {
+            return null;
+        }
+        for (BlockedActionType blockedAction : BlockedActionType.values()) {
+            if (foodComponent == blockedAction.food) {
                 return blockedAction;
             }
         }
