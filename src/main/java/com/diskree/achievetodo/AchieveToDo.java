@@ -30,7 +30,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -160,10 +159,10 @@ public class AchieveToDo implements ModInitializer {
                 return ActionResult.PASS;
             }
             if (isActionBlocked(player, BlockedActionType.findBlockedItem(player, stack))) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             if (isActionBlocked(player, BlockedActionType.findBlockedEquipment(item))) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             return ActionResult.PASS;
         });
@@ -177,16 +176,16 @@ public class AchieveToDo implements ModInitializer {
                 block instanceof UsableBlock usableBlock && usableBlock.achievetodo$canUse(player, hand, hit) &&
                 isActionBlocked(player, BlockedActionType.findBlockedBlock(blockState))
             ) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             if (item instanceof UsableItem usableItem && (usableItem.achievetodo$canUse(player, hit)) ||
-                block instanceof UsableItemOnBlock usableItemOnBlock &&
-                    usableItemOnBlock.achievetodo$canUse(player, stack, hand, hit)) {
+                block instanceof UsableItemOnBlock usableItemOnBlock && usableItemOnBlock.achievetodo$canUse(player, stack, hand, hit)
+            ) {
                 if (isActionBlocked(player, BlockedActionType.findBlockedItem(player, stack))) {
-                    return ActionResult.FAIL;
+                    return ActionResult.CONSUME;
                 }
                 if (isActionBlocked(player, BlockedActionType.findBlockedTool(item))) {
-                    return ActionResult.FAIL;
+                    return ActionResult.CONSUME;
                 }
             }
             return ActionResult.PASS;
@@ -201,7 +200,7 @@ public class AchieveToDo implements ModInitializer {
                 boatEntity.canAddPassenger(player) &&
                 isActionBlocked(player, BlockedActionType.USING_BOAT)
             ) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             if (entity instanceof VillagerEntity villagerEntity &&
                 !villagerEntity.isBaby() &&
@@ -211,14 +210,14 @@ public class AchieveToDo implements ModInitializer {
                 )
             ) {
                 villagerEntity.sayNo();
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             if (item == Items.SHEARS &&
                 entity instanceof Shearable shearable &&
                 shearable.isShearable() &&
                 isActionBlocked(player, BlockedActionType.USING_SHEARS)
             ) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             return ActionResult.PASS;
         });
@@ -227,16 +226,16 @@ public class AchieveToDo implements ModInitializer {
             ItemStack stack = player.getStackInHand(hand);
             Item item = stack.getItem();
             if (isActionBlocked(player, BlockedActionType.BREAK_BLOCKS)) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             if (pos.getY() < 0 && isActionBlocked(player, BlockedActionType.BREAK_BLOCKS_IN_NEGATIVE_Y)) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             if (isActionBlocked(player, BlockedActionType.findBlockedTool(item))) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             if (item == Items.SHEARS && isActionBlocked(player, BlockedActionType.USING_SHEARS)) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             return ActionResult.PASS;
         });
@@ -244,10 +243,10 @@ public class AchieveToDo implements ModInitializer {
             ItemStack stack = player.getStackInHand(hand);
             Item item = stack.getItem();
             if (isActionBlocked(player, BlockedActionType.findBlockedTool(item))) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             if (item == Items.SHEARS && isActionBlocked(player, BlockedActionType.USING_SHEARS)) {
-                return ActionResult.FAIL;
+                return ActionResult.CONSUME;
             }
             return ActionResult.PASS;
         });
