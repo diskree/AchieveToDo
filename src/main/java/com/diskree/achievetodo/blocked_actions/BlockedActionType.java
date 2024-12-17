@@ -83,7 +83,7 @@ public enum BlockedActionType {
     EQUIP_ELYTRA(
         657
     ),
-    END_GATEWAY(
+    OUTER_ISLANDS(
         679, EndGatewayBlock.class
     ),
     FLY(
@@ -643,7 +643,7 @@ public enum BlockedActionType {
             case USING_BOAT -> Items.OAK_BOAT;
             case BREAK_BLOCKS_IN_NEGATIVE_Y -> Items.COBBLED_DEEPSLATE;
             case EQUIP_ELYTRA -> Items.ELYTRA;
-            case END_GATEWAY -> Items.END_STONE_BRICKS;
+            case OUTER_ISLANDS -> Items.END_STONE_BRICKS;
             case OPEN_SHULKER_BOX -> Items.SHULKER_BOX;
             default -> null;
         };

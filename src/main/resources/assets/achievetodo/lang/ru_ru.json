@@ -18,7 +18,6 @@
   "achievetodo.world_creation_tab.lan.cooperative_mode": "Кооперативный режим",
   "achievetodo.world_creation_tab.lan.cooperative_mode.info": "Каждое полученное достижение одного игрока автоматически выдаётся всем игрокам.",
 
-
   "achievetodo.downloader.download": "Загрузить",
   "achievetodo.downloader.download_tooltip": "Файл будет загружен через ваш браузер.",
   "achievetodo.downloader.select_file": "Выбрать файл",
@@ -71,7 +70,7 @@
   "achievetodo.blocked_message.equip_netherite_armor": "Вы сейчас не можете надевать незеритовую броню",
   "achievetodo.blocked_message.end": "Энд закрыт",
   "achievetodo.blocked_message.equip_elytra": "Вы сейчас не можете надевать элитры",
-  "achievetodo.blocked_message.end_gateway": "Дальний Энд закрыт",
+  "achievetodo.blocked_message.outer_islands": "Дальний Энд закрыт",
   "achievetodo.blocked_message.open_shulker_box": "Вы сейчас не можете открывать шалкеровый ящик",
   "achievetodo.blocked_message.fly": "Вы сейчас не можете летать на элитрах",
   "achievetodo.blocked_message.using_enchanting_table": "Вы сейчас не можете использовать стол зачарований",
@@ -182,8 +181,8 @@
   "achievetodo.blocked_message.eat_tropical_fish.description": "Возможность есть тропическую рыбу",
   "achievetodo.blocked_message.end.title": "Энд",
   "achievetodo.blocked_message.end.description": "Возможность телепортации в Энд",
-  "achievetodo.blocked_message.end_gateway.title": "Дальний Энд",
-  "achievetodo.blocked_message.end_gateway.description": "Возможность телепортации в Дальний Энд",
+  "achievetodo.blocked_message.outer_islands.title": "Дальний Энд",
+  "achievetodo.blocked_message.outer_islands.description": "Возможность телепортации в Дальний Энд",
   "achievetodo.blocked_message.equip_diamond_armor.title": "Алмазная броня",
   "achievetodo.blocked_message.equip_diamond_armor.description": "Возможность надевать алмазную броню",
   "achievetodo.blocked_message.equip_elytra.title": "Элитры",
@@ -303,8 +302,6 @@
   "achievetodo.blocked_message.using_smithing_table.title": "Стол кузнеца",
   "achievetodo.blocked_message.using_smithing_table.description": "Возможность использовать стол кузнеца",
 
-  "achievetodo.blocked_message.left": "Осталось выполнить достижений: ",
-
   "achievetodo.unblocked.food": "Доступна еда",
   "achievetodo.unblocked.action": "Доступно действие",
   "achievetodo.unblocked.item": "Доступен предмет",
@@ -313,6 +310,8 @@
   "achievetodo.unblocked.equipment": "Доступно снаряжение",
   "achievetodo.unblocked.dimension": "Доступно измерение",
   "achievetodo.unblocked.villager": "Доступен крестьянин",
+
+  "achievetodo.blocked_message.left": "Осталось выполнить достижений: ",
 
   "%1$s has unblocked %2$s%3$s%4$s": "%1$s разблокировал %2$s%3$s%4$s"
 }

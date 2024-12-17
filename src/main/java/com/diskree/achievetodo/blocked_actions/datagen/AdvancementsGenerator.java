@@ -166,7 +166,7 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
             EQUIP_NETHERITE_ARMOR,
             END,
             EQUIP_ELYTRA,
-            END_GATEWAY,
+            OUTER_ISLANDS,
         },
         {
             OPEN_BLAST_FURNACE,

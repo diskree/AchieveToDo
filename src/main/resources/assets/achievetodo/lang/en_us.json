@@ -43,19 +43,6 @@
   "achievetodo.error.integrity_check_failed": "This world cannot be loaded because the integrity check failed.",
   "achievetodo.error.unknown": "Unknown error. Please check your free disk space or reboot your computer and try again.",
 
-  "achievetodo.blocked_message.left": "Advancements left: ",
-
-  "achievetodo.unblocked.food": "Food available",
-  "achievetodo.unblocked.action": "Action available",
-  "achievetodo.unblocked.item": "Item available",
-  "achievetodo.unblocked.block": "Block available",
-  "achievetodo.unblocked.tool": "Tools available",
-  "achievetodo.unblocked.equipment": "Equipment available",
-  "achievetodo.unblocked.dimension": "Dimension available",
-  "achievetodo.unblocked.villager": "Villager available",
-
-  "%1$s has unblocked %2$s%3$s%4$s": "%1$s has unblocked %2$s%3$s%4$s",
-
   "achievetodo.blocked_message.food": "This food is not available",
   "achievetodo.blocked_message.jump": "You cannot jump yet",
   "achievetodo.blocked_message.break_blocks": "You cannot break blocks yet",
@@ -83,7 +70,7 @@
   "achievetodo.blocked_message.equip_netherite_armor": "You cannot equip netherite armor yet",
   "achievetodo.blocked_message.end": "The End is locked",
   "achievetodo.blocked_message.equip_elytra": "You cannot equip an elytra yet",
-  "achievetodo.blocked_message.end_gateway": "You cannot teleport to the Outer Islands yet",
+  "achievetodo.blocked_message.outer_islands": "You cannot teleport to the Outer Islands yet",
   "achievetodo.blocked_message.open_shulker_box": "You cannot open a shulker box yet",
   "achievetodo.blocked_message.fly": "You cannot use fireworks for flying yet",
   "achievetodo.blocked_message.using_enchanting_table": "You cannot use an enchanting table yet",
@@ -194,8 +181,8 @@
   "achievetodo.blocked_message.eat_tropical_fish.description": "Ability to eat tropical fish",
   "achievetodo.blocked_message.end.title": "The End",
   "achievetodo.blocked_message.end.description": "Ability to enter The End",
-  "achievetodo.blocked_message.end_gateway.title": "Teleport to Outer Islands",
-  "achievetodo.blocked_message.end_gateway.description": "Ability to teleport to the Outer Islands",
+  "achievetodo.blocked_message.outer_islands.title": "Teleport to Outer Islands",
+  "achievetodo.blocked_message.outer_islands.description": "Ability to teleport to the Outer Islands",
   "achievetodo.blocked_message.equip_diamond_armor.title": "Diamond armor",
   "achievetodo.blocked_message.equip_diamond_armor.description": "Ability to equip diamond armor",
   "achievetodo.blocked_message.equip_elytra.title": "Elytra",
@@ -313,5 +300,18 @@
   "achievetodo.blocked_message.using_cartography_table.title": "Cartography table",
   "achievetodo.blocked_message.using_cartography_table.description": "Ability to use a cartography table",
   "achievetodo.blocked_message.using_smithing_table.title": "Smithing table",
-  "achievetodo.blocked_message.using_smithing_table.description": "Ability to use a smithing table"
+  "achievetodo.blocked_message.using_smithing_table.description": "Ability to use a smithing table",
+
+  "achievetodo.unblocked.food": "Food available",
+  "achievetodo.unblocked.action": "Action available",
+  "achievetodo.unblocked.item": "Item available",
+  "achievetodo.unblocked.block": "Block available",
+  "achievetodo.unblocked.tool": "Tools available",
+  "achievetodo.unblocked.equipment": "Equipment available",
+  "achievetodo.unblocked.dimension": "Dimension available",
+  "achievetodo.unblocked.villager": "Villager available",
+
+  "achievetodo.blocked_message.left": "Advancements left: ",
+
+  "%1$s has unblocked %2$s%3$s%4$s": "%1$s has unblocked %2$s%3$s%4$s"
 }
