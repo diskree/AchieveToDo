@@ -1,6 +1,8 @@
 package com.diskree.achievetodo.blocked_actions;
 
 import com.diskree.achievetodo.AchieveToDo;
+import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.blocked_actions.datagen.AdvancementsGenerator;
 import com.diskree.achievetodo.injection.ArmorItemImpl;
 import com.diskree.achievetodo.injection.MiningToolItemImpl;
 import com.diskree.achievetodo.injection.SwordItemImpl;
@@ -414,9 +416,15 @@ public enum BlockedActionType {
         return map(advancement.getAdvancementEntry().id());
     }
 
-    public static @Nullable BlockedActionType map(@NotNull Identifier advancementId) {
+    public static @Nullable BlockedActionType map(Identifier advancementId) {
+        if (!BuildConfig.MOD_ID.equals(advancementId.getNamespace())) {
+            return null;
+        }
         String[] pathPieces = advancementId.getPath().split("/");
-        return pathPieces.length == 2 ? BlockedActionType.map(pathPieces[1]) : null;
+        if (pathPieces.length == 2 && AdvancementsGenerator.BLOCKED_ACTIONS.equals(pathPieces[0])) {
+            return BlockedActionType.map(pathPieces[1]);
+        }
+        return null;
     }
 
     @Nullable

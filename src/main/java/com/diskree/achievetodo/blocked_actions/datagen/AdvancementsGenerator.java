@@ -28,6 +28,7 @@ import static com.diskree.achievetodo.blocked_actions.BlockedActionType.*;
 public class AdvancementsGenerator extends FabricAdvancementProvider {
 
     public static final String BLOCKED_ACTION_DEMYSTIFIED_CRITERION_PREFIX = "demystified_";
+    public static final String BLOCKED_ACTIONS = "blocked_actions";
 
     public enum Tab {
         BIOMES(AdvancementTabType.LEFT),
@@ -35,14 +36,17 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
         WEAPONRY(AdvancementTabType.LEFT),
         HUSBANDRY(AdvancementTabType.LEFT),
         MONSTERS(AdvancementTabType.LEFT),
+
         MINING(AdvancementTabType.ABOVE),
         BUILDING(AdvancementTabType.ABOVE),
         FARMING(AdvancementTabType.ABOVE),
         NETHER(AdvancementTabType.ABOVE),
         END(AdvancementTabType.ABOVE),
+
         BLOCKED_ACTIONS(AdvancementTabType.RIGHT),
         STATISTICS(AdvancementTabType.RIGHT),
         BACAP(AdvancementTabType.RIGHT),
+
         REDSTONE(AdvancementTabType.BELOW),
         POTION(AdvancementTabType.BELOW),
         ENCHANTING(AdvancementTabType.BELOW),
@@ -200,10 +204,9 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
         },
     };
 
-    private static final String BLOCKED_ACTIONS = "blocked_actions";
-
     protected AdvancementsGenerator(
-        FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup
+        FabricDataOutput output,
+        CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup
     ) {
         super(output, registryLookup);
     }
