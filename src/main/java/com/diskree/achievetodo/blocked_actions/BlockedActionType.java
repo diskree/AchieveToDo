@@ -41,7 +41,7 @@ public enum BlockedActionType {
     OPEN_INVENTORY(
         25
     ),
-    BREAK_BLOCKS_IN_POSITIVE_Y(
+    BREAK_BLOCKS(
         30
     ),
     USING_BOAT(
@@ -639,7 +639,7 @@ public enum BlockedActionType {
             case OPEN_DOOR -> Items.DARK_OAK_DOOR;
             case SLEEP -> Items.RED_BED;
             case OPEN_INVENTORY -> Items.BUNDLE;
-            case BREAK_BLOCKS_IN_POSITIVE_Y -> Items.COBBLESTONE;
+            case BREAK_BLOCKS -> Items.COBBLESTONE;
             case USING_BOAT -> Items.OAK_BOAT;
             case BREAK_BLOCKS_IN_NEGATIVE_Y -> Items.COBBLED_DEEPSLATE;
             case EQUIP_ELYTRA -> Items.ELYTRA;

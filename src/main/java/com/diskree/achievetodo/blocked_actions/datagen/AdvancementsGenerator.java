@@ -126,7 +126,7 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
             OPEN_DOOR,
             SLEEP,
             OPEN_INVENTORY,
-            BREAK_BLOCKS_IN_POSITIVE_Y,
+            BREAK_BLOCKS,
             USING_BOAT,
             USING_SHIELD,
             USING_WATER_BUCKET,

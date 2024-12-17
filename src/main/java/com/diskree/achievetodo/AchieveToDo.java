@@ -205,9 +205,10 @@ public class AchieveToDo implements ModInitializer {
             }
             if (entity instanceof VillagerEntity villagerEntity &&
                 !villagerEntity.isBaby() &&
-                isActionBlocked(player, BlockedActionType.findBlockedVillager(
-                    villagerEntity.getVillagerData().getProfession()
-                ))
+                isActionBlocked(
+                    player,
+                    BlockedActionType.findBlockedVillager(villagerEntity.getVillagerData().getProfession())
+                )
             ) {
                 villagerEntity.sayNo();
                 return ActionResult.FAIL;
@@ -225,9 +226,10 @@ public class AchieveToDo implements ModInitializer {
         AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
             ItemStack stack = player.getStackInHand(hand);
             Item item = stack.getItem();
-            if (player.getWorld().getRegistryKey() == World.OVERWORLD && isActionBlocked(player,
-                pos.getY() >= 0 ? BlockedActionType.BREAK_BLOCKS_IN_POSITIVE_Y :
-                    BlockedActionType.BREAK_BLOCKS_IN_NEGATIVE_Y)) {
+            if (isActionBlocked(player, BlockedActionType.BREAK_BLOCKS)) {
+                return ActionResult.FAIL;
+            }
+            if (pos.getY() < 0 && isActionBlocked(player, BlockedActionType.BREAK_BLOCKS_IN_NEGATIVE_Y)) {
                 return ActionResult.FAIL;
             }
             if (isActionBlocked(player, BlockedActionType.findBlockedTool(item))) {
