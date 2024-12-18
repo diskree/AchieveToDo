@@ -42,22 +42,22 @@ public class EntityMixin {
             return;
         }
 
-        AbilityType abilityType = AbilityType.findPortalUsageAbility(portal);
+        AbilityType ability = AbilityType.findPortalUsageAbility(portal);
         RegistryKey<World> currentDimension = teleportEntity.getWorld().getRegistryKey();
-        if (currentDimension == World.NETHER && abilityType == AbilityType.NETHER) {
+        if (currentDimension == World.NETHER && ability == AbilityType.NETHER) {
             return;
         }
         if (currentDimension == World.END) {
-            if (abilityType == AbilityType.END) {
+            if (ability == AbilityType.END) {
                 return;
             }
-            if (abilityType == AbilityType.OUTER_ISLANDS && !isEndGatewayOnCentralIsland(pos)) {
+            if (ability == AbilityType.OUTER_ISLANDS && !isEndGatewayOnCentralIsland(pos)) {
                 return;
             }
         }
 
         if (teleportEntity instanceof PlayerEntity playerEntity &&
-            AchieveToDo.isAbilityLocked(playerEntity, abilityType)
+            AchieveToDo.isAbilityLocked(playerEntity, ability)
         ) {
             if (enderPearl != null) {
                 enderPearl.remove(Entity.RemovalReason.DISCARDED);
@@ -69,14 +69,14 @@ public class EntityMixin {
             return;
         }
         if (teleportEntity.getControllingPassenger() instanceof PlayerEntity controllingPlayer &&
-            AchieveToDo.isAbilityLocked(controllingPlayer, abilityType)
+            AchieveToDo.isAbilityLocked(controllingPlayer, ability)
         ) {
             ci.cancel();
             return;
         }
         for (Entity passengerEntity : teleportEntity.getPassengerList()) {
             if (passengerEntity instanceof PlayerEntity passenger &&
-                AchieveToDo.isAbilityLocked(passenger, abilityType)
+                AchieveToDo.isAbilityLocked(passenger, ability)
             ) {
                 passenger.stopRiding();
             }

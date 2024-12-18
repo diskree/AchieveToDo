@@ -1,11 +1,13 @@
 import os
 import json
+import shutil
+import argparse
 
 def split_identifier(identifier):
     namespace, path = identifier.split(":")
     path_parts = path.split("/")
     advancement = path_parts[-1]
-    tab = "/".join(path_parts[:-1]) if len(path_parts) > 1 else ""
+    tab = path_parts[-2] if len(path_parts) > 1 else ""
     return namespace, tab, advancement
 
 def read_file_lines(file_path):
@@ -19,59 +21,53 @@ def find_first_matching_line(lines, substring):
             return stripped_line[stripped_line.index(substring):].strip()
     return None
 
-folder_path = "E:/BACAP"
+parser = argparse.ArgumentParser(description="Process JSON files in the specified folder.")
+parser.add_argument("bacap_path", help="Path to the BACAP folder.")
+args = parser.parse_args()
 
-# Лог ошибок
-log_file = "missing_files.log"
+bacap_path = args.bacap_path
 
-# Создаём лог-файл (очищаем старое содержимое)
-with open(log_file, 'w', encoding='utf-8') as log:
-    log.write("Missing Files Log:\n")
+if not os.path.exists(bacap_path):
+    raise FileNotFoundError(f"Path '{bacap_path}' does not exist.")
 
-for root, _, files in os.walk(folder_path):
+override_msg_path = "src/main/resources/resourcepacks/bacap_override/data/bacap_rewards/function/msg"
+
+if os.path.exists(override_msg_path):
+    shutil.rmtree(override_msg_path)
+
+for root, _, files in os.walk(bacap_path):
     for file in files:
         if file.endswith('.json'):
             json_file = os.path.join(root, file)
-            try:
-                with open(json_file, 'r', encoding='utf-8') as file:
-                    data = json.load(file)
-                    if 'display' in data and 'title' in data['display'] and 'rewards' in data and 'function' in data['rewards']:
-                        advancement_namespace = os.path.basename(os.path.dirname(os.path.dirname(os.path.dirname(json_file))))
-                        advancement_tab = os.path.basename(os.path.dirname(json_file))
-                        advancement = os.path.basename(json_file)
+            with open(json_file, 'r', encoding='utf-8') as file:
+                content = file.read()
+                content = content.replace("\\'", "\\\\'")
+                data = json.loads(content)
+                if 'display' in data and 'title' in data['display'] and 'rewards' in data and 'function' in data['rewards']:
+                    reward_namespace, reward_tab, reward_advancement = split_identifier(data['rewards']['function'])
+                    rewards_path = os.path.join(bacap_path, f"data/{reward_namespace}/function/{reward_tab}/{reward_advancement}.mcfunction")
 
-                        namespace, tab, advancement = split_identifier(data['rewards']['function'])
-                        rewards_path = os.path.join(folder_path, f"data/{namespace}/function/{tab}/{advancement}.mcfunction")
-                        
-                        if not os.path.exists(rewards_path):
-                            # Логируем отсутствие файла
-                            with open(log_file, 'a', encoding='utf-8') as log:
-                                log.write(f"Missing file: {rewards_path}\n")
+                    if not os.path.exists(rewards_path):
+                        continue
+
+                    rewards_function = read_file_lines(rewards_path)
+                    msg_function = find_first_matching_line(rewards_function, "bacap_rewards:msg")
+                    if msg_function:
+                        msg_namespace, msg_tab, msg_advancement = split_identifier(msg_function)
+                        bacap_msg_path = os.path.join(bacap_path, f"data/{msg_namespace}/function/msg/{msg_tab}/{msg_advancement}.mcfunction")
+
+                        if not os.path.exists(bacap_msg_path):
                             continue
 
-                        rewards_function = read_file_lines(rewards_path)
-                        msg_function = find_first_matching_line(rewards_function, "bacap_rewards:msg")
-                        if msg_function:
-                            namespace, tab, advancement = split_identifier(msg_function)
-                            msg_path = os.path.join(folder_path, f"data/{namespace}/function/{tab}/{advancement}.mcfunction")
-                            
-                            if not os.path.exists(msg_path):
-                                # Логируем отсутствие файла
-                                with open(log_file, 'a', encoding='utf-8') as log:
-                                    log.write(f"Missing file: {msg_path}\n")
-                                continue
-                            
-                            injection = f'"clickEvent":{{"action":"run_command", "value":"/advancementssearch highlight {advancement_namespace}:{advancement_tab}/{advancement} obtained_status"}},'
-                            with open(msg_path, 'r', encoding='utf-8') as file:
-                                content = file.read()
-                            updated_content = content.replace('"hoverEvent"', f'{injection}"hoverEvent"')
-                            with open(msg_path, 'w', encoding='utf-8') as file:
-                                file.write(updated_content)
-            except FileNotFoundError:
-                # Логируем общий случай, если файл не найден
-                with open(log_file, 'a', encoding='utf-8') as log:
-                    log.write(f"File not found: {json_file}\n")
-            except Exception as e:
-                # Логируем любые другие ошибки
-                with open(log_file, 'a', encoding='utf-8') as log:
-                    log.write(f"Error processing file {json_file}: {e}\n")
+                        advancement_namespace = os.path.basename(os.path.dirname(os.path.dirname(os.path.dirname(json_file))))
+                        advancement_tab = os.path.basename(os.path.dirname(json_file))
+                        advancement_name = os.path.splitext(os.path.basename(json_file))[0]
+                        injection = f'"clickEvent":{{"action":"run_command","value":"/advancementssearch highlight {advancement_namespace}:{advancement_tab}/{advancement_name} obtained_status"}},'
+                        with open(bacap_msg_path, 'r', encoding='utf-8') as file:
+                            content = file.read()
+
+                        updated_content = content.replace('"hoverEvent"', f'{injection}"hoverEvent"')
+                        override_msg_function_path = os.path.join(override_msg_path, f"{msg_tab}/{msg_advancement}.mcfunction")
+                        os.makedirs(os.path.dirname(override_msg_function_path), exist_ok=True)
+                        with open(override_msg_function_path, 'w', encoding='utf-8') as file:
+                            file.write(updated_content)
