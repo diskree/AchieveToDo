@@ -1,85 +1,57 @@
 package com.diskree.achievetodo.mixin.client;
 
+import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDoClient;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
-import com.diskree.achievetodo.blocked_actions.datagen.AdvancementsGenerator;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.AdvancementRequirements;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.List;
 
 @Mixin(AdvancementProgress.class)
 public abstract class AdvancementProgressMixin {
 
-    @Shadow
-    private AdvancementRequirements requirements;
-
     @Unique
-    private int getActionUnblockAdvancementsCount() {
-        if (requirements.requirements().size() == 2) {
-            List<String> criteria = requirements.requirements().getFirst();
-            if (criteria != null && !criteria.isEmpty()) {
-                String maybeDemystifiedCriterion = criteria.getFirst();
-                String prefix = AdvancementsGenerator.BLOCKED_ACTION_DEMYSTIFIED_CRITERION_PREFIX;
-                if (maybeDemystifiedCriterion != null && maybeDemystifiedCriterion.startsWith(prefix)) {
-                    BlockedActionType blockedAction = BlockedActionType.map(maybeDemystifiedCriterion.split(prefix)[1]);
-                    if (blockedAction != null) {
-                        return blockedAction.getUnblockAdvancementsCount();
-                    }
-                }
-            }
-        }
-        return -1;
+    private AbilityType ability;
+
+    @Inject(
+        method = "init",
+        at = @At("TAIL")
+    )
+    public void findAbility(AdvancementRequirements requirements, CallbackInfo ci) {
+        ability = AbilityType.findByRequirements(requirements);
     }
 
     @Inject(
-        method = "getProgressBarPercentage",
+        method = "countObtainedRequirements",
         at = @At("HEAD"),
         cancellable = true
     )
-    public void overrideBlockedActionProgress(CallbackInfoReturnable<Float> cir) {
-        float actionUnblockAdvancementsCount = getActionUnblockAdvancementsCount();
-        if (actionUnblockAdvancementsCount != -1) {
-            ClientPlayerEntity clientPlayer = MinecraftClient.getInstance().player;
-            if (clientPlayer != null) {
-                cir.setReturnValue(
-                    Math.min(
-                        actionUnblockAdvancementsCount,
-                        AchieveToDoClient.advancementsCount / actionUnblockAdvancementsCount
-                    )
-                );
-            }
+    public void setObtainedAdvancementsCountForAbility(CallbackInfoReturnable<Integer> cir) {
+        if (ability != null) {
+            cir.setReturnValue(AchieveToDoClient.obtainedAdvancementsCount);
         }
     }
 
-    @Inject(
-        method = "getProgressBarFraction",
-        at = @At("HEAD"),
-        cancellable = true
+    @WrapOperation(
+        method = {
+            "getProgressBarPercentage",
+            "getProgressBarFraction"
+        },
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/advancement/AdvancementRequirements;getLength()I"
+        )
     )
-    public void overrideBlockedActionProgressBarFraction(CallbackInfoReturnable<Text> cir) {
-        int actionUnblockAdvancementsCount = getActionUnblockAdvancementsCount();
-        if (actionUnblockAdvancementsCount != -1) {
-            ClientPlayerEntity clientPlayer = MinecraftClient.getInstance().player;
-            if (clientPlayer != null) {
-                cir.setReturnValue(Text.translatable(
-                    "advancements.progress",
-                    Math.min(
-                        actionUnblockAdvancementsCount,
-                        AchieveToDoClient.advancementsCount
-                    ),
-                    actionUnblockAdvancementsCount
-                ));
-            }
-        }
+    public int setRequiredAdvancementsCountForAbility(
+        AdvancementRequirements requirements,
+        Operation<Integer> original
+    ) {
+        return ability != null ? ability.getRequiredAdvancementsCount() : original.call(requirements);
     }
 }

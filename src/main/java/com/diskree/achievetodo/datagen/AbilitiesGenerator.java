@@ -1,15 +1,15 @@
-package com.diskree.achievetodo.blocked_actions.datagen;
+package com.diskree.achievetodo.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockedActionsGenerator implements DataGeneratorEntrypoint {
+public class AbilitiesGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-        pack.addProvider(AdvancementsGenerator::new);
-        pack.addProvider(FunctionsGenerator::new);
+        pack.addProvider(AbilityAdvancementsGenerator::new);
+        pack.addProvider(AbilityUnlockMessagesGenerator::new);
     }
 }

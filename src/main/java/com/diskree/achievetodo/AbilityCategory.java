@@ -1,9 +1,9 @@
-package com.diskree.achievetodo.blocked_actions;
+package com.diskree.achievetodo;
 
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-public enum BlockedActionCategory {
+public enum AbilityCategory {
 
     ACTION,
     FOOD,

@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AchieveToDo;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
+import com.diskree.achievetodo.AbilityType;
 import net.minecraft.block.Portal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,9 +21,9 @@ public class EntityMixin {
 
     @Unique
     private boolean isEndGatewayOnCentralIsland(@NotNull BlockPos pos) {
-        return pos.getY() == 75
-            && pos.getX() >= -96 && pos.getX() <= 96
-            && pos.getZ() >= -96 && pos.getZ() <= 96;
+        return pos.getY() == 75 &&
+            pos.getX() >= -96 && pos.getX() <= 96 &&
+            pos.getZ() >= -96 && pos.getZ() <= 96;
     }
 
     @Inject(
@@ -33,47 +33,50 @@ public class EntityMixin {
     )
     private void blockPortal(Portal portal, BlockPos pos, CallbackInfo ci) {
         Entity teleportEntity = (Entity) (Object) this;
-        boolean byEnderPearl = false;
-        if (teleportEntity instanceof EnderPearlEntity enderPearl) {
-            teleportEntity = enderPearl.getOwner();
-            byEnderPearl = true;
+        EnderPearlEntity enderPearl = null;
+        if (teleportEntity instanceof EnderPearlEntity enderPearlEntity) {
+            teleportEntity = enderPearlEntity.getOwner();
+            enderPearl = enderPearlEntity;
         }
         if (teleportEntity == null) {
             return;
         }
 
-        BlockedActionType blockedActionType = BlockedActionType.findBlockedPortal(portal);
+        AbilityType abilityType = AbilityType.findPortalUsageAbility(portal);
         RegistryKey<World> currentDimension = teleportEntity.getWorld().getRegistryKey();
-        if (currentDimension == World.NETHER && blockedActionType == BlockedActionType.NETHER) {
+        if (currentDimension == World.NETHER && abilityType == AbilityType.NETHER) {
             return;
         }
         if (currentDimension == World.END) {
-            if (blockedActionType == BlockedActionType.END) {
+            if (abilityType == AbilityType.END) {
                 return;
             }
-            if (blockedActionType == BlockedActionType.OUTER_ISLANDS && !isEndGatewayOnCentralIsland(pos)) {
+            if (abilityType == AbilityType.OUTER_ISLANDS && !isEndGatewayOnCentralIsland(pos)) {
                 return;
             }
         }
 
         if (teleportEntity instanceof PlayerEntity playerEntity &&
-            AchieveToDo.isActionBlocked(playerEntity, blockedActionType)
+            AchieveToDo.isAbilityLocked(playerEntity, abilityType)
         ) {
+            if (enderPearl != null) {
+                enderPearl.remove(Entity.RemovalReason.DISCARDED);
+            }
             ci.cancel();
             return;
         }
-        if (byEnderPearl || !teleportEntity.hasPassengers()) {
+        if (enderPearl != null || !teleportEntity.hasPassengers()) {
             return;
         }
         if (teleportEntity.getControllingPassenger() instanceof PlayerEntity controllingPlayer &&
-            AchieveToDo.isActionBlocked(controllingPlayer, blockedActionType)
+            AchieveToDo.isAbilityLocked(controllingPlayer, abilityType)
         ) {
             ci.cancel();
             return;
         }
         for (Entity passengerEntity : teleportEntity.getPassengerList()) {
             if (passengerEntity instanceof PlayerEntity passenger &&
-                AchieveToDo.isActionBlocked(passenger, blockedActionType)
+                AchieveToDo.isAbilityLocked(passenger, abilityType)
             ) {
                 passenger.stopRiding();
             }

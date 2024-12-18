@@ -1,69 +1,42 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.injection.UsableBlock;
+import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.AchieveToDo;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ShulkerBoxBlock.class)
-public abstract class ShulkerBoxBlockMixin implements UsableBlock {
+public abstract class ShulkerBoxBlockMixin {
 
-    @Unique
-    private boolean isCanUseChecking;
-
-    @Override
-    public boolean achievetodo$canUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        isCanUseChecking = true;
-        boolean canUse = onUse(
-            player.getWorld().getBlockState(hit.getBlockPos()),
-            player.getWorld(),
-            hit.getBlockPos(),
-            player,
-            hit
-        ) == null;
-        isCanUseChecking = false;
-        return canUse;
-    }
-
-    @Shadow
-    protected abstract ActionResult onUse(
-        BlockState state,
-        World world,
-        BlockPos pos,
-        PlayerEntity player,
-        BlockHitResult hit
-    );
-
-    @Inject(
+    @WrapOperation(
         method = "onUse",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;openHandledScreen(Lnet/minecraft/screen/NamedScreenHandlerFactory;)Ljava/util/OptionalInt;",
-            shift = At.Shift.BEFORE
-        ),
-        cancellable = true
+            target = "Lnet/minecraft/block/ShulkerBoxBlock;canOpen(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/ShulkerBoxBlockEntity;)Z"
+        )
     )
-    public void returnOnUse(
+    private boolean lockShulkerBox(
         BlockState state,
         World world,
         BlockPos pos,
-        PlayerEntity player,
-        BlockHitResult hit,
-        CallbackInfoReturnable<ActionResult> cir
+        @NotNull ShulkerBoxBlockEntity entity,
+        @NotNull Operation<Boolean> original,
+        @Local(argsOnly = true) PlayerEntity player
     ) {
-        if (isCanUseChecking) {
-            cir.setReturnValue(null);
+        if (!original.call(state, world, pos, entity)) {
+            return false;
         }
+        return entity.getAnimationStage() == ShulkerBoxBlockEntity.AnimationStage.CLOSED &&
+            AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_SHULKER_BOX);
     }
 }

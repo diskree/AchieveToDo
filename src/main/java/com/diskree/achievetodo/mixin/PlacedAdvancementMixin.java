@@ -1,8 +1,8 @@
 package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
-import com.diskree.achievetodo.blocked_actions.datagen.AdvancementsGenerator;
+import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlacedAdvancement;
@@ -40,8 +40,8 @@ public abstract class PlacedAdvancementMixin {
         Identifier advancementId = getAdvancementEntry().id();
         if (advancementId.getNamespace().equals(BuildConfig.MOD_ID) && getAdvancement().isRoot()) {
             List<Identifier> rowsOrder = new ArrayList<>();
-            for (BlockedActionType[] row : AdvancementsGenerator.TREE) {
-                rowsOrder.add(AdvancementsGenerator.buildAdvancementId(row[0]));
+            for (AbilityType[] row : AbilityAdvancementsGenerator.TREE) {
+                rowsOrder.add(AbilityAdvancementsGenerator.buildAdvancementId(row[0]));
             }
             List<PlacedAdvancement> childrenList = new ArrayList<>(children);
             childrenList.sort((placedAdvancement, otherPlacedAdvancement) -> {

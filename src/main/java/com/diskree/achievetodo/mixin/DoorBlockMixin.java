@@ -1,49 +1,21 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.injection.UsableBlock;
+import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.AchieveToDo;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(DoorBlock.class)
-public abstract class DoorBlockMixin implements UsableBlock {
-
-    @Unique
-    private boolean isCanUseChecking;
-
-    @Override
-    public boolean achievetodo$canUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        isCanUseChecking = true;
-        boolean canUse = onUse(
-            player.getWorld().getBlockState(hit.getBlockPos()),
-            player.getWorld(),
-            hit.getBlockPos(),
-            player,
-            hit
-        ) == null;
-        isCanUseChecking = false;
-        return canUse;
-    }
-
-    @Shadow
-    protected abstract ActionResult onUse(
-        BlockState state,
-        World world,
-        BlockPos pos,
-        PlayerEntity player,
-        BlockHitResult hit
-    );
+public abstract class DoorBlockMixin {
 
     @Inject(
         method = "onUse",
@@ -54,7 +26,7 @@ public abstract class DoorBlockMixin implements UsableBlock {
         ),
         cancellable = true
     )
-    public void returnOnUse(
+    public void lockUsage(
         BlockState state,
         World world,
         BlockPos pos,
@@ -62,8 +34,8 @@ public abstract class DoorBlockMixin implements UsableBlock {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (isCanUseChecking) {
-            cir.setReturnValue(null);
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_DOOR)) {
+            cir.setReturnValue(ActionResult.CONSUME);
         }
     }
 }

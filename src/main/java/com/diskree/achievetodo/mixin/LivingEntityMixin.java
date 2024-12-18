@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AchieveToDo;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
+import com.diskree.achievetodo.AbilityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,10 +20,10 @@ public class LivingEntityMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    public void blockEquipment(ItemStack stack, EquipmentSlot slot, CallbackInfoReturnable<Boolean> cir) {
+    public void lockEquip(ItemStack stack, EquipmentSlot slot, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (livingEntity instanceof PlayerEntity player) {
-            if (AchieveToDo.isActionBlocked(player, BlockedActionType.findBlockedEquipment(stack.getItem()))) {
+            if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))) {
                 cir.setReturnValue(false);
             }
         }
@@ -34,10 +34,10 @@ public class LivingEntityMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    public void blockEquipmentFromDispenser(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    public void lockEquip(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (livingEntity instanceof PlayerEntity player) {
-            if (AchieveToDo.isActionBlocked(player, BlockedActionType.findBlockedEquipment(stack.getItem()))) {
+            if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))) {
                 cir.setReturnValue(false);
             }
         }
@@ -48,11 +48,11 @@ public class LivingEntityMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    public void blockJump(CallbackInfo ci) {
+    public void lockJump(CallbackInfo ci) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (livingEntity instanceof PlayerEntity player &&
             !player.isTouchingWater() &&
-            AchieveToDo.isActionBlocked(player, BlockedActionType.JUMP)
+            AchieveToDo.isAbilityLocked(player, AbilityType.JUMP)
         ) {
             ci.cancel();
         }

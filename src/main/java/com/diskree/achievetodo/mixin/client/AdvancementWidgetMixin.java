@@ -1,16 +1,19 @@
 package com.diskree.achievetodo.mixin.client;
 
+import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.AchieveToDo;
 import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
-import com.diskree.achievetodo.blocked_actions.datagen.AdvancementsGenerator;
+import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.AdvancementRequirements;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.advancement.criterion.CriterionProgress;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.advancement.AdvancementTab;
 import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -23,30 +26,30 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AdvancementWidget.class)
 public abstract class AdvancementWidgetMixin {
 
     @Unique
-    private static final Identifier MYSTIFIED_TEXTURE = Identifier.of(BuildConfig.MOD_ID, "mystified_mark");
+    private static final Identifier ABILITY_MYSTIFIED_MASK_TEXTURE =
+        Identifier.of(BuildConfig.MOD_ID, "ability_mystified_mask");
 
     @Unique
-    private boolean isMystifiedBlockedActionAdvancement() {
-        BlockedActionType blockedAction = BlockedActionType.map(advancement);
-        if (blockedAction == null || blockedAction.isUnblocked(client.player) || progress == null) {
+    @Nullable
+    private AbilityType ability;
+
+    @Unique
+    private boolean shouldRenderMystifiedMask() {
+        if (ability == null || progress == null || !AchieveToDo.isAbilityLocked(client.player, ability, true)) {
             return false;
         }
-        CriterionProgress demystifiedProgress = progress.getCriterionProgress(
-            AdvancementsGenerator.BLOCKED_ACTION_DEMYSTIFIED_CRITERION_PREFIX + blockedAction.getName()
+        CriterionProgress demystifiedCriterionProgress = progress.getCriterionProgress(
+            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getLowerCaseName()
         );
-        return demystifiedProgress != null && !demystifiedProgress.isObtained();
+        return demystifiedCriterionProgress != null && !demystifiedCriterionProgress.isObtained();
     }
-
-    @Shadow
-    @Final
-    private PlacedAdvancement advancement;
 
     @Shadow
     private @Nullable AdvancementProgress progress;
@@ -54,6 +57,38 @@ public abstract class AdvancementWidgetMixin {
     @Shadow
     @Final
     private MinecraftClient client;
+
+    @Inject(
+        method = "<init>",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/font/TextRenderer;wrapLines(Lnet/minecraft/text/StringVisitable;I)Ljava/util/List;",
+            shift = At.Shift.BEFORE
+        )
+    )
+    private void findAbility(
+        AdvancementTab tab,
+        MinecraftClient client,
+        PlacedAdvancement advancement,
+        AdvancementDisplay display,
+        CallbackInfo ci
+    ) {
+        ability = AbilityType.findByAdvancement(advancement);
+    }
+
+    @WrapOperation(
+        method = "getProgressWidth",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/advancement/AdvancementRequirements;getLength()I"
+        )
+    )
+    public int overrideRequirementsCountForAbility(
+        AdvancementRequirements requirements,
+        Operation<Integer> original
+    ) {
+        return ability != null ? ability.getRequiredAdvancementsCount() : original.call(requirements);
+    }
 
     @ModifyArg(
         method = "renderWidgets",
@@ -63,8 +98,8 @@ public abstract class AdvancementWidgetMixin {
         ),
         index = 1
     )
-    private Identifier renderWidgetsModifyIcon(Identifier texture) {
-        return isMystifiedBlockedActionAdvancement() ? MYSTIFIED_TEXTURE : texture;
+    private Identifier renderMystifiedMaskInsteadFrameIfNeeded(Identifier original) {
+        return shouldRenderMystifiedMask() ? ABILITY_MYSTIFIED_MASK_TEXTURE : original;
     }
 
     @WrapOperation(
@@ -74,10 +109,10 @@ public abstract class AdvancementWidgetMixin {
             target = "Lnet/minecraft/client/gui/DrawContext;drawItemWithoutEntity(Lnet/minecraft/item/ItemStack;II)V"
         )
     )
-    private void disableIconForMystifiedBlockedAction(
+    private void hideAdvancementIconForMystifiedAbility(
         DrawContext instance, ItemStack stack, int x, int y, Operation<Void> original
     ) {
-        if (!isMystifiedBlockedActionAdvancement()) {
+        if (!shouldRenderMystifiedMask()) {
             original.call(instance, stack, x, y);
         }
     }
@@ -87,28 +122,13 @@ public abstract class AdvancementWidgetMixin {
         at = @At("RETURN"),
         cancellable = true
     )
-    private void disableTooltipForMystifiedBlockedAction(
+    private void doNotRenderTooltipForMystifiedAbility(
         int originX,
         int originY,
         int mouseX,
         int mouseY,
         @NotNull CallbackInfoReturnable<Boolean> cir
     ) {
-        cir.setReturnValue(cir.getReturnValue() && !isMystifiedBlockedActionAdvancement());
-    }
-
-    @Redirect(
-        method = "getProgressWidth",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/advancement/AdvancementRequirements;getLength()I"
-        )
-    )
-    public int initRedirect(AdvancementRequirements requirements) {
-        BlockedActionType blockedAction = BlockedActionType.map(advancement);
-        if (blockedAction != null) {
-            return blockedAction.getUnblockAdvancementsCount();
-        }
-        return advancement.getAdvancement().requirements().getLength();
+        cir.setReturnValue(cir.getReturnValue() && !shouldRenderMystifiedMask());
     }
 }

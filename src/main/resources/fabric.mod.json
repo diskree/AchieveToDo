@@ -15,7 +15,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"fabric-datagen": [
-			"com.diskree.achievetodo.blocked_actions.datagen.BlockedActionsGenerator"
+			"com.diskree.achievetodo.datagen.AbilitiesGenerator"
 		],
 		"main": [
 			"com.diskree.achievetodo.AchieveToDo"

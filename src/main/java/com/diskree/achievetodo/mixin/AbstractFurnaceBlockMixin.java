@@ -1,50 +1,20 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.injection.UsableBlock;
-import net.minecraft.block.AbstractFurnaceBlock;
-import net.minecraft.block.BlockState;
+import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.AchieveToDo;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractFurnaceBlock.class)
-public abstract class AbstractFurnaceBlockMixin implements UsableBlock {
-
-    @Unique
-    private boolean isCanUseChecking;
-
-    @Override
-    public boolean achievetodo$canUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        isCanUseChecking = true;
-        boolean canUse = onUse(
-            player.getWorld().getBlockState(hit.getBlockPos()),
-            player.getWorld(),
-            hit.getBlockPos(),
-            player,
-            hit
-        ) == null;
-        isCanUseChecking = false;
-        return canUse;
-    }
-
-    @Shadow
-    protected abstract ActionResult onUse(
-        BlockState state,
-        World world, BlockPos pos,
-        PlayerEntity player,
-        BlockHitResult hit
-    );
+public abstract class AbstractFurnaceBlockMixin {
 
     @Inject(
         method = "onUse",
@@ -52,9 +22,10 @@ public abstract class AbstractFurnaceBlockMixin implements UsableBlock {
             value = "INVOKE",
             target = "Lnet/minecraft/block/AbstractFurnaceBlock;openScreen(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/player/PlayerEntity;)V",
             shift = At.Shift.BEFORE
-        ), cancellable = true
+        ),
+        cancellable = true
     )
-    public void returnOnUse(
+    public void lockUsage(
         BlockState state,
         World world,
         BlockPos pos,
@@ -62,23 +33,17 @@ public abstract class AbstractFurnaceBlockMixin implements UsableBlock {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (isCanUseChecking) {
-            cir.setReturnValue(null);
+        AbstractFurnaceBlock abstractFurnaceBlock = (AbstractFurnaceBlock) (Object) this;
+        AbilityType ability = null;
+        if (abstractFurnaceBlock instanceof FurnaceBlock) {
+            ability = AbilityType.OPEN_FURNACE;
+        } else if (abstractFurnaceBlock instanceof SmokerBlock) {
+            ability = AbilityType.OPEN_SMOKER;
+        } else if (abstractFurnaceBlock instanceof BlastFurnaceBlock) {
+            ability = AbilityType.OPEN_BLAST_FURNACE;
         }
-    }
-
-    @Redirect(
-        method = "onUse",
-        at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/world/World;isClient:Z",
-            opcode = Opcodes.GETFIELD
-        )
-    )
-    public boolean skipClientCheck(World world) {
-        if (isCanUseChecking) {
-            return false;
+        if (AchieveToDo.isAbilityLocked(player, ability)) {
+            cir.setReturnValue(ActionResult.CONSUME);
         }
-        return world.isClient;
     }
 }

@@ -7,15 +7,15 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public record ScoreSyncPayload(int score) implements CustomPayload {
+public record SyncAdvancementsCountPayload(int score) implements CustomPayload {
 
-    public static final Id<ScoreSyncPayload> ID =
-        new CustomPayload.Id<>(Identifier.of(BuildConfig.MOD_ID, "score"));
+    public static final Id<SyncAdvancementsCountPayload> ID =
+        new CustomPayload.Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_advancements_count"));
 
-    public static final PacketCodec<PacketByteBuf, ScoreSyncPayload> CODEC =
-        CustomPayload.codecOf(ScoreSyncPayload::write, ScoreSyncPayload::new);
+    public static final PacketCodec<PacketByteBuf, SyncAdvancementsCountPayload> CODEC =
+        CustomPayload.codecOf(SyncAdvancementsCountPayload::write, SyncAdvancementsCountPayload::new);
 
-    private ScoreSyncPayload(@NotNull PacketByteBuf buf) {
+    private SyncAdvancementsCountPayload(@NotNull PacketByteBuf buf) {
         this(buf.readInt());
     }
 

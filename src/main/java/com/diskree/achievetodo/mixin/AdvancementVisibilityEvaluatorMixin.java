@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
+import com.diskree.achievetodo.AbilityType;
 import it.unimi.dsi.fastutil.Stack;
 import net.minecraft.advancement.AdvancementDisplays;
 import net.minecraft.advancement.PlacedAdvancement;
@@ -19,14 +19,14 @@ public abstract class AdvancementVisibilityEvaluatorMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    private static void forceShowBlockedActionAdvancements(
+    private static void forceShowAbilityAdvancements(
         PlacedAdvancement advancement,
         Stack<AdvancementDisplays.Status> statuses,
         Predicate<PlacedAdvancement> donePredicate,
         AdvancementDisplays.ResultConsumer consumer,
         CallbackInfoReturnable<Boolean> cir
     ) {
-        if (BlockedActionType.map(advancement) != null) {
+        if (AbilityType.findByAdvancement(advancement) != null) {
             statuses.push(AdvancementDisplays.Status.SHOW);
             for (PlacedAdvancement child : advancement.getChildren()) {
                 AdvancementDisplays.shouldDisplay(child, statuses, donePredicate, consumer);

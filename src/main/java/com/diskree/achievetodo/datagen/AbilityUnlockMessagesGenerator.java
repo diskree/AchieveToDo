@@ -1,6 +1,6 @@
-package com.diskree.achievetodo.blocked_actions.datagen;
+package com.diskree.achievetodo.datagen;
 
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
+import com.diskree.achievetodo.AbilityType;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingOutputStream;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -19,15 +19,48 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
-public class FunctionsGenerator implements DataProvider {
+public class AbilityUnlockMessagesGenerator implements DataProvider {
 
     protected final FabricDataOutput dataOutput;
 
-    protected FunctionsGenerator(FabricDataOutput dataOutput) {
+    protected AbilityUnlockMessagesGenerator(FabricDataOutput dataOutput) {
         this.dataOutput = dataOutput;
     }
 
-    private static @NotNull String getFunction(@NotNull BlockedActionType blockedAction) {
+    @Override
+    public CompletableFuture<?> run(DataWriter writer) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                createFunctions(writer);
+            } catch (IOException ignored) {
+            }
+        }, Util.getMainWorkerExecutor());
+    }
+
+    @Override
+    public String getName() {
+        return getClass().getSimpleName();
+    }
+
+    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
+    private void createFunctions(DataWriter dataWriter) throws IOException {
+        for (AbilityType ability : AbilityType.values()) {
+            String function = buildFunction(ability);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            HashingOutputStream hashingOutputStream = new HashingOutputStream(Hashing.sha1(), byteArrayOutputStream);
+            try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new OutputStreamWriter(hashingOutputStream, StandardCharsets.UTF_8))
+            ) {
+                bufferedWriter.write(function);
+            }
+            Path functionsPath = dataOutput
+                .getResolver(DataOutput.OutputType.DATA_PACK, "function")
+                .resolve(AbilityAdvancementsGenerator.buildAdvancementId(ability), "mcfunction");
+            dataWriter.write(functionsPath, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
+        }
+    }
+
+    private @NotNull String buildFunction(@NotNull AbilityType ability) {
         String function = """
             tellraw @a {
                 "translate":"%1$s has unblocked %2$s%3$s%4$s",
@@ -41,7 +74,7 @@ public class FunctionsGenerator implements DataProvider {
                     },
                     {
                         "color":"yellow",
-                        "translate":"achievetodo.blocked_message.{NAME}.title",
+                        "translate":"achievetodo.locked_message.{NAME}.title",
                         "clickEvent":{
                             "action":"run_command",
                             "value":"/advancementssearch highlight {ADVANCEMENT_ID} obtained_status"
@@ -50,14 +83,14 @@ public class FunctionsGenerator implements DataProvider {
                             "action":"show_text",
                             "contents":{
                                 "color":"yellow",
-                                "translate":"achievetodo.blocked_message.{NAME}.title",
+                                "translate":"achievetodo.locked_message.{NAME}.title",
                                 "extra":[
                                     {
                                         "text":"\\n"
                                     },
                                     {
                                         "color":"yellow",
-                                        "translate":"achievetodo.blocked_message.{NAME}.description"
+                                        "translate":"achievetodo.locked_message.{NAME}.description"
                                     },
                                     {
                                         "text":"\\n\\n"
@@ -83,41 +116,8 @@ public class FunctionsGenerator implements DataProvider {
                 ]
             }
             """
-            .replace("{NAME}", blockedAction.getName())
-            .replace("{ADVANCEMENT_ID}", AdvancementsGenerator.buildAdvancementId(blockedAction).toString());
+            .replace("{NAME}", ability.getLowerCaseName())
+            .replace("{ADVANCEMENT_ID}", AbilityAdvancementsGenerator.buildAdvancementId(ability).toString());
         return String.join("", Arrays.stream(function.split("\\R")).map(String::trim).toArray(String[]::new));
-    }
-
-    @Override
-    public CompletableFuture<?> run(DataWriter writer) {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                createFunctions(writer);
-            } catch (IOException ignored) {
-            }
-        }, Util.getMainWorkerExecutor());
-    }
-
-    @Override
-    public String getName() {
-        return getClass().getSimpleName();
-    }
-
-    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
-    private void createFunctions(DataWriter dataWriter) throws IOException {
-        for (BlockedActionType blockedAction : BlockedActionType.values()) {
-            String function = getFunction(blockedAction);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            HashingOutputStream hashingOutputStream = new HashingOutputStream(Hashing.sha1(), byteArrayOutputStream);
-            try (BufferedWriter bufferedWriter = new BufferedWriter(
-                new OutputStreamWriter(hashingOutputStream, StandardCharsets.UTF_8))
-            ) {
-                bufferedWriter.write(function);
-            }
-            Path functionsPath = dataOutput
-                .getResolver(DataOutput.OutputType.DATA_PACK, "function")
-                .resolve(AdvancementsGenerator.buildAdvancementId(blockedAction), "mcfunction");
-            dataWriter.write(functionsPath, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
-        }
     }
 }

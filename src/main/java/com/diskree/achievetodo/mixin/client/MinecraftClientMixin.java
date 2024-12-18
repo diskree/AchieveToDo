@@ -1,11 +1,10 @@
 package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.AchieveToDo;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
+import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.injection.CreateWorldScreenImpl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,7 @@ public class MinecraftClientMixin {
             ordinal = 4
         )
     )
-    public boolean blockInventory(@NotNull KeyBinding keyBinding) {
-        return keyBinding.wasPressed() && !AchieveToDo.isActionBlocked(player, BlockedActionType.OPEN_INVENTORY);
+    public boolean lockInventory(@NotNull KeyBinding keyBinding) {
+        return keyBinding.wasPressed() && !AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_INVENTORY);
     }
 }

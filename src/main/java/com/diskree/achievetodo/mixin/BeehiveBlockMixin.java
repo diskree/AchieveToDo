@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.injection.UsableItemOnBlock;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.AchieveToDo;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,55 +12,24 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BeehiveBlock.class)
-public abstract class BeehiveBlockMixin implements UsableItemOnBlock {
-
-    @Unique
-    private boolean isCanUseChecking;
-
-    @Override
-    public boolean achievetodo$canUse(PlayerEntity player, ItemStack stack, Hand hand, BlockHitResult hit) {
-        isCanUseChecking = true;
-        boolean canUse = onUseWithItem(
-            stack,
-            player.getWorld().getBlockState(hit.getBlockPos()),
-            player.getWorld(),
-            hit.getBlockPos(),
-            player,
-            hand,
-            hit
-        ) == null;
-        isCanUseChecking = false;
-        return canUse;
-    }
-
-    @Shadow
-    protected abstract ActionResult onUseWithItem(
-        ItemStack stack,
-        BlockState state,
-        World world,
-        BlockPos pos,
-        PlayerEntity player,
-        Hand hand,
-        BlockHitResult hit
-    );
+public abstract class BeehiveBlockMixin {
 
     @Inject(
         method = "onUseWithItem",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/item/ItemStack;isOf(Lnet/minecraft/item/Item;)Z",
-            shift = At.Shift.AFTER
+            target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V",
+            shift = At.Shift.BEFORE,
+            ordinal = 0
         ),
         cancellable = true
     )
-    public void returnOnUse(
+    public void lockShears(
         ItemStack stack,
         BlockState state,
         World world,
@@ -70,19 +39,8 @@ public abstract class BeehiveBlockMixin implements UsableItemOnBlock {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (isCanUseChecking) {
-            cir.setReturnValue(null);
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_SHEARS)) {
+            cir.setReturnValue(ActionResult.CONSUME);
         }
-    }
-
-    @ModifyReturnValue(
-        method = "onUseWithItem",
-        at = @At("RETURN")
-    )
-    public ActionResult skipClientCheck(ActionResult original) {
-        if (isCanUseChecking) {
-            return ActionResult.SUCCESS;
-        }
-        return original;
     }
 }

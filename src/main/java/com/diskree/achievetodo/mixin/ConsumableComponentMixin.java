@@ -1,8 +1,7 @@
 package com.diskree.achievetodo.mixin;
 
+import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
-import com.diskree.achievetodo.injection.UsableBlock;
 import net.minecraft.component.type.ConsumableComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ConsumableComponent.class)
-public abstract class ConsumableComponentMixin implements UsableBlock {
+public abstract class ConsumableComponentMixin {
 
     @Inject(
         method = "consume",
@@ -26,14 +25,14 @@ public abstract class ConsumableComponentMixin implements UsableBlock {
         ),
         cancellable = true
     )
-    public void blockFood(
+    public void lockFood(
         LivingEntity user,
         ItemStack stack,
         Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (user instanceof PlayerEntity player &&
-            AchieveToDo.isActionBlocked(player, BlockedActionType.findBlockedFood(stack))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findFoodAbility(stack))
         ) {
             cir.setReturnValue(ActionResult.CONSUME);
         }

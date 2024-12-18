@@ -1,7 +1,7 @@
-package com.diskree.achievetodo.blocked_actions.datagen;
+package com.diskree.achievetodo.datagen;
 
+import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
@@ -23,12 +23,14 @@ import net.minecraft.util.Identifier;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import static com.diskree.achievetodo.blocked_actions.BlockedActionType.*;
+import static com.diskree.achievetodo.AbilityType.*;
 
-public class AdvancementsGenerator extends FabricAdvancementProvider {
+public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
 
-    public static final String BLOCKED_ACTION_DEMYSTIFIED_CRITERION_PREFIX = "demystified_";
-    public static final String BLOCKED_ACTIONS = "blocked_actions";
+    public static final String DEMYSTIFIED_CRITERION_PREFIX = BuildConfig.MOD_ID + "_" + "demystified" + "_";
+    public static final String UNLOCKED_CRITERION = BuildConfig.MOD_ID + "_" + "unlocked";
+
+    public static final String ABILITY_PATH_PREFIX = "abilities/";
 
     public enum Tab {
         BIOMES(AdvancementTabType.LEFT),
@@ -43,7 +45,7 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
         NETHER(AdvancementTabType.ABOVE),
         END(AdvancementTabType.ABOVE),
 
-        BLOCKED_ACTIONS(AdvancementTabType.RIGHT),
+        ABILITIES(AdvancementTabType.RIGHT),
         STATISTICS(AdvancementTabType.RIGHT),
         BACAP(AdvancementTabType.RIGHT),
 
@@ -76,7 +78,7 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
         }
     }
 
-    public static final BlockedActionType[][] TREE = new BlockedActionType[][]{
+    public static final AbilityType[][] TREE = new AbilityType[][]{
         {
             EAT_SALMON,
             EAT_COD,
@@ -204,19 +206,19 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
         },
     };
 
-    protected AdvancementsGenerator(
+    protected AbilityAdvancementsGenerator(
         FabricDataOutput output,
         CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup
     ) {
         super(output, registryLookup);
     }
 
-    public static Identifier buildAdvancementId(BlockedActionType blockedAction) {
-        return buildAdvancementId(blockedAction.getName());
+    public static Identifier buildAdvancementId(AbilityType ability) {
+        return buildAdvancementId(ability.getLowerCaseName());
     }
 
     private static Identifier buildAdvancementId(String suffix) {
-        return Identifier.of(BuildConfig.MOD_ID, BLOCKED_ACTIONS + "/" + suffix);
+        return Identifier.of(BuildConfig.MOD_ID, ABILITY_PATH_PREFIX + suffix);
     }
 
     @Override
@@ -243,22 +245,28 @@ public class AdvancementsGenerator extends FabricAdvancementProvider {
         consumer.accept(rootAdvancement);
 
         AdvancementEntry parentAdvancement = rootAdvancement;
-        for (BlockedActionType[] row : TREE) {
-            for (BlockedActionType blockedAction : row) {
-                Identifier id = buildAdvancementId(blockedAction);
-                Item icon = blockedAction.getIcon();
-                Text title = blockedAction.getTitle();
-                Text description = blockedAction.getDescription();
+        for (AbilityType[] row : TREE) {
+            for (AbilityType ability : row) {
+                Identifier id = buildAdvancementId(ability);
+                Item icon = ability.getIcon();
+                if (icon == null) {
+                    System.out.println(ability);
+                }
+                Text title = ability.getTitle();
+                Text description = ability.getDescription();
                 parentAdvancement = Advancement.Builder
                     .createUntelemetered()
                     .parent(parentAdvancement)
                     .display(icon, title, description, null, AdvancementFrame.TASK, true, false, false)
                     .rewards(AdvancementRewards.Builder.function(id))
                     .criterion(
-                        BLOCKED_ACTION_DEMYSTIFIED_CRITERION_PREFIX + blockedAction.getName(),
+                        DEMYSTIFIED_CRITERION_PREFIX + ability.getLowerCaseName(),
                         Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions())
                     )
-                    .criterion("unblocked", Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions()))
+                    .criterion(
+                        UNLOCKED_CRITERION,
+                        Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions())
+                    )
                     .build(id);
                 consumer.accept(parentAdvancement);
             }

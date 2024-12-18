@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.AchieveToDo;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
+import com.diskree.achievetodo.AbilityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -25,9 +25,9 @@ public abstract class ArmorSlotMixin {
         at = @At(value = "HEAD"),
         cancellable = true
     )
-    private void blockEquipment(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    private void lockEquip(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (entity instanceof PlayerEntity player &&
-            AchieveToDo.isActionBlocked(player, BlockedActionType.findBlockedEquipment(stack.getItem()))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))
         ) {
             cir.setReturnValue(false);
         }

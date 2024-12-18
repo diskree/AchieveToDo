@@ -1,8 +1,7 @@
 package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.blocked_actions.BlockedActionCategory;
-import com.diskree.achievetodo.blocked_actions.BlockedActionType;
+import com.diskree.achievetodo.AbilityType;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.toast.AdvancementToast;
@@ -12,9 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,21 +23,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AdvancementToastMixin {
 
     @Unique
-    private static final Identifier ACTION_UNBLOCKED_TOAST_TEXTURE =
-        Identifier.of(BuildConfig.MOD_ID, "action_unblocked_toast");
+    private static final Identifier ABILITY_UNLOCKED_NOTIFICATION_BACKGROUND_TEXTURE =
+        Identifier.of(BuildConfig.MOD_ID, "ability_unlocked_notification_background");
 
     @Unique
-    private @Nullable BlockedActionCategory getBlockedActionCategory() {
-        if (advancement == null) {
-            return null;
-        }
-        BlockedActionType blockedAction = BlockedActionType.map(advancement.id());
-        return blockedAction != null ? blockedAction.getCategory() : null;
-    }
+    private static final int ABILITY_UNLOCKED_NOTIFICATION_TITLE_COLOR = Colors.BLACK;
 
-    @Shadow
-    @Final
-    private AdvancementEntry advancement;
+    @Unique
+    private static final int ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR = 0x725e3c;
+
+    @Unique
+    @Nullable
+    private AbilityType ability;
+
+    @Inject(
+        method = "<init>",
+        at = @At(
+            value = "TAIL")
+    )
+    private void findAbility(AdvancementEntry advancement, CallbackInfo ci) {
+        ability = AbilityType.findByAdvancement(advancement);
+    }
 
     @ModifyArg(
         method = "draw",
@@ -51,9 +54,8 @@ public class AdvancementToastMixin {
         ),
         index = 1
     )
-    private Identifier redirectBackgroundTexture(Identifier texture) {
-        BlockedActionCategory category = getBlockedActionCategory();
-        return category != null ? ACTION_UNBLOCKED_TOAST_TEXTURE : texture;
+    private Identifier setCustomBackgroundTextureForAbilityUnlockedNotification(Identifier original) {
+        return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_BACKGROUND_TEXTURE : original;
     }
 
     @ModifyArg(
@@ -64,9 +66,11 @@ public class AdvancementToastMixin {
         ),
         index = 1
     )
-    private Text modifyTitle(Text text) {
-        BlockedActionCategory category = getBlockedActionCategory();
-        return category != null ? Text.translatable(category.getUnblockPopupTitle().getString()) : text;
+    private Text setCustomTitleForAbilityUnlockedNotification(Text original) {
+        if (ability != null) {
+            return Text.translatable(ability.getAbilityCategory().getUnblockPopupTitle().getString());
+        }
+        return original;
     }
 
     @ModifyVariable(
@@ -74,8 +78,8 @@ public class AdvancementToastMixin {
         at = @At(value = "STORE"),
         ordinal = 0
     )
-    private int setCustomColorForUnblockingTitle(int color) {
-        return getBlockedActionCategory() != null ? Colors.BLACK : color;
+    private int setCustomTitleColorForAbilityUnlockedNotification(int original) {
+        return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_TITLE_COLOR : original;
     }
 
     @ModifyArg(
@@ -87,8 +91,8 @@ public class AdvancementToastMixin {
         ),
         index = 4
     )
-    private int setCustomColorForBlockedActionDescription(int color) {
-        return getBlockedActionCategory() != null ? 0x725e3c : color;
+    private int setCustomSubtitleColorForAbilityUnlockedNotification(int original) {
+        return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR : original;
     }
 
     @Inject(
@@ -99,12 +103,8 @@ public class AdvancementToastMixin {
             ordinal = 0
         )
     )
-    private void playActionUnblockedSound(
-        ToastManager manager,
-        long time,
-        CallbackInfo ci
-    ) {
-        if (getBlockedActionCategory() != null) {
+    private void playAbilityUnlockedSound(ToastManager manager, long time, CallbackInfo ci) {
+        if (ability != null) {
             manager.getClient().getSoundManager().play(
                 PositionedSoundInstance.master(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.8f, 0.2f)
             );

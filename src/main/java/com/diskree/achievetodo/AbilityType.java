@@ -1,12 +1,12 @@
-package com.diskree.achievetodo.blocked_actions;
+package com.diskree.achievetodo;
 
-import com.diskree.achievetodo.AchieveToDo;
-import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.blocked_actions.datagen.AdvancementsGenerator;
+import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.injection.ArmorItemImpl;
 import com.diskree.achievetodo.injection.MiningToolItemImpl;
 import com.diskree.achievetodo.injection.SwordItemImpl;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.AdvancementRequirements;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.block.*;
 import net.minecraft.component.DataComponentTypes;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum BlockedActionType {
+public enum AbilityType {
 
     JUMP(
         8
@@ -347,7 +347,7 @@ public enum BlockedActionType {
         900, VillagerProfession.LIBRARIAN
     );
 
-    private final int unblockAdvancementsCount;
+    private final int requiredAdvancementsCount;
 
     private final Item item;
     private final FoodComponent food;
@@ -357,40 +357,40 @@ public enum BlockedActionType {
     private final Class<? extends Portal> portal;
     private final VillagerProfession villager;
 
-    BlockedActionType(int unblockAdvancementsCount) {
-        this(unblockAdvancementsCount, null, null, null, null, null, null, null);
+    AbilityType(int requiredAdvancementsCount) {
+        this(requiredAdvancementsCount, null, null, null, null, null, null, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, Item item) {
-        this(unblockAdvancementsCount, item, null, null, null, null, null, null);
+    AbilityType(int requiredAdvancementsCount, Item item) {
+        this(requiredAdvancementsCount, item, null, null, null, null, null, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, FoodComponent food) {
-        this(unblockAdvancementsCount, null, food, null, null, null, null, null);
+    AbilityType(int requiredAdvancementsCount, FoodComponent food) {
+        this(requiredAdvancementsCount, null, food, null, null, null, null, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, Block block) {
-        this(unblockAdvancementsCount, null, null, block, null, null, null, null);
+    AbilityType(int requiredAdvancementsCount, Block block) {
+        this(requiredAdvancementsCount, null, null, block, null, null, null, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, ToolMaterial materials) {
-        this(unblockAdvancementsCount, null, null, null, materials, null, null, null);
+    AbilityType(int requiredAdvancementsCount, ToolMaterial materials) {
+        this(requiredAdvancementsCount, null, null, null, materials, null, null, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, ArmorMaterial materials) {
-        this(unblockAdvancementsCount, null, null, null, null, materials, null, null);
+    AbilityType(int requiredAdvancementsCount, ArmorMaterial materials) {
+        this(requiredAdvancementsCount, null, null, null, null, materials, null, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, Class<? extends Portal> portal) {
-        this(unblockAdvancementsCount, null, null, null, null, null, portal, null);
+    AbilityType(int requiredAdvancementsCount, Class<? extends Portal> portal) {
+        this(requiredAdvancementsCount, null, null, null, null, null, portal, null);
     }
 
-    BlockedActionType(int unblockAdvancementsCount, VillagerProfession villager) {
-        this(unblockAdvancementsCount, null, null, null, null, null, null, villager);
+    AbilityType(int requiredAdvancementsCount, VillagerProfession villager) {
+        this(requiredAdvancementsCount, null, null, null, null, null, null, villager);
     }
 
-    BlockedActionType(
-        int unblockAdvancementsCount,
+    AbilityType(
+        int requiredAdvancementsCount,
         Item item,
         FoodComponent food,
         Block block,
@@ -399,7 +399,7 @@ public enum BlockedActionType {
         Class<? extends Portal> portal,
         VillagerProfession villager
     ) {
-        this.unblockAdvancementsCount = unblockAdvancementsCount;
+        this.requiredAdvancementsCount = requiredAdvancementsCount;
         this.item = item;
         this.food = food;
         this.block = block;
@@ -409,55 +409,84 @@ public enum BlockedActionType {
         this.villager = villager;
     }
 
-    public static BlockedActionType map(String name) {
+    public static AbilityType findByName(String name) {
         if (name == null) {
             return null;
         }
-        for (BlockedActionType blockedAction : values()) {
-            if (blockedAction.name().equalsIgnoreCase(name)) {
-                return blockedAction;
+        for (AbilityType ability : values()) {
+            if (ability.name().equalsIgnoreCase(name)) {
+                return ability;
             }
         }
         return null;
     }
 
-    public static BlockedActionType map(@NotNull PlacedAdvancement advancement) {
-        return map(advancement.getAdvancementEntry().id());
+    public static AbilityType findByAdvancement(@NotNull PlacedAdvancement advancement) {
+        return findByAdvancement(advancement.getAdvancementEntry());
     }
 
-    public static @Nullable BlockedActionType map(Identifier advancementId) {
-        if (!BuildConfig.MOD_ID.equals(advancementId.getNamespace())) {
+    public static AbilityType findByAdvancement(@NotNull AdvancementEntry advancement) {
+        return findByAdvancementId(advancement.id());
+    }
+
+    public static @Nullable AbilityType findByAdvancementId(Identifier advancementId) {
+        if (advancementId == null || !BuildConfig.MOD_ID.equals(advancementId.getNamespace())) {
             return null;
         }
-        String[] pathPieces = advancementId.getPath().split("/");
-        if (pathPieces.length == 2 && AdvancementsGenerator.BLOCKED_ACTIONS.equals(pathPieces[0])) {
-            return BlockedActionType.map(pathPieces[1]);
+        String path = advancementId.getPath();
+        if (path.startsWith(AbilityAdvancementsGenerator.ABILITY_PATH_PREFIX)) {
+            return findByName(path.split(AbilityAdvancementsGenerator.ABILITY_PATH_PREFIX)[1]);
         }
         return null;
     }
 
+    public static @Nullable AbilityType findByRequirements(@NotNull AdvancementRequirements requirementsData) {
+        if (requirementsData.requirements().size() != 2) {
+            return null;
+        }
+        String abilityName = null;
+        boolean isUnlockedCriterionFound = false;
+        for (List<String> requirement : requirementsData.requirements()) {
+            if (requirement.size() != 1) {
+                return null;
+            }
+            String criteriaName = requirement.getFirst();
+            if (abilityName == null && criteriaName.startsWith(AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX)) {
+                abilityName = criteriaName.split(AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX)[1];
+            } else if (!isUnlockedCriterionFound && criteriaName.equals(AbilityAdvancementsGenerator.UNLOCKED_CRITERION)) {
+                isUnlockedCriterionFound = true;
+            } else {
+                return null;
+            }
+        }
+        if (abilityName == null || !isUnlockedCriterionFound) {
+            return null;
+        }
+        return findByName(abilityName);
+    }
+
     @Nullable
-    public static BlockedActionType findBlockedItem(PlayerEntity player, ItemStack stack) {
+    public static AbilityType findItemUsageAbility(PlayerEntity player, ItemStack stack) {
         if (stack == null) {
             return null;
         }
         if (stack.isOf(Items.CROSSBOW)) {
-            return CrossbowItem.isCharged(stack) ? BlockedActionType.USING_CROSSBOW : null;
+            return CrossbowItem.isCharged(stack) ? USING_CROSSBOW : null;
         }
         if (stack.isOf(Items.FIREWORK_ROCKET)) {
-            return player.isGliding() ? BlockedActionType.FLY : null;
+            return player.isGliding() ? FLY : null;
         }
-        for (BlockedActionType blockedAction : BlockedActionType.values()) {
+        for (AbilityType ability : values()) {
             Item item = stack.getItem();
-            if (item == blockedAction.item) {
-                return blockedAction;
+            if (item == ability.item) {
+                return ability;
             }
         }
         return null;
     }
 
     @Nullable
-    public static BlockedActionType findBlockedFood(ItemStack stack) {
+    public static AbilityType findFoodAbility(ItemStack stack) {
         if (stack == null) {
             return null;
         }
@@ -465,55 +494,43 @@ public enum BlockedActionType {
         if (foodComponent == null) {
             return null;
         }
-        for (BlockedActionType blockedAction : BlockedActionType.values()) {
-            if (foodComponent == blockedAction.food) {
-                return blockedAction;
+        for (AbilityType ability : values()) {
+            if (foodComponent == ability.food) {
+                return ability;
             }
         }
         return null;
     }
 
     @Nullable
-    public static BlockedActionType findBlockedBlock(BlockState blockState) {
+    public static AbilityType findBlockUsageAbility(BlockState blockState) {
         if (blockState == null) {
             return null;
         }
-        if (blockState.getBlock() instanceof BedBlock) {
-            return SLEEP;
-        }
-        if (blockState.getBlock() instanceof ShulkerBoxBlock) {
-            return OPEN_SHULKER_BOX;
-        }
-        if (blockState.getBlock() instanceof AnvilBlock) {
-            return USING_ANVIL;
-        }
-        if (blockState.getBlock() instanceof DoorBlock doorBlock) {
-            return !doorBlock.isOpen(blockState) ? OPEN_DOOR : null;
-        }
-        for (BlockedActionType blockedAction : BlockedActionType.values()) {
-            if (blockState.isOf(blockedAction.block)) {
-                return blockedAction;
+        for (AbilityType ability : values()) {
+            if (blockState.isOf(ability.block)) {
+                return ability;
             }
         }
         return null;
     }
 
     @Nullable
-    public static BlockedActionType findBlockedTool(Item item) {
+    public static AbilityType findToolUsageAbility(Item item) {
         if (item == null) {
             return null;
         }
         if (item instanceof MiningToolItemImpl toolItem) {
-            for (BlockedActionType blockedAction : BlockedActionType.values()) {
-                if (toolItem.achievetodo$getToolMaterial() == blockedAction.toolMaterial) {
-                    return blockedAction;
+            for (AbilityType ability : values()) {
+                if (toolItem.achievetodo$getToolMaterial() == ability.toolMaterial) {
+                    return ability;
                 }
             }
         }
         if (item instanceof SwordItemImpl toolItem) {
-            for (BlockedActionType blockedAction : BlockedActionType.values()) {
-                if (toolItem.achievetodo$getSwordMaterial() == blockedAction.toolMaterial) {
-                    return blockedAction;
+            for (AbilityType ability : values()) {
+                if (toolItem.achievetodo$getSwordMaterial() == ability.toolMaterial) {
+                    return ability;
                 }
             }
         }
@@ -521,7 +538,7 @@ public enum BlockedActionType {
     }
 
     @Nullable
-    public static BlockedActionType findBlockedEquipment(Item item) {
+    public static AbilityType findEquipmentUsageAbility(Item item) {
         if (item == null) {
             return null;
         }
@@ -529,9 +546,9 @@ public enum BlockedActionType {
             return EQUIP_ELYTRA;
         }
         if (item instanceof ArmorItemImpl armorItem) {
-            for (BlockedActionType blockedAction : BlockedActionType.values()) {
-                if (armorItem.achievetodo$getMaterial() == blockedAction.equipmentMaterial) {
-                    return blockedAction;
+            for (AbilityType ability : values()) {
+                if (armorItem.achievetodo$getMaterial() == ability.equipmentMaterial) {
+                    return ability;
                 }
             }
         }
@@ -539,85 +556,81 @@ public enum BlockedActionType {
     }
 
     @Nullable
-    public static BlockedActionType findBlockedPortal(Portal portal) {
+    public static AbilityType findPortalUsageAbility(Portal portal) {
         if (portal == null) {
             return null;
         }
-        for (BlockedActionType blockedAction : BlockedActionType.values()) {
-            if (portal.getClass() == blockedAction.portal) {
-                return blockedAction;
+        for (AbilityType ability : values()) {
+            if (portal.getClass() == ability.portal) {
+                return ability;
             }
         }
         return null;
     }
 
     @Nullable
-    public static BlockedActionType findBlockedVillager(VillagerProfession profession) {
+    public static AbilityType findVillagerAbility(VillagerProfession profession) {
         if (profession == null) {
             return null;
         }
-        for (BlockedActionType blockedAction : BlockedActionType.values()) {
-            if (profession == blockedAction.villager) {
-                return blockedAction;
+        for (AbilityType ability : values()) {
+            if (profession == ability.villager) {
+                return ability;
             }
         }
         return null;
     }
 
-    public BlockedActionCategory getCategory() {
+    public AbilityCategory getAbilityCategory() {
         if (item != null && item.getComponents().contains(DataComponentTypes.FOOD)) {
-            return BlockedActionCategory.FOOD;
+            return AbilityCategory.FOOD;
         }
         if (item != null && this != USING_WATER_BUCKET && this != FLY) {
-            return BlockedActionCategory.ITEM;
+            return AbilityCategory.ITEM;
         }
         if (block != null || this == OPEN_SHULKER_BOX) {
-            return BlockedActionCategory.BLOCK;
+            return AbilityCategory.BLOCK;
         }
         if (toolMaterial != null) {
-            return BlockedActionCategory.TOOL;
+            return AbilityCategory.TOOL;
         }
         if (equipmentMaterial != null || this == EQUIP_ELYTRA) {
-            return BlockedActionCategory.EQUIPMENT;
+            return AbilityCategory.EQUIPMENT;
         }
         if (portal != null) {
-            return BlockedActionCategory.DIMENSION;
+            return AbilityCategory.DIMENSION;
         }
         if (villager != null) {
-            return BlockedActionCategory.VILLAGER;
+            return AbilityCategory.VILLAGER;
         }
-        return BlockedActionCategory.ACTION;
+        return AbilityCategory.ACTION;
     }
 
-    public @NotNull Text getBlockedMessage() {
-        if (item != null && item.getComponents().contains(DataComponentTypes.FOOD)) {
-            return Text.translatable("achievetodo.blocked_message.food");
+    public @NotNull Text getLockedMessage() {
+        if (food != null) {
+            return Text.translatable("achievetodo.locked_message.food");
         }
         if (villager != null) {
-            return Text.translatable("achievetodo.blocked_message.villager");
+            return Text.translatable("achievetodo.locked_message.villager");
         }
-        return Text.translatable("achievetodo.blocked_message." + getName());
+        return Text.translatable("achievetodo.locked_message." + getLowerCaseName());
     }
 
-    public Text buildBlockedDescription(PlayerEntity player) {
-        int leftAdvancementsCount = unblockAdvancementsCount - AchieveToDo.getScore(player);
+    public Text buildLockedDescription(PlayerEntity player) {
+        int leftAdvancementsCount = requiredAdvancementsCount - AchieveToDo.getScore(player);
         boolean isMultiLineActionBarInstalled = FabricLoader.getInstance().isModLoaded("multilineactionbar");
-        return Text.of(getBlockedMessage().getString() + "." + (isMultiLineActionBarInstalled ? "\n" : " "))
+        return Text.of(getLockedMessage().getString() + "." + (isMultiLineActionBarInstalled ? "\n" : " "))
             .copy()
-            .append(Text.translatable("achievetodo.blocked_message.left"))
+            .append(Text.translatable("achievetodo.locked_message.left"))
             .append(Text.of(String.valueOf(leftAdvancementsCount)))
             .formatted(Formatting.YELLOW);
     }
 
-    public int getUnblockAdvancementsCount() {
-        return unblockAdvancementsCount;
+    public int getRequiredAdvancementsCount() {
+        return requiredAdvancementsCount;
     }
 
-    public boolean isUnblocked(PlayerEntity player) {
-        return AchieveToDo.getScore(player) >= unblockAdvancementsCount;
-    }
-
-    public @NotNull String getName() {
+    public @NotNull String getLowerCaseName() {
         return name().toLowerCase();
     }
 
@@ -625,6 +638,12 @@ public enum BlockedActionType {
     public Item getIcon() {
         if (item != null) {
             return item;
+        }
+        if (food != null) {
+            return Registries.ITEM.stream()
+                .filter(item -> item.getComponents().get(DataComponentTypes.FOOD) == food)
+                .findFirst()
+                .orElseThrow();
         }
         if (block != null) {
             return block.asItem();
@@ -676,10 +695,10 @@ public enum BlockedActionType {
     }
 
     public @NotNull Text getTitle() {
-        return Text.translatable("achievetodo.blocked_message." + getName() + ".title");
+        return Text.translatable("achievetodo.locked_message." + getLowerCaseName() + ".title");
     }
 
     public @NotNull Text getDescription() {
-        return Text.translatable("achievetodo.blocked_message." + getName() + ".description");
+        return Text.translatable("achievetodo.locked_message." + getLowerCaseName() + ".description");
     }
 }

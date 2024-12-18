@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.mixin.client;
 
-import com.diskree.achievetodo.blocked_actions.datagen.AdvancementsGenerator;
+import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.advancement.AdvancementEntry;
@@ -55,9 +55,9 @@ public class AdvancementTabMixin {
             cir.setReturnValue(null);
             return;
         }
-        AdvancementsGenerator.Tab tab;
+        AbilityAdvancementsGenerator.Tab tab;
         try {
-            tab = AdvancementsGenerator.Tab.valueOf(advancementId.getPath().split("/")[0].toUpperCase(Locale.ROOT));
+            tab = AbilityAdvancementsGenerator.Tab.valueOf(advancementId.getPath().split("/")[0].toUpperCase(Locale.ROOT));
         } catch (Exception ignored) {
             cir.setReturnValue(null);
             return;
