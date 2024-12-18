@@ -257,6 +257,15 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
                 if (isHardcoreEnabled) {
                     packManager.enable(InternalPack.BACAP_HARDCORE_OVERRIDE.getDatapackName());
                 }
+                if (isNullscapeEnabled) {
+                    packManager.enable(InternalPack.BACAP_NULLSCAPE_OVERRIDE.getDatapackName());
+                }
+                if (isAmplifiedNetherEnabled) {
+                    packManager.enable(InternalPack.BACAP_AMPLIFIED_NETHER_OVERRIDE.getDatapackName());
+                }
+                if (isTerralithEnabled) {
+                    packManager.enable(InternalPack.BACAP_TERRALITH_OVERRIDE.getDatapackName());
+                }
                 if (worldCreatorImpl.achievetodo$isItemRewardsEnabled()) {
                     packManager.enable(InternalPack.BACAP_REWARDS_ITEM.getDatapackName());
                 }
