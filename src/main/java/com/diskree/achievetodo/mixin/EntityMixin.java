@@ -33,8 +33,10 @@ public class EntityMixin {
     )
     private void blockPortal(Portal portal, BlockPos pos, CallbackInfo ci) {
         Entity teleportEntity = (Entity) (Object) this;
+        boolean byEnderPearl = false;
         if (teleportEntity instanceof EnderPearlEntity enderPearl) {
             teleportEntity = enderPearl.getOwner();
+            byEnderPearl = true;
         }
         if (teleportEntity == null) {
             return;
@@ -60,7 +62,7 @@ public class EntityMixin {
             ci.cancel();
             return;
         }
-        if (!teleportEntity.hasPassengers()) {
+        if (byEnderPearl || !teleportEntity.hasPassengers()) {
             return;
         }
         if (teleportEntity.getControllingPassenger() instanceof PlayerEntity controllingPlayer &&
