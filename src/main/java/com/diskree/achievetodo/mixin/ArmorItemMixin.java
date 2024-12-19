@@ -32,7 +32,7 @@ public class ArmorItemMixin implements ArmorItemImpl {
 
     @Inject(
         method = "<init>",
-        at = @At("RETURN")
+        at = @At("TAIL")
     )
     public void saveMaterial(ArmorMaterial material, EquipmentType type, Item.Settings settings, CallbackInfo ci) {
         this.material = material;

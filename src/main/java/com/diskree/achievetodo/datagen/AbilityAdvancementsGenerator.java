@@ -250,7 +250,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
                 Identifier id = buildAdvancementId(ability);
                 Item icon = ability.getIcon();
                 if (icon == null) {
-                    System.out.println(ability);
+                    throw new IllegalStateException("Ability " + ability + " haven't icon!");
                 }
                 Text title = ability.getTitle();
                 Text description = ability.getDescription();

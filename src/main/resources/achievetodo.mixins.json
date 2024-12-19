@@ -23,11 +23,12 @@
     "EnchantedTableBlockMixin",
     "EnderChestBlockMixin",
     "EntityMixin",
+    "EquippableComponentMixin",
     "GrindstoneBlockMixin",
     "HoeItemMixin",
     "LivingEntityMixin",
     "LoomBlockMixin",
-    "MiningToolItemMixin",
+    "PickaxeItemMixin",
     "PlacedAdvancementMixin",
     "PlayerAdvancementTrackerMixin",
     "PlayerEntityMixin",
@@ -36,8 +37,7 @@
     "ShovelItemMixin",
     "ShulkerBoxBlockMixin",
     "SmithingTableBlockMixin",
-    "StonecutterBlockMixin",
-    "SwordItemMixin"
+    "StonecutterBlockMixin"
   ],
   "client": [
     "client.AdvancementProgressMixin",

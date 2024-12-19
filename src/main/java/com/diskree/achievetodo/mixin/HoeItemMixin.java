@@ -1,47 +1,57 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.injection.UsableItem;
+import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.AchieveToDo;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.HoeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(HoeItem.class)
-public abstract class HoeItemMixin implements UsableItem {
+public abstract class HoeItemMixin {
 
     @Unique
-    private boolean isCanUseChecking;
+    private ToolMaterial material;
 
-    @Override
-    public boolean achievetodo$canUse(PlayerEntity player, BlockHitResult hit) {
-        isCanUseChecking = true;
-        boolean canUse = useOnBlock(new ItemUsageContext(player.getWorld(), player, null, null, hit)) == null;
-        isCanUseChecking = false;
-        return canUse;
+    @Inject(
+        method = "<init>",
+        at = @At("TAIL")
+    )
+    private void saveMaterial(
+        ToolMaterial material,
+        float attackDamage,
+        float attackSpeed,
+        Item.Settings settings,
+        CallbackInfo ci
+    ) {
+        this.material = material;
     }
-
-    @Shadow
-    public abstract ActionResult useOnBlock(ItemUsageContext context);
 
     @Inject(
         method = "useOnBlock",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/item/ItemUsageContext;getPlayer()Lnet/minecraft/entity/player/PlayerEntity;",
+            target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
-    public void returnOnUse(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-        if (isCanUseChecking) {
-            cir.setReturnValue(null);
+    public void lockUsage(
+        ItemUsageContext context,
+        CallbackInfoReturnable<ActionResult> cir,
+        @Local PlayerEntity player
+    ) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(material))) {
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

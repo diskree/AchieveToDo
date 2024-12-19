@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.AchieveToDo;
 import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.AchieveToDo;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,10 +22,10 @@ public class LivingEntityMixin {
     )
     public void lockEquip(ItemStack stack, EquipmentSlot slot, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
-        if (livingEntity instanceof PlayerEntity player) {
-            if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))) {
-                cir.setReturnValue(false);
-            }
+        if (livingEntity instanceof PlayerEntity player &&
+            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))
+        ) {
+            cir.setReturnValue(false);
         }
     }
 
@@ -36,10 +36,10 @@ public class LivingEntityMixin {
     )
     public void lockEquip(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
-        if (livingEntity instanceof PlayerEntity player) {
-            if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))) {
-                cir.setReturnValue(false);
-            }
+        if (livingEntity instanceof PlayerEntity player &&
+            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))
+        ) {
+            cir.setReturnValue(false);
         }
     }
 

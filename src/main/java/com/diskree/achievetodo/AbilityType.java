@@ -2,8 +2,7 @@ package com.diskree.achievetodo;
 
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.injection.ArmorItemImpl;
-import com.diskree.achievetodo.injection.MiningToolItemImpl;
-import com.diskree.achievetodo.injection.SwordItemImpl;
+import com.diskree.achievetodo.injection.PickaxeItemImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementRequirements;
@@ -503,35 +502,13 @@ public enum AbilityType {
     }
 
     @Nullable
-    public static AbilityType findBlockUsageAbility(BlockState blockState) {
-        if (blockState == null) {
+    public static AbilityType findToolUsageAbility(ToolMaterial toolMaterial) {
+        if (toolMaterial == null) {
             return null;
         }
         for (AbilityType ability : values()) {
-            if (blockState.isOf(ability.block)) {
+            if (toolMaterial == ability.toolMaterial) {
                 return ability;
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    public static AbilityType findToolUsageAbility(Item item) {
-        if (item == null) {
-            return null;
-        }
-        if (item instanceof MiningToolItemImpl toolItem) {
-            for (AbilityType ability : values()) {
-                if (toolItem.achievetodo$getToolMaterial() == ability.toolMaterial) {
-                    return ability;
-                }
-            }
-        }
-        if (item instanceof SwordItemImpl toolItem) {
-            for (AbilityType ability : values()) {
-                if (toolItem.achievetodo$getSwordMaterial() == ability.toolMaterial) {
-                    return ability;
-                }
             }
         }
         return null;
@@ -616,8 +593,8 @@ public enum AbilityType {
         return Text.translatable("achievetodo.locked_message." + getLowerCaseName());
     }
 
-    public Text buildLockedDescription(PlayerEntity player) {
-        int leftAdvancementsCount = requiredAdvancementsCount - AchieveToDo.getScore(player);
+    public Text buildLockedDescription(int obtainedAdvancementsCount) {
+        int leftAdvancementsCount = requiredAdvancementsCount - obtainedAdvancementsCount;
         boolean isMultiLineActionBarInstalled = FabricLoader.getInstance().isModLoaded("multilineactionbar");
         return Text.of(getLockedMessage().getString() + "." + (isMultiLineActionBarInstalled ? "\n" : " "))
             .copy()
@@ -650,9 +627,8 @@ public enum AbilityType {
         }
         if (toolMaterial != null) {
             return Registries.ITEM.stream()
-                .filter(item -> item instanceof PickaxeItem &&
-                    item instanceof MiningToolItemImpl miningToolItem &&
-                    miningToolItem.achievetodo$getToolMaterial() == toolMaterial
+                .filter(item -> item instanceof PickaxeItemImpl pickaxeItem &&
+                    pickaxeItem.achievetodo$getMaterial() == toolMaterial
                 )
                 .findFirst()
                 .orElse(null);
@@ -667,7 +643,12 @@ public enum AbilityType {
                 .orElse(null);
         }
         if (portal != null) {
-            return portal == NetherPortalBlock.class ? Items.OBSIDIAN : Items.END_PORTAL_FRAME;
+            return switch (this) {
+                case NETHER -> Items.OBSIDIAN;
+                case END -> Items.END_PORTAL_FRAME;
+                case OUTER_ISLANDS -> Items.CHORUS_PLANT;
+                default -> null;
+            };
         }
         if (villager != null) {
             PointOfInterestType poi = Registries.POINT_OF_INTEREST_TYPE.get(Identifier.ofVanilla(villager.id()));
