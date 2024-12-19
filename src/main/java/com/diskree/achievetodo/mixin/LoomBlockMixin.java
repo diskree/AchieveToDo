@@ -35,7 +35,7 @@ public abstract class LoomBlockMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_LOOM)) {
-            cir.setReturnValue(ActionResult.CONSUME);
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

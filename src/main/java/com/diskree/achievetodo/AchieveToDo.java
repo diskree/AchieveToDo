@@ -8,21 +8,12 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Shearable;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -177,62 +168,13 @@ public class AchieveToDo implements ModInitializer {
             updateObtainedAdvancementsCount(server.getScoreboard(), handler.player)
         );
 
-        UseItemCallback.EVENT.register((player, world, hand) -> {
-            ItemStack stack = player.getStackInHand(hand);
-            if (isAbilityLocked(player, AbilityType.findItemUsageAbility(player, stack))) {
-                return ActionResult.CONSUME;
-            }
-            return ActionResult.PASS;
-        });
-        UseEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
-            ItemStack stack = player.getStackInHand(hand);
-            Item item = stack.getItem();
-            if (entity instanceof ItemFrameEntity) {
-                return ActionResult.PASS;
-            }
-            if (entity instanceof BoatEntity boatEntity &&
-                boatEntity.canAddPassenger(player) &&
-                isAbilityLocked(player, AbilityType.USING_BOAT)
-            ) {
-                return ActionResult.CONSUME;
-            }
-            if (entity instanceof VillagerEntity villager &&
-                !villager.isBaby() &&
-                isAbilityLocked(player, AbilityType.findVillagerAbility(villager.getVillagerData().getProfession()))
-            ) {
-                villager.sayNo();
-                return ActionResult.CONSUME;
-            }
-            if (item == Items.SHEARS &&
-                entity instanceof Shearable shearable &&
-                shearable.isShearable() &&
-                isAbilityLocked(player, AbilityType.USING_SHEARS)
-            ) {
-                return ActionResult.CONSUME;
-            }
-            return ActionResult.PASS;
-        });
-
         AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
-            ItemStack stack = player.getStackInHand(hand);
-            Item item = stack.getItem();
-            if (isAbilityLocked(player, AbilityType.BREAK_BLOCKS)) {
-                return ActionResult.CONSUME;
-            }
-            if (pos.getY() < 0 && isAbilityLocked(player, AbilityType.BREAK_BLOCKS_IN_NEGATIVE_Y)) {
-                return ActionResult.CONSUME;
-            }
 //            if (isAbilityLocked(player, AbilityType.findToolUsageAbility(item))) {
 //                return ActionResult.CONSUME;
 //            }
-            if (item == Items.SHEARS && isAbilityLocked(player, AbilityType.USING_SHEARS)) {
-                return ActionResult.CONSUME;
-            }
             return ActionResult.PASS;
         });
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
-            ItemStack stack = player.getStackInHand(hand);
-            Item item = stack.getItem();
 //            if (isAbilityLocked(player, AbilityType.findToolUsageAbility(item))) {
 //                return ActionResult.CONSUME;
 //            }

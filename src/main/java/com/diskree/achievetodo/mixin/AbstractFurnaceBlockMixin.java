@@ -43,7 +43,7 @@ public abstract class AbstractFurnaceBlockMixin {
             ability = AbilityType.OPEN_BLAST_FURNACE;
         }
         if (AchieveToDo.isAbilityLocked(player, ability)) {
-            cir.setReturnValue(ActionResult.CONSUME);
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

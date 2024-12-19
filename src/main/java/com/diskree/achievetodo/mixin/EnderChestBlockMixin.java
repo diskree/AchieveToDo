@@ -35,7 +35,7 @@ public abstract class EnderChestBlockMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_ENDER_CHEST)) {
-            cir.setReturnValue(ActionResult.CONSUME);
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

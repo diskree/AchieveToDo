@@ -31,7 +31,7 @@ public abstract class ArmorSlotMixin {
     )
     private void lockEquip(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (entity instanceof PlayerEntity player &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(stack.getItem()))
         ) {
             cir.setReturnValue(false);
         }
@@ -50,7 +50,7 @@ public abstract class ArmorSlotMixin {
         Operation<Boolean> original,
         @Local @NotNull ItemStack itemStack
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(itemStack.getItem()))) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(itemStack.getItem()))) {
             return false;
         }
         return original.call(armorSlot, player);

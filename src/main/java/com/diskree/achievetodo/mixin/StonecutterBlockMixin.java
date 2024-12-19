@@ -35,7 +35,7 @@ public abstract class StonecutterBlockMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_STONECUTTER)) {
-            cir.setReturnValue(ActionResult.CONSUME);
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

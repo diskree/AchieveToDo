@@ -32,9 +32,9 @@ public abstract class ConsumableComponentMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (user instanceof PlayerEntity player &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.findFoodAbility(stack))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findEatFoodAbility(stack))
         ) {
-            cir.setReturnValue(ActionResult.CONSUME);
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

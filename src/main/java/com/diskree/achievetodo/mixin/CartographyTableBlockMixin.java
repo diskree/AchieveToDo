@@ -34,8 +34,8 @@ public abstract class CartographyTableBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_BREWING_STAND)) {
-            cir.setReturnValue(ActionResult.CONSUME);
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_CARTOGRAPHY_TABLE)) {
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

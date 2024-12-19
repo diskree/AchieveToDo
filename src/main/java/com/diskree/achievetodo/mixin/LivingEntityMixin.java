@@ -23,7 +23,7 @@ public class LivingEntityMixin {
     public void lockEquip(ItemStack stack, EquipmentSlot slot, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (livingEntity instanceof PlayerEntity player &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(stack.getItem()))
         ) {
             cir.setReturnValue(false);
         }
@@ -37,7 +37,7 @@ public class LivingEntityMixin {
     public void lockEquip(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (livingEntity instanceof PlayerEntity player &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(stack.getItem()))
         ) {
             cir.setReturnValue(false);
         }

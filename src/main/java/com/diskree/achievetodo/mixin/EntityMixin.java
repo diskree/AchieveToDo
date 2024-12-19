@@ -42,7 +42,7 @@ public class EntityMixin {
             return;
         }
 
-        AbilityType ability = AbilityType.findPortalUsageAbility(portal);
+        AbilityType ability = AbilityType.findPortalTeleportAbility(portal);
         RegistryKey<World> currentDimension = teleportEntity.getWorld().getRegistryKey();
         if (currentDimension == World.NETHER && ability == AbilityType.NETHER) {
             return;

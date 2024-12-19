@@ -24,7 +24,7 @@ public abstract class AdvancementProgressMixin {
         at = @At("TAIL")
     )
     public void findAbility(AdvancementRequirements requirements, CallbackInfo ci) {
-        ability = AbilityType.findByRequirements(requirements);
+        ability = AbilityType.findByAdvancementRequirements(requirements);
     }
 
     @Inject(

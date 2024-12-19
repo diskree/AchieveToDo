@@ -29,8 +29,8 @@ public abstract class EquippableComponentMixin {
         PlayerEntity player,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentUsageAbility(stack.getItem()))) {
-            cir.setReturnValue(ActionResult.CONSUME);
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(stack.getItem()))) {
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

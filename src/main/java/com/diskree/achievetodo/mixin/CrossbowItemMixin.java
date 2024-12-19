@@ -2,40 +2,37 @@ package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BrewingStandBlock;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BrewingStandBlock.class)
-public abstract class BrewingStandBlockMixin {
+@Mixin(CrossbowItem.class)
+public abstract class CrossbowItemMixin {
 
     @Inject(
-        method = "onUse",
+        method = "use",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;openHandledScreen(Lnet/minecraft/screen/NamedScreenHandlerFactory;)Ljava/util/OptionalInt;",
+            target = "Lnet/minecraft/item/CrossbowItem;shootAll(Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;FFLnet/minecraft/entity/LivingEntity;)V",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
-    public void lockUsage(
-        BlockState state,
+    public void lockCrossbowShoot(
         World world,
-        BlockPos pos,
         PlayerEntity player,
-        BlockHitResult hit,
+        Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_BREWING_STAND)) {
-            cir.setReturnValue(ActionResult.PASS);
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_CROSSBOW)) {
+            cir.setReturnValue(ActionResult.FAIL);
         }
     }
 }

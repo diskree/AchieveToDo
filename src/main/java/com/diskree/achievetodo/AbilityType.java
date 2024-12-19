@@ -11,8 +11,10 @@ import net.minecraft.block.*;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.component.type.FoodComponents;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.ArmorMaterials;
 import net.minecraft.item.equipment.EquipmentType;
@@ -439,7 +441,9 @@ public enum AbilityType {
         return null;
     }
 
-    public static @Nullable AbilityType findByRequirements(@NotNull AdvancementRequirements requirementsData) {
+    public static @Nullable AbilityType findByAdvancementRequirements(
+        @NotNull AdvancementRequirements requirementsData
+    ) {
         if (requirementsData.requirements().size() != 2) {
             return null;
         }
@@ -450,9 +454,13 @@ public enum AbilityType {
                 return null;
             }
             String criteriaName = requirement.getFirst();
-            if (abilityName == null && criteriaName.startsWith(AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX)) {
+            if (abilityName == null &&
+                criteriaName.startsWith(AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX)
+            ) {
                 abilityName = criteriaName.split(AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX)[1];
-            } else if (!isUnlockedCriterionFound && criteriaName.equals(AbilityAdvancementsGenerator.UNLOCKED_CRITERION)) {
+            } else if (!isUnlockedCriterionFound &&
+                criteriaName.equals(AbilityAdvancementsGenerator.UNLOCKED_CRITERION)
+            ) {
                 isUnlockedCriterionFound = true;
             } else {
                 return null;
@@ -465,27 +473,7 @@ public enum AbilityType {
     }
 
     @Nullable
-    public static AbilityType findItemUsageAbility(PlayerEntity player, ItemStack stack) {
-        if (stack == null) {
-            return null;
-        }
-        if (stack.isOf(Items.CROSSBOW)) {
-            return CrossbowItem.isCharged(stack) ? USING_CROSSBOW : null;
-        }
-        if (stack.isOf(Items.FIREWORK_ROCKET)) {
-            return player.isGliding() ? FLY : null;
-        }
-        for (AbilityType ability : values()) {
-            Item item = stack.getItem();
-            if (item == ability.item) {
-                return ability;
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    public static AbilityType findFoodAbility(ItemStack stack) {
+    public static AbilityType findEatFoodAbility(ItemStack stack) {
         if (stack == null) {
             return null;
         }
@@ -515,7 +503,7 @@ public enum AbilityType {
     }
 
     @Nullable
-    public static AbilityType findEquipmentUsageAbility(Item item) {
+    public static AbilityType findEquipmentEquipAbility(Item item) {
         if (item == null) {
             return null;
         }
@@ -533,7 +521,7 @@ public enum AbilityType {
     }
 
     @Nullable
-    public static AbilityType findPortalUsageAbility(Portal portal) {
+    public static AbilityType findPortalTeleportAbility(Portal portal) {
         if (portal == null) {
             return null;
         }
@@ -546,7 +534,7 @@ public enum AbilityType {
     }
 
     @Nullable
-    public static AbilityType findVillagerAbility(VillagerProfession profession) {
+    public static AbilityType findVillagerTradeAbility(VillagerProfession profession) {
         if (profession == null) {
             return null;
         }

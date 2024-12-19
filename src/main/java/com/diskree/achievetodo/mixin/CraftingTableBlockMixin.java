@@ -35,7 +35,7 @@ public abstract class CraftingTableBlockMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_CRAFTING_TABLE)) {
-            cir.setReturnValue(ActionResult.CONSUME);
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

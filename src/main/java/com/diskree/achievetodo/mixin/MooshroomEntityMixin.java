@@ -2,43 +2,29 @@ package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
-import net.minecraft.block.BeehiveBlock;
-import net.minecraft.block.BlockState;
+import net.minecraft.entity.passive.MooshroomEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BeehiveBlock.class)
-public abstract class BeehiveBlockMixin {
+@Mixin(MooshroomEntity.class)
+public abstract class MooshroomEntityMixin {
 
     @Inject(
-        method = "onUseWithItem",
+        method = "interactMob",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V",
+            target = "Lnet/minecraft/entity/passive/MooshroomEntity;getWorld()Lnet/minecraft/world/World;",
             shift = At.Shift.BEFORE,
             ordinal = 0
         ),
         cancellable = true
     )
-    public void lockShears(
-        ItemStack stack,
-        BlockState state,
-        World world,
-        BlockPos pos,
-        PlayerEntity player,
-        Hand hand,
-        BlockHitResult hit,
-        CallbackInfoReturnable<ActionResult> cir
-    ) {
+    public void lockShears(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_SHEARS)) {
             cir.setReturnValue(ActionResult.PASS);
         }

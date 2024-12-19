@@ -2,40 +2,36 @@ package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BrewingStandBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BowItem;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BrewingStandBlock.class)
-public abstract class BrewingStandBlockMixin {
+@Mixin(BowItem.class)
+public abstract class BowItemMixin {
 
     @Inject(
-        method = "onUse",
+        method = "use",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;openHandledScreen(Lnet/minecraft/screen/NamedScreenHandlerFactory;)Ljava/util/OptionalInt;",
+            target = "Lnet/minecraft/entity/player/PlayerEntity;setCurrentHand(Lnet/minecraft/util/Hand;)V",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
-    public void lockUsage(
-        BlockState state,
+    public void lockBowShoot(
         World world,
-        BlockPos pos,
         PlayerEntity player,
-        BlockHitResult hit,
+        Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_BREWING_STAND)) {
-            cir.setReturnValue(ActionResult.PASS);
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_BOW)) {
+            cir.setReturnValue(ActionResult.FAIL);
         }
     }
 }

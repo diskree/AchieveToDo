@@ -30,7 +30,7 @@ public abstract class BrushItemMixin {
         @Local PlayerEntity player
     ) {
         if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_BRUSH)) {
-            cir.setReturnValue(ActionResult.CONSUME);
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

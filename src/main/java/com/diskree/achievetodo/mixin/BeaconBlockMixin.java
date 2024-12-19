@@ -34,8 +34,8 @@ public abstract class BeaconBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_ANVIL)) {
-            cir.setReturnValue(ActionResult.CONSUME);
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_BEACON)) {
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }
