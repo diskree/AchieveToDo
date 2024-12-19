@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.mixin.client;
 
-import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
+import com.diskree.achievetodo.gui.AdvancementsTabType;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.advancement.AdvancementEntry;
@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Locale;
 
 @Mixin(AdvancementTab.class)
 public class AdvancementTabMixin {
@@ -55,10 +53,13 @@ public class AdvancementTabMixin {
             cir.setReturnValue(null);
             return;
         }
-        AbilityAdvancementsGenerator.Tab tab;
-        try {
-            tab = AbilityAdvancementsGenerator.Tab.valueOf(advancementId.getPath().split("/")[0].toUpperCase(Locale.ROOT));
-        } catch (Exception ignored) {
+        String[] pathSlices = advancementId.getPath().split("/");
+        if (pathSlices.length != 2) {
+            cir.setReturnValue(null);
+            return;
+        }
+        AdvancementsTabType tab = AdvancementsTabType.findByName(pathSlices[0]);
+        if (tab == null) {
             cir.setReturnValue(null);
             return;
         }

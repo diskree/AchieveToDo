@@ -5,7 +5,7 @@ import com.diskree.achievetodo.networking.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -14,7 +14,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.AdvancementEntry;
-import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Shearable;
 import net.minecraft.entity.decoration.ItemFrameEntity;
@@ -24,6 +23,7 @@ import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import org.jetbrains.annotations.NotNull;
@@ -34,20 +34,96 @@ import java.util.UUID;
 
 public class AchieveToDo implements ModInitializer {
 
+    public static AdvancementsMode currentAdvancementsMode;
+    public static ScoreboardObjective currentScoreboardObjective;
+    public static ScoreboardDisplaySlot currentScoreboardDisplaySlot;
+
     private static final Map<UUID, Integer> advancementsCountByPlayerUUID = new HashMap<>();
 
-    public static void onAdvancementGranted(ServerPlayerEntity serverPlayer, AdvancementEntry advancement) {
-        if (AbilityType.findByAdvancement(advancement) != null) {
+    public static void prepareScoreboard(ServerScoreboard scoreboard) {
+        AdvancementsMode oldAdvancementsMode = currentAdvancementsMode;
+        ScoreboardObjective oldScoreboardObjective = currentScoreboardObjective;
+        ScoreboardDisplaySlot oldScoreboardDisplaySlot = currentScoreboardDisplaySlot;
+
+        currentAdvancementsMode = null;
+        currentScoreboardObjective = null;
+        currentScoreboardDisplaySlot = null;
+
+        ScoreboardDisplaySlot[] slotPriority = {
+            ScoreboardDisplaySlot.SIDEBAR, ScoreboardDisplaySlot.LIST, ScoreboardDisplaySlot.BELOW_NAME
+        };
+        for (ScoreboardDisplaySlot displaySlot : slotPriority) {
+            ScoreboardObjective objective = scoreboard.getObjectiveForSlot(displaySlot);
+            if (objective != null) {
+                AdvancementsMode advancementsMode = AdvancementsMode.findByObjectiveName(objective.getName());
+                if (advancementsMode != null) {
+                    currentAdvancementsMode = advancementsMode;
+                    currentScoreboardObjective = objective;
+                    currentScoreboardDisplaySlot = displaySlot;
+                    break;
+                }
+            }
+        }
+        if (currentAdvancementsMode == null ||
+            currentScoreboardObjective == null ||
+            currentScoreboardDisplaySlot == null
+        ) {
             return;
         }
-        setObtainedAdvancementsCount(serverPlayer, getObtainedAdvancementsCount(serverPlayer) + 1);
+        if (currentAdvancementsMode != oldAdvancementsMode ||
+            currentScoreboardObjective != oldScoreboardObjective ||
+            currentScoreboardDisplaySlot != oldScoreboardDisplaySlot
+        ) {
+            for (ServerPlayerEntity serverPlayerEntity : scoreboard.server.getPlayerManager().getPlayerList()) {
+                updateObtainedAdvancementsCount(scoreboard, serverPlayerEntity);
+            }
+        }
     }
 
-    public static void onAdvancementRevoked(ServerPlayerEntity serverPlayer, AdvancementEntry advancement) {
-        if (AbilityType.findByAdvancement(advancement) != null) {
+    public static void updateObtainedAdvancementsCount(ServerScoreboard scoreboard, @NotNull ServerPlayerEntity player) {
+        if (currentAdvancementsMode == null) {
             return;
         }
-        setObtainedAdvancementsCount(serverPlayer, getObtainedAdvancementsCount(serverPlayer) - 1);
+        int score = 0;
+        if (currentAdvancementsMode.isTeamsMode()) {
+            Team team = scoreboard.getScoreHolderTeam(player.getNameForScoreboard());
+            if (team != null) {
+                for (String playerName : team.getPlayerList()) {
+                    ReadableScoreboardScore playerScore = scoreboard.getScore(
+                        ScoreHolder.fromName(playerName),
+                        currentScoreboardObjective
+                    );
+                    if (playerScore != null) {
+                        score += playerScore.getScore();
+                    }
+                }
+            }
+        } else {
+            ReadableScoreboardScore playerScore = scoreboard.getScore(
+                ScoreHolder.fromName(player.getNameForScoreboard()),
+                currentScoreboardObjective
+            );
+            if (playerScore != null) {
+                score = playerScore.getScore();
+            }
+        }
+        setObtainedAdvancementsCount(player, score);
+    }
+
+    public static void setObtainedAdvancementsCount(@NotNull ServerPlayerEntity player, int count) {
+        UUID playerUuid = player.getUuid();
+        int oldCount = advancementsCountByPlayerUUID.getOrDefault(playerUuid, 0);
+        advancementsCountByPlayerUUID.put(playerUuid, count);
+        if (oldCount != 0) {
+            for (AbilityType ability : AbilityType.values()) {
+                if (count >= ability.getRequiredAdvancementsCount() &&
+                    oldCount < ability.getRequiredAdvancementsCount()
+                ) {
+                    unlockAbility(player, ability);
+                }
+            }
+        }
+        ServerPlayNetworking.send(player, new SyncAdvancementsCountPayload(count));
     }
 
     public static int getObtainedAdvancementsCount(@NotNull PlayerEntity player) {
@@ -90,17 +166,19 @@ public class AchieveToDo implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(DemystifyAbilityPayload.ID, DemystifyAbilityPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncAdvancementsCountPayload.ID, SyncAdvancementsCountPayload.CODEC);
 
-        ServerWorldEvents.LOAD.register((server, world) -> advancementsCountByPlayerUUID.clear());
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            advancementsCountByPlayerUUID.clear();
+            prepareScoreboard(server.getScoreboard());
+        });
         ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
             context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
         );
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-            setObtainedAdvancementsCount(handler.player, calculateObtainedAdvancementsCount(handler.player))
+            updateObtainedAdvancementsCount(server.getScoreboard(), handler.player)
         );
 
         UseItemCallback.EVENT.register((player, world, hand) -> {
             ItemStack stack = player.getStackInHand(hand);
-            Item item = stack.getItem();
             if (isAbilityLocked(player, AbilityType.findItemUsageAbility(player, stack))) {
                 return ActionResult.CONSUME;
             }
@@ -160,35 +238,6 @@ public class AchieveToDo implements ModInitializer {
 //            }
             return ActionResult.PASS;
         });
-    }
-
-    private static void setObtainedAdvancementsCount(@NotNull ServerPlayerEntity serverPlayer, int score) {
-        UUID playerUuid = serverPlayer.getUuid();
-        int oldScore = advancementsCountByPlayerUUID.getOrDefault(playerUuid, 0);
-        advancementsCountByPlayerUUID.put(playerUuid, score);
-        if (oldScore != 0) {
-            for (AbilityType ability : AbilityType.values()) {
-                if (score >= ability.getRequiredAdvancementsCount() &&
-                    oldScore < ability.getRequiredAdvancementsCount()
-                ) {
-                    unlockAbility(serverPlayer, ability);
-                }
-            }
-        }
-        ServerPlayNetworking.send(serverPlayer, new SyncAdvancementsCountPayload(score));
-    }
-
-    private static int calculateObtainedAdvancementsCount(@NotNull ServerPlayerEntity player) {
-        int obtainedAdvancementsCount = 0;
-        for (Map.Entry<AdvancementEntry, AdvancementProgress> entry : player.getAdvancementTracker().progress.entrySet()) {
-            if (entry.getKey().value().display().isPresent() &&
-                entry.getValue().isDone() &&
-                AbilityType.findByAdvancement(entry.getKey()) == null
-            ) {
-                obtainedAdvancementsCount++;
-            }
-        }
-        return obtainedAdvancementsCount;
     }
 
     private static void demystifyAbility(@NotNull ServerPlayerEntity player, @NotNull AbilityType ability) {

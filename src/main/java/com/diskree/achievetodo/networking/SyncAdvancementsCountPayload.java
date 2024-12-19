@@ -7,7 +7,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public record SyncAdvancementsCountPayload(int score) implements CustomPayload {
+public record SyncAdvancementsCountPayload(int count) implements CustomPayload {
 
     public static final Id<SyncAdvancementsCountPayload> ID =
         new CustomPayload.Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_advancements_count"));
@@ -20,7 +20,7 @@ public record SyncAdvancementsCountPayload(int score) implements CustomPayload {
     }
 
     private void write(@NotNull PacketByteBuf buf) {
-        buf.writeInt(score);
+        buf.writeInt(count);
     }
 
     @Override

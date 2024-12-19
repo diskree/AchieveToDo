@@ -4,7 +4,7 @@ import com.diskree.achievetodo.AchieveToDoClient;
 import com.diskree.achievetodo.ExternalPack;
 import com.diskree.achievetodo.InternalPack;
 import com.diskree.achievetodo.gui.CreateWorldTab;
-import com.diskree.achievetodo.gui.DownloadExternalPackScreen;
+import com.diskree.achievetodo.gui.ExternalPackDownloader;
 import com.diskree.achievetodo.injection.CreateWorldScreenImpl;
 import com.diskree.achievetodo.injection.WorldCreatorImpl;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -45,7 +45,17 @@ import java.util.function.Consumer;
 public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
 
     @Unique
-    private boolean isWaitingDatapacks;
+    private boolean isWaitingDatapack;
+
+    @Override
+    public boolean achievetodo$isWaitingDatapack() {
+        return isWaitingDatapack;
+    }
+
+    @Override
+    public void achievetodo$setWaitingDatapack(boolean isWaitingDatapack) {
+        this.isWaitingDatapack = isWaitingDatapack;
+    }
 
     @Shadow
     @Final
@@ -54,18 +64,12 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
     @Shadow
     private @Nullable ResourcePackManager packManager;
 
-    @Override
-    public boolean achievetodo$datapacksLoaded() {
-        if (isWaitingDatapacks) {
-            createLevel();
-            isWaitingDatapacks = false;
-            return true;
-        }
-        return false;
-    }
+    @Shadow
+    public abstract void createLevel();
 
     @Shadow
-    protected abstract void createLevel();
+    @Nullable
+    protected abstract Path getOrCreateDataPackTempDir();
 
     @Shadow
     @Nullable
@@ -78,10 +82,6 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
         Consumer<DataConfiguration> consumer
     );
 
-    @Shadow
-    @Nullable
-    protected abstract Path getOrCreateDataPackTempDir();
-
     @ModifyArgs(
         method = "init",
         at = @At(
@@ -89,7 +89,7 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
             target = "Lnet/minecraft/client/gui/widget/TabNavigationWidget$Builder;tabs([Lnet/minecraft/client/gui/tab/Tab;)Lnet/minecraft/client/gui/widget/TabNavigationWidget$Builder;"
         )
     )
-    private void addModTab(@NotNull Args args) {
+    private void addTab(@NotNull Args args) {
         CreateWorldScreen createWorldScreen = (CreateWorldScreen) (Object) this;
         Tab[] originalTabs = args.get(0);
         Tab[] newTabs = new Tab[originalTabs.length + 1];
@@ -105,7 +105,7 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
         method = "create(Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/gui/screen/Screen;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/client/world/GeneratorOptionsHolder;Ljava/nio/file/Path;)Lnet/minecraft/client/gui/screen/world/CreateWorldScreen;",
         at = @At(value = "TAIL")
     )
-    private static void createInject(
+    private static void parseWorldOptionsOnRecreate(
         MinecraftClient client,
         Screen parent,
         @NotNull LevelInfo levelInfo,
@@ -150,8 +150,12 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
         }
     }
 
-    @Inject(method = "createLevel", at = @At("HEAD"), cancellable = true)
-    private void createLevelInject(CallbackInfo ci) {
+    @Inject(
+        method = "createLevel",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void prepareDatapacks(CallbackInfo ci) {
         CreateWorldScreen createWorldScreen = (CreateWorldScreen) (Object) this;
         WorldCreatorImpl worldCreatorImpl = (WorldCreatorImpl) worldCreator;
         MinecraftClient client = createWorldScreen.client;
@@ -172,28 +176,22 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
             requiredPacks.add(ExternalPack.BACAP_HARDCORE);
         }
         if (isTerralithEnabled) {
+            requiredPacks.add(ExternalPack.TERRALITH);
             requiredPacks.add(ExternalPack.BACAP_TERRALITH);
         }
         if (isAmplifiedNetherEnabled) {
+            requiredPacks.add(ExternalPack.AMPLIFIED_NETHER);
             requiredPacks.add(ExternalPack.BACAP_AMPLIFIED_NETHER);
         }
         if (isNullscapeEnabled) {
-            requiredPacks.add(ExternalPack.BACAP_NULLSCAPE);
-        }
-        if (isTerralithEnabled) {
-            requiredPacks.add(ExternalPack.TERRALITH);
-        }
-        if (isAmplifiedNetherEnabled) {
-            requiredPacks.add(ExternalPack.AMPLIFIED_NETHER);
-        }
-        if (isNullscapeEnabled) {
             requiredPacks.add(ExternalPack.NULLSCAPE);
+            requiredPacks.add(ExternalPack.BACAP_NULLSCAPE);
         }
         for (ExternalPack requiredPack : requiredPacks) {
             if (Files.exists(globalPacksDirectory.resolve(requiredPack.getFileName()))) {
                 continue;
             }
-            client.setScreen(new DownloadExternalPackScreen(createWorldScreen, requiredPack, isFileDownloaded -> {
+            client.setScreen(new ExternalPackDownloader(createWorldScreen, requiredPack, isFileDownloaded -> {
                 if (isFileDownloaded) {
                     createLevel();
                 }
@@ -202,7 +200,7 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
             return;
         }
 
-        if (!isWaitingDatapacks) {
+        if (!isWaitingDatapack) {
             Path worldPacksTempDirectory = getOrCreateDataPackTempDir();
             if (worldPacksTempDirectory == null) {
                 ci.cancel();
@@ -230,41 +228,25 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
                 }
 
                 packManager.enable(ExternalPack.BACAP.getDatapackName());
+                packManager.enable(InternalPack.BACAP_OVERRIDE.getDatapackName());
                 if (isHardcoreEnabled) {
                     packManager.enable(ExternalPack.BACAP_HARDCORE.getDatapackName());
-                }
-                if (isNullscapeEnabled) {
-                    packManager.enable(ExternalPack.BACAP_NULLSCAPE.getDatapackName());
-                }
-                if (isAmplifiedNetherEnabled) {
-                    packManager.enable(ExternalPack.BACAP_AMPLIFIED_NETHER.getDatapackName());
-                }
-                if (isTerralithEnabled) {
-                    packManager.enable(ExternalPack.BACAP_TERRALITH.getDatapackName());
-                }
-
-                if (isNullscapeEnabled) {
-                    packManager.enable(ExternalPack.NULLSCAPE.getDatapackName());
-                }
-                if (isAmplifiedNetherEnabled) {
-                    packManager.enable(ExternalPack.AMPLIFIED_NETHER.getDatapackName());
+                    packManager.enable(InternalPack.BACAP_HARDCORE_OVERRIDE.getDatapackName());
                 }
                 if (isTerralithEnabled) {
                     packManager.enable(ExternalPack.TERRALITH.getDatapackName());
-                }
-
-                packManager.enable(InternalPack.BACAP_OVERRIDE.getDatapackName());
-                if (isHardcoreEnabled) {
-                    packManager.enable(InternalPack.BACAP_HARDCORE_OVERRIDE.getDatapackName());
-                }
-                if (isNullscapeEnabled) {
-                    packManager.enable(InternalPack.BACAP_NULLSCAPE_OVERRIDE.getDatapackName());
+                    packManager.enable(ExternalPack.BACAP_TERRALITH.getDatapackName());
+                    packManager.enable(InternalPack.BACAP_TERRALITH_OVERRIDE.getDatapackName());
                 }
                 if (isAmplifiedNetherEnabled) {
+                    packManager.enable(ExternalPack.AMPLIFIED_NETHER.getDatapackName());
+                    packManager.enable(ExternalPack.BACAP_AMPLIFIED_NETHER.getDatapackName());
                     packManager.enable(InternalPack.BACAP_AMPLIFIED_NETHER_OVERRIDE.getDatapackName());
                 }
-                if (isTerralithEnabled) {
-                    packManager.enable(InternalPack.BACAP_TERRALITH_OVERRIDE.getDatapackName());
+                if (isNullscapeEnabled) {
+                    packManager.enable(ExternalPack.NULLSCAPE.getDatapackName());
+                    packManager.enable(ExternalPack.BACAP_NULLSCAPE.getDatapackName());
+                    packManager.enable(InternalPack.BACAP_NULLSCAPE_OVERRIDE.getDatapackName());
                 }
                 if (worldCreatorImpl.achievetodo$isItemRewardsEnabled()) {
                     packManager.enable(InternalPack.BACAP_REWARDS_ITEM.getDatapackName());
@@ -279,7 +261,7 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
                     packManager.enable(InternalPack.BACAP_COOPERATIVE_MODE.getDatapackName());
                 }
 
-                isWaitingDatapacks = true;
+                isWaitingDatapack = true;
                 applyDataPacks(packManager, false, (dataConfiguration) -> client.setScreen(createWorldScreen));
 
                 ci.cancel();

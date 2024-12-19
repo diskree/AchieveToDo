@@ -2,7 +2,7 @@ package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.ExternalPack;
 import com.diskree.achievetodo.Utils;
-import com.diskree.achievetodo.gui.DownloadExternalPackScreen;
+import com.diskree.achievetodo.gui.ExternalPackDownloader;
 import com.diskree.achievetodo.gui.ErrorScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
@@ -136,7 +136,7 @@ public abstract class WorldListWidgetMixin {
                 ci.cancel();
                 continue;
             }
-            client.setScreen(new DownloadExternalPackScreen(screen, externalPack, isFileDownloaded -> {
+            client.setScreen(new ExternalPackDownloader(screen, externalPack, isFileDownloaded -> {
                 if (isFileDownloaded) {
                     try {
                         Files.copy(globalPack, worldPack, StandardCopyOption.REPLACE_EXISTING);

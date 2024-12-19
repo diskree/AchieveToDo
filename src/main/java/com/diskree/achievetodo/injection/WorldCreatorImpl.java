@@ -20,17 +20,17 @@ public interface WorldCreatorImpl {
 
     boolean achievetodo$isCooperativeModeEnabled();
 
-    void achievetodo$setItemRewardsEnabled(boolean itemRewardsEnabled);
+    void achievetodo$setItemRewardsEnabled(boolean isItemRewardsEnabled);
 
-    void achievetodo$setExperienceRewardsEnabled(boolean experienceRewardsEnabled);
+    void achievetodo$setExperienceRewardsEnabled(boolean isExperienceRewardsEnabled);
 
-    void achievetodo$setTrophyRewardsEnabled(boolean trophyRewardsEnabled);
+    void achievetodo$setTrophyRewardsEnabled(boolean isTrophyRewardsEnabled);
 
-    void achievetodo$setTerralithEnabled(boolean terralithEnabled);
+    void achievetodo$setTerralithEnabled(boolean isTerralithEnabled);
 
-    void achievetodo$setAmplifiedNetherEnabled(boolean amplifiedNetherEnabled);
+    void achievetodo$setAmplifiedNetherEnabled(boolean isAmplifiedNetherEnabled);
 
-    void achievetodo$setNullscapeEnabled(boolean nullscapeEnabled);
+    void achievetodo$setNullscapeEnabled(boolean isNullscapeEnabled);
 
-    void achievetodo$setCooperativeModeEnabled(boolean cooperativeModeEnabled);
+    void achievetodo$setCooperativeModeEnabled(boolean isCooperativeModeEnabled);
 }

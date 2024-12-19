@@ -19,7 +19,7 @@ public class AchieveToDoClient implements ClientModInitializer {
         registerInternalDataPacks();
 
         ClientPlayNetworking.registerGlobalReceiver(SyncAdvancementsCountPayload.ID, (payload, context) ->
-            context.client().execute(() -> obtainedAdvancementsCount = payload.score())
+            context.client().execute(() -> obtainedAdvancementsCount = payload.count())
         );
     }
 

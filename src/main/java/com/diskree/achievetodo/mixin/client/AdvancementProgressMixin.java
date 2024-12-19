@@ -34,7 +34,9 @@ public abstract class AdvancementProgressMixin {
     )
     public void setObtainedAdvancementsCountForAbility(CallbackInfoReturnable<Integer> cir) {
         if (ability != null) {
-            cir.setReturnValue(AchieveToDoClient.obtainedAdvancementsCount);
+            cir.setReturnValue(
+                Math.min(AchieveToDoClient.obtainedAdvancementsCount, ability.getRequiredAdvancementsCount())
+            );
         }
     }
 

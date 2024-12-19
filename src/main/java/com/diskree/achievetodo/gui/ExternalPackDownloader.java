@@ -37,7 +37,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 @Environment(EnvType.CLIENT)
-public class DownloadExternalPackScreen extends ConfirmScreen {
+public class ExternalPackDownloader extends ConfirmScreen {
 
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
@@ -53,7 +53,7 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
     private ButtonWidget backButton;
     private static final AtomicBoolean isDownloadingCanceled = new AtomicBoolean(true);
 
-    public DownloadExternalPackScreen(Screen parent, @NotNull ExternalPack externalPack, BooleanConsumer exitCallback, boolean isOutdatedVersion) {
+    public ExternalPackDownloader(Screen parent, @NotNull ExternalPack externalPack, BooleanConsumer exitCallback, boolean isOutdatedVersion) {
         super(
             null,
             Text.translatable("achievetodo.downloader.title_prefix").append(Text.of(externalPack.getName()).copy().formatted(externalPack.getColor(), Formatting.ITALIC)),
@@ -117,6 +117,7 @@ public class DownloadExternalPackScreen extends ConfirmScreen {
                                 PointerBuffer filters = stack.mallocPointer(1);
                                 filters.put(0, stack.UTF8("*.zip"));
 
+                                @SuppressWarnings("DataFlowIssue")
                                 String selectedFilePath = TinyFileDialogs.tinyfd_openFileDialog(
                                     Text.translatable("achievetodo.downloader.select_file").getString(),
                                     System.getProperty("user.home"),
