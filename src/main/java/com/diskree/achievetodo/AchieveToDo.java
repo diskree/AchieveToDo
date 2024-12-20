@@ -6,8 +6,6 @@ import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -16,7 +14,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -155,31 +152,18 @@ public class AchieveToDo implements ModInitializer {
     @Override
     public void onInitialize() {
         PayloadTypeRegistry.playC2S().register(DemystifyAbilityPayload.ID, DemystifyAbilityPayload.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
+            context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
+        );
         PayloadTypeRegistry.playS2C().register(SyncAdvancementsCountPayload.ID, SyncAdvancementsCountPayload.CODEC);
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             advancementsCountByPlayerUUID.clear();
             prepareScoreboard(server.getScoreboard());
         });
-        ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
-            context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
-        );
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
             updateObtainedAdvancementsCount(server.getScoreboard(), handler.player)
         );
-
-        AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
-//            if (isAbilityLocked(player, AbilityType.findToolUsageAbility(item))) {
-//                return ActionResult.CONSUME;
-//            }
-            return ActionResult.PASS;
-        });
-        AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
-//            if (isAbilityLocked(player, AbilityType.findToolUsageAbility(item))) {
-//                return ActionResult.CONSUME;
-//            }
-            return ActionResult.PASS;
-        });
     }
 
     private static void demystifyAbility(@NotNull ServerPlayerEntity player, @NotNull AbilityType ability) {

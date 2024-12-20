@@ -1,8 +1,8 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.injection.PickaxeItemImpl;
+import com.diskree.achievetodo.injection.SwordItemImpl;
 import net.minecraft.item.Item;
-import net.minecraft.item.PickaxeItem;
+import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PickaxeItem.class)
-public abstract class PickaxeItemMixin implements PickaxeItemImpl {
+@Mixin(SwordItem.class)
+public abstract class SwordItemMixin implements SwordItemImpl {
 
     @Unique
     private ToolMaterial material;

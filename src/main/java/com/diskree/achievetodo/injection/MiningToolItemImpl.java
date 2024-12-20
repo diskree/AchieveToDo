@@ -2,7 +2,7 @@ package com.diskree.achievetodo.injection;
 
 import net.minecraft.item.ToolMaterial;
 
-public interface PickaxeItemImpl {
+public interface MiningToolItemImpl {
 
     ToolMaterial achievetodo$getMaterial();
 }

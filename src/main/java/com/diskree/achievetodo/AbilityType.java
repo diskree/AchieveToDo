@@ -2,7 +2,7 @@ package com.diskree.achievetodo;
 
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.injection.ArmorItemImpl;
-import com.diskree.achievetodo.injection.PickaxeItemImpl;
+import com.diskree.achievetodo.injection.MiningToolItemImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementRequirements;
@@ -11,10 +11,7 @@ import net.minecraft.block.*;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.component.type.FoodComponents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.ArmorMaterials;
 import net.minecraft.item.equipment.EquipmentType;
@@ -615,8 +612,9 @@ public enum AbilityType {
         }
         if (toolMaterial != null) {
             return Registries.ITEM.stream()
-                .filter(item -> item instanceof PickaxeItemImpl pickaxeItem &&
-                    pickaxeItem.achievetodo$getMaterial() == toolMaterial
+                .filter(item -> item instanceof PickaxeItem pickaxeItem &&
+                    pickaxeItem instanceof MiningToolItemImpl miningToolItem &&
+                    miningToolItem.achievetodo$getMaterial() == toolMaterial
                 )
                 .findFirst()
                 .orElse(null);
