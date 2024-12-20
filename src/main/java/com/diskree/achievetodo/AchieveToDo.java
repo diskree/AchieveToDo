@@ -68,37 +68,10 @@ public class AchieveToDo implements ModInitializer {
         }
     }
 
-    public static void updateObtainedAdvancementsCount(ServerScoreboard scoreboard, @NotNull ServerPlayerEntity player) {
-        if (currentAdvancementsMode == null) {
+    public static void setObtainedAdvancementsCount(@NotNull ServerPlayerEntity player, int count) {
+        if (count == 0) {
             return;
         }
-        int score = 0;
-        if (currentAdvancementsMode.isTeamsMode()) {
-            Team team = scoreboard.getScoreHolderTeam(player.getNameForScoreboard());
-            if (team != null) {
-                for (String playerName : team.getPlayerList()) {
-                    ReadableScoreboardScore playerScore = scoreboard.getScore(
-                        ScoreHolder.fromName(playerName),
-                        currentScoreboardObjective
-                    );
-                    if (playerScore != null) {
-                        score += playerScore.getScore();
-                    }
-                }
-            }
-        } else {
-            ReadableScoreboardScore playerScore = scoreboard.getScore(
-                ScoreHolder.fromName(player.getNameForScoreboard()),
-                currentScoreboardObjective
-            );
-            if (playerScore != null) {
-                score = playerScore.getScore();
-            }
-        }
-        setObtainedAdvancementsCount(player, score);
-    }
-
-    public static void setObtainedAdvancementsCount(@NotNull ServerPlayerEntity player, int count) {
         UUID playerUuid = player.getUuid();
         int oldCount = advancementsCountByPlayerUUID.getOrDefault(playerUuid, 0);
         advancementsCountByPlayerUUID.put(playerUuid, count);
@@ -112,16 +85,6 @@ public class AchieveToDo implements ModInitializer {
             }
         }
         ServerPlayNetworking.send(player, new SyncAdvancementsCountPayload(count));
-    }
-
-    public static int getObtainedAdvancementsCount(@NotNull PlayerEntity player) {
-        if (player.getWorld().isClient && player instanceof ClientPlayerEntity) {
-            return AchieveToDoClient.obtainedAdvancementsCount;
-        }
-        if (player instanceof ServerPlayerEntity) {
-            return advancementsCountByPlayerUUID.get(player.getUuid());
-        }
-        return 0;
     }
 
     public static boolean isAbilityLocked(PlayerEntity player, AbilityType ability) {
@@ -166,6 +129,39 @@ public class AchieveToDo implements ModInitializer {
         );
     }
 
+    private static void updateObtainedAdvancementsCount(
+        ServerScoreboard scoreboard,
+        @NotNull ServerPlayerEntity player
+    ) {
+        if (currentAdvancementsMode == null) {
+            return;
+        }
+        int score = 0;
+        if (currentAdvancementsMode.isTeamsMode()) {
+            Team team = scoreboard.getScoreHolderTeam(player.getNameForScoreboard());
+            if (team != null) {
+                for (String playerName : team.getPlayerList()) {
+                    ReadableScoreboardScore playerScore = scoreboard.getScore(
+                        ScoreHolder.fromName(playerName),
+                        currentScoreboardObjective
+                    );
+                    if (playerScore != null) {
+                        score += playerScore.getScore();
+                    }
+                }
+            }
+        } else {
+            ReadableScoreboardScore playerScore = scoreboard.getScore(
+                ScoreHolder.fromName(player.getNameForScoreboard()),
+                currentScoreboardObjective
+            );
+            if (playerScore != null) {
+                score = playerScore.getScore();
+            }
+        }
+        setObtainedAdvancementsCount(player, score);
+    }
+
     private static void demystifyAbility(@NotNull ServerPlayerEntity player, @NotNull AbilityType ability) {
         AdvancementEntry advancement = player.server.getAdvancementLoader()
             .get(AbilityAdvancementsGenerator.buildAdvancementId(ability));
@@ -181,5 +177,15 @@ public class AchieveToDo implements ModInitializer {
         for (String criterion : player.getAdvancementTracker().getProgress(advancement).getUnobtainedCriteria()) {
             player.getAdvancementTracker().grantCriterion(advancement, criterion);
         }
+    }
+
+    private static int getObtainedAdvancementsCount(@NotNull PlayerEntity player) {
+        if (player.getWorld().isClient && player instanceof ClientPlayerEntity) {
+            return AchieveToDoClient.obtainedAdvancementsCount;
+        }
+        if (player instanceof ServerPlayerEntity) {
+            return advancementsCountByPlayerUUID.get(player.getUuid());
+        }
+        return 0;
     }
 }

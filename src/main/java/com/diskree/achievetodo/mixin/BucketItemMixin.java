@@ -19,7 +19,8 @@ public abstract class BucketItemMixin {
         method = "placeFluid",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/block/FluidFillable;tryFillWithFluid(Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/fluid/FluidState;)Z"
+            target = "Lnet/minecraft/block/FluidFillable;tryFillWithFluid(Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/fluid/FluidState;)Z",
+            shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
@@ -38,8 +39,9 @@ public abstract class BucketItemMixin {
     @Inject(
         method = "placeFluid",
         at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/block/BlockState;isLiquid()Z"
+            value = "FIELD",
+            target = "Lnet/minecraft/world/World;isClient:Z",
+            shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
