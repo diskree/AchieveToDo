@@ -41,10 +41,9 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             EAT_GLOW_BERRIES,
             EAT_PUFFERFISH,
             EAT_POISONOUS_POTATO,
-            EAT_CHORUS_FRUIT,
+            EAT_SUSPICIOUS_STEW,
         },
         {
-            EAT_SUSPICIOUS_STEW,
             EAT_BEETROOT,
             EAT_CARROT,
             EAT_CHICKEN,
@@ -54,6 +53,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             EAT_APPLE,
             EAT_MELON_SLICE,
             EAT_COOKIE,
+            EAT_MUSHROOM_STEW,
         },
         {
             OPEN_CHEST,
@@ -133,7 +133,6 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             USING_ENCHANTING_TABLE,
         },
         {
-            EAT_MUSHROOM_STEW,
             EAT_RABBIT_STEW,
             EAT_HONEY_BOTTLE,
             EAT_PUMPKIN_PIE,
@@ -143,9 +142,9 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             EAT_MUTTON,
             EAT_PORKCHOP,
             EAT_BEEF,
+            EAT_BAKED_POTATO,
         },
         {
-            EAT_BAKED_POTATO,
             EAT_COOKED_SALMON,
             EAT_COOKED_COD,
             EAT_COOKED_RABBIT,
@@ -154,6 +153,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             EAT_COOKED_PORKCHOP,
             EAT_COOKED_BEEF,
             EAT_BREAD,
+            EAT_CHORUS_FRUIT,
             EAT_GOLDEN_CARROT,
         },
     };

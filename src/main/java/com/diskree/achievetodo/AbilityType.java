@@ -120,9 +120,6 @@ public enum AbilityType {
     EAT_POISONOUS_POTATO(
         22, FoodComponents.POISONOUS_POTATO
     ),
-    EAT_CHORUS_FRUIT(
-        27, FoodComponents.CHORUS_FRUIT
-    ),
     EAT_SUSPICIOUS_STEW(
         32, FoodComponents.SUSPICIOUS_STEW
     ),
@@ -209,6 +206,9 @@ public enum AbilityType {
     ),
     EAT_BREAD(
         654, FoodComponents.BREAD
+    ),
+    EAT_CHORUS_FRUIT(
+        686, FoodComponents.CHORUS_FRUIT
     ),
     EAT_GOLDEN_CARROT(
         702, FoodComponents.GOLDEN_CARROT
@@ -632,7 +632,7 @@ public enum AbilityType {
             return switch (this) {
                 case NETHER -> Items.OBSIDIAN;
                 case END -> Items.END_PORTAL_FRAME;
-                case OUTER_ISLANDS -> Items.CHORUS_PLANT;
+                case OUTER_ISLANDS -> Items.CHORUS_FLOWER;
                 default -> null;
             };
         }
