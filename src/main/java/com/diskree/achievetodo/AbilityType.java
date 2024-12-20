@@ -38,10 +38,10 @@ public enum AbilityType {
     SLEEP(
         20
     ),
-    OPEN_INVENTORY(
+    BREAK_BLOCKS(
         25
     ),
-    BREAK_BLOCKS(
+    OPEN_INVENTORY(
         30
     ),
     USING_BOAT(
