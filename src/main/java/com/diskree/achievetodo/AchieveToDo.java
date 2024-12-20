@@ -16,7 +16,6 @@ import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -29,7 +28,7 @@ public class AchieveToDo implements ModInitializer {
     public static ScoreboardObjective currentScoreboardObjective;
     public static ScoreboardDisplaySlot currentScoreboardDisplaySlot;
 
-    private static final Map<UUID, Integer> advancementsCountByPlayerUUID = new HashMap<>();
+    private static final Map<UUID, Integer> advancementsCountByPlayerUUID = new Object2IntOpenHashMap<>();
 
     public static void prepareScoreboard(ServerScoreboard scoreboard) {
         AdvancementsMode oldAdvancementsMode = currentAdvancementsMode;
