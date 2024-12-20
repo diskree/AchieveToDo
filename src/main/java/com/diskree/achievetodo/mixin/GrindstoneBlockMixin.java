@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GrindstoneBlock.class)
-public abstract class GrindstoneBlockMixin {
+public class GrindstoneBlockMixin {
 
     @Inject(
         method = "onUse",

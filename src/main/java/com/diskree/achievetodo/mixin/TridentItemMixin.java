@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TridentItem.class)
-public abstract class TridentItemMixin {
+public class TridentItemMixin {
 
     @Inject(
         method = "use",

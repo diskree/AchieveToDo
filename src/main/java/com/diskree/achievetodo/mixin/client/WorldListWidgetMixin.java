@@ -2,8 +2,8 @@ package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.ExternalPack;
 import com.diskree.achievetodo.Utils;
-import com.diskree.achievetodo.gui.ExternalPackDownloader;
 import com.diskree.achievetodo.gui.ErrorScreen;
+import com.diskree.achievetodo.gui.ExternalPackDownloader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.minecraft.client.gui.screen.world.WorldListWidget;

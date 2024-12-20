@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BrushItem.class)
-public abstract class BrushItemMixin {
+public class BrushItemMixin {
 
     @Inject(
         method = "useOnBlock",

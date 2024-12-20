@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BucketItem.class)
-public abstract class BucketItemMixin {
+public class BucketItemMixin {
 
     @Inject(
         method = "placeFluid",

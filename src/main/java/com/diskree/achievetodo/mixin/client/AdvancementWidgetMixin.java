@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AdvancementWidget.class)
-public abstract class AdvancementWidgetMixin {
+public class AdvancementWidgetMixin {
 
     @Unique
     private static final Identifier ABILITY_MYSTIFIED_MASK_TEXTURE =
@@ -42,7 +42,10 @@ public abstract class AdvancementWidgetMixin {
 
     @Unique
     private boolean shouldRenderMystifiedMask() {
-        if (ability == null || progress == null || !AchieveToDo.isAbilityLocked(client.player, ability, true)) {
+        if (progress == null ||
+            client.player == null ||
+            !AchieveToDo.isAbilityLocked(client.player, ability, true)
+        ) {
             return false;
         }
         CriterionProgress demystifiedCriterionProgress = progress.getCriterionProgress(

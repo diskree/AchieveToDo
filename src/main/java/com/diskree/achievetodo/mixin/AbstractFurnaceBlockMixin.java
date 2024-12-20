@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractFurnaceBlock.class)
-public abstract class AbstractFurnaceBlockMixin {
+public class AbstractFurnaceBlockMixin {
 
     @Inject(
         method = "onUse",

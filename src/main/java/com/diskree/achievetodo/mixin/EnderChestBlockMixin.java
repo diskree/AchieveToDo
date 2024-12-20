@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EnderChestBlock.class)
-public abstract class EnderChestBlockMixin {
+public class EnderChestBlockMixin {
 
     @Inject(
         method = "onUse",

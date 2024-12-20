@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AdvancementProgress.class)
-public abstract class AdvancementProgressMixin {
+public class AdvancementProgressMixin {
 
     @Unique
     private AbilityType ability;

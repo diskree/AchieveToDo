@@ -53,18 +53,30 @@ public class ExternalPackDownloader extends ConfirmScreen {
     private ButtonWidget backButton;
     private static final AtomicBoolean isDownloadingCanceled = new AtomicBoolean(true);
 
-    public ExternalPackDownloader(Screen parent, @NotNull ExternalPack externalPack, BooleanConsumer exitCallback, boolean isOutdatedVersion) {
+    public ExternalPackDownloader(
+        Screen parent,
+        @NotNull ExternalPack externalPack,
+        BooleanConsumer exitCallback,
+        boolean isOutdatedVersion
+    ) {
         super(
             null,
-            Text.translatable("achievetodo.downloader.title_prefix").append(Text.of(externalPack.getName()).copy().formatted(externalPack.getColor(), Formatting.ITALIC)),
-            Text.translatable(isOutdatedVersion ? "achievetodo.downloader.reason.outdated" : "achievetodo.downloader.reason." + externalPack.name().toLowerCase())
+            Text.translatable("achievetodo.downloader.title_prefix")
+                .append(
+                    Text.of(externalPack.getName())
+                        .copy()
+                        .formatted(externalPack.getColor(), Formatting.ITALIC)
+                ),
+            Text.translatable(isOutdatedVersion ? "achievetodo.downloader.reason.outdated" : externalPack.getReasonKey())
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
-                .append(Text.translatable(externalPack.isInGameDownloadSupported() ? "achievetodo.downloader.automatically_info" : "achievetodo.downloader.manually_info")
-                    .copy().formatted(Formatting.YELLOW)
+                .append(
+                    Text.translatable(externalPack.isInGameDownloadSupported() ? "achievetodo.downloader.automatically_info" : "achievetodo.downloader.manually_info")
+                        .copy()
+                        .formatted(Formatting.YELLOW)
                 )
         );
         this.parent = parent;

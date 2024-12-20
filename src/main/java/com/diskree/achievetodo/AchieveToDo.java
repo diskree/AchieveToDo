@@ -19,8 +19,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class AchieveToDo implements ModInitializer {
+
+    public static Logger logger = Logger.getLogger(BuildConfig.MOD_NAME);
 
     public static AdvancementsMode currentAdvancementsMode;
     public static ScoreboardObjective currentScoreboardObjective;
@@ -56,6 +59,9 @@ public class AchieveToDo implements ModInitializer {
             currentScoreboardObjective == null ||
             currentScoreboardDisplaySlot == null
         ) {
+            logger.warning("Can't find advancements counter in scoreboard! " +
+                "Please check that BACAP datapack is installed " +
+                "or enable advancements counter in the sidebar, tab list or below player names.");
             return;
         }
         if (currentAdvancementsMode != oldAdvancementsMode ||
@@ -92,8 +98,7 @@ public class AchieveToDo implements ModInitializer {
     }
 
     public static boolean isAbilityLocked(PlayerEntity player, AbilityType ability, boolean checkOnly) {
-        if (player == null ||
-            ability == null ||
+        if (ability == null ||
             player.isCreative() ||
             player.isSpectator() ||
             getObtainedAdvancementsCount(player) >= ability.getRequiredAdvancementsCount()
@@ -124,8 +129,8 @@ public class AchieveToDo implements ModInitializer {
             advancementsCountByPlayerUUID.clear();
             prepareScoreboard(server.getScoreboard());
         });
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-            updateObtainedAdvancementsCount(server.getScoreboard(), handler.player)
+        ServerPlayConnectionEvents.JOIN.register(
+            (handler, sender, server) -> updateObtainedAdvancementsCount(server.getScoreboard(), handler.player)
         );
     }
 
@@ -136,30 +141,33 @@ public class AchieveToDo implements ModInitializer {
         if (currentAdvancementsMode == null) {
             return;
         }
-        int score = 0;
+        int count = 0;
+        String playerName = player.getNameForScoreboard();
         if (currentAdvancementsMode.isTeamsMode()) {
-            Team team = scoreboard.getScoreHolderTeam(player.getNameForScoreboard());
-            if (team != null) {
-                for (String playerName : team.getPlayerList()) {
-                    ReadableScoreboardScore playerScore = scoreboard.getScore(
-                        ScoreHolder.fromName(playerName),
-                        currentScoreboardObjective
-                    );
-                    if (playerScore != null) {
-                        score += playerScore.getScore();
-                    }
+            Team team = scoreboard.getScoreHolderTeam(playerName);
+            if (team == null) {
+                logger.warning("Player [" + playerName + "] is not a member of any team!");
+                return;
+            }
+            for (String teamMemberName : team.getPlayerList()) {
+                ReadableScoreboardScore teamMemberScore = scoreboard.getScore(
+                    ScoreHolder.fromName(teamMemberName),
+                    currentScoreboardObjective
+                );
+                if (teamMemberScore != null) {
+                    count += teamMemberScore.getScore();
                 }
             }
         } else {
             ReadableScoreboardScore playerScore = scoreboard.getScore(
-                ScoreHolder.fromName(player.getNameForScoreboard()),
+                ScoreHolder.fromName(playerName),
                 currentScoreboardObjective
             );
             if (playerScore != null) {
-                score = playerScore.getScore();
+                count = playerScore.getScore();
             }
         }
-        setObtainedAdvancementsCount(player, score);
+        setObtainedAdvancementsCount(player, count);
     }
 
     private static void demystifyAbility(@NotNull ServerPlayerEntity player, @NotNull AbilityType ability) {

@@ -313,5 +313,7 @@
 
   "achievetodo.locked_message.left": "Advancements left: ",
 
-  "%1$s has unblocked %2$s%3$s%4$s": "%1$s has unblocked %2$s%3$s%4$s"
+  "%1$s has unblocked %2$s%3$s%4$s": "%1$s has unblocked %2$s%3$s%4$s",
+
+  "achievetodo.suggest_install_advancements_search_mod": "To navigate to advancements, install the "
 }

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ShieldItem.class)
-public abstract class ShieldItemMixin {
+public class ShieldItemMixin {
 
     @Inject(
         method = "use",

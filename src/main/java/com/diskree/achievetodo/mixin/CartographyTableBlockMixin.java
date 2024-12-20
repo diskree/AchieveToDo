@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CartographyTableBlock.class)
-public abstract class CartographyTableBlockMixin {
+public class CartographyTableBlockMixin {
 
     @Inject(
         method = "onUse",

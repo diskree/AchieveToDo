@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BrewingStandBlock.class)
-public abstract class BrewingStandBlockMixin {
+public class BrewingStandBlockMixin {
 
     @Inject(
         method = "onUse",

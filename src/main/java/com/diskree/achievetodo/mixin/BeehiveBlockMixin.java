@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BeehiveBlock.class)
-public abstract class BeehiveBlockMixin {
+public class BeehiveBlockMixin {
 
     @Inject(
         method = "onUseWithItem",

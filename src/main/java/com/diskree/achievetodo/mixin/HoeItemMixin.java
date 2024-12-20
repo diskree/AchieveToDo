@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(HoeItem.class)
-public abstract class HoeItemMixin {
+public class HoeItemMixin {
 
     @Unique
     private ToolMaterial material;

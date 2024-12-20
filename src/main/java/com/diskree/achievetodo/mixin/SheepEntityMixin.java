@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SheepEntity.class)
-public abstract class SheepEntityMixin {
+public class SheepEntityMixin {
 
     @Inject(
         method = "interactMob",

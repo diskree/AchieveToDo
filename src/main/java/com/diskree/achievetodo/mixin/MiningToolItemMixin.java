@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MiningToolItem.class)
-public abstract class MiningToolItemMixin implements MiningToolItemImpl {
+public class MiningToolItemMixin implements MiningToolItemImpl {
 
     @Unique
     private ToolMaterial material;

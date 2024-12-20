@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EnchantingTableBlock.class)
-public abstract class EnchantedTableBlockMixin {
+public class EnchantedTableBlockMixin {
 
     @Inject(
         method = "onUse",

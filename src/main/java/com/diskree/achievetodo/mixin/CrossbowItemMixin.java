@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CrossbowItem.class)
-public abstract class CrossbowItemMixin {
+public class CrossbowItemMixin {
 
     @Inject(
         method = "use",

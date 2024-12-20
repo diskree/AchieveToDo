@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LoomBlock.class)
-public abstract class LoomBlockMixin {
+public class LoomBlockMixin {
 
     @Inject(
         method = "onUse",

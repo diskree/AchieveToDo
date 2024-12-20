@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MooshroomEntity.class)
-public abstract class MooshroomEntityMixin {
+public class MooshroomEntityMixin {
 
     @Inject(
         method = "interactMob",

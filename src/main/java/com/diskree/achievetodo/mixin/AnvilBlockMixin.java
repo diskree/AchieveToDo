@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AnvilBlock.class)
-public abstract class AnvilBlockMixin {
+public class AnvilBlockMixin {
 
     @Inject(
         method = "onUse",

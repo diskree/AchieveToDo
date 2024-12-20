@@ -1,9 +1,8 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
-import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.util.Identifier;
@@ -19,17 +18,15 @@ import java.util.List;
 import java.util.Set;
 
 @Mixin(PlacedAdvancement.class)
-public abstract class PlacedAdvancementMixin {
-
-    @Shadow
-    public abstract AdvancementEntry getAdvancementEntry();
+public class PlacedAdvancementMixin {
 
     @Shadow
     @Final
     private Set<PlacedAdvancement> children;
 
     @Shadow
-    public abstract Advancement getAdvancement();
+    @Final
+    private AdvancementEntry advancementEntry;
 
     @Inject(
         method = "getChildren",
@@ -37,8 +34,8 @@ public abstract class PlacedAdvancementMixin {
         cancellable = true
     )
     public void getChildrenInject(CallbackInfoReturnable<Iterable<PlacedAdvancement>> cir) {
-        Identifier advancementId = getAdvancementEntry().id();
-        if (advancementId.getNamespace().equals(BuildConfig.MOD_ID) && getAdvancement().isRoot()) {
+        Identifier advancementId = advancementEntry.id();
+        if (advancementId.getNamespace().equals(BuildConfig.MOD_ID) && advancementEntry.value().isRoot()) {
             List<Identifier> rowsOrder = new ArrayList<>();
             for (AbilityType[] row : AbilityAdvancementsGenerator.TREE) {
                 rowsOrder.add(AbilityAdvancementsGenerator.buildAdvancementId(row[0]));

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SmithingTableBlock.class)
-public abstract class SmithingTableBlockMixin {
+public class SmithingTableBlockMixin {
 
     @Inject(
         method = "onUse",

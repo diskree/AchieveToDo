@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.function.Predicate;
 
 @Mixin(AdvancementDisplays.class)
-public abstract class AdvancementVisibilityEvaluatorMixin {
+public class AdvancementVisibilityEvaluatorMixin {
 
     @Inject(
         method = "shouldDisplay(Lnet/minecraft/advancement/PlacedAdvancement;Lit/unimi/dsi/fastutil/Stack;Ljava/util/function/Predicate;Lnet/minecraft/advancement/AdvancementDisplays$ResultConsumer;)Z",

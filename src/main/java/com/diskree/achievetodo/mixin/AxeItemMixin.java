@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 
 @Mixin(AxeItem.class)
-public abstract class AxeItemMixin {
+public class AxeItemMixin {
 
     @Unique
     private ToolMaterial material;

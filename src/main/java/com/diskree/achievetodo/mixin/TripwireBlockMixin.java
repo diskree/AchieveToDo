@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TripwireBlock.class)
-public abstract class TripwireBlockMixin {
+public class TripwireBlockMixin {
 
     @Inject(
         method = "onBreak",

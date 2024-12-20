@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SwordItem.class)
-public abstract class SwordItemMixin implements SwordItemImpl {
+public class SwordItemMixin implements SwordItemImpl {
 
     @Unique
     private ToolMaterial material;

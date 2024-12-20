@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EquippableComponent.class)
-public abstract class EquippableComponentMixin {
+public class EquippableComponentMixin {
 
     @Inject(
         method = "equip",

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EnderPearlItem.class)
-public abstract class EnderPearlItemMixin {
+public class EnderPearlItemMixin {
 
     @Inject(
         method = "use",

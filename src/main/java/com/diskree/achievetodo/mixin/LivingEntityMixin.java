@@ -45,7 +45,11 @@ public class LivingEntityMixin {
 
     @Inject(
         method = "jump",
-        at = @At("HEAD"),
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/entity/LivingEntity;getVelocity()Lnet/minecraft/util/math/Vec3d;",
+            shift = At.Shift.BEFORE
+        ),
         cancellable = true
     )
     public void lockJump(CallbackInfo ci) {

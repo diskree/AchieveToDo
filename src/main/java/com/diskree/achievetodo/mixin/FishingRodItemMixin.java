@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FishingRodItem.class)
-public abstract class FishingRodItemMixin {
+public class FishingRodItemMixin {
 
     @Inject(
         method = "use",

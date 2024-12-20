@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WolfEntity.class)
-public abstract class WolfEntityMixin {
+public class WolfEntityMixin {
 
     @Inject(
         method = "interactMob",

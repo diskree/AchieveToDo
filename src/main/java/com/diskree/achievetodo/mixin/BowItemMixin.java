@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BowItem.class)
-public abstract class BowItemMixin {
+public class BowItemMixin {
 
     @Inject(
         method = "use",

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ConsumableComponent.class)
-public abstract class ConsumableComponentMixin {
+public class ConsumableComponentMixin {
 
     @Inject(
         method = "consume",
