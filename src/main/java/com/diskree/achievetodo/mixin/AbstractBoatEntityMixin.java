@@ -18,8 +18,9 @@ public class AbstractBoatEntityMixin {
         at = @At("TAIL")
     )
     private boolean lockBoat(boolean original, @Local(argsOnly = true) Entity passenger) {
-        return original &&
-            passenger instanceof PlayerEntity player &&
-            !AchieveToDo.isAbilityLocked(player, AbilityType.USING_BOAT);
+        return original && (
+            !(passenger instanceof PlayerEntity player) ||
+                !AchieveToDo.isAbilityLocked(player, AbilityType.USING_BOAT)
+        );
     }
 }
