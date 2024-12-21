@@ -24,3 +24,6 @@ function blazeandcave:setup_item_rewards
 function blazeandcave:setup_experience_rewards
 function blazeandcave:setup_trophy_rewards
 function blazeandcave:setup_cooperative_mode
+
+scoreboard players set intro_msg bac_settings 0
+scoreboard players set introduced bac_settings 1
