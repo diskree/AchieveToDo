@@ -26,7 +26,7 @@ public class LoomBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockLoom(
         BlockState state,
         World world,
         BlockPos pos,

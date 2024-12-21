@@ -3,6 +3,7 @@ package com.diskree.achievetodo;
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.networking.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -92,11 +93,11 @@ public class AchieveToDo implements ModInitializer {
         ServerPlayNetworking.send(player, new SyncAdvancementsCountPayload(count));
     }
 
-    public static boolean isAbilityLocked(PlayerEntity player, AbilityType ability) {
+    public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability) {
         return isAbilityLocked(player, ability, false);
     }
 
-    public static boolean isAbilityLocked(PlayerEntity player, AbilityType ability, boolean checkOnly) {
+    public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability, boolean checkOnly) {
         if (ability == null ||
             player.isCreative() ||
             player.isSpectator() ||

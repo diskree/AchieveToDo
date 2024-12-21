@@ -26,7 +26,7 @@ public class GrindstoneBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockGrindstone(
         BlockState state,
         World world,
         BlockPos pos,

@@ -2,7 +2,8 @@ package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
-import net.minecraft.block.*;
+import net.minecraft.block.BarrelBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -13,19 +14,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AbstractFurnaceBlock.class)
-public class AbstractFurnaceBlockMixin {
+@Mixin(BarrelBlock.class)
+public class BarrelBlockMixin {
 
     @Inject(
         method = "onUse",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/block/AbstractFurnaceBlock;openScreen(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/player/PlayerEntity;)V",
+            target = "Lnet/minecraft/entity/player/PlayerEntity;openHandledScreen(Lnet/minecraft/screen/NamedScreenHandlerFactory;)Ljava/util/OptionalInt;",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
-    public void lockFurnace(
+    public void lockBarrel(
         BlockState state,
         World world,
         BlockPos pos,
@@ -33,16 +34,7 @@ public class AbstractFurnaceBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        AbstractFurnaceBlock abstractFurnaceBlock = (AbstractFurnaceBlock) (Object) this;
-        AbilityType ability = null;
-        if (abstractFurnaceBlock instanceof FurnaceBlock) {
-            ability = AbilityType.OPEN_FURNACE;
-        } else if (abstractFurnaceBlock instanceof SmokerBlock) {
-            ability = AbilityType.OPEN_SMOKER;
-        } else if (abstractFurnaceBlock instanceof BlastFurnaceBlock) {
-            ability = AbilityType.OPEN_BLAST_FURNACE;
-        }
-        if (AchieveToDo.isAbilityLocked(player, ability)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_BARREL)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

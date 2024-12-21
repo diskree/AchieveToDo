@@ -6,6 +6,7 @@ import net.minecraft.component.type.ConsumableComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,6 +36,24 @@ public class ConsumableComponentMixin {
             AchieveToDo.isAbilityLocked(player, AbilityType.findEatFoodAbility(stack))
         ) {
             cir.setReturnValue(ActionResult.PASS);
+        }
+    }
+
+    @Inject(
+        method = "canConsume",
+        at = @At(value = "HEAD"),
+        cancellable = true
+    )
+    public void lockOminousBottle(
+        LivingEntity user,
+        ItemStack stack,
+        CallbackInfoReturnable<Boolean> cir
+    ) {
+        if (user instanceof PlayerEntity player &&
+            stack.isOf(Items.OMINOUS_BOTTLE) &&
+            AchieveToDo.isAbilityLocked(player, AbilityType.USE_OMINOUS_BOTTLE)
+        ) {
+            cir.setReturnValue(false);
         }
     }
 }

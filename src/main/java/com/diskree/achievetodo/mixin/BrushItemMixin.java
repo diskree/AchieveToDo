@@ -24,7 +24,7 @@ public class BrushItemMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockBrush(
         ItemUsageContext context,
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player

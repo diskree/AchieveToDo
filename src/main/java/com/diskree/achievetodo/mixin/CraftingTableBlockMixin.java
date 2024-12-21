@@ -26,7 +26,7 @@ public class CraftingTableBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockCraftingTable(
         BlockState state,
         World world,
         BlockPos pos,

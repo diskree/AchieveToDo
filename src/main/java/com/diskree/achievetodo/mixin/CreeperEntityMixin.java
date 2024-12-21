@@ -3,33 +3,39 @@ package com.diskree.achievetodo.mixin;
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.ShearsItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ShearsItem.class)
-public class ShearsItemMixin {
+@Mixin(CreeperEntity.class)
+public class CreeperEntityMixin {
 
     @Inject(
-        method = "useOnBlock",
+        method = "interactMob",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/item/ItemUsageContext;getStack()Lnet/minecraft/item/ItemStack;",
+            target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
-    public void lockShears(
-        ItemUsageContext context,
+    public void lockFlintAndSteel(
+        PlayerEntity player,
+        Hand hand,
         CallbackInfoReturnable<ActionResult> cir,
-        @Local PlayerEntity player
+        @Local @NotNull ItemStack itemStack
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_SHEARS)) {
+        if (itemStack.isOf(Items.FLINT_AND_STEEL) &&
+            AchieveToDo.isAbilityLocked(player, AbilityType.USING_FLINT_AND_STEEL)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

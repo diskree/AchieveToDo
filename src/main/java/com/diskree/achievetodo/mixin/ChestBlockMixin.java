@@ -26,7 +26,7 @@ public class ChestBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockChest(
         BlockState state,
         World world,
         BlockPos pos,

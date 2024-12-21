@@ -26,7 +26,7 @@ public class AnvilBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockAnvil(
         BlockState state,
         World world,
         BlockPos pos,

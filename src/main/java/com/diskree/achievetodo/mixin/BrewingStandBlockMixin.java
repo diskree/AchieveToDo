@@ -26,7 +26,7 @@ public class BrewingStandBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockBrewingStand(
         BlockState state,
         World world,
         BlockPos pos,

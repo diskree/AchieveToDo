@@ -26,7 +26,7 @@ public class SmithingTableBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockSmithingTable(
         BlockState state,
         World world,
         BlockPos pos,

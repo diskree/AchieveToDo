@@ -26,7 +26,7 @@ public class StonecutterBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockStonecutter(
         BlockState state,
         World world,
         BlockPos pos,

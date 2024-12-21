@@ -45,7 +45,7 @@ public class HoeItemMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockTool(
         ItemUsageContext context,
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player

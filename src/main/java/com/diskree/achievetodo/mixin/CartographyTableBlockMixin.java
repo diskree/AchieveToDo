@@ -26,7 +26,7 @@ public class CartographyTableBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockCartographyTable(
         BlockState state,
         World world,
         BlockPos pos,

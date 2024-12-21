@@ -343,6 +343,84 @@ public enum AbilityType {
     ),
     VILLAGER_LIBRARIAN(
         900, VillagerProfession.LIBRARIAN
+    ),
+    UNLOCK_VAULT(
+        999
+    ),
+    USING_CAMPFIRE(
+        999
+    ),
+    USING_CAULDRON(
+        999
+    ),
+    USING_JUKEBOX(
+        999
+    ),
+    USING_COMPOSTER(
+        999
+    ),
+    PLACE_END_CRYSTAL(
+        999
+    ),
+    THROW_ENDER_EYE(
+        999
+    ),
+    CHARGE_RESPAWN_ANCHOR(
+        999
+    ),
+    OPEN_BARREL(
+        999
+    ),
+    IGNITE_TNT(
+        999
+    ),
+    OPEN_TRAPDOOR(
+        999
+    ),
+    OPEN_FENCE_GATE(
+        999
+    ),
+    USING_MINECART(
+        999
+    ),
+    USING_FLINT_AND_STEEL(
+        999
+    ),
+    USE_BUNDLE(
+        999
+    ),
+    THROW_EGG(
+        999
+    ),
+    THROW_SNOWBALL(
+        999
+    ),
+    THROW_WIND_CHARGE(
+        999
+    ),
+    USE_OMINOUS_BOTTLE(
+        999
+    ),
+    EQUIP_TURTLE_HELMET(
+        999
+    ),
+    USE_MACE(
+        999
+    ),
+    WANDERING_TRADER(
+        999
+    ),
+    SWIM(
+        999
+    ),
+    SNEAK(
+        999
+    ),
+    SPRINT(
+        999
+    ),
+    SEE(
+        999
     );
 
     private final int requiredAdvancementsCount;
@@ -504,6 +582,9 @@ public enum AbilityType {
         if (item == null) {
             return null;
         }
+        if (item == Items.TURTLE_HELMET) {
+            return EQUIP_TURTLE_HELMET;
+        }
         if (item == Items.ELYTRA) {
             return EQUIP_ELYTRA;
         }
@@ -650,7 +731,7 @@ public enum AbilityType {
             case JUMP -> Items.SLIME_BLOCK;
             case OPEN_DOOR -> Items.DARK_OAK_DOOR;
             case SLEEP -> Items.RED_BED;
-            case OPEN_INVENTORY -> Items.BUNDLE;
+            case OPEN_INVENTORY -> Items.LIGHT_GRAY_BUNDLE;
             case BREAK_BLOCKS -> Items.COBBLESTONE;
             case USING_BOAT -> Items.OAK_BOAT;
             case BREAK_BLOCKS_IN_NEGATIVE_Y -> Items.COBBLED_DEEPSLATE;

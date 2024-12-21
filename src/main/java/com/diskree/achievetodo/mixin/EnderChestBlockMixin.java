@@ -26,7 +26,7 @@ public class EnderChestBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockEnderChest(
         BlockState state,
         World world,
         BlockPos pos,

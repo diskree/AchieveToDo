@@ -26,7 +26,7 @@ public class EnchantedTableBlockMixin {
         ),
         cancellable = true
     )
-    public void lockUsage(
+    public void lockEnchantingTable(
         BlockState state,
         World world,
         BlockPos pos,
