@@ -11,11 +11,11 @@ public enum AbilityCategory {
     BLOCK,
     TOOL,
     EQUIPMENT,
-    DIMENSION,
+    PORTAL,
     VILLAGER;
 
     public @NotNull Text getUnblockPopupTitle() {
-        return Text.translatable("achievetodo.unblocked." + getName()).append("!");
+        return Text.translatable("achievetodo.unlocked." + getName()).append("!");
     }
 
     public @NotNull String getName() {

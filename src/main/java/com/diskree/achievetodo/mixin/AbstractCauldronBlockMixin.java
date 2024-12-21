@@ -44,7 +44,7 @@ public class AbstractCauldronBlockMixin {
         Operation<ActionResult> original
     ) {
         if (behavior != ((Object2ObjectOpenHashMap<?, ?>) behaviorMap.map()).defaultReturnValue() &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.USING_CAULDRON)
+            AchieveToDo.isAbilityLocked(player, AbilityType.USE_CAULDRON)
         ) {
             return ActionResult.CONSUME;
         }

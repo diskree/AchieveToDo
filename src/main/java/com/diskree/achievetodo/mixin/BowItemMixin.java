@@ -30,7 +30,7 @@ public class BowItemMixin {
         Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_BOW)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.SHOOT_BOW)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
     }

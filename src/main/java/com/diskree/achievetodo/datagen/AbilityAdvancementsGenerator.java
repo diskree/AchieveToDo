@@ -11,6 +11,7 @@ import net.minecraft.advancement.AdvancementRewards;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.advancement.criterion.TickCriterion;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -30,6 +31,8 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
     public static final String UNLOCKED_CRITERION = BuildConfig.MOD_ID + "_" + "unlocked";
 
     public static final String ABILITY_PATH_PREFIX = "abilities/";
+
+    public static final Block BACKGROUND = Blocks.PALE_MOSS_BLOCK;
     public static final AbilityType[][] TREE = new AbilityType[][]{
         {
             EAT_SALMON,
@@ -57,21 +60,21 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
         },
         {
             OPEN_CHEST,
-            USING_CRAFTING_TABLE,
-            USING_STONECUTTER,
+            OPEN_CRAFTING_TABLE,
+            OPEN_STONECUTTER,
             OPEN_FURNACE,
-            USING_ANVIL,
-            USING_GRINDSTONE,
-            USING_LOOM,
+            OPEN_ANVIL,
+            OPEN_GRINDSTONE,
+            OPEN_LOOM,
             OPEN_SMOKER,
         },
         {
-            USING_GOLDEN_TOOLS,
+            USE_GOLDEN_TOOLS,
             EQUIP_GOLDEN_ARMOR,
-            USING_WOODEN_TOOLS,
-            USING_STONE_TOOLS,
+            USE_WOODEN_TOOLS,
+            USE_STONE_TOOLS,
             EQUIP_LEATHER_ARMOR,
-            USING_IRON_TOOLS,
+            USE_IRON_TOOLS,
             EQUIP_IRON_ARMOR,
             EQUIP_CHAINMAIL_ARMOR,
         },
@@ -81,56 +84,56 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             SLEEP,
             BREAK_BLOCKS,
             OPEN_INVENTORY,
-            USING_BOAT,
-            USING_SHIELD,
-            USING_WATER_BUCKET,
-            USING_SHEARS,
+            GET_INTO_BOAT,
+            USE_SHIELD,
+            USE_WATER_BUCKET,
+            USE_SHEARS,
         },
         {
-            VILLAGER_MASON,
-            VILLAGER_CARTOGRAPHER,
-            VILLAGER_LEATHERWORKER,
-            VILLAGER_SHEPHERD,
-            VILLAGER_BUTCHER,
-            VILLAGER_FARMER,
-            VILLAGER_CLERIC,
-            VILLAGER_FISHERMAN,
-            VILLAGER_FLETCHER,
-            VILLAGER_ARMORER,
-            VILLAGER_WEAPONSMITH,
-            VILLAGER_TOOLSMITH,
-            VILLAGER_LIBRARIAN,
+            TRADE_WITH_MASON,
+            TRADE_WITH_CARTOGRAPHER,
+            TRADE_WITH_LEATHERWORKER,
+            TRADE_WITH_SHEPHERD,
+            TRADE_WITH_BUTCHER,
+            TRADE_WITH_FARMER,
+            TRADE_WITH_CLERIC,
+            TRADE_WITH_FISHERMAN,
+            TRADE_WITH_FLETCHER,
+            TRADE_WITH_ARMORER,
+            TRADE_WITH_WEAPONSMITH,
+            TRADE_WITH_TOOLSMITH,
+            TRADE_WITH_LIBRARIAN,
         },
         {
-            USING_CROSSBOW,
+            SHOOT_CROSSBOW,
             BREAK_BLOCKS_IN_NEGATIVE_Y,
-            USING_FISHING_ROD,
-            USING_BOW,
-            USING_BRUSH,
-            USING_SPYGLASS,
-            THROW_TRIDENT,
+            USE_FISHING_ROD,
+            SHOOT_BOW,
+            USE_BRUSH,
+            USE_SPYGLASS,
+            ATTACK_WITH_TRIDENT,
             THROW_ENDER_PEARL,
-            FLY,
+            GLIDE_WITH_FIREWORKS,
         },
         {
-            NETHER,
+            ENTER_NETHER,
             EQUIP_DIAMOND_ARMOR,
-            USING_DIAMOND_TOOLS,
-            USING_NETHERITE_TOOLS,
+            USE_DIAMOND_TOOLS,
+            USE_NETHERITE_TOOLS,
             EQUIP_NETHERITE_ARMOR,
-            END,
+            ENTER_END,
             EQUIP_ELYTRA,
-            OUTER_ISLANDS,
+            TELEPORT_OUTER_ISLANDS,
         },
         {
             OPEN_BLAST_FURNACE,
-            USING_CARTOGRAPHY_TABLE,
+            OPEN_CARTOGRAPHY_TABLE,
             OPEN_ENDER_CHEST,
             OPEN_BREWING_STAND,
-            USING_SMITHING_TABLE,
-            USING_BEACON,
+            OPEN_SMITHING_TABLE,
+            OPEN_BEACON,
             OPEN_SHULKER_BOX,
-            USING_ENCHANTING_TABLE,
+            OPEN_ENCHANTING_TABLE,
         },
         {
             EAT_RABBIT_STEW,
@@ -155,6 +158,34 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             EAT_BREAD,
             EAT_CHORUS_FRUIT,
             EAT_GOLDEN_CARROT,
+        },
+        {
+            VISION,
+            SWIM,
+            SNEAK,
+            SPRINT,
+            UNLOCK_VAULT,
+            USE_CAMPFIRE,
+            USE_CAULDRON,
+            USE_JUKEBOX,
+            USE_COMPOSTER,
+            PLACE_END_CRYSTAL,
+            THROW_ENDER_EYE,
+            CHARGE_RESPAWN_ANCHOR,
+            OPEN_BARREL,
+            IGNITE_TNT,
+            OPEN_TRAPDOOR,
+            OPEN_FENCE_GATE,
+            GET_INTO_MINECART,
+            USE_FLINT_AND_STEEL,
+            PUT_IN_BUNDLE,
+            THROW_EGG,
+            THROW_SNOWBALL,
+            THROW_WIND_CHARGE,
+            DRINK_OMINOUS_BOTTLE,
+            EQUIP_TURTLE_HELMET,
+            ATTACK_WITH_MACE,
+            TRADE_WITH_WANDERING_TRADER,
         },
     };
 
@@ -185,7 +216,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
                 Text.of(BuildConfig.MOD_NAME),
                 Text.translatable(BuildConfig.MOD_ID + ".root.description"),
                 Identifier.ofVanilla(
-                    "textures/block/" + Registries.BLOCK.getId(Blocks.PALE_OAK_PLANKS).getPath() + ".png"
+                    "textures/block/" + Registries.BLOCK.getId(BACKGROUND).getPath() + ".png"
                 ),
                 AdvancementFrame.TASK,
                 false,
@@ -201,9 +232,6 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             for (AbilityType ability : row) {
                 Identifier id = buildAdvancementId(ability);
                 Item icon = ability.getIcon();
-                if (icon == null) {
-                    throw new IllegalStateException("Ability " + ability + " haven't icon!");
-                }
                 Text title = ability.getTitle();
                 Text description = ability.getDescription();
                 parentAdvancement = Advancement.Builder

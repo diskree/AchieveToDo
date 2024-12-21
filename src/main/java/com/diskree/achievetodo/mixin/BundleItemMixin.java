@@ -27,6 +27,6 @@ public class BundleItemMixin {
         PlayerEntity player,
         @NotNull Operation<Boolean> original
     ) {
-        return original.call(instance, player) && !AchieveToDo.isAbilityLocked(player, AbilityType.USE_BUNDLE);
+        return original.call(instance, player) && !AchieveToDo.isAbilityLocked(player, AbilityType.PUT_IN_BUNDLE);
     }
 }

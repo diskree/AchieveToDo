@@ -29,7 +29,7 @@ public class BrushItemMixin {
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_BRUSH)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_BRUSH)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

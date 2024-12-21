@@ -34,7 +34,7 @@ public class CreeperEntityMixin {
         @Local @NotNull ItemStack itemStack
     ) {
         if (itemStack.isOf(Items.FLINT_AND_STEEL) &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.USING_FLINT_AND_STEEL)
+            AchieveToDo.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL)
         ) {
             cir.setReturnValue(ActionResult.PASS);
         }

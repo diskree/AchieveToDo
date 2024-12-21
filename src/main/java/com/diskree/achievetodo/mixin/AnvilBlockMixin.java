@@ -34,7 +34,7 @@ public class AnvilBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_ANVIL)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_ANVIL)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

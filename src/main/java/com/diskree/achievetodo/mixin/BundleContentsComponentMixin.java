@@ -23,7 +23,7 @@ public class BundleContentsComponentMixin {
         PlayerEntity player,
         CallbackInfoReturnable<Integer> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_BUNDLE)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.PUT_IN_BUNDLE)) {
             cir.setReturnValue(0);
         }
     }

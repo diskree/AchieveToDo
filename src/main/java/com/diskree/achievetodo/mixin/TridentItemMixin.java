@@ -29,7 +29,7 @@ public class TridentItemMixin {
         Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.THROW_TRIDENT)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.ATTACK_WITH_TRIDENT)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

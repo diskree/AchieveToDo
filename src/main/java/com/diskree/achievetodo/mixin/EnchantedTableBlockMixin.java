@@ -34,7 +34,7 @@ public class EnchantedTableBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_ENCHANTING_TABLE)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_ENCHANTING_TABLE)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

@@ -21,7 +21,7 @@ public abstract class MinecartEntityMixin extends AbstractMinecartEntity {
     protected boolean canAddPassenger(Entity passenger) {
         return super.canAddPassenger(passenger) && (
             !(passenger instanceof PlayerEntity player) ||
-                !AchieveToDo.isAbilityLocked(player, AbilityType.USING_MINECART)
+                !AchieveToDo.isAbilityLocked(player, AbilityType.GET_INTO_MINECART)
         );
     }
 }

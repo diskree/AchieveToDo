@@ -34,7 +34,7 @@ public class SmithingTableBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_SMITHING_TABLE)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_SMITHING_TABLE)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

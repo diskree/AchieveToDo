@@ -34,7 +34,7 @@ public class GrindstoneBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_GRINDSTONE)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_GRINDSTONE)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

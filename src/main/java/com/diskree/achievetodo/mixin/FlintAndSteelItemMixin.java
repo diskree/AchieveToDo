@@ -29,7 +29,7 @@ public class FlintAndSteelItemMixin {
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_FLINT_AND_STEEL)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
     }

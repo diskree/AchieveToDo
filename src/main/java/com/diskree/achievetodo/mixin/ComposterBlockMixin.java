@@ -38,7 +38,7 @@ public class ComposterBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_COMPOSTER)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_COMPOSTER)) {
             cir.setReturnValue(ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION);
         }
     }

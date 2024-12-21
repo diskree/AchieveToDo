@@ -20,7 +20,7 @@ public class AbstractBoatEntityMixin {
     private boolean lockBoat(boolean original, @Local(argsOnly = true) Entity passenger) {
         return original && (
             !(passenger instanceof PlayerEntity player) ||
-                !AchieveToDo.isAbilityLocked(player, AbilityType.USING_BOAT)
+                !AchieveToDo.isAbilityLocked(player, AbilityType.GET_INTO_BOAT)
         );
     }
 }

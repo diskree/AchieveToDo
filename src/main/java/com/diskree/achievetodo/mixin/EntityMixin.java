@@ -44,14 +44,14 @@ public class EntityMixin {
 
         AbilityType ability = AbilityType.findPortalTeleportAbility(portal);
         RegistryKey<World> currentDimension = teleportEntity.getWorld().getRegistryKey();
-        if (currentDimension == World.NETHER && ability == AbilityType.NETHER) {
+        if (currentDimension == World.NETHER && ability == AbilityType.ENTER_NETHER) {
             return;
         }
         if (currentDimension == World.END) {
-            if (ability == AbilityType.END) {
+            if (ability == AbilityType.ENTER_END) {
                 return;
             }
-            if (ability == AbilityType.OUTER_ISLANDS && !isEndGatewayOnCentralIsland(pos)) {
+            if (ability == AbilityType.TELEPORT_OUTER_ISLANDS && !isEndGatewayOnCentralIsland(pos)) {
                 return;
             }
         }

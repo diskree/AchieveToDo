@@ -38,7 +38,7 @@ public class CampfireBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_CAMPFIRE)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_CAMPFIRE)) {
             cir.setReturnValue(ActionResult.CONSUME);
         }
     }

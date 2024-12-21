@@ -26,7 +26,7 @@ public class SpyglassItemMixin {
         Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_SPYGLASS)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_SPYGLASS)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

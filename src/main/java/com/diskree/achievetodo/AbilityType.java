@@ -29,79 +29,139 @@ import java.util.List;
 
 public enum AbilityType {
 
-    JUMP(
-        8
+    VISION(
+        2,
+        Items.ENDER_EYE
     ),
-    OPEN_DOOR(
-        15
-    ),
-    SLEEP(
-        20
-    ),
-    BREAK_BLOCKS(
-        25
-    ),
-    OPEN_INVENTORY(
-        30
-    ),
-    USING_BOAT(
-        82
-    ),
-    USING_SHIELD(
-        93, Items.SHIELD
-    ),
-    USING_WATER_BUCKET(
-        135, Items.WATER_BUCKET
-    ),
-    USING_SHEARS(
-        144, Items.SHEARS
-    ),
-    USING_CROSSBOW(
-        178, Items.CROSSBOW
-    ),
-    BREAK_BLOCKS_IN_NEGATIVE_Y(
-        206
-    ),
-    USING_FISHING_ROD(
-        225, Items.FISHING_ROD
-    ),
-    USING_BOW(
-        243, Items.BOW
-    ),
-    USING_BRUSH(
-        261, Items.BRUSH
-    ),
-    USING_SPYGLASS(
-        282, Items.SPYGLASS
-    ),
-    THROW_TRIDENT(
-        311, Items.TRIDENT
-    ),
-    THROW_ENDER_PEARL(
-        334, Items.ENDER_PEARL
-    ),
-    EQUIP_ELYTRA(
-        657
-    ),
-    OUTER_ISLANDS(
-        679, EndGatewayBlock.class
-    ),
-    FLY(
-        721, Items.FIREWORK_ROCKET
-    ),
-    OPEN_SHULKER_BOX(
-        754
-    ),
-
     EAT_SALMON(
-        3, FoodComponents.SALMON
+        4,
+        FoodComponents.SALMON
     ),
     EAT_COD(
-        4, FoodComponents.COD
+        6,
+        FoodComponents.COD
+    ),
+    JUMP(
+        8,
+        Items.SLIME_BLOCK
     ),
     EAT_TROPICAL_FISH(
-        5, FoodComponents.TROPICAL_FISH
+        10,
+        FoodComponents.TROPICAL_FISH
     ),
+    SNEAK(
+        13,
+        Items.CHAINMAIL_LEGGINGS
+    ),
+    OPEN_DOOR(
+        16,
+        Items.PALE_OAK_DOOR
+    ),
+    SLEEP(
+        19,
+        Items.LIGHT_GRAY_BED
+    ),
+    BREAK_BLOCKS(
+        23,
+        Items.COBBLESTONE
+    ),
+    OPEN_INVENTORY(
+        30,
+        Items.LIGHT_GRAY_BUNDLE
+    ),
+    SWIM(
+        35,
+        Items.WATER_BUCKET
+    ),
+    SPRINT(
+        50,
+        Items.CHAINMAIL_BOOTS
+    ),
+    THROW_ENDER_EYE(999, Items.ENDER_EYE),
+    GLIDE_WITH_FIREWORKS(721, Items.FIREWORK_ROCKET),
+
+    OPEN_TRAPDOOR(999, Items.PALE_OAK_TRAPDOOR),
+    OPEN_FENCE_GATE(999, Items.PALE_OAK_FENCE_GATE),
+
+    BREAK_BLOCKS_IN_NEGATIVE_Y(206, Items.COBBLED_DEEPSLATE),
+
+    GET_INTO_BOAT(82, Items.PALE_OAK_BOAT),
+    GET_INTO_MINECART(999, Items.MINECART),
+    USE_SHEARS(144, Items.SHEARS),
+    USE_BRUSH(261, Items.BRUSH),
+    USE_SPYGLASS(282, Items.SPYGLASS),
+    USE_FLINT_AND_STEEL(999, Items.FLINT_AND_STEEL),
+    USE_FISHING_ROD(225, Items.FISHING_ROD),
+    USE_WATER_BUCKET(135, Items.WATER_BUCKET),
+
+    THROW_EGG(999, Items.EGG),
+    THROW_SNOWBALL(999, Items.SNOWBALL),
+    THROW_WIND_CHARGE(999, Items.WIND_CHARGE),
+    THROW_ENDER_PEARL(334, Items.ENDER_PEARL),
+    SHOOT_CROSSBOW(178, Items.CROSSBOW),
+    SHOOT_BOW(243, Items.BOW),
+    ATTACK_WITH_TRIDENT(311, Items.TRIDENT),
+    ATTACK_WITH_MACE(999, Items.MACE),
+
+    PLACE_END_CRYSTAL(999, Items.END_CRYSTAL),
+    PUT_IN_BUNDLE(999, Items.BUNDLE),
+    DRINK_OMINOUS_BOTTLE(999, Items.OMINOUS_BOTTLE),
+
+    OPEN_CHEST(
+        36, Blocks.CHEST
+    ),
+    OPEN_CRAFTING_TABLE(
+        52, Blocks.CRAFTING_TABLE
+    ),
+    OPEN_STONECUTTER(
+        78, Blocks.STONECUTTER
+    ),
+    OPEN_FURNACE(
+        99, Blocks.FURNACE
+    ),
+    OPEN_ANVIL(
+        103, Blocks.ANVIL
+    ),
+    OPEN_GRINDSTONE(
+        174, Blocks.GRINDSTONE
+    ),
+    OPEN_LOOM(
+        215, Blocks.LOOM
+    ),
+    OPEN_SMOKER(
+        257, Blocks.SMOKER
+    ),
+    OPEN_BLAST_FURNACE(
+        272, Blocks.BLAST_FURNACE
+    ),
+    OPEN_CARTOGRAPHY_TABLE(
+        304, Blocks.CARTOGRAPHY_TABLE
+    ),
+    OPEN_ENDER_CHEST(
+        352, Blocks.ENDER_CHEST
+    ),
+    OPEN_BREWING_STAND(
+        409, Blocks.BREWING_STAND
+    ),
+    OPEN_SMITHING_TABLE(
+        453, Blocks.SMITHING_TABLE
+    ),
+    OPEN_BEACON(
+        505, Blocks.BEACON
+    ),
+    OPEN_ENCHANTING_TABLE(
+        937, Blocks.ENCHANTING_TABLE
+    ),
+    OPEN_SHULKER_BOX(754, Blocks.LIGHT_GRAY_SHULKER_BOX),
+    UNLOCK_VAULT(999, Blocks.VAULT),
+    USE_CAMPFIRE(999, Blocks.CAMPFIRE),
+    USE_CAULDRON(999, Blocks.CAULDRON),
+    USE_JUKEBOX(999, Blocks.JUKEBOX),
+    USE_COMPOSTER(999, Blocks.COMPOSTER),
+    OPEN_BARREL(999, Blocks.BARREL),
+    IGNITE_TNT(999, Blocks.TNT),
+    CHARGE_RESPAWN_ANCHOR(999, Blocks.RESPAWN_ANCHOR),
+
     EAT_ROTTEN_FLESH(
         10, FoodComponents.ROTTEN_FLESH
     ),
@@ -214,70 +274,26 @@ public enum AbilityType {
         702, FoodComponents.GOLDEN_CARROT
     ),
 
-    OPEN_CHEST(
-        36, Blocks.CHEST
-    ),
-    USING_CRAFTING_TABLE(
-        52, Blocks.CRAFTING_TABLE
-    ),
-    USING_STONECUTTER(
-        78, Blocks.STONECUTTER
-    ),
-    OPEN_FURNACE(
-        99, Blocks.FURNACE
-    ),
-    USING_ANVIL(
-        103, Blocks.ANVIL
-    ),
-    USING_GRINDSTONE(
-        174, Blocks.GRINDSTONE
-    ),
-    USING_LOOM(
-        215, Blocks.LOOM
-    ),
-    OPEN_SMOKER(
-        257, Blocks.SMOKER
-    ),
-    OPEN_BLAST_FURNACE(
-        272, Blocks.BLAST_FURNACE
-    ),
-    USING_CARTOGRAPHY_TABLE(
-        304, Blocks.CARTOGRAPHY_TABLE
-    ),
-    OPEN_ENDER_CHEST(
-        352, Blocks.ENDER_CHEST
-    ),
-    OPEN_BREWING_STAND(
-        409, Blocks.BREWING_STAND
-    ),
-    USING_SMITHING_TABLE(
-        453, Blocks.SMITHING_TABLE
-    ),
-    USING_BEACON(
-        505, Blocks.BEACON
-    ),
-    USING_ENCHANTING_TABLE(
-        937, Blocks.ENCHANTING_TABLE
-    ),
-
-    USING_GOLDEN_TOOLS(
+    USE_GOLDEN_TOOLS(
         41, ToolMaterial.GOLD
     ),
-    USING_WOODEN_TOOLS(
+    USE_WOODEN_TOOLS(
         63, ToolMaterial.WOOD
     ),
-    USING_STONE_TOOLS(
+    USE_STONE_TOOLS(
         97, ToolMaterial.STONE
     ),
-    USING_IRON_TOOLS(
+    USE_IRON_TOOLS(
         122, ToolMaterial.IRON
     ),
-    USING_DIAMOND_TOOLS(
+    USE_DIAMOND_TOOLS(
         358, ToolMaterial.DIAMOND
     ),
-    USING_NETHERITE_TOOLS(
+    USE_NETHERITE_TOOLS(
         504, ToolMaterial.NETHERITE
     ),
+
+    USE_SHIELD(93, Items.SHIELD),
 
     EQUIP_GOLDEN_ARMOR(
         44, ArmorMaterials.GOLD
@@ -298,155 +314,82 @@ public enum AbilityType {
         552, ArmorMaterials.NETHERITE
     ),
 
-    NETHER(
+    EQUIP_ELYTRA(657, Items.ELYTRA),
+    EQUIP_TURTLE_HELMET(999, Items.TURTLE_HELMET),
+
+    ENTER_NETHER(
         275, NetherPortalBlock.class
     ),
-    END(
+    ENTER_END(
         575, EndPortalBlock.class
     ),
+    TELEPORT_OUTER_ISLANDS(
+        679, EndGatewayBlock.class
+    ),
 
-    VILLAGER_MASON(
+    TRADE_WITH_WANDERING_TRADER(
+        100, Items.WANDERING_TRADER_SPAWN_EGG
+    ),
+    TRADE_WITH_MASON(
         210, VillagerProfession.MASON
     ),
-    VILLAGER_CARTOGRAPHER(
+    TRADE_WITH_CARTOGRAPHER(
         230, VillagerProfession.CARTOGRAPHER
     ),
-    VILLAGER_LEATHERWORKER(
+    TRADE_WITH_LEATHERWORKER(
         280, VillagerProfession.LEATHERWORKER
     ),
-    VILLAGER_SHEPHERD(
+    TRADE_WITH_SHEPHERD(
         315, VillagerProfession.SHEPHERD
     ),
-    VILLAGER_BUTCHER(
+    TRADE_WITH_BUTCHER(
         330, VillagerProfession.BUTCHER
     ),
-    VILLAGER_FARMER(
+    TRADE_WITH_FARMER(
         385, VillagerProfession.FARMER
     ),
-    VILLAGER_CLERIC(
+    TRADE_WITH_CLERIC(
         400, VillagerProfession.CLERIC
     ),
-    VILLAGER_FISHERMAN(
+    TRADE_WITH_FISHERMAN(
         444, VillagerProfession.FISHERMAN
     ),
-    VILLAGER_FLETCHER(
+    TRADE_WITH_FLETCHER(
         520, VillagerProfession.FLETCHER
     ),
-    VILLAGER_ARMORER(
+    TRADE_WITH_ARMORER(
         540, VillagerProfession.ARMORER
     ),
-    VILLAGER_WEAPONSMITH(
+    TRADE_WITH_WEAPONSMITH(
         590, VillagerProfession.WEAPONSMITH
     ),
-    VILLAGER_TOOLSMITH(
+    TRADE_WITH_TOOLSMITH(
         860, VillagerProfession.TOOLSMITH
     ),
-    VILLAGER_LIBRARIAN(
+    TRADE_WITH_LIBRARIAN(
         900, VillagerProfession.LIBRARIAN
-    ),
-    UNLOCK_VAULT(
-        999
-    ),
-    USING_CAMPFIRE(
-        999
-    ),
-    USING_CAULDRON(
-        999
-    ),
-    USING_JUKEBOX(
-        999
-    ),
-    USING_COMPOSTER(
-        999
-    ),
-    PLACE_END_CRYSTAL(
-        999
-    ),
-    THROW_ENDER_EYE(
-        999
-    ),
-    CHARGE_RESPAWN_ANCHOR(
-        999
-    ),
-    OPEN_BARREL(
-        999
-    ),
-    IGNITE_TNT(
-        999
-    ),
-    OPEN_TRAPDOOR(
-        999
-    ),
-    OPEN_FENCE_GATE(
-        999
-    ),
-    USING_MINECART(
-        999
-    ),
-    USING_FLINT_AND_STEEL(
-        999
-    ),
-    USE_BUNDLE(
-        999
-    ),
-    THROW_EGG(
-        999
-    ),
-    THROW_SNOWBALL(
-        999
-    ),
-    THROW_WIND_CHARGE(
-        999
-    ),
-    USE_OMINOUS_BOTTLE(
-        999
-    ),
-    EQUIP_TURTLE_HELMET(
-        999
-    ),
-    USE_MACE(
-        999
-    ),
-    WANDERING_TRADER(
-        999
-    ),
-    SWIM(
-        999
-    ),
-    SNEAK(
-        999
-    ),
-    SPRINT(
-        999
-    ),
-    SEE(
-        999
     );
 
     private final int requiredAdvancementsCount;
 
     private final Item item;
-    private final FoodComponent food;
     private final Block block;
+    private final FoodComponent food;
     private final ToolMaterial toolMaterial;
     private final ArmorMaterial equipmentMaterial;
     private final Class<? extends Portal> portal;
     private final VillagerProfession villager;
 
-    AbilityType(int requiredAdvancementsCount) {
-        this(requiredAdvancementsCount, null, null, null, null, null, null, null);
-    }
-
     AbilityType(int requiredAdvancementsCount, Item item) {
         this(requiredAdvancementsCount, item, null, null, null, null, null, null);
     }
 
-    AbilityType(int requiredAdvancementsCount, FoodComponent food) {
-        this(requiredAdvancementsCount, null, food, null, null, null, null, null);
-    }
-
     AbilityType(int requiredAdvancementsCount, Block block) {
         this(requiredAdvancementsCount, null, null, block, null, null, null, null);
+    }
+
+    AbilityType(int requiredAdvancementsCount, FoodComponent food) {
+        this(requiredAdvancementsCount, null, food, null, null, null, null, null);
     }
 
     AbilityType(int requiredAdvancementsCount, ToolMaterial materials) {
@@ -625,11 +568,11 @@ public enum AbilityType {
     }
 
     public AbilityCategory getAbilityCategory() {
-        if (item != null && item.getComponents().contains(DataComponentTypes.FOOD)) {
-            return AbilityCategory.FOOD;
-        }
-        if (item != null && this != USING_WATER_BUCKET && this != FLY) {
+        if (item != null) {
             return AbilityCategory.ITEM;
+        }
+        if (food != null) {
+            return AbilityCategory.FOOD;
         }
         if (block != null || this == OPEN_SHULKER_BOX) {
             return AbilityCategory.BLOCK;
@@ -637,13 +580,13 @@ public enum AbilityType {
         if (toolMaterial != null) {
             return AbilityCategory.TOOL;
         }
-        if (equipmentMaterial != null || this == EQUIP_ELYTRA) {
+        if (equipmentMaterial != null || this == EQUIP_ELYTRA || this == EQUIP_TURTLE_HELMET) {
             return AbilityCategory.EQUIPMENT;
         }
         if (portal != null) {
-            return AbilityCategory.DIMENSION;
+            return AbilityCategory.PORTAL;
         }
-        if (villager != null) {
+        if (villager != null || this == TRADE_WITH_WANDERING_TRADER) {
             return AbilityCategory.VILLAGER;
         }
         return AbilityCategory.ACTION;
@@ -682,14 +625,14 @@ public enum AbilityType {
         if (item != null) {
             return item;
         }
+        if (block != null) {
+            return block.asItem();
+        }
         if (food != null) {
             return Registries.ITEM.stream()
                 .filter(item -> item.getComponents().get(DataComponentTypes.FOOD) == food)
                 .findFirst()
                 .orElseThrow();
-        }
-        if (block != null) {
-            return block.asItem();
         }
         if (toolMaterial != null) {
             return Registries.ITEM.stream()
@@ -711,9 +654,9 @@ public enum AbilityType {
         }
         if (portal != null) {
             return switch (this) {
-                case NETHER -> Items.OBSIDIAN;
-                case END -> Items.END_PORTAL_FRAME;
-                case OUTER_ISLANDS -> Items.CHORUS_FLOWER;
+                case ENTER_NETHER -> Items.OBSIDIAN;
+                case ENTER_END -> Items.END_PORTAL_FRAME;
+                case TELEPORT_OUTER_ISLANDS -> Items.CHORUS_FLOWER;
                 default -> null;
             };
         }
@@ -727,19 +670,7 @@ public enum AbilityType {
                 }
             }
         }
-        return switch (this) {
-            case JUMP -> Items.SLIME_BLOCK;
-            case OPEN_DOOR -> Items.DARK_OAK_DOOR;
-            case SLEEP -> Items.RED_BED;
-            case OPEN_INVENTORY -> Items.LIGHT_GRAY_BUNDLE;
-            case BREAK_BLOCKS -> Items.COBBLESTONE;
-            case USING_BOAT -> Items.OAK_BOAT;
-            case BREAK_BLOCKS_IN_NEGATIVE_Y -> Items.COBBLED_DEEPSLATE;
-            case EQUIP_ELYTRA -> Items.ELYTRA;
-            case OUTER_ISLANDS -> Items.END_STONE_BRICKS;
-            case OPEN_SHULKER_BOX -> Items.SHULKER_BOX;
-            default -> null;
-        };
+        throw new IllegalStateException("Ability " + this + " haven't icon!");
     }
 
     public @NotNull Text getTitle() {

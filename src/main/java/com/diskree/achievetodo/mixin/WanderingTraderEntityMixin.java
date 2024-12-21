@@ -23,7 +23,7 @@ public abstract class WanderingTraderEntityMixin {
         cancellable = true
     )
     public void lockWanderingTrader(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.WANDERING_TRADER)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.TRADE_WITH_WANDERING_TRADER)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

@@ -31,7 +31,7 @@ public class TripwireBlockMixin {
         PlayerEntity player,
         CallbackInfoReturnable<BlockState> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_SHEARS)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
             cir.setReturnValue(blockState);
         }
     }

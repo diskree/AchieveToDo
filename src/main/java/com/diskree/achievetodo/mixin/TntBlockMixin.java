@@ -47,7 +47,7 @@ public class TntBlockMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (stack.isOf(Items.FLINT_AND_STEEL) &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.USING_FLINT_AND_STEEL)
+            AchieveToDo.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL)
         ) {
             cir.setReturnValue(ActionResult.CONSUME);
             return;

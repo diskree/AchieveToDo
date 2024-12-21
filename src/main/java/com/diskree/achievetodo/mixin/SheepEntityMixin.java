@@ -24,7 +24,7 @@ public class SheepEntityMixin {
         cancellable = true
     )
     public void lockShears(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_SHEARS)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

@@ -30,7 +30,7 @@ public class FireworkRocketItemMixin {
         Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.FLY)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.GLIDE_WITH_FIREWORKS)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

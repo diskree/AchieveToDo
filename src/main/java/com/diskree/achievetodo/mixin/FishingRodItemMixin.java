@@ -31,7 +31,7 @@ public class FishingRodItemMixin {
         Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_FISHING_ROD)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_FISHING_ROD)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

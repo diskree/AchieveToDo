@@ -34,7 +34,7 @@ public class CraftingTableBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_CRAFTING_TABLE)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_CRAFTING_TABLE)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

@@ -2,7 +2,6 @@ package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.util.ActionResult;
@@ -31,7 +30,7 @@ public class CrossbowItemMixin {
         Hand hand,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_CROSSBOW)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.SHOOT_CROSSBOW)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
     }

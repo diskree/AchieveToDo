@@ -32,7 +32,7 @@ public class JukeboxPlayableComponentMixin {
         PlayerEntity player,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_JUKEBOX)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_JUKEBOX)) {
             cir.setReturnValue(ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION);
         }
     }

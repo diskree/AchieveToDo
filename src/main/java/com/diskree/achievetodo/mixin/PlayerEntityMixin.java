@@ -72,7 +72,7 @@ public class PlayerEntityMixin {
         ) {
             return true;
         }
-        if (item instanceof ShearsItem && AchieveToDo.isAbilityLocked(player, AbilityType.USING_SHEARS)) {
+        if (item instanceof ShearsItem && AchieveToDo.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
             return true;
         }
         return false;
@@ -90,7 +90,9 @@ public class PlayerEntityMixin {
     public void lockEntityAttack(Entity entity, CallbackInfo info) {
         PlayerEntity player = (PlayerEntity) (Object) this;
         Item item = player.getMainHandStack().getItem();
-        if (item == Items.MACE && AchieveToDo.isAbilityLocked(player, AbilityType.USE_MACE)) {
+        if (item == Items.TRIDENT && AchieveToDo.isAbilityLocked(player, AbilityType.ATTACK_WITH_TRIDENT)) {
+            info.cancel();
+        } else if (item == Items.MACE && AchieveToDo.isAbilityLocked(player, AbilityType.ATTACK_WITH_MACE)) {
             info.cancel();
         } else if (item instanceof SwordItemImpl swordItem &&
             AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(swordItem.achievetodo$getMaterial()))

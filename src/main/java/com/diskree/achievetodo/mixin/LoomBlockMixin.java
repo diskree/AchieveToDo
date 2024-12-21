@@ -34,7 +34,7 @@ public class LoomBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_LOOM)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_LOOM)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

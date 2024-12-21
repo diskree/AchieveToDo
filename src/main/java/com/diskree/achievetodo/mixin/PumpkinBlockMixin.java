@@ -38,7 +38,7 @@ public class PumpkinBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USING_SHEARS)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }
