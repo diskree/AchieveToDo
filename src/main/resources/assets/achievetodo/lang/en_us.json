@@ -112,8 +112,8 @@
   "achievetodo.locked_message.eat_golden_carrot.title": "Golden carrot",
   "achievetodo.locked_message.eat_golden_carrot.description": "Ability to eat golden carrot",
 
-  "achievetodo.locked_message.eat_honey_bottle.title": "Honey bottle",
-  "achievetodo.locked_message.eat_honey_bottle.description": "Ability to drink honey",
+  "achievetodo.locked_message.eat_honey.title": "Honey",
+  "achievetodo.locked_message.eat_honey.description": "Ability to drink honey",
 
   "achievetodo.locked_message.eat_melon_slice.title": "Melon slice",
   "achievetodo.locked_message.eat_melon_slice.description": "Ability to eat melon slice",
@@ -298,7 +298,7 @@
   "achievetodo.locked_message.open_ender_chest.description": "Ability to use an ender chest",
   "achievetodo.locked_message.open_ender_chest": "You can't use an ender chest yet",
 
-  "achievetodo.locked_message.glide_with_fireworks.title": "Fireworks",
+  "achievetodo.locked_message.glide_with_fireworks.title": "Fireworks for flying",
   "achievetodo.locked_message.glide_with_fireworks.description": "Ability to use fireworks for flying",
   "achievetodo.locked_message.glide_with_fireworks": "You can't use fireworks for flying yet",
 
@@ -330,7 +330,7 @@
   "achievetodo.locked_message.sleep.description": "Ability to sleep",
   "achievetodo.locked_message.sleep": "You can't sleep yet",
 
-  "achievetodo.locked_message.open_inventory.title": "Open inventory",
+  "achievetodo.locked_message.open_inventory.title": "Inventory",
   "achievetodo.locked_message.open_inventory.description": "Ability to open the inventory",
   "achievetodo.locked_message.open_inventory": "You can't open your inventory yet",
 
@@ -430,7 +430,7 @@
   "achievetodo.locked_message.use_campfire.description": "Ability to use a campfire",
   "achievetodo.locked_message.use_campfire": "You can't use a campfire yet",
 
-  "achievetodo.locked_message.use_cauldron.title": "Campfire",
+  "achievetodo.locked_message.use_cauldron.title": "Cauldron",
   "achievetodo.locked_message.use_cauldron.description": "Ability to use a cauldron",
   "achievetodo.locked_message.use_cauldron": "You can't use a cauldron yet",
 
@@ -446,9 +446,9 @@
   "achievetodo.locked_message.place_end_crystal.description": "Ability to place an End crystal",
   "achievetodo.locked_message.place_end_crystal": "You can't place an End crystal yet",
 
-  "achievetodo.locked_message.throw_ender_eye.title": "Ender eye",
-  "achievetodo.locked_message.throw_ender_eye.description": "Ability to throw an Ender eye",
-  "achievetodo.locked_message.throw_ender_eye": "You can't throw an Ender eye yet",
+  "achievetodo.locked_message.use_ender_eye.title": "Ender eye",
+  "achievetodo.locked_message.use_ender_eye.description": "Ability to throw an Ender eye",
+  "achievetodo.locked_message.use_ender_eye": "You can't throw an Ender eye yet",
 
   "achievetodo.locked_message.charge_respawn_anchor.title": "Respawn anchor",
   "achievetodo.locked_message.charge_respawn_anchor.description": "Ability to charge a respawn anchor",
@@ -494,9 +494,9 @@
   "achievetodo.locked_message.throw_wind_charge.description": "Ability to throw a wind charge",
   "achievetodo.locked_message.throw_wind_charge": "You can't throw a wind charge yet",
 
-  "achievetodo.locked_message.drink_ominous_bottle.title": "Ominous bottle",
-  "achievetodo.locked_message.drink_ominous_bottle.description": "Ability to drink an ominous bottle",
-  "achievetodo.locked_message.drink_ominous_bottle": "You can't drink an ominous bottle yet",
+  "achievetodo.locked_message.use_ominous_bottle.title": "Ominous bottle",
+  "achievetodo.locked_message.use_ominous_bottle.description": "Ability to drink an ominous bottle",
+  "achievetodo.locked_message.use_ominous_bottle": "You can't drink an ominous bottle yet",
 
   "achievetodo.locked_message.equip_turtle_helmet.title": "Turtle helmet",
   "achievetodo.locked_message.equip_turtle_helmet.description": "Ability to equip a turtle helmet",

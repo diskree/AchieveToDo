@@ -2,8 +2,6 @@ package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,11 +17,8 @@ public class ServerPlayerEntityMixin {
         cancellable = true
     )
     public void lockJump(CallbackInfo ci) {
-        LivingEntity livingEntity = (LivingEntity) (Object) this;
-        if (livingEntity instanceof PlayerEntity player &&
-            !player.isTouchingWater() &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.JUMP)
-        ) {
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        if (!player.isTouchingWater() && AchieveToDo.isAbilityLocked(player, AbilityType.JUMP)) {
             ci.cancel();
         }
     }

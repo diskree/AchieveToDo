@@ -20,6 +20,8 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -34,6 +36,15 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
 
     public static final Block BACKGROUND = Blocks.PALE_MOSS_BLOCK;
     public static final AbilityType[][] TREE = new AbilityType[][]{
+        {
+            TRADE_WITH_WANDERING_TRADER,
+            TRADE_WITH_MASON,
+            TRADE_WITH_CARTOGRAPHER,
+            TRADE_WITH_LEATHERWORKER,
+            TRADE_WITH_SHEPHERD,
+            TRADE_WITH_BUTCHER,
+            TRADE_WITH_FARMER,
+        },
         {
             EAT_SALMON,
             EAT_COD,
@@ -59,16 +70,6 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             EAT_MUSHROOM_STEW,
         },
         {
-            OPEN_CHEST,
-            OPEN_CRAFTING_TABLE,
-            OPEN_STONECUTTER,
-            OPEN_FURNACE,
-            OPEN_ANVIL,
-            OPEN_GRINDSTONE,
-            OPEN_LOOM,
-            OPEN_SMOKER,
-        },
-        {
             USE_GOLDEN_TOOLS,
             EQUIP_GOLDEN_ARMOR,
             USE_WOODEN_TOOLS,
@@ -77,53 +78,56 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             USE_IRON_TOOLS,
             EQUIP_IRON_ARMOR,
             EQUIP_CHAINMAIL_ARMOR,
+            ATTACK_WITH_TRIDENT,
+            USE_SHIELD,
+            THROW_EGG,
+            THROW_SNOWBALL,
+            THROW_WIND_CHARGE,
         },
         {
-            JUMP,
+            OPEN_CHEST,
+            OPEN_CRAFTING_TABLE,
+            OPEN_STONECUTTER,
+            OPEN_FURNACE,
+            OPEN_ANVIL,
+            OPEN_GRINDSTONE,
+            OPEN_LOOM,
+            OPEN_SMOKER,
+            UNLOCK_VAULT,
+            USE_CAMPFIRE,
+            USE_CAULDRON,
+            USE_JUKEBOX,
+        },
+        {
             OPEN_DOOR,
-            SLEEP,
+            OPEN_TRAPDOOR,
+            OPEN_FENCE_GATE,
             BREAK_BLOCKS,
-            OPEN_INVENTORY,
             GET_INTO_BOAT,
-            USE_SHIELD,
+            GET_INTO_MINECART,
             USE_WATER_BUCKET,
             USE_SHEARS,
+            USE_ENDER_EYE,
         },
         {
-            TRADE_WITH_MASON,
-            TRADE_WITH_CARTOGRAPHER,
-            TRADE_WITH_LEATHERWORKER,
-            TRADE_WITH_SHEPHERD,
-            TRADE_WITH_BUTCHER,
-            TRADE_WITH_FARMER,
-            TRADE_WITH_CLERIC,
-            TRADE_WITH_FISHERMAN,
-            TRADE_WITH_FLETCHER,
-            TRADE_WITH_ARMORER,
-            TRADE_WITH_WEAPONSMITH,
-            TRADE_WITH_TOOLSMITH,
-            TRADE_WITH_LIBRARIAN,
+            VISION,
+            SNEAK,
+            SWIM,
+            SPRINT,
+            JUMP,
+            SLEEP,
+            OPEN_INVENTORY,
         },
         {
-            SHOOT_CROSSBOW,
+            USE_FLINT_AND_STEEL,
+            PUT_IN_BUNDLE,
+            USE_OMINOUS_BOTTLE,
             BREAK_BLOCKS_IN_NEGATIVE_Y,
             USE_FISHING_ROD,
-            SHOOT_BOW,
             USE_BRUSH,
             USE_SPYGLASS,
-            ATTACK_WITH_TRIDENT,
             THROW_ENDER_PEARL,
             GLIDE_WITH_FIREWORKS,
-        },
-        {
-            ENTER_NETHER,
-            EQUIP_DIAMOND_ARMOR,
-            USE_DIAMOND_TOOLS,
-            USE_NETHERITE_TOOLS,
-            EQUIP_NETHERITE_ARMOR,
-            ENTER_END,
-            EQUIP_ELYTRA,
-            TELEPORT_OUTER_ISLANDS,
         },
         {
             OPEN_BLAST_FURNACE,
@@ -134,10 +138,29 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             OPEN_BEACON,
             OPEN_SHULKER_BOX,
             OPEN_ENCHANTING_TABLE,
+            USE_COMPOSTER,
+            CHARGE_RESPAWN_ANCHOR,
+            OPEN_BARREL,
+            IGNITE_TNT,
+        },
+        {
+            ATTACK_WITH_MACE,
+            ENTER_NETHER,
+            EQUIP_DIAMOND_ARMOR,
+            USE_DIAMOND_TOOLS,
+            USE_NETHERITE_TOOLS,
+            EQUIP_NETHERITE_ARMOR,
+            ENTER_END,
+            EQUIP_ELYTRA,
+            TELEPORT_OUTER_ISLANDS,
+            PLACE_END_CRYSTAL,
+            SHOOT_CROSSBOW,
+            SHOOT_BOW,
+            EQUIP_TURTLE_HELMET
         },
         {
             EAT_RABBIT_STEW,
-            EAT_HONEY_BOTTLE,
+            EAT_HONEY,
             EAT_PUMPKIN_PIE,
             EAT_GOLDEN_APPLE,
             EAT_ENCHANTED_GOLDEN_APPLE,
@@ -160,32 +183,13 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             EAT_GOLDEN_CARROT,
         },
         {
-            VISION,
-            SWIM,
-            SNEAK,
-            SPRINT,
-            UNLOCK_VAULT,
-            USE_CAMPFIRE,
-            USE_CAULDRON,
-            USE_JUKEBOX,
-            USE_COMPOSTER,
-            PLACE_END_CRYSTAL,
-            THROW_ENDER_EYE,
-            CHARGE_RESPAWN_ANCHOR,
-            OPEN_BARREL,
-            IGNITE_TNT,
-            OPEN_TRAPDOOR,
-            OPEN_FENCE_GATE,
-            GET_INTO_MINECART,
-            USE_FLINT_AND_STEEL,
-            PUT_IN_BUNDLE,
-            THROW_EGG,
-            THROW_SNOWBALL,
-            THROW_WIND_CHARGE,
-            DRINK_OMINOUS_BOTTLE,
-            EQUIP_TURTLE_HELMET,
-            ATTACK_WITH_MACE,
-            TRADE_WITH_WANDERING_TRADER,
+            TRADE_WITH_CLERIC,
+            TRADE_WITH_FISHERMAN,
+            TRADE_WITH_FLETCHER,
+            TRADE_WITH_ARMORER,
+            TRADE_WITH_WEAPONSMITH,
+            TRADE_WITH_TOOLSMITH,
+            TRADE_WITH_LIBRARIAN,
         },
     };
 
@@ -229,6 +233,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
 
         AdvancementEntry parentAdvancement = rootAdvancement;
         for (AbilityType[] row : TREE) {
+            Arrays.sort(row, Comparator.comparingInt(AbilityType::getRequiredAdvancementsCount));
             for (AbilityType ability : row) {
                 Identifier id = buildAdvancementId(ability);
                 Item icon = ability.getIcon();

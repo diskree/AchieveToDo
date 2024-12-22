@@ -29,348 +29,137 @@ import java.util.List;
 
 public enum AbilityType {
 
-    VISION(
-        2,
-        Items.ENDER_EYE
-    ),
-    EAT_SALMON(
-        4,
-        FoodComponents.SALMON
-    ),
-    EAT_COD(
-        6,
-        FoodComponents.COD
-    ),
-    JUMP(
-        8,
-        Items.SLIME_BLOCK
-    ),
-    EAT_TROPICAL_FISH(
-        10,
-        FoodComponents.TROPICAL_FISH
-    ),
-    SNEAK(
-        13,
-        Items.CHAINMAIL_LEGGINGS
-    ),
-    OPEN_DOOR(
-        16,
-        Items.PALE_OAK_DOOR
-    ),
-    SLEEP(
-        19,
-        Items.LIGHT_GRAY_BED
-    ),
-    BREAK_BLOCKS(
-        23,
-        Items.COBBLESTONE
-    ),
-    OPEN_INVENTORY(
-        30,
-        Items.LIGHT_GRAY_BUNDLE
-    ),
-    SWIM(
-        35,
-        Items.WATER_BUCKET
-    ),
-    SPRINT(
-        50,
-        Items.CHAINMAIL_BOOTS
-    ),
-    THROW_ENDER_EYE(999, Items.ENDER_EYE),
-    GLIDE_WITH_FIREWORKS(721, Items.FIREWORK_ROCKET),
+    VISION(2, Items.ENDER_EYE),
+    EAT_SALMON(3, FoodComponents.SALMON),
+    EAT_COD(4, FoodComponents.COD),
+    EAT_TROPICAL_FISH(5, FoodComponents.TROPICAL_FISH),
+    JUMP(8, Items.SLIME_BLOCK),
+    EAT_ROTTEN_FLESH(10, FoodComponents.ROTTEN_FLESH),
+    SNEAK(11, Items.CHAINMAIL_LEGGINGS),
+    EAT_SWEET_BERRIES(12, FoodComponents.SWEET_BERRIES),
+    OPEN_DOOR(13, Items.PALE_OAK_DOOR),
+    SLEEP(14, Items.LIGHT_GRAY_BED),
+    OPEN_INVENTORY(15, Items.LIGHT_GRAY_BUNDLE),
+    EAT_PUFFERFISH(16, FoodComponents.PUFFERFISH),
+    EAT_POISONOUS_POTATO(17, FoodComponents.POISONOUS_POTATO),
+    SWIM(18, Items.HEART_OF_THE_SEA),
+    OPEN_CHEST(19, Blocks.CHEST),
+    THROW_EGG(20, Items.EGG),
+    BREAK_BLOCKS(21, Items.COBBLESTONE),
+    SPRINT(22, Items.CHAINMAIL_BOOTS),
+    EAT_SUSPICIOUS_STEW(23, FoodComponents.SUSPICIOUS_STEW),
+    EAT_ENCHANTED_GOLDEN_APPLE(24, FoodComponents.ENCHANTED_GOLDEN_APPLE),
+    USE_GOLDEN_TOOLS(25, ToolMaterial.GOLD),
+    GET_INTO_BOAT(26, Items.PALE_OAK_BOAT),
+    TRADE_WITH_WANDERING_TRADER(27, Items.WANDERING_TRADER_SPAWN_EGG),
+    GET_INTO_MINECART(28, Items.MINECART),
+    EAT_GLOW_BERRIES(29, FoodComponents.GLOW_BERRIES),
+    USE_SHEARS(30, Items.SHEARS),
+    USE_SPYGLASS(31, Items.SPYGLASS),
+    OPEN_CRAFTING_TABLE(32, Blocks.CRAFTING_TABLE),
+    EQUIP_GOLDEN_ARMOR(33, ArmorMaterials.GOLD),
+    EAT_BEETROOT(34, FoodComponents.BEETROOT),
+    OPEN_FENCE_GATE(35, Items.PALE_OAK_FENCE_GATE),
+    USE_WATER_BUCKET(40, Items.WATER_BUCKET),
+    EAT_CARROT(45, FoodComponents.CARROT),
+    THROW_ENDER_PEARL(50, Items.ENDER_PEARL),
+    OPEN_STONECUTTER(60, Blocks.STONECUTTER),
+    SHOOT_CROSSBOW(70, Items.CROSSBOW),
+    SHOOT_BOW(80, Items.BOW),
+    BREAK_BLOCKS_IN_NEGATIVE_Y(90, Items.COBBLED_DEEPSLATE),
+    EAT_CHICKEN(100, FoodComponents.CHICKEN),
+    OPEN_FURNACE(110, Blocks.FURNACE),
+    PUT_IN_BUNDLE(120, Items.BUNDLE),
+    USE_OMINOUS_BOTTLE(130, Items.OMINOUS_BOTTLE),
+    USE_WOODEN_TOOLS(140, ToolMaterial.WOOD),
+    USE_FISHING_ROD(150, Items.FISHING_ROD),
+    EAT_DRIED_KELP(160, FoodComponents.DRIED_KELP),
+    EAT_GOLDEN_APPLE(170, FoodComponents.GOLDEN_APPLE),
+    TRADE_WITH_MASON(180, VillagerProfession.MASON),
+    EQUIP_LEATHER_ARMOR(190, ArmorMaterials.LEATHER),
+    OPEN_ANVIL(200, Blocks.ANVIL),
+    USE_BRUSH(210, Items.BRUSH),
+    OPEN_ENCHANTING_TABLE(220, Blocks.ENCHANTING_TABLE),
+    OPEN_SHULKER_BOX(230, Blocks.LIGHT_GRAY_SHULKER_BOX),
+    UNLOCK_VAULT(240, Blocks.VAULT),
+    OPEN_GRINDSTONE(250, Blocks.GRINDSTONE),
+    USE_CAULDRON(260, Blocks.CAULDRON),
+    EAT_POTATO(270, FoodComponents.POTATO),
+    USE_JUKEBOX(280, Blocks.JUKEBOX),
+    USE_COMPOSTER(290, Blocks.COMPOSTER),
+    EQUIP_IRON_ARMOR(300, ArmorMaterials.IRON),
+    OPEN_BARREL(310, Blocks.BARREL),
+    OPEN_SMOKER(320, Blocks.SMOKER),
+    EAT_MELON_SLICE(330, FoodComponents.MELON_SLICE),
+    OPEN_BEACON(340, Blocks.BEACON),
+    EAT_MUSHROOM_STEW(350, FoodComponents.MUSHROOM_STEW),
+    OPEN_BLAST_FURNACE(360, Blocks.BLAST_FURNACE),
+    EQUIP_CHAINMAIL_ARMOR(370, ArmorMaterials.CHAIN),
+    OPEN_CARTOGRAPHY_TABLE(380, Blocks.CARTOGRAPHY_TABLE),
+    EAT_MUTTON(390, FoodComponents.MUTTON),
+    OPEN_ENDER_CHEST(400, Blocks.ENDER_CHEST),
+    ATTACK_WITH_TRIDENT(410, Items.TRIDENT),
+    EAT_BEEF(420, FoodComponents.BEEF),
+    OPEN_BREWING_STAND(430, Blocks.BREWING_STAND),
+    EAT_COOKED_CHICKEN(440, FoodComponents.COOKED_CHICKEN),
+    USE_FLINT_AND_STEEL(450, Items.FLINT_AND_STEEL),
+    EQUIP_DIAMOND_ARMOR(460, ArmorMaterials.DIAMOND),
+    EAT_COOKED_PORKCHOP(470, FoodComponents.COOKED_PORKCHOP),
+    OPEN_SMITHING_TABLE(480, Blocks.SMITHING_TABLE),
+    USE_STONE_TOOLS(490, ToolMaterial.STONE),
+    USE_NETHERITE_TOOLS(500, ToolMaterial.NETHERITE),
+    USE_SHIELD(510, Items.SHIELD),
+    USE_IRON_TOOLS(520, ToolMaterial.IRON),
+    EAT_BAKED_POTATO(530, FoodComponents.BAKED_POTATO),
+    ENTER_NETHER(540, NetherPortalBlock.class),
+    ATTACK_WITH_MACE(550, Items.MACE),
+    ENTER_END(560, EndPortalBlock.class),
+    EAT_COOKED_MUTTON(570, FoodComponents.COOKED_MUTTON),
+    TRADE_WITH_CARTOGRAPHER(580, VillagerProfession.CARTOGRAPHER),
+    EAT_COOKED_SALMON(590, FoodComponents.COOKED_SALMON),
+    TRADE_WITH_LEATHERWORKER(600, VillagerProfession.LEATHERWORKER),
+    EAT_COOKED_BEEF(610, FoodComponents.COOKED_BEEF),
+    TRADE_WITH_SHEPHERD(620, VillagerProfession.SHEPHERD),
+    TRADE_WITH_BUTCHER(630, VillagerProfession.BUTCHER),
+    EAT_COOKED_RABBIT(640, FoodComponents.COOKED_RABBIT),
+    TRADE_WITH_FARMER(650, VillagerProfession.FARMER),
+    USE_DIAMOND_TOOLS(660, ToolMaterial.DIAMOND),
+    EQUIP_NETHERITE_ARMOR(670, ArmorMaterials.NETHERITE),
+    EAT_APPLE(680, FoodComponents.APPLE),
+    TRADE_WITH_CLERIC(690, VillagerProfession.CLERIC),
+    EAT_PORKCHOP(700, FoodComponents.PORKCHOP),
+    EAT_RABBIT(710, FoodComponents.RABBIT),
+    EAT_COOKED_COD(720, FoodComponents.COOKED_COD),
+    USE_ENDER_EYE(730, Items.ENDER_EYE),
+    EQUIP_ELYTRA(740, Items.ELYTRA),
+    TELEPORT_OUTER_ISLANDS(750, EndGatewayBlock.class),
+    EAT_SPIDER_EYE(760, FoodComponents.SPIDER_EYE),
+    TRADE_WITH_FISHERMAN(770, VillagerProfession.FISHERMAN),
+    THROW_SNOWBALL(780, Items.SNOWBALL),
+    THROW_WIND_CHARGE(790, Items.WIND_CHARGE),
+    OPEN_TRAPDOOR(800, Items.PALE_OAK_TRAPDOOR),
+    EAT_RABBIT_STEW(810, FoodComponents.RABBIT_STEW),
+    TRADE_WITH_FLETCHER(820, VillagerProfession.FLETCHER),
+    IGNITE_TNT(830, Blocks.TNT),
+    CHARGE_RESPAWN_ANCHOR(840, Blocks.RESPAWN_ANCHOR),
+    EAT_BEETROOT_SOUP(850, FoodComponents.BEETROOT_SOUP),
+    OPEN_LOOM(860, Blocks.LOOM),
+    EAT_HONEY(870, FoodComponents.HONEY_BOTTLE),
+    EQUIP_TURTLE_HELMET(880, Items.TURTLE_HELMET),
+    TRADE_WITH_ARMORER(890, VillagerProfession.ARMORER),
+    PLACE_END_CRYSTAL(900, Items.END_CRYSTAL),
+    EAT_CHORUS_FRUIT(910, FoodComponents.CHORUS_FRUIT),
+    TRADE_WITH_WEAPONSMITH(920, VillagerProfession.WEAPONSMITH),
+    EAT_GOLDEN_CARROT(930, FoodComponents.GOLDEN_CARROT),
+    GLIDE_WITH_FIREWORKS(940, Items.FIREWORK_ROCKET),
+    EAT_BREAD(950, FoodComponents.BREAD),
+    TRADE_WITH_TOOLSMITH(960, VillagerProfession.TOOLSMITH),
+    EAT_PUMPKIN_PIE(970, FoodComponents.PUMPKIN_PIE),
+    USE_CAMPFIRE(980, Blocks.CAMPFIRE),
+    EAT_COOKIE(990, FoodComponents.COOKIE),
+    TRADE_WITH_LIBRARIAN(1000, VillagerProfession.LIBRARIAN);
 
-    OPEN_TRAPDOOR(999, Items.PALE_OAK_TRAPDOOR),
-    OPEN_FENCE_GATE(999, Items.PALE_OAK_FENCE_GATE),
-
-    BREAK_BLOCKS_IN_NEGATIVE_Y(206, Items.COBBLED_DEEPSLATE),
-
-    GET_INTO_BOAT(82, Items.PALE_OAK_BOAT),
-    GET_INTO_MINECART(999, Items.MINECART),
-    USE_SHEARS(144, Items.SHEARS),
-    USE_BRUSH(261, Items.BRUSH),
-    USE_SPYGLASS(282, Items.SPYGLASS),
-    USE_FLINT_AND_STEEL(999, Items.FLINT_AND_STEEL),
-    USE_FISHING_ROD(225, Items.FISHING_ROD),
-    USE_WATER_BUCKET(135, Items.WATER_BUCKET),
-
-    THROW_EGG(999, Items.EGG),
-    THROW_SNOWBALL(999, Items.SNOWBALL),
-    THROW_WIND_CHARGE(999, Items.WIND_CHARGE),
-    THROW_ENDER_PEARL(334, Items.ENDER_PEARL),
-    SHOOT_CROSSBOW(178, Items.CROSSBOW),
-    SHOOT_BOW(243, Items.BOW),
-    ATTACK_WITH_TRIDENT(311, Items.TRIDENT),
-    ATTACK_WITH_MACE(999, Items.MACE),
-
-    PLACE_END_CRYSTAL(999, Items.END_CRYSTAL),
-    PUT_IN_BUNDLE(999, Items.BUNDLE),
-    DRINK_OMINOUS_BOTTLE(999, Items.OMINOUS_BOTTLE),
-
-    OPEN_CHEST(
-        36, Blocks.CHEST
-    ),
-    OPEN_CRAFTING_TABLE(
-        52, Blocks.CRAFTING_TABLE
-    ),
-    OPEN_STONECUTTER(
-        78, Blocks.STONECUTTER
-    ),
-    OPEN_FURNACE(
-        99, Blocks.FURNACE
-    ),
-    OPEN_ANVIL(
-        103, Blocks.ANVIL
-    ),
-    OPEN_GRINDSTONE(
-        174, Blocks.GRINDSTONE
-    ),
-    OPEN_LOOM(
-        215, Blocks.LOOM
-    ),
-    OPEN_SMOKER(
-        257, Blocks.SMOKER
-    ),
-    OPEN_BLAST_FURNACE(
-        272, Blocks.BLAST_FURNACE
-    ),
-    OPEN_CARTOGRAPHY_TABLE(
-        304, Blocks.CARTOGRAPHY_TABLE
-    ),
-    OPEN_ENDER_CHEST(
-        352, Blocks.ENDER_CHEST
-    ),
-    OPEN_BREWING_STAND(
-        409, Blocks.BREWING_STAND
-    ),
-    OPEN_SMITHING_TABLE(
-        453, Blocks.SMITHING_TABLE
-    ),
-    OPEN_BEACON(
-        505, Blocks.BEACON
-    ),
-    OPEN_ENCHANTING_TABLE(
-        937, Blocks.ENCHANTING_TABLE
-    ),
-    OPEN_SHULKER_BOX(754, Blocks.LIGHT_GRAY_SHULKER_BOX),
-    UNLOCK_VAULT(999, Blocks.VAULT),
-    USE_CAMPFIRE(999, Blocks.CAMPFIRE),
-    USE_CAULDRON(999, Blocks.CAULDRON),
-    USE_JUKEBOX(999, Blocks.JUKEBOX),
-    USE_COMPOSTER(999, Blocks.COMPOSTER),
-    OPEN_BARREL(999, Blocks.BARREL),
-    IGNITE_TNT(999, Blocks.TNT),
-    CHARGE_RESPAWN_ANCHOR(999, Blocks.RESPAWN_ANCHOR),
-
-    EAT_ROTTEN_FLESH(
-        10, FoodComponents.ROTTEN_FLESH
-    ),
-    EAT_SPIDER_EYE(
-        12, FoodComponents.SPIDER_EYE
-    ),
-    EAT_SWEET_BERRIES(
-        14, FoodComponents.SWEET_BERRIES
-    ),
-    EAT_GLOW_BERRIES(
-        16, FoodComponents.GLOW_BERRIES
-    ),
-    EAT_PUFFERFISH(
-        18, FoodComponents.PUFFERFISH
-    ),
-    EAT_POISONOUS_POTATO(
-        22, FoodComponents.POISONOUS_POTATO
-    ),
-    EAT_SUSPICIOUS_STEW(
-        32, FoodComponents.SUSPICIOUS_STEW
-    ),
-    EAT_BEETROOT(
-        38, FoodComponents.BEETROOT
-    ),
-    EAT_CARROT(
-        43, FoodComponents.CARROT
-    ),
-    EAT_CHICKEN(
-        47, FoodComponents.CHICKEN
-    ),
-    EAT_DRIED_KELP(
-        51, FoodComponents.DRIED_KELP
-    ),
-    EAT_BEETROOT_SOUP(
-        68, FoodComponents.BEETROOT_SOUP
-    ),
-    EAT_POTATO(
-        71, FoodComponents.POTATO
-    ),
-    EAT_APPLE(
-        83, FoodComponents.APPLE
-    ),
-    EAT_MELON_SLICE(
-        95, FoodComponents.MELON_SLICE
-    ),
-    EAT_COOKIE(
-        102, FoodComponents.COOKIE
-    ),
-    EAT_MUSHROOM_STEW(
-        114, FoodComponents.MUSHROOM_STEW
-    ),
-    EAT_RABBIT_STEW(
-        127, FoodComponents.RABBIT_STEW
-    ),
-    EAT_HONEY_BOTTLE(
-        132, FoodComponents.HONEY_BOTTLE
-    ),
-    EAT_PUMPKIN_PIE(
-        141, FoodComponents.PUMPKIN_PIE
-    ),
-    EAT_GOLDEN_APPLE(
-        155, FoodComponents.GOLDEN_APPLE
-    ),
-    EAT_ENCHANTED_GOLDEN_APPLE(
-        166, FoodComponents.ENCHANTED_GOLDEN_APPLE
-    ),
-    EAT_RABBIT(
-        182, FoodComponents.RABBIT
-    ),
-    EAT_MUTTON(
-        212, FoodComponents.MUTTON
-    ),
-    EAT_PORKCHOP(
-        226, FoodComponents.PORKCHOP
-    ),
-    EAT_BEEF(
-        249, FoodComponents.BEEF
-    ),
-    EAT_BAKED_POTATO(
-        252, FoodComponents.BAKED_POTATO
-    ),
-    EAT_COOKED_SALMON(
-        312, FoodComponents.COOKED_SALMON
-    ),
-    EAT_COOKED_COD(
-        373, FoodComponents.COOKED_COD
-    ),
-    EAT_COOKED_RABBIT(
-        432, FoodComponents.COOKED_RABBIT
-    ),
-    EAT_COOKED_CHICKEN(
-        459, FoodComponents.COOKED_CHICKEN
-    ),
-    EAT_COOKED_MUTTON(
-        524, FoodComponents.COOKED_MUTTON
-    ),
-    EAT_COOKED_PORKCHOP(
-        550, FoodComponents.COOKED_PORKCHOP
-    ),
-    EAT_COOKED_BEEF(
-        603, FoodComponents.COOKED_BEEF
-    ),
-    EAT_BREAD(
-        654, FoodComponents.BREAD
-    ),
-    EAT_CHORUS_FRUIT(
-        686, FoodComponents.CHORUS_FRUIT
-    ),
-    EAT_GOLDEN_CARROT(
-        702, FoodComponents.GOLDEN_CARROT
-    ),
-
-    USE_GOLDEN_TOOLS(
-        41, ToolMaterial.GOLD
-    ),
-    USE_WOODEN_TOOLS(
-        63, ToolMaterial.WOOD
-    ),
-    USE_STONE_TOOLS(
-        97, ToolMaterial.STONE
-    ),
-    USE_IRON_TOOLS(
-        122, ToolMaterial.IRON
-    ),
-    USE_DIAMOND_TOOLS(
-        358, ToolMaterial.DIAMOND
-    ),
-    USE_NETHERITE_TOOLS(
-        504, ToolMaterial.NETHERITE
-    ),
-
-    USE_SHIELD(93, Items.SHIELD),
-
-    EQUIP_GOLDEN_ARMOR(
-        44, ArmorMaterials.GOLD
-    ),
-    EQUIP_LEATHER_ARMOR(
-        98, ArmorMaterials.LEATHER
-    ),
-    EQUIP_IRON_ARMOR(
-        158, ArmorMaterials.IRON
-    ),
-    EQUIP_CHAINMAIL_ARMOR(
-        203, ArmorMaterials.CHAIN
-    ),
-    EQUIP_DIAMOND_ARMOR(
-        305, ArmorMaterials.DIAMOND
-    ),
-    EQUIP_NETHERITE_ARMOR(
-        552, ArmorMaterials.NETHERITE
-    ),
-
-    EQUIP_ELYTRA(657, Items.ELYTRA),
-    EQUIP_TURTLE_HELMET(999, Items.TURTLE_HELMET),
-
-    ENTER_NETHER(
-        275, NetherPortalBlock.class
-    ),
-    ENTER_END(
-        575, EndPortalBlock.class
-    ),
-    TELEPORT_OUTER_ISLANDS(
-        679, EndGatewayBlock.class
-    ),
-
-    TRADE_WITH_WANDERING_TRADER(
-        100, Items.WANDERING_TRADER_SPAWN_EGG
-    ),
-    TRADE_WITH_MASON(
-        210, VillagerProfession.MASON
-    ),
-    TRADE_WITH_CARTOGRAPHER(
-        230, VillagerProfession.CARTOGRAPHER
-    ),
-    TRADE_WITH_LEATHERWORKER(
-        280, VillagerProfession.LEATHERWORKER
-    ),
-    TRADE_WITH_SHEPHERD(
-        315, VillagerProfession.SHEPHERD
-    ),
-    TRADE_WITH_BUTCHER(
-        330, VillagerProfession.BUTCHER
-    ),
-    TRADE_WITH_FARMER(
-        385, VillagerProfession.FARMER
-    ),
-    TRADE_WITH_CLERIC(
-        400, VillagerProfession.CLERIC
-    ),
-    TRADE_WITH_FISHERMAN(
-        444, VillagerProfession.FISHERMAN
-    ),
-    TRADE_WITH_FLETCHER(
-        520, VillagerProfession.FLETCHER
-    ),
-    TRADE_WITH_ARMORER(
-        540, VillagerProfession.ARMORER
-    ),
-    TRADE_WITH_WEAPONSMITH(
-        590, VillagerProfession.WEAPONSMITH
-    ),
-    TRADE_WITH_TOOLSMITH(
-        860, VillagerProfession.TOOLSMITH
-    ),
-    TRADE_WITH_LIBRARIAN(
-        900, VillagerProfession.LIBRARIAN
-    );
-
-    private final int requiredAdvancementsCount;
+    private int requiredAdvancementsCount;
 
     private final Item item;
     private final Block block;
@@ -426,6 +215,14 @@ public enum AbilityType {
         this.equipmentMaterial = equipmentMaterial;
         this.portal = portal;
         this.villager = villager;
+    }
+
+    static {
+        int totalCount = 0;
+        for (AbilityType ability : AbilityType.values()) {
+            totalCount += ability.requiredAdvancementsCount;
+            ability.requiredAdvancementsCount = totalCount;
+        }
     }
 
     public static AbilityType findByName(String name) {
@@ -603,7 +400,7 @@ public enum AbilityType {
     }
 
     public Text buildLockedDescription(int obtainedAdvancementsCount) {
-        int leftAdvancementsCount = requiredAdvancementsCount - obtainedAdvancementsCount;
+        int leftAdvancementsCount = getRequiredAdvancementsCount() - obtainedAdvancementsCount;
         boolean isMultiLineActionBarInstalled = FabricLoader.getInstance().isModLoaded("multilineactionbar");
         return Text.of(getLockedMessage().getString() + "." + (isMultiLineActionBarInstalled ? "\n" : " "))
             .copy()

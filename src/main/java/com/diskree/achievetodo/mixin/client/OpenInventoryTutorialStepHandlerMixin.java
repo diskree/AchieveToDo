@@ -2,6 +2,7 @@ package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.tutorial.OpenInventoryTutorialStepHandler;
 import net.minecraft.client.tutorial.TutorialManager;
 import org.spongepowered.asm.mixin.Final;
@@ -28,7 +29,8 @@ public class OpenInventoryTutorialStepHandlerMixin {
         cancellable = true
     )
     public void scheduleUntilOpenInventoryAbilityUnlocked(CallbackInfo ci) {
-        if (AchieveToDo.isAbilityLocked(manager.getClient().player, AbilityType.OPEN_INVENTORY, true)) {
+        ClientPlayerEntity player = manager.getClient().player;
+        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_INVENTORY, true)) {
             ci.cancel();
         }
     }

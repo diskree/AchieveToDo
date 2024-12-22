@@ -30,10 +30,9 @@ public class EndCrystalItemMixin {
         @NotNull Operation<Boolean> original,
         @Local(argsOnly = true) ItemUsageContext context
     ) {
-        if (original.call(entities)) {
-            PlayerEntity player = context.getPlayer();
-            return player != null && !AchieveToDo.isAbilityLocked(player, AbilityType.PLACE_END_CRYSTAL);
-        }
-        return false;
+        return original.call(entities) && (
+            !(context.getPlayer() instanceof PlayerEntity player) ||
+                !AchieveToDo.isAbilityLocked(player, AbilityType.PLACE_END_CRYSTAL)
+        );
     }
 }

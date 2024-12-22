@@ -42,7 +42,7 @@ public class InGameHudMixin {
         method = "renderCrosshair",
         at = @At("RETURN")
     )
-    public void renderBlackOverlayWhenSeeAbilityLocked(
+    public void lockVision(
         @NotNull DrawContext context,
         RenderTickCounter tickCounter,
         CallbackInfo ci

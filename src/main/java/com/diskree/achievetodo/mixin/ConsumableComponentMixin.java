@@ -51,7 +51,7 @@ public class ConsumableComponentMixin {
     ) {
         if (user instanceof PlayerEntity player &&
             stack.isOf(Items.OMINOUS_BOTTLE) &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.DRINK_OMINOUS_BOTTLE)
+            AchieveToDo.isAbilityLocked(player, AbilityType.USE_OMINOUS_BOTTLE)
         ) {
             cir.setReturnValue(false);
         }

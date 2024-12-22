@@ -46,9 +46,7 @@ public class TntBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (stack.isOf(Items.FLINT_AND_STEEL) &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL)
-        ) {
+        if (stack.isOf(Items.FLINT_AND_STEEL) && AchieveToDo.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL)) {
             cir.setReturnValue(ActionResult.CONSUME);
             return;
         }
@@ -71,8 +69,9 @@ public class TntBlockMixin {
         @NotNull Operation<Boolean> original,
         @Local Entity owner
     ) {
-        return original.call(projectileEntity, world, blockPos) &&
-            owner instanceof PlayerEntity player &&
-            !AchieveToDo.isAbilityLocked(player, AbilityType.IGNITE_TNT);
+        return original.call(projectileEntity, world, blockPos) && (
+            !(owner instanceof PlayerEntity player) ||
+                !AchieveToDo.isAbilityLocked(player, AbilityType.IGNITE_TNT)
+        );
     }
 }

@@ -25,7 +25,7 @@ public class EnderEyeItemMixin {
         cancellable = true
     )
     public void lockEnderEye(World world, PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.THROW_ENDER_EYE)) {
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_ENDER_EYE)) {
             cir.setReturnValue(ActionResult.CONSUME);
         }
     }

@@ -9,6 +9,7 @@ import net.minecraft.item.BucketItem;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,13 +34,13 @@ public class BucketItemMixin {
         cancellable = true
     )
     public void lockFillFluid(
-        PlayerEntity player,
+        @Nullable PlayerEntity player,
         World world,
         BlockPos pos,
         BlockHitResult hitResult,
         CallbackInfoReturnable<Boolean> cir
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)) {
+        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)) {
             cir.setReturnValue(false);
         }
     }
@@ -54,13 +55,13 @@ public class BucketItemMixin {
         cancellable = true
     )
     public void lockEmptying(
-        PlayerEntity player,
+        @Nullable PlayerEntity player,
         World world,
         BlockPos pos,
         BlockHitResult hitResult,
         CallbackInfoReturnable<Boolean> cir
     ) {
-        if (fluid == Fluids.WATER && AchieveToDo.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)) {
+        if (fluid == Fluids.WATER && player != null && AchieveToDo.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)) {
             cir.setReturnValue(false);
         }
     }

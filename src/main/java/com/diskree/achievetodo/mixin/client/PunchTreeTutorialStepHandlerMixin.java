@@ -2,6 +2,7 @@ package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.tutorial.PunchTreeTutorialStepHandler;
 import net.minecraft.client.tutorial.TutorialManager;
 import org.spongepowered.asm.mixin.Final;
@@ -28,7 +29,8 @@ public class PunchTreeTutorialStepHandlerMixin {
         cancellable = true
     )
     public void scheduleUntilBlockBreakingAbilityUnlocked(CallbackInfo ci) {
-        if (AchieveToDo.isAbilityLocked(manager.getClient().player, AbilityType.BREAK_BLOCKS, true)) {
+        ClientPlayerEntity player = manager.getClient().player;
+        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.BREAK_BLOCKS, true)) {
             ci.cancel();
         }
     }

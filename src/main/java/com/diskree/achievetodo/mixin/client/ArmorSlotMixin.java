@@ -47,12 +47,10 @@ public class ArmorSlotMixin {
     private boolean lockEquip(
         ArmorSlot armorSlot,
         PlayerEntity player,
-        Operation<Boolean> original,
+        @NotNull Operation<Boolean> original,
         @Local @NotNull ItemStack itemStack
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(itemStack.getItem()))) {
-            return false;
-        }
-        return original.call(armorSlot, player);
+        return original.call(armorSlot, player) &&
+            !AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(itemStack.getItem()));
     }
 }

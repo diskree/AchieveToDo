@@ -50,7 +50,7 @@ public class HoeItemMixin {
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(material))) {
+        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(material))) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

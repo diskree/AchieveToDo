@@ -13,9 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Mixin(PlacedAdvancement.class)
 public class PlacedAdvancementMixin {
@@ -38,6 +36,7 @@ public class PlacedAdvancementMixin {
         if (advancementId.getNamespace().equals(BuildConfig.MOD_ID) && advancementEntry.value().isRoot()) {
             List<Identifier> rowsOrder = new ArrayList<>();
             for (AbilityType[] row : AbilityAdvancementsGenerator.TREE) {
+                Arrays.sort(row, Comparator.comparingInt(AbilityType::getRequiredAdvancementsCount));
                 rowsOrder.add(AbilityAdvancementsGenerator.buildAdvancementId(row[0]));
             }
             List<PlacedAdvancement> childrenList = new ArrayList<>(children);

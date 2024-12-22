@@ -29,7 +29,7 @@ public class ShearsItemMixin {
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player
     ) {
-        if (AchieveToDo.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
+        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

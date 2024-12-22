@@ -50,6 +50,8 @@ public class MinecraftClientMixin {
         )
     )
     public boolean lockInventory(KeyBinding keyBinding, @NotNull Operation<Boolean> original) {
-        return original.call(keyBinding) && !AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_INVENTORY);
+        return original.call(keyBinding) &&
+            player != null &&
+            !AchieveToDo.isAbilityLocked(player, AbilityType.OPEN_INVENTORY);
     }
 }

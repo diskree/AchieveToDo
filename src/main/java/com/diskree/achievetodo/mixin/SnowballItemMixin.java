@@ -17,10 +17,7 @@ public class SnowballItemMixin {
 
     @Inject(
         method = "use",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;"
-        ),
+        at = @At(value = "HEAD"),
         cancellable = true
     )
     public void lockSnowball(
