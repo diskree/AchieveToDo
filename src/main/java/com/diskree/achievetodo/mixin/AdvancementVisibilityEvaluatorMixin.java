@@ -1,38 +1,24 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.AbilityType;
+import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.Stack;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.advancement.AdvancementDisplays;
-import net.minecraft.advancement.PlacedAdvancement;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Predicate;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(AdvancementDisplays.class)
 public class AdvancementVisibilityEvaluatorMixin {
 
-    @Inject(
-        method = "shouldDisplay(Lnet/minecraft/advancement/PlacedAdvancement;Lit/unimi/dsi/fastutil/Stack;Ljava/util/function/Predicate;Lnet/minecraft/advancement/AdvancementDisplays$ResultConsumer;)Z",
-        at = @At("HEAD"),
-        cancellable = true
+    @ModifyConstant(
+        method = "shouldDisplay(Lit/unimi/dsi/fastutil/Stack;)Z",
+        constant = @Constant(intValue = 2)
     )
-    private static void forceShowAbilityAdvancements(
-        PlacedAdvancement advancement,
-        Stack<AdvancementDisplays.Status> statuses,
-        Predicate<PlacedAdvancement> donePredicate,
-        AdvancementDisplays.ResultConsumer consumer,
-        CallbackInfoReturnable<Boolean> cir
+    private static int forceShowAllAdvancements(
+        int displayDepth,
+        @Local(argsOnly = true) Stack<AdvancementDisplays.Status> statuses
     ) {
-        if (AbilityType.findByAdvancement(advancement) != null) {
-            statuses.push(AdvancementDisplays.Status.SHOW);
-            for (PlacedAdvancement child : advancement.getChildren()) {
-                AdvancementDisplays.shouldDisplay(child, statuses, donePredicate, consumer);
-            }
-            consumer.accept(advancement, true);
-            cir.setReturnValue(true);
-        }
+        return ((ObjectArrayList<AdvancementDisplays.Status>) statuses).size() - 1;
     }
 }

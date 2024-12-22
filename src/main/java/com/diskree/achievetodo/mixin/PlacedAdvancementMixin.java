@@ -1,8 +1,8 @@
 package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AbilityType;
-import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
+import com.diskree.achievetodo.gui.AdvancementsTabType;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.util.Identifier;
@@ -31,21 +31,24 @@ public class PlacedAdvancementMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    public void getChildrenInject(CallbackInfoReturnable<Iterable<PlacedAdvancement>> cir) {
-        Identifier advancementId = advancementEntry.id();
-        if (advancementId.getNamespace().equals(BuildConfig.MOD_ID) && advancementEntry.value().isRoot()) {
-            List<Identifier> rowsOrder = new ArrayList<>();
-            for (AbilityType[] row : AbilityAdvancementsGenerator.TREE) {
-                Arrays.sort(row, Comparator.comparingInt(AbilityType::getRequiredAdvancementsCount));
-                rowsOrder.add(AbilityAdvancementsGenerator.buildAdvancementId(row[0]));
+    public void sortAbilitiesTree(CallbackInfoReturnable<Iterable<PlacedAdvancement>> cir) {
+        String[] pathSlices = advancementEntry.id().getPath().split("/");
+        if (pathSlices.length == 2) {
+            AdvancementsTabType tab = AdvancementsTabType.findByName(pathSlices[0]);
+            if (tab == AdvancementsTabType.ABILITIES && advancementEntry.value().isRoot()) {
+                List<Identifier> rowsOrder = new ArrayList<>();
+                for (AbilityType[] row : AbilityAdvancementsGenerator.TREE) {
+                    Arrays.sort(row, Comparator.comparingInt(AbilityType::getRequiredAdvancementsCount));
+                    rowsOrder.add(AbilityAdvancementsGenerator.buildAdvancementId(row[0]));
+                }
+                List<PlacedAdvancement> childrenList = new ArrayList<>(children);
+                childrenList.sort((placedAdvancement, otherPlacedAdvancement) -> {
+                    Integer index = rowsOrder.indexOf(placedAdvancement.getAdvancementEntry().id());
+                    Integer otherIndex = rowsOrder.indexOf(otherPlacedAdvancement.getAdvancementEntry().id());
+                    return index.compareTo(otherIndex);
+                });
+                cir.setReturnValue(childrenList);
             }
-            List<PlacedAdvancement> childrenList = new ArrayList<>(children);
-            childrenList.sort((placedAdvancement, otherPlacedAdvancement) -> {
-                Integer index = rowsOrder.indexOf(placedAdvancement.getAdvancementEntry().id());
-                Integer otherIndex = rowsOrder.indexOf(otherPlacedAdvancement.getAdvancementEntry().id());
-                return index.compareTo(otherIndex);
-            });
-            cir.setReturnValue(childrenList);
         }
     }
 }
