@@ -85,6 +85,7 @@
   ],
   "client": [
     "client.AdvancementProgressMixin",
+    "client.AdvancementsScreenMixin",
     "client.AdvancementTabMixin",
     "client.AdvancementToastMixin",
     "client.AdvancementWidgetMixin",

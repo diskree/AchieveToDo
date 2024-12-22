@@ -16,3 +16,4 @@ accessible field net/minecraft/advancement/PlayerAdvancementTracker progress Lja
 accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;
 accessible field net/minecraft/block/entity/EndGatewayBlockEntity exitPortalPos Lnet/minecraft/util/math/BlockPos;
 accessible field net/minecraft/scoreboard/ServerScoreboard server Lnet/minecraft/server/MinecraftServer;
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget advancement Lnet/minecraft/advancement/PlacedAdvancement;

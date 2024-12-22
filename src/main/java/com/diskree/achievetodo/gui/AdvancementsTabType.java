@@ -1,6 +1,7 @@
 package com.diskree.achievetodo.gui;
 
 import net.minecraft.client.gui.screen.advancement.AdvancementTabType;
+import net.minecraft.util.Identifier;
 
 public enum AdvancementsTabType {
 
@@ -35,13 +36,13 @@ public enum AdvancementsTabType {
         return position;
     }
 
-    public static AdvancementsTabType findByName(String name) {
-        if (name == null) {
-            return null;
-        }
-        for (AdvancementsTabType tabType : values()) {
-            if (tabType.name().equalsIgnoreCase(name)) {
-                return tabType;
+    public static AdvancementsTabType findByAdvancement(Identifier advancementId) {
+        String[] pathSlices = advancementId.getPath().split("/");
+        if (pathSlices.length == 2) {
+            for (AdvancementsTabType tabType : values()) {
+                if (tabType.name().equalsIgnoreCase(pathSlices[0])) {
+                    return tabType;
+                }
             }
         }
         return null;

@@ -1,21 +1,74 @@
 package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.gui.AdvancementsTabType;
-import net.minecraft.advancement.Advancement;
+import com.diskree.achievetodo.injection.AdvancementsScreenImpl;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.advancement.AdvancementDisplay;
-import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.advancement.AdvancementTab;
+import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
-import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AdvancementTab.class)
 public class AdvancementTabMixin {
+
+    @Shadow
+    @Final
+    private AdvancementsScreen screen;
+
+    @Inject(
+        method = "drawWidgetTooltip",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;drawTooltip(Lnet/minecraft/client/gui/DrawContext;IIFII)V",
+            shift = At.Shift.AFTER
+        )
+    )
+    public void saveFocusedAdvancementWidget(
+        DrawContext context,
+        int mouseX,
+        int mouseY,
+        int x,
+        int y,
+        CallbackInfo ci,
+        @Local(ordinal = 0) AdvancementWidget advancementWidget
+    ) {
+        if (screen instanceof AdvancementsScreenImpl screenImpl) {
+            screenImpl.advancementssearch$setFocusedAdvancementWidget(advancementWidget);
+        }
+    }
+
+    @Inject(
+        method = "drawWidgetTooltip",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V",
+            shift = At.Shift.AFTER
+        )
+    )
+    public void resetFocusedAdvancementWidget(
+        DrawContext context,
+        int mouseX,
+        int mouseY,
+        int x,
+        int y,
+        CallbackInfo ci,
+        @Local(ordinal = 0) boolean shouldShowTooltip
+    ) {
+        if (!shouldShowTooltip && screen instanceof AdvancementsScreenImpl screenImpl) {
+            screenImpl.advancementssearch$setFocusedAdvancementWidget(null);
+        }
+    }
 
     @Inject(
         method = "create",
@@ -26,39 +79,15 @@ public class AdvancementTabMixin {
         MinecraftClient client,
         AdvancementsScreen screen,
         int index,
-        PlacedAdvancement root,
+        @NotNull PlacedAdvancement root,
         CallbackInfoReturnable<AdvancementTab> cir
     ) {
-        if (root == null) {
-            cir.setReturnValue(null);
-            return;
-        }
-        AdvancementEntry advancementEntry = root.getAdvancementEntry();
-        if (advancementEntry == null) {
-            cir.setReturnValue(null);
-            return;
-        }
-        Identifier advancementId = advancementEntry.id();
-        if (advancementId == null) {
-            cir.setReturnValue(null);
-            return;
-        }
-        Advancement advancement = root.getAdvancement();
-        if (advancement == null) {
-            cir.setReturnValue(null);
-            return;
-        }
-        AdvancementDisplay advancementDisplay = advancement.display().orElse(null);
+        AdvancementDisplay advancementDisplay = root.getAdvancement().display().orElse(null);
         if (advancementDisplay == null) {
             cir.setReturnValue(null);
             return;
         }
-        String[] pathSlices = advancementId.getPath().split("/");
-        if (pathSlices.length != 2) {
-            cir.setReturnValue(null);
-            return;
-        }
-        AdvancementsTabType tab = AdvancementsTabType.findByName(pathSlices[0]);
+        AdvancementsTabType tab = AdvancementsTabType.findByAdvancement(root.getAdvancementEntry().id());
         if (tab == null) {
             cir.setReturnValue(null);
             return;
