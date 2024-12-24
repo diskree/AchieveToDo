@@ -81,9 +81,8 @@ public class PlacedAdvancementMixin {
 
         if (tab == AdvancementsTab.ABILITIES && advancementEntry.value().isRoot()) {
             List<Identifier> rowsOrder = new ArrayList<>();
-            for (AbilityType[] row : AbilityAdvancementsGenerator.TREE) {
-                Arrays.sort(row, Comparator.comparingInt(AbilityType::getRequiredAdvancementsCount));
-                rowsOrder.add(AbilityAdvancementsGenerator.buildAdvancementId(row[0]));
+            for (List<AbilityType> branch : AbilityAdvancementsGenerator.getAbilitiesTree()) {
+                rowsOrder.add(AbilityAdvancementsGenerator.buildAdvancementId(branch.getFirst()));
             }
             sortedChildren.sort((placedAdvancement, otherPlacedAdvancement) -> {
                 Integer index = rowsOrder.indexOf(placedAdvancement.getAdvancementEntry().id());

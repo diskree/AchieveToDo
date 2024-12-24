@@ -11,8 +11,9 @@ public enum AbilityCategory {
     BLOCK,
     TOOL,
     EQUIPMENT,
+    WEAPON,
     PORTAL,
-    VILLAGER;
+    TRADING;
 
     public @NotNull Text getUnblockPopupTitle() {
         return Text.translatable("achievetodo.unlocked." + getName()).append("!");

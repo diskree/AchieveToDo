@@ -68,7 +68,7 @@ public class AdvancementToastMixin {
     )
     private Text setCustomTitleForAbilityUnlockedNotification(Text original) {
         if (ability != null) {
-            return Text.translatable(ability.getAbilityCategory().getUnblockPopupTitle().getString());
+            return Text.translatable(ability.getCategory().getUnblockPopupTitle().getString());
         }
         return original;
     }

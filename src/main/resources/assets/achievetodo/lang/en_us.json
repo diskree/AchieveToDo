@@ -330,7 +330,7 @@
   "achievetodo.locked_message.sleep.description": "Ability to sleep",
   "achievetodo.locked_message.sleep": "You can't sleep yet",
 
-  "achievetodo.locked_message.open_inventory.title": "Inventory",
+  "achievetodo.locked_message.open_inventory.title": "Open inventory",
   "achievetodo.locked_message.open_inventory.description": "Ability to open the inventory",
   "achievetodo.locked_message.open_inventory": "You can't open your inventory yet",
 
@@ -514,11 +514,11 @@
   "achievetodo.unlocked.action": "Action available",
   "achievetodo.unlocked.item": "Item available",
   "achievetodo.unlocked.block": "Block available",
-  "achievetodo.unlocked.tool": "Tools available",
+  "achievetodo.unlocked.tool": "Tool available",
   "achievetodo.unlocked.weapon": "Weapon available",
   "achievetodo.unlocked.equipment": "Equipment available",
   "achievetodo.unlocked.portal": "Portal available",
-  "achievetodo.unlocked.villager": "Villager available",
+  "achievetodo.unlocked.trading": "Trading available",
 
   "achievetodo.locked_message.left": "Advancements left: ",
 

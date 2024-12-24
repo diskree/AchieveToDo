@@ -330,7 +330,7 @@
   "achievetodo.locked_message.sleep.description": "Возможность ложиться спать",
   "achievetodo.locked_message.sleep": "Вы сейчас не можете лечь спать",
 
-  "achievetodo.locked_message.open_inventory.title": "Инвентарь",
+  "achievetodo.locked_message.open_inventory.title": "Открывать инвентарь",
   "achievetodo.locked_message.open_inventory.description": "Возможность открывать инвентарь",
   "achievetodo.locked_message.open_inventory": "Вы сейчас не можете открыть инвентарь",
 
@@ -359,7 +359,7 @@
   "achievetodo.locked_message.attack_with_trident": "Вы сейчас не можете атаковать трезубцем",
 
   "achievetodo.locked_message.throw_ender_pearl.title": "Эндер-жемчуг",
-  "achievetodo.locked_message.throw_ender_pearl.description": "Возможность бросания эндер-жемчуга",
+  "achievetodo.locked_message.throw_ender_pearl.description": "Возможность бросить эндер-жемчуг",
   "achievetodo.locked_message.throw_ender_pearl": "Вы сейчас не можете бросить эндер-жемчуг",
 
   "achievetodo.locked_message.use_golden_tools.title": "Золотые инструменты",
@@ -514,11 +514,11 @@
   "achievetodo.unlocked.action": "Доступно действие",
   "achievetodo.unlocked.item": "Доступен предмет",
   "achievetodo.unlocked.block": "Доступен блок",
-  "achievetodo.unlocked.tool": "Доступны инструменты",
+  "achievetodo.unlocked.tool": "Доступен инструмент",
   "achievetodo.unlocked.weapon": "Доступно оружие",
   "achievetodo.unlocked.equipment": "Доступно снаряжение",
   "achievetodo.unlocked.portal": "Доступен портал",
-  "achievetodo.unlocked.villager": "Доступен крестьянин",
+  "achievetodo.unlocked.trading": "Доступна торговля",
 
   "achievetodo.locked_message.left": "Осталось выполнить достижений: ",
 
