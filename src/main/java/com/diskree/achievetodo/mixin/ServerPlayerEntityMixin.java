@@ -97,12 +97,20 @@ public class ServerPlayerEntityMixin {
                     for (int z = realStartZ; z <= realEndZ; z++) {
                         int topY = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE, x, z);
                         if (topY > maxY) {
-                            AchieveToDo.logger.info("Found higher block at ({}, {}, {}) [old maxY={}, new maxY={}]",
-                                x, topY, z, maxY, topY);
+                            AchieveToDo.logger.info(
+                                "Found higher block at ({}, {}, {}) [old maxY={}, new maxY={}]",
+                                x, topY, z, maxY, topY
+                            );
                             maxY = topY;
                             BlockPos topPos = new BlockPos(x, topY, z);
                             BlockState state = world.getBlockState(topPos);
+                            if (!state.getFluidState().isEmpty()) {
+                                continue;
+                            }
                             VoxelShape shape = state.getCollisionShape(world, topPos);
+                            if (shape.isEmpty() || shape.getMax(Direction.Axis.Y) < 1.0D) {
+                                continue;
+                            }
                             double maxCollisionY = shape.getMax(Direction.Axis.Y);
                             if (maxCollisionY >= 1.0D) {
                                 topY++;
