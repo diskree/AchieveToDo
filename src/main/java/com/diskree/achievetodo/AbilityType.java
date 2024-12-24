@@ -216,12 +216,12 @@ public enum AbilityType {
     ),
     EAT_BEETROOT_SOUP(
         AbilityCategory.FOOD,
-        TreeLine.FOOD, 10,
+        TreeLine.FOOD, 5,
         FoodComponents.BEETROOT_SOUP
     ),
     PUT_IN_BUNDLE(
         AbilityCategory.ITEM,
-        TreeLine.ACTIONS, 10,
+        TreeLine.ACTIONS, 5,
         Items.BUNDLE
     ),
     EAT_RABBIT_STEW(
@@ -231,7 +231,7 @@ public enum AbilityType {
     ),
     OPEN_TRAPDOOR(
         AbilityCategory.ACTION,
-        TreeLine.ACTIONS, 10,
+        TreeLine.ACTIONS, 5,
         Items.PALE_OAK_TRAPDOOR
     ),
     USE_WOODEN_TOOLS(
@@ -251,12 +251,12 @@ public enum AbilityType {
     ),
     EAT_MUTTON(
         AbilityCategory.FOOD,
-        TreeLine.FOOD, 10,
+        TreeLine.FOOD, 5,
         FoodComponents.MUTTON
     ),
     THROW_SNOWBALL(
         AbilityCategory.ITEM,
-        TreeLine.ACTIONS, 10,
+        TreeLine.ACTIONS, 5,
         Items.SNOWBALL
     ),
     EQUIP_LEATHER_ARMOR(
@@ -266,7 +266,7 @@ public enum AbilityType {
     ),
     OPEN_FENCE_GATE(
         AbilityCategory.ACTION,
-        TreeLine.ACTIONS, 10,
+        TreeLine.ACTIONS, 5,
         Items.PALE_OAK_FENCE_GATE
     ),
     EAT_PUMPKIN_PIE(
@@ -291,7 +291,7 @@ public enum AbilityType {
     ),
     EAT_ENCHANTED_GOLDEN_APPLE(
         AbilityCategory.FOOD,
-        TreeLine.FOOD, 5,
+        TreeLine.FOOD, 10,
         FoodComponents.ENCHANTED_GOLDEN_APPLE
     ),
     THROW_EGG(
@@ -306,17 +306,17 @@ public enum AbilityType {
     ),
     OPEN_GRINDSTONE(
         AbilityCategory.BLOCK,
-        TreeLine.BLOCKS, 5,
+        TreeLine.BLOCKS, 10,
         Blocks.GRINDSTONE
     ),
     SHOOT_CROSSBOW(
         AbilityCategory.WEAPON,
-        TreeLine.UPGRADE, 5,
+        TreeLine.UPGRADE, 10,
         Items.CROSSBOW
     ),
     EAT_RABBIT(
         AbilityCategory.FOOD,
-        TreeLine.FOOD, 5,
+        TreeLine.FOOD, 10,
         FoodComponents.RABBIT
     ),
     EQUIP_CHAINMAIL_ARMOR(
@@ -334,15 +334,15 @@ public enum AbilityType {
         TreeLine.ACTIONS, 10,
         Items.FLINT_AND_STEEL
     ),
-    ENTER_NETHER(
-        AbilityCategory.PORTAL,
-        TreeLine.UPGRADE, 10,
-        NetherPortalBlock.class
-    ),
     IGNITE_TNT(
         AbilityCategory.BLOCK,
         TreeLine.BLOCKS, 10,
         Blocks.TNT
+    ),
+    ENTER_NETHER(
+        AbilityCategory.PORTAL,
+        TreeLine.UPGRADE, 10,
+        NetherPortalBlock.class
     ),
     TRADE_WITH_WANDERING_TRADER(
         AbilityCategory.TRADING,
@@ -484,15 +484,15 @@ public enum AbilityType {
         TreeLine.BLOCKS, 10,
         Blocks.BEACON
     ),
-    ENTER_END(
-        AbilityCategory.PORTAL,
-        TreeLine.UPGRADE, 10,
-        EndPortalBlock.class
-    ),
     THROW_WIND_CHARGE(
         AbilityCategory.ITEM,
         TreeLine.ACTIONS, 10,
         Items.WIND_CHARGE
+    ),
+    ENTER_END(
+        AbilityCategory.PORTAL,
+        TreeLine.UPGRADE, 10,
+        EndPortalBlock.class
     ),
     OPEN_CARTOGRAPHY_TABLE(
         AbilityCategory.BLOCK,
