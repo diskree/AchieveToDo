@@ -524,5 +524,21 @@
 
   "%1$s has unblocked %2$s%3$s%4$s": "%1$s has unblocked %2$s%3$s%4$s",
 
+  "achievetodo.pending_tab.biomes": "Kill a mob to unlock the tab",
+  "achievetodo.pending_tab.adventure": "Kill a mob to unlock the tab",
+  "achievetodo.pending_tab.weaponry": "Obtain a sword to unlock the tab",
+  "achievetodo.pending_tab.husbandry": "Eat something to unlock the tab",
+  "achievetodo.pending_tab.monsters": "Obtain a sword to unlock the tab",
+  "achievetodo.pending_tab.mining": "Obtain a pickaxe to unlock the tab",
+  "achievetodo.pending_tab.building": "Obtain a crafting table to unlock the tab",
+  "achievetodo.pending_tab.farming": "Obtain a hoe to unlock the tab",
+  "achievetodo.pending_tab.nether": "Travel to the Nether to unlock the tab",
+  "achievetodo.pending_tab.end": "Travel to the End to unlock the tab",
+  "achievetodo.pending_tab.statistics": "Survive the first night to unlock the tab",
+  "achievetodo.pending_tab.redstone": "Obtain redstone to unlock the tab",
+  "achievetodo.pending_tab.potion": "Brew a potion to unlock the tab",
+  "achievetodo.pending_tab.enchanting": "Enchant an item at the enchantment table to unlock the tab",
+  "achievetodo.pending_tab.challenges": "Kill the ender dragon to unlock the tab",
+
   "achievetodo.suggest_install_advancements_search_mod": "To navigate to advancements, install the "
 }

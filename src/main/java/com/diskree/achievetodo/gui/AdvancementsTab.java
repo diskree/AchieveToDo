@@ -1,9 +1,14 @@
 package com.diskree.achievetodo.gui;
 
+import com.diskree.achievetodo.BuildConfig;
 import net.minecraft.client.gui.screen.advancement.AdvancementTabType;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public enum AdvancementsTabType {
+public enum AdvancementsTab {
 
     BIOMES(AdvancementTabType.LEFT),
     ADVENTURE(AdvancementTabType.LEFT),
@@ -18,9 +23,9 @@ public enum AdvancementsTabType {
     END(AdvancementTabType.ABOVE),
 
     ABILITIES(AdvancementTabType.RIGHT),
-    STATISTICS(AdvancementTabType.RIGHT),
     BACAP(AdvancementTabType.RIGHT),
 
+    STATISTICS(AdvancementTabType.BELOW),
     REDSTONE(AdvancementTabType.BELOW),
     POTION(AdvancementTabType.BELOW),
     ENCHANTING(AdvancementTabType.BELOW),
@@ -28,7 +33,7 @@ public enum AdvancementsTabType {
 
     private final AdvancementTabType position;
 
-    AdvancementsTabType(AdvancementTabType position) {
+    AdvancementsTab(AdvancementTabType position) {
         this.position = position;
     }
 
@@ -36,21 +41,9 @@ public enum AdvancementsTabType {
         return position;
     }
 
-    public static AdvancementsTabType findByAdvancement(Identifier advancementId) {
-        String[] pathSlices = advancementId.getPath().split("/");
-        if (pathSlices.length == 2) {
-            for (AdvancementsTabType tabType : values()) {
-                if (tabType.name().equalsIgnoreCase(pathSlices[0])) {
-                    return tabType;
-                }
-            }
-        }
-        return null;
-    }
-
     public int getOrder() {
         int order = 0;
-        for (AdvancementsTabType tab : AdvancementsTabType.values()) {
+        for (AdvancementsTab tab : AdvancementsTab.values()) {
             if (tab.position == position) {
                 if (tab == this) {
                     break;
@@ -59,5 +52,26 @@ public enum AdvancementsTabType {
             }
         }
         return order;
+    }
+
+    public @NotNull Identifier getPendingTabId() {
+        return Identifier.of(BuildConfig.MOD_ID + "_pending", name().toLowerCase() + "/root");
+    }
+
+    public @NotNull Text getPendingHelp() {
+        return Text.translatable("achievetodo.pending_tab." + name().toLowerCase())
+            .formatted(Formatting.ITALIC).formatted(Formatting.GRAY);
+    }
+
+    public static @Nullable AdvancementsTab findByAdvancement(@NotNull Identifier advancementId) {
+        String[] pathSlices = advancementId.getPath().split("/");
+        if (pathSlices.length == 2) {
+            for (AdvancementsTab tabType : values()) {
+                if (tabType.name().equalsIgnoreCase(pathSlices[0])) {
+                    return tabType;
+                }
+            }
+        }
+        return null;
     }
 }

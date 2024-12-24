@@ -1,60 +1,199 @@
 package com.diskree.achievetodo.mixin.client;
 
-import com.diskree.achievetodo.injection.AdvancementsScreenImpl;
-import net.minecraft.advancement.AdvancementEntry;
-import net.minecraft.advancement.PlacedAdvancement;
+import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.gui.AdvancementsTab;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.advancement.*;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
+import net.minecraft.client.gui.screen.advancement.AdvancementTab;
+import net.minecraft.client.gui.screen.advancement.AdvancementTabType;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 
 @Mixin(AdvancementsScreen.class)
-public abstract class AdvancementsScreenMixin extends Screen implements AdvancementsScreenImpl {
+public abstract class AdvancementsScreenMixin extends Screen {
 
     @Unique
-    private AdvancementWidget focusedAdvancementWidget;
+    private final Identifier PENDING_TAB_ICON = Identifier.of(BuildConfig.MOD_ID, "pending_tab_icon");
+
+    @Shadow
+    @Final
+    private Map<AdvancementEntry, AdvancementTab> tabs;
 
     @Unique
-    private boolean isFocusedAdvancementClicked;
+    private boolean isPendingTab(@NotNull AdvancementTab tab) {
+        Identifier advancementId = tab.getRoot().getAdvancementEntry().id();
+        AdvancementsTab maybePendingTab = AdvancementsTab.findByAdvancement(advancementId);
+        return maybePendingTab != null && maybePendingTab.getPendingTabId().equals(advancementId);
+    }
 
     public AdvancementsScreenMixin() {
         super(null);
     }
 
-    @Override
-    public void advancementssearch$setFocusedAdvancementWidget(AdvancementWidget focusedAdvancementWidget) {
-        this.focusedAdvancementWidget = focusedAdvancementWidget;
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (isFocusedAdvancementClicked && focusedAdvancementWidget != null) {
-            AdvancementEntry focusedAdvancement = focusedAdvancementWidget.advancement.getAdvancementEntry();
-            Identifier focusedAdvancementId = focusedAdvancement.id();
-            List<String> childIds = new ArrayList<>();
-            for (PlacedAdvancement placedAdvancement : focusedAdvancementWidget.advancement.getChildren()) {
-                childIds.add(placedAdvancement.getAdvancementEntry().id().toString());
-            }
-            System.out.println("Advancement ID: " + focusedAdvancementId.toString() +
-                "\nChildren IDs: " + String.join(", ", childIds));
+    @Inject(
+        method = "init",
+        at = @At(
+            value = "INVOKE",
+            target = "Ljava/util/Map;clear()V",
+            shift = At.Shift.AFTER
+        )
+    )
+    public void addPendingTabs(CallbackInfo ci) {
+        if (client == null) {
+            return;
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+        AdvancementsScreen advancementsScreen = (AdvancementsScreen) (Object) this;
+        for (AdvancementsTab tab : AdvancementsTab.values()) {
+            AdvancementDisplay advancementDisplay = new AdvancementDisplay(
+                new ItemStack(Items.AIR),
+                tab.getPendingHelp(),
+                Text.empty(),
+                Optional.empty(),
+                AdvancementFrame.TASK,
+                false,
+                false,
+                false
+            );
+            PlacedAdvancement placedAdvancement = new PlacedAdvancement(
+                Advancement.Builder
+                    .createUntelemetered()
+                    .display(advancementDisplay)
+                    .build(tab.getPendingTabId()),
+                null
+            );
+            tabs.put(
+                placedAdvancement.getAdvancementEntry(),
+                new AdvancementTab(
+                    client,
+                    advancementsScreen,
+                    tab.getPosition(),
+                    tab.getOrder(),
+                    placedAdvancement,
+                    advancementDisplay
+                )
+            );
+        }
     }
 
     @Inject(
-        method = "mouseClicked",
+        method = "onRootAdded",
         at = @At(value = "HEAD")
     )
-    public void mouseClickedInject(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        isFocusedAdvancementClicked = focusedAdvancementWidget != null;
+    public void removePendingTab(@NotNull PlacedAdvancement root, CallbackInfo ci) {
+        AdvancementsTab tab = AdvancementsTab.findByAdvancement(root.getAdvancementEntry().id());
+        AdvancementEntry pendingTabToRemove = null;
+        for (AdvancementEntry advancementEntry : tabs.keySet()) {
+            if (tab != null && tab.getPendingTabId().equals(advancementEntry.id())) {
+                pendingTabToRemove = advancementEntry;
+                break;
+            }
+        }
+        if (pendingTabToRemove != null) {
+            tabs.remove(pendingTabToRemove);
+        }
+    }
+
+    @WrapOperation(
+        method = "init",
+        at = @At(
+            value = "INVOKE",
+            target = "Ljava/util/Map;values()Ljava/util/Collection;"
+        )
+    )
+    public Collection<AdvancementTab> setAbilitiesTabOpenedByDefault(
+        Map<AdvancementEntry, AdvancementTab> tabs,
+        @NotNull Operation<Collection<AdvancementTab>> original
+    ) {
+        return original.call(tabs).stream().filter(tab ->
+            AdvancementsTab.findByAdvancement(tab.getRoot().getAdvancementEntry().id()) == AdvancementsTab.ABILITIES
+        ).toList();
+    }
+
+    @WrapOperation(
+        method = "mouseClicked",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/screen/advancement/AdvancementTab;isClickOnTab(IIDD)Z"
+        )
+    )
+    public boolean disallowClickOnPendingTab(
+        @NotNull AdvancementTab tab,
+        int screenX,
+        int screenY,
+        double mouseX,
+        double mouseY,
+        Operation<Boolean> original
+    ) {
+        return !isPendingTab(tab) && original.call(tab, screenX, screenY, mouseX, mouseY);
+    }
+
+    @WrapOperation(
+        method = "drawWindow",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/screen/advancement/AdvancementTab;drawBackground(Lnet/minecraft/client/gui/DrawContext;IIZ)V"
+        )
+    )
+    public void renderPendingTab(
+        AdvancementTab tab,
+        DrawContext context,
+        int x,
+        int y,
+        boolean selected,
+        @NotNull Operation<Void> original
+    ) {
+        boolean isPendingTab = isPendingTab(tab);
+        if (isPendingTab) {
+            context.draw();
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 0.3f);
+            int maskX = x + tab.getType().getTabX(tab.getIndex());
+            int maskY = y + tab.getType().getTabY(tab.getIndex());
+            switch (tab.getType()) {
+                case AdvancementTabType.ABOVE:
+                    maskX += 6;
+                    maskY += 9;
+                    break;
+                case AdvancementTabType.BELOW:
+                    maskX += 6;
+                    maskY += 6;
+                    break;
+                case AdvancementTabType.LEFT:
+                    maskX += 10;
+                    maskY += 6;
+                    break;
+                case AdvancementTabType.RIGHT:
+                    maskX += 6;
+                    maskY += 5;
+            }
+            context.drawGuiTexture(RenderLayer::getGuiTextured, PENDING_TAB_ICON, maskX, maskY, 16, 16);
+        }
+        original.call(tab, context, x, y, selected);
+        if (isPendingTab) {
+            context.draw();
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            RenderSystem.disableBlend();
+        }
     }
 }

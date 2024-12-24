@@ -16,14 +16,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class AchieveToDo implements ModInitializer {
 
-    public static Logger logger = Logger.getLogger(BuildConfig.MOD_NAME);
+    public static Logger logger = LoggerFactory.getLogger(BuildConfig.MOD_NAME);
 
     public static AdvancementsMode currentAdvancementsMode;
     public static ScoreboardObjective currentScoreboardObjective;
@@ -59,7 +60,7 @@ public class AchieveToDo implements ModInitializer {
             currentScoreboardObjective == null ||
             currentScoreboardDisplaySlot == null
         ) {
-            logger.warning("Can't find advancements counter in scoreboard! " +
+            logger.error("Can't find advancements counter in scoreboard! " +
                 "Please check that BACAP datapack is installed " +
                 "or enable advancements counter in the sidebar, tab list or below player names.");
             return;
@@ -146,7 +147,7 @@ public class AchieveToDo implements ModInitializer {
         if (currentAdvancementsMode.isTeamsMode()) {
             Team team = scoreboard.getScoreHolderTeam(playerName);
             if (team == null) {
-                logger.warning("Player [" + playerName + "] is not a member of any team!");
+                logger.warn("Player [{}] is not a member of any team!", playerName);
                 return;
             }
             for (String teamMemberName : team.getPlayerList()) {

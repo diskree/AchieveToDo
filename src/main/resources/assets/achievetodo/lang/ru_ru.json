@@ -524,5 +524,21 @@
 
   "%1$s has unblocked %2$s%3$s%4$s": "%1$s разблокировал %2$s%3$s%4$s",
 
+  "achievetodo.pending_tab.biomes": "Убейте моба, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.adventure": "Убейте моба, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.weaponry": "Добудьте меч, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.husbandry": "Съешьте что-нибудь, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.monsters": "Добудьте меч, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.mining": "Добудьте кирку, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.building": "Добудьте верстак, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.farming": "Добудьте мотыгу, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.nether": "Переместитесь в Незер, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.end": "Переместитесь в Энд, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.statistics": "Переживите первую ночь, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.redstone": "Добудьте редстоун, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.potion": "Сварите зелье, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.enchanting": "Зачаруйте предмет на столе зачарования, чтобы разблокировать вкладку",
+  "achievetodo.pending_tab.challenges": "Убейте эндер-дракона, чтобы разблокировать вкладку",
+
   "achievetodo.suggest_install_advancements_search_mod": "Для перехода к достижениям установите "
 }
