@@ -230,7 +230,7 @@
   "achievetodo.locked_message.use_stone_tools.description": "Возможность пользоваться каменными инструментами",
   "achievetodo.locked_message.use_stone_tools": "Вы сейчас не можете пользоваться каменными инструментами",
 
-  "achievetodo.locked_message.get_into_boat.title": "Лодка",
+  "achievetodo.locked_message.get_into_boat.title": "Садиться в лодку",
   "achievetodo.locked_message.get_into_boat.description": "Возможность садиться в лодку",
   "achievetodo.locked_message.get_into_boat": "Вы сейчас не можете сесть в лодку",
 
@@ -470,7 +470,7 @@
   "achievetodo.locked_message.open_fence_gate.description": "Возможность открывать калитку",
   "achievetodo.locked_message.open_fence_gate": "Вы сейчас не можете открыть калитку",
 
-  "achievetodo.locked_message.get_into_minecart.title": "Вагонетка",
+  "achievetodo.locked_message.get_into_minecart.title": "Садиться в вагонетку",
   "achievetodo.locked_message.get_into_minecart.description": "Возможность садиться в вагонетку",
   "achievetodo.locked_message.get_into_minecart": "Вы сейчас не можете сесть в вагонетку",
 

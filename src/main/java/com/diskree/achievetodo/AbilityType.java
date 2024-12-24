@@ -214,6 +214,11 @@ public enum AbilityType {
         TreeLine.FOOD, 5,
         FoodComponents.MUSHROOM_STEW
     ),
+    EAT_BEETROOT_SOUP(
+        AbilityCategory.FOOD,
+        TreeLine.FOOD, 10,
+        FoodComponents.BEETROOT_SOUP
+    ),
     EAT_RABBIT_STEW(
         AbilityCategory.FOOD,
         TreeLine.FOOD, 5,
@@ -229,6 +234,16 @@ public enum AbilityType {
         TreeLine.ACTIONS, 5,
         Items.WATER_BUCKET
     ),
+    EAT_MUTTON(
+        AbilityCategory.FOOD,
+        TreeLine.FOOD, 10,
+        FoodComponents.MUTTON
+    ),
+    THROW_SNOWBALL(
+        AbilityCategory.ITEM,
+        TreeLine.ACTIONS, 10,
+        Items.SNOWBALL
+    ),
     USE_WOODEN_TOOLS(
         AbilityCategory.TOOL,
         TreeLine.UPGRADE, 5,
@@ -239,10 +254,10 @@ public enum AbilityType {
         TreeLine.FOOD, 5,
         FoodComponents.PUMPKIN_PIE
     ),
-    USE_SHEARS(
+    THROW_EGG(
         AbilityCategory.ITEM,
-        TreeLine.ACTIONS, 5,
-        Items.SHEARS
+        TreeLine.ACTIONS, 10,
+        Items.EGG
     ),
     EAT_GOLDEN_APPLE(
         AbilityCategory.FOOD,
@@ -253,6 +268,11 @@ public enum AbilityType {
         AbilityCategory.EQUIPMENT,
         TreeLine.UPGRADE, 5,
         ArmorMaterials.LEATHER
+    ),
+    USE_SHEARS(
+        AbilityCategory.ITEM,
+        TreeLine.ACTIONS, 5,
+        Items.SHEARS
     ),
     EAT_ENCHANTED_GOLDEN_APPLE(
         AbilityCategory.FOOD,
@@ -289,6 +309,11 @@ public enum AbilityType {
         TreeLine.ACTIONS, 10,
         Items.COBBLED_DEEPSLATE
     ),
+    IGNITE_TNT(
+        AbilityCategory.BLOCK,
+        TreeLine.BLOCKS, 10,
+        Blocks.TNT
+    ),
     TRADE_WITH_WANDERING_TRADER(
         AbilityCategory.TRADING,
         TreeLine.TRADING, 10,
@@ -314,6 +339,21 @@ public enum AbilityType {
         TreeLine.BLOCKS, 10,
         Blocks.JUKEBOX
     ),
+    OPEN_TRAPDOOR(
+        AbilityCategory.ACTION,
+        TreeLine.ACTIONS, 10,
+        Items.PALE_OAK_TRAPDOOR
+    ),
+    ENTER_NETHER(
+        AbilityCategory.PORTAL,
+        TreeLine.UPGRADE, 10,
+        NetherPortalBlock.class
+    ),
+    ATTACK_WITH_TRIDENT(
+        AbilityCategory.WEAPON,
+        TreeLine.UPGRADE, 10,
+        Items.TRIDENT
+    ),
     USE_COMPOSTER(
         AbilityCategory.BLOCK,
         TreeLine.BLOCKS, 10,
@@ -323,11 +363,6 @@ public enum AbilityType {
         AbilityCategory.FOOD,
         TreeLine.FOOD, 10,
         FoodComponents.BEEF
-    ),
-    THROW_EGG(
-        AbilityCategory.WEAPON,
-        TreeLine.UPGRADE, 10,
-        Items.EGG
     ),
     USE_FLINT_AND_STEEL(
         AbilityCategory.ITEM,
@@ -384,11 +419,6 @@ public enum AbilityType {
         TreeLine.BLOCKS, 10,
         Blocks.SMOKER
     ),
-    ENTER_NETHER(
-        AbilityCategory.PORTAL,
-        TreeLine.UPGRADE, 10,
-        NetherPortalBlock.class
-    ),
     USE_BRUSH(
         AbilityCategory.ITEM,
         TreeLine.ACTIONS, 10,
@@ -410,8 +440,8 @@ public enum AbilityType {
         Items.SPYGLASS
     ),
     THROW_WIND_CHARGE(
-        AbilityCategory.WEAPON,
-        TreeLine.UPGRADE, 10,
+        AbilityCategory.ITEM,
+        TreeLine.ACTIONS, 10,
         Items.WIND_CHARGE
     ),
     OPEN_CARTOGRAPHY_TABLE(
@@ -424,11 +454,6 @@ public enum AbilityType {
         TreeLine.UPGRADE, 10,
         ArmorMaterials.DIAMOND
     ),
-    ATTACK_WITH_TRIDENT(
-        AbilityCategory.WEAPON,
-        TreeLine.UPGRADE, 10,
-        Items.TRIDENT
-    ),
     EAT_COOKED_SALMON(
         AbilityCategory.FOOD,
         TreeLine.FOOD, 10,
@@ -438,11 +463,6 @@ public enum AbilityType {
         AbilityCategory.TRADING,
         TreeLine.TRADING, 10,
         VillagerProfession.SHEPHERD
-    ),
-    THROW_SNOWBALL(
-        AbilityCategory.WEAPON,
-        TreeLine.UPGRADE, 10,
-        Items.SNOWBALL
     ),
     TRADE_WITH_BUTCHER(
         AbilityCategory.TRADING,
@@ -469,6 +489,16 @@ public enum AbilityType {
         TreeLine.BLOCKS, 10,
         Blocks.BEACON
     ),
+    USE_ENDER_EYE(
+        AbilityCategory.ITEM,
+        TreeLine.ACTIONS, 10,
+        Items.ENDER_EYE
+    ),
+    ENTER_END(
+        AbilityCategory.PORTAL,
+        TreeLine.UPGRADE, 10,
+        EndPortalBlock.class
+    ),
     EAT_COOKED_COD(
         AbilityCategory.FOOD,
         TreeLine.FOOD, 10,
@@ -484,11 +514,6 @@ public enum AbilityType {
         TreeLine.BLOCKS, 10,
         Blocks.RESPAWN_ANCHOR
     ),
-    IGNITE_TNT(
-        AbilityCategory.BLOCK,
-        TreeLine.BLOCKS, 10,
-        Blocks.TNT
-    ),
     TRADE_WITH_CLERIC(
         AbilityCategory.TRADING,
         TreeLine.TRADING, 10,
@@ -499,6 +524,11 @@ public enum AbilityType {
         TreeLine.ACTIONS, 10,
         Items.OMINOUS_BOTTLE
     ),
+    EQUIP_ELYTRA(
+        AbilityCategory.EQUIPMENT,
+        TreeLine.UPGRADE, 10,
+        Items.ELYTRA
+    ),
     OPEN_BREWING_STAND(
         AbilityCategory.BLOCK,
         TreeLine.BLOCKS, 10,
@@ -508,11 +538,6 @@ public enum AbilityType {
         AbilityCategory.BLOCK,
         TreeLine.BLOCKS, 10,
         Blocks.VAULT
-    ),
-    OPEN_TRAPDOOR(
-        AbilityCategory.ACTION,
-        TreeLine.ACTIONS, 10,
-        Items.PALE_OAK_TRAPDOOR
     ),
     EAT_COOKED_RABBIT(
         AbilityCategory.FOOD,
@@ -534,10 +559,20 @@ public enum AbilityType {
         TreeLine.FOOD, 10,
         FoodComponents.COOKED_CHICKEN
     ),
+    GLIDE_WITH_FIREWORKS(
+        AbilityCategory.ACTION,
+        TreeLine.ACTIONS, 10,
+        Items.FIREWORK_ROCKET
+    ),
     USE_NETHERITE_TOOLS(
         AbilityCategory.TOOL,
         TreeLine.UPGRADE, 10,
         ToolMaterial.NETHERITE
+    ),
+    EAT_CHORUS_FRUIT(
+        AbilityCategory.FOOD,
+        TreeLine.FOOD, 10,
+        FoodComponents.CHORUS_FRUIT
     ),
     TRADE_WITH_FLETCHER(
         AbilityCategory.TRADING,
@@ -553,11 +588,6 @@ public enum AbilityType {
         AbilityCategory.TRADING,
         TreeLine.TRADING, 10,
         VillagerProfession.ARMORER
-    ),
-    USE_ENDER_EYE(
-        AbilityCategory.ITEM,
-        TreeLine.ACTIONS, 10,
-        Items.ENDER_EYE
     ),
     EAT_COOKED_PORKCHOP(
         AbilityCategory.FOOD,
@@ -584,11 +614,6 @@ public enum AbilityType {
         TreeLine.TRADING, 10,
         VillagerProfession.WEAPONSMITH
     ),
-    ENTER_END(
-        AbilityCategory.PORTAL,
-        TreeLine.UPGRADE, 10,
-        EndPortalBlock.class
-    ),
     EAT_COOKED_BEEF(
         AbilityCategory.FOOD,
         TreeLine.FOOD, 10,
@@ -598,21 +623,6 @@ public enum AbilityType {
         AbilityCategory.BLOCK,
         TreeLine.BLOCKS, 10,
         Blocks.LOOM
-    ),
-    EAT_MUTTON(
-        AbilityCategory.FOOD,
-        TreeLine.FOOD, 10,
-        FoodComponents.MUTTON
-    ),
-    EAT_BEETROOT_SOUP(
-        AbilityCategory.FOOD,
-        TreeLine.FOOD, 10,
-        FoodComponents.BEETROOT_SOUP
-    ),
-    EAT_CHORUS_FRUIT(
-        AbilityCategory.FOOD,
-        TreeLine.FOOD, 10,
-        FoodComponents.CHORUS_FRUIT
     ),
     USE_CAMPFIRE(
         AbilityCategory.BLOCK,
@@ -628,16 +638,6 @@ public enum AbilityType {
         AbilityCategory.FOOD,
         TreeLine.FOOD, 10,
         FoodComponents.GOLDEN_CARROT
-    ),
-    EQUIP_ELYTRA(
-        AbilityCategory.EQUIPMENT,
-        TreeLine.UPGRADE, 10,
-        Items.ELYTRA
-    ),
-    GLIDE_WITH_FIREWORKS(
-        AbilityCategory.ACTION,
-        TreeLine.ACTIONS, 10,
-        Items.FIREWORK_ROCKET
     ),
     EQUIP_TURTLE_HELMET(
         AbilityCategory.EQUIPMENT,
@@ -666,7 +666,7 @@ public enum AbilityType {
     ),
     PLACE_END_CRYSTAL(
         AbilityCategory.ITEM,
-        TreeLine.UPGRADE, 10,
+        TreeLine.ACTIONS, 10,
         Items.END_CRYSTAL
     ),
     OPEN_ENCHANTING_TABLE(

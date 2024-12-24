@@ -230,7 +230,7 @@
   "achievetodo.locked_message.use_stone_tools.description": "Ability to use stone tools",
   "achievetodo.locked_message.use_stone_tools": "You can't use stone tools yet",
 
-  "achievetodo.locked_message.get_into_boat.title": "Boat",
+  "achievetodo.locked_message.get_into_boat.title": "Get into a boat",
   "achievetodo.locked_message.get_into_boat.description": "Ability to get into a boat",
   "achievetodo.locked_message.get_into_boat": "You can't get into a boat yet",
 
@@ -470,7 +470,7 @@
   "achievetodo.locked_message.open_fence_gate.description": "Ability to open a fence gate",
   "achievetodo.locked_message.open_fence_gate": "You can't open a fence gate yet",
 
-  "achievetodo.locked_message.get_into_minecart.title": "Minecart",
+  "achievetodo.locked_message.get_into_minecart.title": "Get into a minecart",
   "achievetodo.locked_message.get_into_minecart.description": "Ability to get into a minecart",
   "achievetodo.locked_message.get_into_minecart": "You can't get into a minecart yet",
 
