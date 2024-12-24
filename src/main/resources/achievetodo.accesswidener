@@ -1,19 +1,11 @@
 accessWidener v2 named
 
-accessible class net/minecraft/advancement/AdvancementDisplays$Status
-accessible class net/minecraft/client/gui/screen/world/WorldScreenOptionGrid
 accessible class net/minecraft/screen/slot/ArmorSlot
+accessible class net/minecraft/client/gui/screen/world/WorldScreenOptionGrid
 accessible class net/minecraft/client/gui/screen/advancement/AdvancementTabType
+accessible class net/minecraft/advancement/AdvancementDisplays$Status
 
-accessible method net/minecraft/entity/vehicle/AbstractBoatEntity canAddPassenger (Lnet/minecraft/entity/Entity;)Z
-accessible method net/minecraft/entity/passive/VillagerEntity sayNo ()V
-accessible method net/minecraft/advancement/AdvancementDisplays shouldDisplay (Lnet/minecraft/advancement/PlacedAdvancement;Lit/unimi/dsi/fastutil/Stack;Ljava/util/function/Predicate;Lnet/minecraft/advancement/AdvancementDisplays$ResultConsumer;)Z
 accessible method net/minecraft/client/gui/screen/world/CreateWorldScreen createLevel ()V
 
-accessible field net/minecraft/network/packet/s2c/play/ScoreboardScoreUpdateS2CPacket objectiveName Ljava/lang/String;
-accessible field net/minecraft/network/packet/s2c/play/ScoreboardScoreUpdateS2CPacket score I
-accessible field net/minecraft/advancement/PlayerAdvancementTracker progress Ljava/util/Map;
-accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;
-accessible field net/minecraft/block/entity/EndGatewayBlockEntity exitPortalPos Lnet/minecraft/util/math/BlockPos;
 accessible field net/minecraft/scoreboard/ServerScoreboard server Lnet/minecraft/server/MinecraftServer;
-accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget advancement Lnet/minecraft/advancement/PlacedAdvancement;
+accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;

@@ -9,7 +9,7 @@
     "AbstractBoatEntityMixin",
     "AbstractCauldronBlockMixin",
     "AbstractFurnaceBlockMixin",
-    "AdvancementVisibilityEvaluatorMixin",
+    "AdvancementDisplaysMixin",
     "AnvilBlockMixin",
     "ArmorItemMixin",
     "AxeItemMixin",
