@@ -13,10 +13,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AdvancementToast.class)
@@ -92,6 +89,14 @@ public class AdvancementToastMixin {
         index = 4
     )
     private int setCustomSubtitleColorForAbilityUnlockedNotification(int original) {
+        return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR : original;
+    }
+
+    @ModifyConstant(
+        method = "draw",
+        constant = @Constant(intValue = 16777215)
+    )
+    private int setCustomTwoLineSubtitleColorForAbilityUnlockedNotification(int original) {
         return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR : original;
     }
 
