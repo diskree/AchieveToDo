@@ -1,6 +1,4 @@
 {
-  "achievetodo.advancements_tab.root.description": "All your favorite Minecraft mechanics are locked away! Complete advancements to reclaim them.",
-
   "achievetodo.world_creation_tab.rewards.title": "Advancement rewards",
   "achievetodo.world_creation_tab.rewards.items": "Items",
   "achievetodo.world_creation_tab.rewards.items.tooltip": "You will receive items for completing advancements. For example, several logs for the first felling of a tree.",
@@ -42,6 +40,26 @@
   "achievetodo.error.wrong_datapack_file": "This file is incorrect. Please check that you downloaded the file using the «Download» button, then try again.",
   "achievetodo.error.integrity_check_failed": "This world cannot be loaded because the integrity check failed.",
   "achievetodo.error.unknown": "Unknown error. Please check your free disk space or reboot your computer and try again.",
+
+  "achievetodo.description": "All your favorite Minecraft mechanics are locked away! Complete advancements to reclaim them.",
+
+  "achievetodo.locked_tab_tooltip.biomes": "Kill a mob to unlock this tab",
+  "achievetodo.locked_tab_tooltip.adventure": "Kill a mob to unlock this tab",
+  "achievetodo.locked_tab_tooltip.weaponry": "Obtain a sword to unlock this tab",
+  "achievetodo.locked_tab_tooltip.husbandry": "Eat something to unlock this tab",
+  "achievetodo.locked_tab_tooltip.monsters": "Obtain a sword to unlock this tab",
+  "achievetodo.locked_tab_tooltip.mining": "Obtain a pickaxe to unlock this tab",
+  "achievetodo.locked_tab_tooltip.building": "Obtain a crafting table to unlock this tab",
+  "achievetodo.locked_tab_tooltip.farming": "Obtain a hoe to unlock this tab",
+  "achievetodo.locked_tab_tooltip.nether": "Travel to the Nether to unlock this tab",
+  "achievetodo.locked_tab_tooltip.end": "Travel to the End to unlock this tab",
+  "achievetodo.locked_tab_tooltip.statistics": "Survive the first night to unlock this tab",
+  "achievetodo.locked_tab_tooltip.redstone": "Obtain redstone to unlock this tab",
+  "achievetodo.locked_tab_tooltip.potion": "Brew a potion to unlock this tab",
+  "achievetodo.locked_tab_tooltip.enchanting": "Enchant an item at the enchantment table to unlock this tab",
+  "achievetodo.locked_tab_tooltip.challenges": "Kill the ender dragon to unlock this tab",
+
+  "achievetodo.suggest_install_advancements_search_mod": "To navigate to advancements, install the ",
 
   "achievetodo.ability.eat_apple.name": "Apple",
   "achievetodo.ability.eat_apple.description": "Ability to eat an apple",
@@ -559,6 +577,8 @@
   "achievetodo.ability.trade_with_wandering_trader.description": "Ability to trade with a wandering trader",
   "achievetodo.ability.trade_with_wandering_trader.locked_message": "You can't trade with a wandering trader yet",
 
+  "achievetodo.ability.left_to_unlock": "Advancements left: ",
+
   "achievetodo.ability_unlocked_toast.action": "Action available",
   "achievetodo.ability_unlocked_toast.item": "Item available",
   "achievetodo.ability_unlocked_toast.food": "Food available",
@@ -569,25 +589,5 @@
   "achievetodo.ability_unlocked_toast.trading": "Trading available",
   "achievetodo.ability_unlocked_toast.portal": "Portal available",
 
-  "achievetodo.ability.left_to_unlock": "Advancements left: ",
-
-  "%1$s has unlocked %2$s%3$s%4$s": "%1$s has unlocked %2$s%3$s%4$s",
-
-  "achievetodo.locked_tab_tooltip.biomes": "Kill a mob to unlock this tab",
-  "achievetodo.locked_tab_tooltip.adventure": "Kill a mob to unlock this tab",
-  "achievetodo.locked_tab_tooltip.weaponry": "Obtain a sword to unlock this tab",
-  "achievetodo.locked_tab_tooltip.husbandry": "Eat something to unlock this tab",
-  "achievetodo.locked_tab_tooltip.monsters": "Obtain a sword to unlock this tab",
-  "achievetodo.locked_tab_tooltip.mining": "Obtain a pickaxe to unlock this tab",
-  "achievetodo.locked_tab_tooltip.building": "Obtain a crafting table to unlock this tab",
-  "achievetodo.locked_tab_tooltip.farming": "Obtain a hoe to unlock this tab",
-  "achievetodo.locked_tab_tooltip.nether": "Travel to the Nether to unlock this tab",
-  "achievetodo.locked_tab_tooltip.end": "Travel to the End to unlock this tab",
-  "achievetodo.locked_tab_tooltip.statistics": "Survive the first night to unlock this tab",
-  "achievetodo.locked_tab_tooltip.redstone": "Obtain redstone to unlock this tab",
-  "achievetodo.locked_tab_tooltip.potion": "Brew a potion to unlock this tab",
-  "achievetodo.locked_tab_tooltip.enchanting": "Enchant an item at the enchantment table to unlock this tab",
-  "achievetodo.locked_tab_tooltip.challenges": "Kill the ender dragon to unlock this tab",
-
-  "achievetodo.suggest_install_advancements_search_mod": "To navigate to advancements, install the "
+  "achievetodo.ability_unlocked_chat_message": "%s has unlocked %s%s%s"
 }

@@ -32,7 +32,7 @@ public class AdvancementTabMixin {
             cir.setReturnValue(null);
             return;
         }
-        AdvancementsTab tab = AdvancementsTab.findByAdvancement(root.getAdvancementEntry().id());
+        AdvancementsTab tab = AdvancementsTab.findByAdvancement(root);
         if (tab == null) {
             cir.setReturnValue(null);
             return;

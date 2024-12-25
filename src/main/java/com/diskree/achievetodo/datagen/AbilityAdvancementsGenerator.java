@@ -1,8 +1,8 @@
 package com.diskree.achievetodo.datagen;
 
+import com.diskree.achievetodo.AbilitiesBranchType;
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.AbilitiesBranchType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
@@ -14,7 +14,6 @@ import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.advancement.criterion.TickCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
@@ -37,8 +36,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
     public static final Block BACKGROUND = Blocks.PALE_MOSS_BLOCK;
 
     public static @NotNull List<List<AbilityType>> getAbilitiesTree() {
-        Map<AbilitiesBranchType, List<AbilityType>> grouped = Arrays
-            .stream(AbilityType.values())
+        Map<AbilitiesBranchType, List<AbilityType>> grouped = Arrays.stream(AbilityType.values())
             .collect(Collectors.groupingBy(AbilityType::getBranchType));
         for (Map.Entry<AbilitiesBranchType, List<AbilityType>> entry : grouped.entrySet()) {
             entry.getValue().sort(Comparator.comparing(AbilityType::getRequiredAdvancementsCount));
@@ -117,10 +115,8 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             .display(
                 Items.BARRIER,
                 Text.of(BuildConfig.MOD_NAME),
-                Text.translatable(BuildConfig.MOD_ID + ".advancements_tab.root.description"),
-                Identifier.ofVanilla(
-                    "textures/block/" + Registries.BLOCK.getId(BACKGROUND).getPath() + ".png"
-                ),
+                Text.translatable(BuildConfig.MOD_ID + ".description"),
+                Identifier.ofVanilla("textures/block/" + Registries.BLOCK.getId(BACKGROUND).getPath() + ".png"),
                 AdvancementFrame.TASK,
                 false,
                 false,
@@ -134,13 +130,19 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
         for (List<AbilityType> branch : getAbilitiesTree()) {
             for (AbilityType ability : branch) {
                 Identifier id = buildAdvancementId(ability);
-                Item icon = ability.getIcon();
-                Text title = ability.getTitle();
-                Text description = ability.getDescription();
                 parentAdvancement = Advancement.Builder
                     .createUntelemetered()
                     .parent(parentAdvancement)
-                    .display(icon, title, description, null, AdvancementFrame.TASK, true, false, false)
+                    .display(
+                        ability.getIcon(),
+                        ability.getTitle(),
+                        ability.getDescription(),
+                        null,
+                        AdvancementFrame.TASK,
+                        true,
+                        false,
+                        false
+                    )
                     .rewards(AdvancementRewards.Builder.function(id))
                     .criterion(
                         DEMYSTIFIED_CRITERION_PREFIX + ability.getLowerCaseName(),

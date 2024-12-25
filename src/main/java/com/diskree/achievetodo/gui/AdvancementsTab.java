@@ -1,6 +1,7 @@
 package com.diskree.achievetodo.gui;
 
 import com.diskree.achievetodo.BuildConfig;
+import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.gui.screen.advancement.AdvancementTabType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -62,6 +63,10 @@ public enum AdvancementsTab {
         return Text.translatable("achievetodo.locked_tab_tooltip." + name().toLowerCase())
             .formatted(Formatting.ITALIC)
             .formatted(Formatting.GRAY);
+    }
+
+    public static @Nullable AdvancementsTab findByAdvancement(@NotNull PlacedAdvancement advancement) {
+        return findByAdvancement(advancement.getAdvancementEntry().id());
     }
 
     public static @Nullable AdvancementsTab findByAdvancement(@NotNull Identifier advancementId) {

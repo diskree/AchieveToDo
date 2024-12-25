@@ -63,8 +63,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
             null,
             Text.translatable("achievetodo.downloader.title_prefix")
                 .append(
-                    Text.of(externalPack.getName())
-                        .copy()
+                    Text.of(externalPack.getName()).copy()
                         .formatted(externalPack.getColor(), Formatting.ITALIC)
                 ),
             Text.translatable(isOutdatedVersion ? "achievetodo.downloader.reason.outdated" : externalPack.getReasonKey())
@@ -74,8 +73,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(
-                    Text.translatable(externalPack.isInGameDownloadSupported() ? "achievetodo.downloader.automatically_info" : "achievetodo.downloader.manually_info")
-                        .copy()
+                    Text.translatable(externalPack.isInGameDownloadSupported() ? "achievetodo.downloader.automatically_info" : "achievetodo.downloader.manually_info").copy()
                         .formatted(Formatting.YELLOW)
                 )
         );

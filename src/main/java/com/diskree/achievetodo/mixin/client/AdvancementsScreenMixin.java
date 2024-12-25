@@ -100,7 +100,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
         at = @At(value = "HEAD")
     )
     public void removeLockedTab(@NotNull PlacedAdvancement root, CallbackInfo ci) {
-        AdvancementsTab tab = AdvancementsTab.findByAdvancement(root.getAdvancementEntry().id());
+        AdvancementsTab tab = AdvancementsTab.findByAdvancement(root);
         AdvancementEntry lockedRoot = null;
         for (AdvancementEntry advancementEntry : tabs.keySet()) {
             if (tab != null && tab.getLockedTabId().equals(advancementEntry.id())) {
@@ -125,7 +125,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
         @NotNull Operation<Collection<AdvancementTab>> original
     ) {
         return original.call(tabs).stream().filter(tab ->
-            AdvancementsTab.findByAdvancement(tab.getRoot().getAdvancementEntry().id()) == AdvancementsTab.ABILITIES
+            AdvancementsTab.findByAdvancement(tab.getRoot()) == AdvancementsTab.ABILITIES
         ).toList();
     }
 

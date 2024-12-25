@@ -63,7 +63,7 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
     private @NotNull String buildFunction(@NotNull AbilityType ability) {
         String function = """
             tellraw @a {
-                "translate":"%1$s has unlocked %2$s%3$s%4$s",
+                "translate":"achievetodo.ability_unlocked_chat_message",
                 "with":[
                     {
                         "selector":"@s"
@@ -74,7 +74,7 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
                     },
                     {
                         "color":"yellow",
-                        "translate":"achievetodo.locked_message.{NAME}.title",
+                        "translate":"achievetodo.ability.{NAME}.name",
                         "clickEvent":{
                             "action":"run_command",
                             "value":"/advancementssearch highlight {ADVANCEMENT_ID} obtained_status"
@@ -83,14 +83,14 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
                             "action":"show_text",
                             "contents":{
                                 "color":"yellow",
-                                "translate":"achievetodo.locked_message.{NAME}.title",
+                                "translate":"achievetodo.ability.{NAME}.name",
                                 "extra":[
                                     {
                                         "text":"\\n"
                                     },
                                     {
                                         "color":"yellow",
-                                        "translate":"achievetodo.locked_message.{NAME}.description"
+                                        "translate":"achievetodo.ability.{NAME}.description"
                                     },
                                     {
                                         "text":"\\n\\n"

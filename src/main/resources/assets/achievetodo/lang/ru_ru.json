@@ -1,6 +1,4 @@
 {
-  "achievetodo.advancements_tab.root.description": "Все знакомые механики Minecraft теперь заблокированы! Выполняйте достижения, чтобы вернуть их.",
-
   "achievetodo.world_creation_tab.rewards.title": "Награды за выполнение достижений",
   "achievetodo.world_creation_tab.rewards.items": "Предметы",
   "achievetodo.world_creation_tab.rewards.items.tooltip": "За выполнение достижений вы будете получать внутриигровые предметы. Например, при первой вырубке дерева вам достанутся несколько брёвен.",
@@ -42,6 +40,26 @@
   "achievetodo.error.wrong_datapack_file": "Этот файл неверный. Пожалуйста, убедитесь, что вы загрузили файл с помощью кнопки «Загрузить» и повторите попытку.",
   "achievetodo.error.integrity_check_failed": "Этот мир невозможно загрузить так как он не прошёл проверку целостности датапаков.",
   "achievetodo.error.unknown": "Неизвестная ошибка. Проверьте свободное место на диске или перезагрузите компьютер и повторите попытку.",
+
+  "achievetodo.description": "Все знакомые механики Minecraft теперь заблокированы! Выполняйте достижения, чтобы вернуть их.",
+
+  "achievetodo.locked_tab_tooltip.biomes": "Убейте моба, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.adventure": "Убейте моба, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.weaponry": "Добудьте меч, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.husbandry": "Съешьте что-нибудь, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.monsters": "Добудьте меч, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.mining": "Добудьте кирку, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.building": "Добудьте верстак, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.farming": "Добудьте мотыгу, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.nether": "Переместитесь в Незер, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.end": "Переместитесь в Энд, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.statistics": "Переживите первую ночь, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.redstone": "Добудьте редстоун, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.potion": "Сварите зелье, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.enchanting": "Зачаруйте предмет на чародейском столе, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.challenges": "Убейте эндер-дракона, чтобы разблокировать эту вкладку",
+
+  "achievetodo.suggest_install_advancements_search_mod": "Для перехода к достижениям установите ",
 
   "achievetodo.ability.eat_apple.name": "Яблоко",
   "achievetodo.ability.eat_apple.description": "Возможность съесть яблоко",
@@ -559,6 +577,8 @@
   "achievetodo.ability.trade_with_wandering_trader.description": "Возможность торговли со странствующим торговцем",
   "achievetodo.ability.trade_with_wandering_trader.locked_message": "Вы сейчас не можете торговать со странствующим торговцем",
 
+  "achievetodo.ability.left_to_unlock": "Осталось выполнить достижений: ",
+
   "achievetodo.ability_unlocked_toast.action": "Доступно действие",
   "achievetodo.ability_unlocked_toast.item": "Доступен предмет",
   "achievetodo.ability_unlocked_toast.food": "Доступна еда",
@@ -569,25 +589,5 @@
   "achievetodo.ability_unlocked_toast.trading": "Доступна торговля",
   "achievetodo.ability_unlocked_toast.portal": "Доступен портал",
 
-  "achievetodo.ability.left_to_unlock": "Осталось выполнить достижений: ",
-
-  "%1$s has unlocked %2$s%3$s%4$s": "%1$s разблокировал %2$s%3$s%4$s",
-
-  "achievetodo.locked_tab_tooltip.biomes": "Убейте моба, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.adventure": "Убейте моба, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.weaponry": "Добудьте меч, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.husbandry": "Съешьте что-нибудь, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.monsters": "Добудьте меч, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.mining": "Добудьте кирку, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.building": "Добудьте верстак, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.farming": "Добудьте мотыгу, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.nether": "Переместитесь в Незер, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.end": "Переместитесь в Энд, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.statistics": "Переживите первую ночь, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.redstone": "Добудьте редстоун, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.potion": "Сварите зелье, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.enchanting": "Зачаруйте предмет на чародейском столе, чтобы разблокировать эту вкладку",
-  "achievetodo.locked_tab_tooltip.challenges": "Убейте эндер-дракона, чтобы разблокировать эту вкладку",
-
-  "achievetodo.suggest_install_advancements_search_mod": "Для перехода к достижениям установите "
+  "achievetodo.ability_unlocked_chat_message": "%s разблокировал %s%s%s"
 }

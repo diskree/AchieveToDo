@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.mixin;
 
+import com.diskree.achievetodo.gui.AdvancementsTab;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -43,7 +44,9 @@ public class AdvancementDisplaysMixin {
         @NotNull Operation<Boolean> original,
         @Local(argsOnly = true) @NotNull PlacedAdvancement placedAdvancement
     ) {
-        if (!placedAdvancement.getAdvancement().isRoot()) {
+        if (!placedAdvancement.getAdvancement().isRoot() &&
+            AdvancementsTab.findByAdvancement(placedAdvancement.getRoot()) != AdvancementsTab.CHALLENGES
+        ) {
             AdvancementDisplay display = placedAdvancement.getAdvancement().display().orElse(null);
             if (display != null && !display.isHidden()) {
                 return true;
