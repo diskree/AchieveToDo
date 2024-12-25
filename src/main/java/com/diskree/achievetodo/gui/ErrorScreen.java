@@ -14,7 +14,8 @@ public class ErrorScreen extends NoticeScreen {
     public ErrorScreen(Screen parent, String messageKey) {
         super(
             () -> MinecraftClient.getInstance().setScreen(parent),
-            Text.translatable("achievetodo.error.title").formatted(Formatting.RED),
+            Text.translatable("achievetodo.error.title")
+                .formatted(Formatting.RED),
             Text.translatable(messageKey)
         );
     }

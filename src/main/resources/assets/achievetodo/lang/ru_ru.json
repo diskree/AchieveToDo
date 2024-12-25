@@ -1,30 +1,30 @@
 {
-  "achievetodo.root.description": "Привычные механики Minecraft заблокированы! Выполняй достижения, чтобы открыть их заново!",
+  "achievetodo.advancements_tab.root.description": "Все знакомые механики Minecraft теперь заблокированы! Выполняйте достижения, чтобы вернуть их.",
 
   "achievetodo.world_creation_tab.rewards.title": "Награды за выполнение достижений",
-  "achievetodo.world_creation_tab.rewards.item": "Предметы",
-  "achievetodo.world_creation_tab.rewards.item.info": "Вы будете получать предметы из игры за выполнение достижений. Например, несколько брёвен при первой вырубке дерева.",
+  "achievetodo.world_creation_tab.rewards.items": "Предметы",
+  "achievetodo.world_creation_tab.rewards.items.tooltip": "За выполнение достижений вы будете получать внутриигровые предметы. Например, при первой вырубке дерева вам достанутся несколько брёвен.",
   "achievetodo.world_creation_tab.rewards.experience": "Опыт",
-  "achievetodo.world_creation_tab.rewards.experience.info": "Вы будете получать игровой опыт за выполнение достижений. Особенно сильно поощряются самые сложные достижения.",
+  "achievetodo.world_creation_tab.rewards.experience.tooltip": "За выполнение достижений вы будете получать опыт. Самые сложные из них приносят особенно щедрые награды.",
   "achievetodo.world_creation_tab.rewards.trophy": "Трофеи",
-  "achievetodo.world_creation_tab.rewards.trophy.info": "Вы будете получать коллекционные предметы за выполнение достижений. Например, бесконечный железный топор за сбор стака брёвен каждого типа дерева.",
+  "achievetodo.world_creation_tab.rewards.trophy.tooltip": "За выполнение достижений вы будете получать коллекционные предметы. Это отлично подойдёт для тех, кто обожает собирать редкие трофеи — а может, вы даже решите построить для них собственный зал славы!",
   "achievetodo.world_creation_tab.generation.title": "Кастомная генерация",
   "achievetodo.world_creation_tab.generation.overworld": "Обычный мир",
-  "achievetodo.world_creation_tab.generation.overworld.info": "Terralith - добавляет более 85 новых биомов и оригинальных структур в обычный мир.",
+  "achievetodo.world_creation_tab.generation.overworld.tooltip": "Terralith — исследуйте почти сотню новых биомов, сочетающих реализм и нотку фэнтези, причём всё построено только из ванильных блоков.",
   "achievetodo.world_creation_tab.generation.nether": "Незер",
-  "achievetodo.world_creation_tab.generation.nether.info": "Amplified Nether - значительно расширяет рельеф Незера и увеличивает его высоту.",
+  "achievetodo.world_creation_tab.generation.nether.tooltip": "Amplified Nether — мечта любого путешественника по Незеру: удвоенная высота мира и «усиленный» ландшафт. Разве нужно что-то ещё?",
   "achievetodo.world_creation_tab.generation.end": "Энд",
-  "achievetodo.world_creation_tab.generation.end.info": "Nullscape - разрушенные острова, парящие глыбы и завораживающий рельеф в Энде.",
+  "achievetodo.world_creation_tab.generation.end.tooltip": "Nullscape — преображает скучный стандартный Энд в инопланетное измерение с невероятно сюрреалистичным рельефом, добавляя несколько новых биомов и при этом сохраняя пустынную атмосферу.",
   "achievetodo.world_creation_tab.lan.cooperative_mode": "Кооперативный режим",
-  "achievetodo.world_creation_tab.lan.cooperative_mode.info": "Каждое достижение, полученное одним игроком, автоматически засчитывается всем остальным.",
+  "achievetodo.world_creation_tab.lan.cooperative_mode.tooltip": "Если вы играете по локальной сети, можно включить коллективный режим достижений. Тогда любое достижение, полученное одним игроком, автоматически засчитывается всем остальным. Если же вы хотите соревноваться, выключите эту опцию — и достижения будут у каждого свои.",
 
   "achievetodo.downloader.download": "Загрузить",
-  "achievetodo.downloader.download_tooltip": "Файл будет загружен через ваш браузер.",
+  "achievetodo.downloader.download.tooltip": "Файл будет загружен через ваш браузер.",
   "achievetodo.downloader.select_file": "Выбрать файл",
   "achievetodo.downloader.learn_more": "Узнать больше…",
-  "achievetodo.downloader.learn_more_tooltip": "Посетите страницу проекта, чтобы поддержать авторов!",
-
+  "achievetodo.downloader.learn_more.tooltip": "Посетите страницу проекта, чтобы поддержать авторов!",
   "achievetodo.downloader.title_prefix": "Для игры необходимо загрузить ",
+
   "achievetodo.downloader.reason.bacap": "Основной датапак с достижениями",
   "achievetodo.downloader.reason.bacap_hardcore": "Поддерживает режим хардкора в BACAP",
   "achievetodo.downloader.reason.bacap_terralith": "Поддерживает функции Terralith в BACAP",
@@ -43,502 +43,551 @@
   "achievetodo.error.integrity_check_failed": "Этот мир невозможно загрузить так как он не прошёл проверку целостности датапаков.",
   "achievetodo.error.unknown": "Неизвестная ошибка. Проверьте свободное место на диске или перезагрузите компьютер и повторите попытку.",
 
-  "achievetodo.locked_message.eat_apple.title": "Яблоко",
-  "achievetodo.locked_message.eat_apple.description": "Возможность съесть яблоко",
-
-  "achievetodo.locked_message.eat_baked_potato.title": "Печёный картофель",
-  "achievetodo.locked_message.eat_baked_potato.description": "Возможность съесть печёный картофель",
-
-  "achievetodo.locked_message.eat_beef.title": "Сырая говядина",
-  "achievetodo.locked_message.eat_beef.description": "Возможность съесть сырую говядину",
-
-  "achievetodo.locked_message.eat_beetroot.title": "Свёкла",
-  "achievetodo.locked_message.eat_beetroot.description": "Возможность съесть свёклу",
-
-  "achievetodo.locked_message.eat_beetroot_soup.title": "Свекольный суп",
-  "achievetodo.locked_message.eat_beetroot_soup.description": "Возможность съесть свекольный суп",
-
-  "achievetodo.locked_message.eat_bread.title": "Хлеб",
-  "achievetodo.locked_message.eat_bread.description": "Возможность съесть хлеб",
-
-  "achievetodo.locked_message.eat_carrot.title": "Морковь",
-  "achievetodo.locked_message.eat_carrot.description": "Возможность съесть морковь",
-
-  "achievetodo.locked_message.eat_chicken.title": "Курятина",
-  "achievetodo.locked_message.eat_chicken.description": "Возможность съесть курятину",
-
-  "achievetodo.locked_message.eat_chorus_fruit.title": "Плод хоруса",
-  "achievetodo.locked_message.eat_chorus_fruit.description": "Возможность съесть плод хоруса",
-
-  "achievetodo.locked_message.eat_cod.title": "Сырая треска",
-  "achievetodo.locked_message.eat_cod.description": "Возможность съесть сырую треску",
-
-  "achievetodo.locked_message.eat_cooked_beef.title": "Стейк",
-  "achievetodo.locked_message.eat_cooked_beef.description": "Возможность съесть стейк",
-
-  "achievetodo.locked_message.eat_cooked_chicken.title": "Жареная курица",
-  "achievetodo.locked_message.eat_cooked_chicken.description": "Возможность съесть жареную курицу",
-
-  "achievetodo.locked_message.eat_cooked_cod.title": "Жареная треска",
-  "achievetodo.locked_message.eat_cooked_cod.description": "Возможность съесть жареную треску",
-
-  "achievetodo.locked_message.eat_cooked_mutton.title": "Жареная баранина",
-  "achievetodo.locked_message.eat_cooked_mutton.description": "Возможность съесть жареную баранину",
-
-  "achievetodo.locked_message.eat_cooked_porkchop.title": "Жареная свинина",
-  "achievetodo.locked_message.eat_cooked_porkchop.description": "Возможность съесть жареную свинину",
-
-  "achievetodo.locked_message.eat_cooked_rabbit.title": "Жареная крольчатина",
-  "achievetodo.locked_message.eat_cooked_rabbit.description": "Возможность съесть жареную крольчатину",
-
-  "achievetodo.locked_message.eat_cooked_salmon.title": "Жареный лосось",
-  "achievetodo.locked_message.eat_cooked_salmon.description": "Возможность съесть жареного лосося",
-
-  "achievetodo.locked_message.eat_cookie.title": "Печенье",
-  "achievetodo.locked_message.eat_cookie.description": "Возможность съесть печенье",
-
-  "achievetodo.locked_message.eat_dried_kelp.title": "Сушёная ламинария",
-  "achievetodo.locked_message.eat_dried_kelp.description": "Возможность съесть сушёную ламинарию",
-
-  "achievetodo.locked_message.eat_enchanted_golden_apple.title": "Зачарованное золотое\nяблоко",
-  "achievetodo.locked_message.eat_enchanted_golden_apple.description": "Возможность съесть зачарованное золотое яблоко",
-
-  "achievetodo.locked_message.eat_glow_berries.title": "Светящиеся ягоды",
-  "achievetodo.locked_message.eat_glow_berries.description": "Возможность съесть светящиеся ягоды",
-
-  "achievetodo.locked_message.eat_golden_apple.title": "Золотое яблоко",
-  "achievetodo.locked_message.eat_golden_apple.description": "Возможность съесть золотое яблоко",
-
-  "achievetodo.locked_message.eat_golden_carrot.title": "Золотая морковь",
-  "achievetodo.locked_message.eat_golden_carrot.description": "Возможность съесть золотую морковь",
-
-  "achievetodo.locked_message.eat_honey.title": "Мёд",
-  "achievetodo.locked_message.eat_honey.description": "Возможность съесть мёд",
-
-  "achievetodo.locked_message.eat_melon_slice.title": "Ломтик арбуза",
-  "achievetodo.locked_message.eat_melon_slice.description": "Возможность съесть ломтик арбуза",
-
-  "achievetodo.locked_message.eat_mushroom_stew.title": "Тушёные грибы",
-  "achievetodo.locked_message.eat_mushroom_stew.description": "Возможность съесть тушёные грибы",
-
-  "achievetodo.locked_message.eat_mutton.title": "Сырая баранина",
-  "achievetodo.locked_message.eat_mutton.description": "Возможность съесть сырую баранину",
-
-  "achievetodo.locked_message.eat_poisonous_potato.title": "Ядовитый картофель",
-  "achievetodo.locked_message.eat_poisonous_potato.description": "Возможность съесть ядовитый картофель",
-
-  "achievetodo.locked_message.eat_porkchop.title": "Сырая свинина",
-  "achievetodo.locked_message.eat_porkchop.description": "Возможность съесть сырую свинину",
-
-  "achievetodo.locked_message.eat_potato.title": "Картофель",
-  "achievetodo.locked_message.eat_potato.description": "Возможность съесть картофель",
-
-  "achievetodo.locked_message.eat_pufferfish.title": "Иглобрюх",
-  "achievetodo.locked_message.eat_pufferfish.description": "Возможность съесть иглобрюха",
-
-  "achievetodo.locked_message.eat_pumpkin_pie.title": "Тыквенный пирог",
-  "achievetodo.locked_message.eat_pumpkin_pie.description": "Возможность съесть тыквенный пирог",
-
-  "achievetodo.locked_message.eat_rabbit.title": "Сырая крольчатина",
-  "achievetodo.locked_message.eat_rabbit.description": "Возможность съесть сырую крольчатину",
-
-  "achievetodo.locked_message.eat_rabbit_stew.title": "Тушёный кролик",
-  "achievetodo.locked_message.eat_rabbit_stew.description": "Возможность съесть тушёного кролика",
-
-  "achievetodo.locked_message.eat_rotten_flesh.title": "Гнилая плоть",
-  "achievetodo.locked_message.eat_rotten_flesh.description": "Возможность съесть гнилую плоть",
-
-  "achievetodo.locked_message.eat_salmon.title": "Сырой лосось",
-  "achievetodo.locked_message.eat_salmon.description": "Возможность съесть сырого лосося",
-
-  "achievetodo.locked_message.eat_spider_eye.title": "Паучий глаз",
-  "achievetodo.locked_message.eat_spider_eye.description": "Возможность съесть паучий глаз",
-
-  "achievetodo.locked_message.eat_suspicious_stew.title": "Загадочное рагу",
-  "achievetodo.locked_message.eat_suspicious_stew.description": "Возможность съесть загадочное рагу",
-
-  "achievetodo.locked_message.eat_sweet_berries.title": "Сладкие ягоды",
-  "achievetodo.locked_message.eat_sweet_berries.description": "Возможность съесть сладкие ягоды",
-
-  "achievetodo.locked_message.eat_tropical_fish.title": "Тропическая рыба",
-  "achievetodo.locked_message.eat_tropical_fish.description": "Возможность съесть тропическую рыбу",
-
-  "achievetodo.locked_message.food": "Вы сейчас не можете съесть это",
-
-  "achievetodo.locked_message.trade_with_armorer.title": "Бронник",
-  "achievetodo.locked_message.trade_with_armorer.description": "Возможность торговли с бронником",
-
-  "achievetodo.locked_message.trade_with_butcher.title": "Мясник",
-  "achievetodo.locked_message.trade_with_butcher.description": "Возможность торговли с мясником",
-
-  "achievetodo.locked_message.trade_with_cartographer.title": "Картограф",
-  "achievetodo.locked_message.trade_with_cartographer.description": "Возможность торговли с картографом",
-
-  "achievetodo.locked_message.trade_with_cleric.title": "Священник",
-  "achievetodo.locked_message.trade_with_cleric.description": "Возможность торговли со священником",
-
-  "achievetodo.locked_message.trade_with_farmer.title": "Фермер",
-  "achievetodo.locked_message.trade_with_farmer.description": "Возможность торговли с фермером",
-
-  "achievetodo.locked_message.trade_with_fisherman.title": "Рыбак",
-  "achievetodo.locked_message.trade_with_fisherman.description": "Возможность торговли с рыбаком",
-
-  "achievetodo.locked_message.trade_with_fletcher.title": "Лучник",
-  "achievetodo.locked_message.trade_with_fletcher.description": "Возможность торговли с лучником",
-
-  "achievetodo.locked_message.trade_with_leatherworker.title": "Кожевник",
-  "achievetodo.locked_message.trade_with_leatherworker.description": "Возможность торговли с кожевником",
-
-  "achievetodo.locked_message.trade_with_librarian.title": "Библиотекарь",
-  "achievetodo.locked_message.trade_with_librarian.description": "Возможность торговли с библиотекарем",
-
-  "achievetodo.locked_message.trade_with_mason.title": "Каменщик",
-  "achievetodo.locked_message.trade_with_mason.description": "Возможность торговли с каменщиком",
-
-  "achievetodo.locked_message.trade_with_shepherd.title": "Пастух",
-  "achievetodo.locked_message.trade_with_shepherd.description": "Возможность торговли с пастухом",
-
-  "achievetodo.locked_message.trade_with_toolsmith.title": "Инструментальщик",
-  "achievetodo.locked_message.trade_with_toolsmith.description": "Возможность торговли с инструментальщиком",
-
-  "achievetodo.locked_message.trade_with_weaponsmith.title": "Оружейник",
-  "achievetodo.locked_message.trade_with_weaponsmith.description": "Возможность торговли с оружейником",
-
-  "achievetodo.locked_message.villager": "Вы сейчас не можете торговать с крестьянином этой профессии",
-
-  "achievetodo.locked_message.jump.title": "Прыжок",
-  "achievetodo.locked_message.jump.description": "Возможность прыгать",
-  "achievetodo.locked_message.jump": "Вы сейчас не можете прыгнуть",
-
-  "achievetodo.locked_message.break_blocks_in_negative_y.title": "Ломать блоки ниже\nнулевой высоты",
-  "achievetodo.locked_message.break_blocks_in_negative_y.description": "Возможность ломать блоки ниже нулевой высоты",
-  "achievetodo.locked_message.break_blocks_in_negative_y": "Вы сейчас не можете сломать блок ниже нулевой высоты",
-
-  "achievetodo.locked_message.break_blocks.title": "Ломать блоки",
-  "achievetodo.locked_message.break_blocks.description": "Возможность ломать блоки",
-  "achievetodo.locked_message.break_blocks": "Вы сейчас не можете сломать блок",
-
-  "achievetodo.locked_message.open_crafting_table.title": "Верстак",
-  "achievetodo.locked_message.open_crafting_table.description": "Возможность пользоваться интерфейсом верстака",
-  "achievetodo.locked_message.open_crafting_table": "Вы сейчас не можете открыть верстак",
-
-  "achievetodo.locked_message.open_furnace.title": "Печь",
-  "achievetodo.locked_message.open_furnace.description": "Возможность пользоваться интерфейсом печи",
-  "achievetodo.locked_message.open_furnace": "Вы сейчас не можете открыть печь",
-
-  "achievetodo.locked_message.use_stone_tools.title": "Каменные инструменты",
-  "achievetodo.locked_message.use_stone_tools.description": "Возможность пользоваться каменными инструментами",
-  "achievetodo.locked_message.use_stone_tools": "Вы сейчас не можете пользоваться каменными инструментами",
-
-  "achievetodo.locked_message.get_into_boat.title": "Садиться в лодку",
-  "achievetodo.locked_message.get_into_boat.description": "Возможность садиться в лодку",
-  "achievetodo.locked_message.get_into_boat": "Вы сейчас не можете сесть в лодку",
-
-  "achievetodo.locked_message.use_shield.title": "Щит",
-  "achievetodo.locked_message.use_shield.description": "Возможность пользоваться щитом",
-  "achievetodo.locked_message.use_shield": "Вы сейчас не можете пользоваться щитом",
-
-  "achievetodo.locked_message.enter_end.title": "Портал в Энд",
-  "achievetodo.locked_message.enter_end.description": "Возможность пользоваться порталом в Энд",
-  "achievetodo.locked_message.enter_end": "Вы сейчас не можете пользоваться порталом в Энд",
-
-  "achievetodo.locked_message.teleport_outer_islands.title": "Портал в Дальний Энд",
-  "achievetodo.locked_message.teleport_outer_islands.description": "Возможность пользоваться порталом в Дальний Энд",
-  "achievetodo.locked_message.teleport_outer_islands": "Вы сейчас не можете пользоваться порталом в Дальний Энд",
-
-  "achievetodo.locked_message.equip_diamond_armor.title": "Алмазная броня",
-  "achievetodo.locked_message.equip_diamond_armor.description": "Возможность надевать алмазную броню",
-  "achievetodo.locked_message.equip_diamond_armor": "Вы сейчас не можете надеть алмазную броню",
-
-  "achievetodo.locked_message.equip_elytra.title": "Элитры",
-  "achievetodo.locked_message.equip_elytra.description": "Возможность надевать элитры",
-  "achievetodo.locked_message.equip_elytra": "Вы сейчас не можете надеть элитры",
-
-  "achievetodo.locked_message.equip_iron_armor.title": "Железная броня",
-  "achievetodo.locked_message.equip_iron_armor.description": "Возможность надевать железную броню",
-  "achievetodo.locked_message.equip_iron_armor": "Вы сейчас не можете надеть железную броню",
-
-  "achievetodo.locked_message.equip_netherite_armor.title": "Незеритовая броня",
-  "achievetodo.locked_message.equip_netherite_armor.description": "Возможность надевать незеритовую броню",
-  "achievetodo.locked_message.equip_netherite_armor": "Вы сейчас не можете надеть незеритовую броню",
-
-  "achievetodo.locked_message.enter_nether.title": "Портал в Незер",
-  "achievetodo.locked_message.enter_nether.description": "Возможность пользоваться порталом в Незер",
-  "achievetodo.locked_message.enter_nether": "Вы сейчас не можете пользоваться порталом в Незер",
-
-  "achievetodo.locked_message.open_anvil.title": "Наковальня",
-  "achievetodo.locked_message.open_anvil.description": "Возможность пользоваться интерфейсом наковальни",
-  "achievetodo.locked_message.open_anvil": "Вы сейчас не можете открыть наковальню",
-
-  "achievetodo.locked_message.open_beacon.title": "Маяк",
-  "achievetodo.locked_message.open_beacon.description": "Возможность пользоваться интерфейсом маяка",
-  "achievetodo.locked_message.open_beacon": "Вы сейчас не можете открыть маяк",
-
-  "achievetodo.locked_message.open_blast_furnace.title": "Плавильная печь",
-  "achievetodo.locked_message.open_blast_furnace.description": "Возможность пользоваться интерфейсом плавильной печи",
-  "achievetodo.locked_message.open_blast_furnace": "Вы сейчас не можете открыть плавильную печь",
-
-  "achievetodo.locked_message.shoot_bow.title": "Лук",
-  "achievetodo.locked_message.shoot_bow.description": "Возможность стрелять из лука",
-  "achievetodo.locked_message.shoot_bow": "Вы сейчас не можете стрелять из лука",
-
-  "achievetodo.locked_message.open_brewing_stand.title": "Зельеварка",
-  "achievetodo.locked_message.open_brewing_stand.description": "Возможность пользоваться интерфейсом зельеварки",
-  "achievetodo.locked_message.open_brewing_stand": "Вы сейчас не можете открыть зельеварку",
-
-  "achievetodo.locked_message.use_diamond_tools.title": "Алмазные инструменты",
-  "achievetodo.locked_message.use_diamond_tools.description": "Возможность пользоваться алмазными инструментами",
-  "achievetodo.locked_message.use_diamond_tools": "Вы сейчас не можете пользоваться алмазными инструментами",
-
-  "achievetodo.locked_message.open_enchanting_table.title": "Чародейский стол",
-  "achievetodo.locked_message.open_enchanting_table.description": "Возможность пользоваться интерфейсом чародейского стола",
-  "achievetodo.locked_message.open_enchanting_table": "Вы сейчас не можете открыть чародейский стол",
-
-  "achievetodo.locked_message.open_ender_chest.title": "Эндер-сундук",
-  "achievetodo.locked_message.open_ender_chest.description": "Возможность открывать эндер-сундук",
-  "achievetodo.locked_message.open_ender_chest": "Вы сейчас не можете открыть эндер-сундук",
-
-  "achievetodo.locked_message.glide_with_fireworks.title": "Фейерверк при полёте",
-  "achievetodo.locked_message.glide_with_fireworks.description": "Возможность пользоваться фейерверком при полёте",
-  "achievetodo.locked_message.glide_with_fireworks": "Вы сейчас не можете пользоваться фейерверком при полёте",
-
-  "achievetodo.locked_message.use_iron_tools.title": "Железные инструменты",
-  "achievetodo.locked_message.use_iron_tools.description": "Возможность пользоваться железными инструментами",
-  "achievetodo.locked_message.use_iron_tools": "Вы сейчас не можете пользоваться железными инструментами",
-
-  "achievetodo.locked_message.use_netherite_tools.title": "Незеритовые инструменты",
-  "achievetodo.locked_message.use_netherite_tools.description": "Возможность пользоваться незеритовыми инструментами",
-  "achievetodo.locked_message.use_netherite_tools": "Вы сейчас не можете пользоваться незеритовыми инструментами",
-
-  "achievetodo.locked_message.open_shulker_box.title": "Шалкеровый ящик",
-  "achievetodo.locked_message.open_shulker_box.description": "Возможность открывать шалкеровый ящик",
-  "achievetodo.locked_message.open_shulker_box": "Вы сейчас не можете открыть шалкеровый ящик",
-
-  "achievetodo.locked_message.open_smoker.title": "Коптильня",
-  "achievetodo.locked_message.open_smoker.description": "Возможность пользоваться интерфейсом коптильни",
-  "achievetodo.locked_message.open_smoker": "Вы сейчас не можете открыть коптильню",
-
-  "achievetodo.locked_message.use_water_bucket.title": "Разливать воду",
-  "achievetodo.locked_message.use_water_bucket.description": "Возможность разливать воду из ведра",
-  "achievetodo.locked_message.use_water_bucket": "Вы сейчас не можете разлить воду из ведра",
-
-  "achievetodo.locked_message.open_door.title": "Открывать дверь",
-  "achievetodo.locked_message.open_door.description": "Возможность открывать дверь",
-  "achievetodo.locked_message.open_door": "Вы сейчас не можете открыть дверь",
-
-  "achievetodo.locked_message.sleep.title": "Ложиться спать",
-  "achievetodo.locked_message.sleep.description": "Возможность ложиться спать",
-  "achievetodo.locked_message.sleep": "Вы сейчас не можете лечь спать",
-
-  "achievetodo.locked_message.open_inventory.title": "Открывать инвентарь",
-  "achievetodo.locked_message.open_inventory.description": "Возможность открывать инвентарь",
-  "achievetodo.locked_message.open_inventory": "Вы сейчас не можете открыть инвентарь",
-
-  "achievetodo.locked_message.use_shears.title": "Ножницы",
-  "achievetodo.locked_message.use_shears.description": "Возможность пользоваться ножницами",
-  "achievetodo.locked_message.use_shears": "Вы сейчас не можете пользоваться ножницами",
-
-  "achievetodo.locked_message.shoot_crossbow.title": "Арбалет",
-  "achievetodo.locked_message.shoot_crossbow.description": "Возможность стрелять из арбалета",
-  "achievetodo.locked_message.shoot_crossbow": "Вы сейчас не можете стрелять из арбалета",
-
-  "achievetodo.locked_message.use_fishing_rod.title": "Удочка",
-  "achievetodo.locked_message.use_fishing_rod.description": "Возможность пользоваться удочкой",
-  "achievetodo.locked_message.use_fishing_rod": "Вы сейчас не можете пользоваться удочкой",
-
-  "achievetodo.locked_message.use_brush.title": "Кисть",
-  "achievetodo.locked_message.use_brush.description": "Возможность пользоваться кистью",
-  "achievetodo.locked_message.use_brush": "Вы сейчас не можете пользоваться кистью",
-
-  "achievetodo.locked_message.use_spyglass.title": "Подзорная труба",
-  "achievetodo.locked_message.use_spyglass.description": "Возможность пользоваться подзорной трубой",
-  "achievetodo.locked_message.use_spyglass": "Вы сейчас не можете пользоваться подзорной трубой",
-
-  "achievetodo.locked_message.attack_with_trident.title": "Трезубец",
-  "achievetodo.locked_message.attack_with_trident.description": "Возможность атаковать трезубцем",
-  "achievetodo.locked_message.attack_with_trident": "Вы сейчас не можете атаковать трезубцем",
-
-  "achievetodo.locked_message.throw_ender_pearl.title": "Эндер-жемчуг",
-  "achievetodo.locked_message.throw_ender_pearl.description": "Возможность бросить эндер-жемчуг",
-  "achievetodo.locked_message.throw_ender_pearl": "Вы сейчас не можете бросить эндер-жемчуг",
-
-  "achievetodo.locked_message.use_golden_tools.title": "Золотые инструменты",
-  "achievetodo.locked_message.use_golden_tools.description": "Возможность пользоваться золотыми инструментами",
-  "achievetodo.locked_message.use_golden_tools": "Вы сейчас не можете пользоваться золотыми инструментами",
-
-  "achievetodo.locked_message.equip_golden_armor.title": "Золотая броня",
-  "achievetodo.locked_message.equip_golden_armor.description": "Возможность надевать золотую броню",
-  "achievetodo.locked_message.equip_golden_armor": "Вы сейчас не можете надеть золотую броню",
-
-  "achievetodo.locked_message.equip_leather_armor.title": "Кожаная броня",
-  "achievetodo.locked_message.equip_leather_armor.description": "Возможность надевать кожаную броню",
-  "achievetodo.locked_message.equip_leather_armor": "Вы сейчас не можете надеть кожаную броню",
-
-  "achievetodo.locked_message.use_wooden_tools.title": "Деревянные инструменты",
-  "achievetodo.locked_message.use_wooden_tools.description": "Возможность пользоваться деревянными инструментами",
-  "achievetodo.locked_message.use_wooden_tools": "Вы сейчас не можете пользоваться деревянными инструментами",
-
-  "achievetodo.locked_message.equip_chainmail_armor.title": "Кольчужная броня",
-  "achievetodo.locked_message.equip_chainmail_armor.description": "Возможность надевать кольчужную броню",
-  "achievetodo.locked_message.equip_chainmail_armor": "Вы сейчас не можете надеть кольчужную броню",
-
-  "achievetodo.locked_message.open_chest.title": "Сундук",
-  "achievetodo.locked_message.open_chest.description": "Возможность открывать сундук",
-  "achievetodo.locked_message.open_chest": "Вы сейчас не можете открыть сундук",
-
-  "achievetodo.locked_message.open_stonecutter.title": "Камнерез",
-  "achievetodo.locked_message.open_stonecutter.description": "Возможность пользоваться интерфейсом камнереза",
-  "achievetodo.locked_message.open_stonecutter": "Вы сейчас не можете открыть камнерез",
-
-  "achievetodo.locked_message.open_grindstone.title": "Точило",
-  "achievetodo.locked_message.open_grindstone.description": "Возможность пользоваться интерфейсом точила",
-  "achievetodo.locked_message.open_grindstone": "Вы сейчас не можете открыть точило",
-
-  "achievetodo.locked_message.open_loom.title": "Ткацкий станок",
-  "achievetodo.locked_message.open_loom.description": "Возможность пользоваться интерфейсом ткацкого станка",
-  "achievetodo.locked_message.open_loom": "Вы сейчас не можете открыть ткацкий станок",
-
-  "achievetodo.locked_message.open_cartography_table.title": "Стол картографа",
-  "achievetodo.locked_message.open_cartography_table.description": "Возможность пользоваться интерфейсом стола картографа",
-  "achievetodo.locked_message.open_cartography_table": "Вы сейчас не можете открыть стол картографа",
-
-  "achievetodo.locked_message.open_smithing_table.title": "Стол кузнеца",
-  "achievetodo.locked_message.open_smithing_table.description": "Возможность пользоваться интерфейсом стола кузнеца",
-  "achievetodo.locked_message.open_smithing_table": "Вы сейчас не можете открыть стол кузнеца",
-
-  "achievetodo.locked_message.vision.title": "Зрение",
-  "achievetodo.locked_message.vision.description": "Возможность видеть",
-  "achievetodo.locked_message.vision": "Вы сейчас не можете видеть",
-
-  "achievetodo.locked_message.swim.title": "Плавание",
-  "achievetodo.locked_message.swim.description": "Возможность плавать",
-  "achievetodo.locked_message.swim": "Вы сейчас не можете плавать",
-
-  "achievetodo.locked_message.sneak.title": "Приседание",
-  "achievetodo.locked_message.sneak.description": "Возможность приседать",
-  "achievetodo.locked_message.sneak": "Вы сейчас не можете присесть",
-
-  "achievetodo.locked_message.sprint.title": "Бег",
-  "achievetodo.locked_message.sprint.description": "Возможность бегать",
-  "achievetodo.locked_message.sprint": "Вы сейчас не можете бегать",
-
-  "achievetodo.locked_message.unlock_vault.title": "Хранилище",
-  "achievetodo.locked_message.unlock_vault.description": "Возможность отпирать хранилище",
-  "achievetodo.locked_message.unlock_vault": "Вы сейчас не можете отпереть хранилище",
-
-  "achievetodo.locked_message.use_campfire.title": "Костёр",
-  "achievetodo.locked_message.use_campfire.description": "Возможность жарить еду на костре",
-  "achievetodo.locked_message.use_campfire": "Вы сейчас не можете пожарить еду на костре",
-
-  "achievetodo.locked_message.use_cauldron.title": "Котёл",
-  "achievetodo.locked_message.use_cauldron.description": "Возможность пользоваться котлом",
-  "achievetodo.locked_message.use_cauldron": "Вы сейчас не можете пользоваться котлом",
-
-  "achievetodo.locked_message.use_jukebox.title": "Проигрыватель",
-  "achievetodo.locked_message.use_jukebox.description": "Возможность пользоваться проигрывателем",
-  "achievetodo.locked_message.use_jukebox": "Вы сейчас не можете пользоваться проигрывателем",
-
-  "achievetodo.locked_message.use_composter.title": "Компостница",
-  "achievetodo.locked_message.use_composter.description": "Возможность пользоваться компостницей",
-  "achievetodo.locked_message.use_composter": "Вы сейчас не можете пользоваться компостницей",
-
-  "achievetodo.locked_message.place_end_crystal.title": "Кристалл Энда",
-  "achievetodo.locked_message.place_end_crystal.description": "Возможность разместить кристалл Энда",
-  "achievetodo.locked_message.place_end_crystal": "Вы сейчас не можете разместить кристалл Энда",
-
-  "achievetodo.locked_message.use_ender_eye.title": "Око Эндера",
-  "achievetodo.locked_message.use_ender_eye.description": "Возможность запустить око Эндера",
-  "achievetodo.locked_message.use_ender_eye": "Вы сейчас не можете запустить око Эндера",
-
-  "achievetodo.locked_message.charge_respawn_anchor.title": "Якорь возрождения",
-  "achievetodo.locked_message.charge_respawn_anchor.description": "Возможность заряжать якорь возрождения",
-  "achievetodo.locked_message.charge_respawn_anchor": "Вы сейчас не можете зарядить якорь возрождения",
-
-  "achievetodo.locked_message.open_barrel.title": "Бочка",
-  "achievetodo.locked_message.open_barrel.description": "Возможность открывать бочку",
-  "achievetodo.locked_message.open_barrel": "Вы сейчас не можете открыть бочку",
-
-  "achievetodo.locked_message.ignite_tnt.title": "Динамит",
-  "achievetodo.locked_message.ignite_tnt.description": "Возможность поджигать динамит",
-  "achievetodo.locked_message.ignite_tnt": "Вы сейчас не можете поджечь динамит",
-
-  "achievetodo.locked_message.open_trapdoor.title": "Открывать люк",
-  "achievetodo.locked_message.open_trapdoor.description": "Возможность открывать люк",
-  "achievetodo.locked_message.open_trapdoor": "Вы сейчас не можете открыть люк",
-
-  "achievetodo.locked_message.open_fence_gate.title": "Открывать калитку",
-  "achievetodo.locked_message.open_fence_gate.description": "Возможность открывать калитку",
-  "achievetodo.locked_message.open_fence_gate": "Вы сейчас не можете открыть калитку",
-
-  "achievetodo.locked_message.get_into_minecart.title": "Садиться в вагонетку",
-  "achievetodo.locked_message.get_into_minecart.description": "Возможность садиться в вагонетку",
-  "achievetodo.locked_message.get_into_minecart": "Вы сейчас не можете сесть в вагонетку",
-
-  "achievetodo.locked_message.use_flint_and_steel.title": "Огниво",
-  "achievetodo.locked_message.use_flint_and_steel.description": "Возможность пользоваться огнивом",
-  "achievetodo.locked_message.use_flint_and_steel": "Вы сейчас не можете пользоваться огнивом",
-
-  "achievetodo.locked_message.put_in_bundle.title": "Мешок",
-  "achievetodo.locked_message.put_in_bundle.description": "Возможность класть вещи в мешок",
-  "achievetodo.locked_message.put_in_bundle": "Вы сейчас не можете класть вещи в мешок",
-
-  "achievetodo.locked_message.throw_egg.title": "Яйцо",
-  "achievetodo.locked_message.throw_egg.description": "Возможность бросить яйцо",
-  "achievetodo.locked_message.throw_egg": "Вы сейчас не можете бросить яйцо",
-
-  "achievetodo.locked_message.throw_snowball.title": "Снежок",
-  "achievetodo.locked_message.throw_snowball.description": "Возможность бросить снежок",
-  "achievetodo.locked_message.throw_snowball": "Вы сейчас не можете бросить снежок",
-
-  "achievetodo.locked_message.throw_wind_charge.title": "Заряд ветра",
-  "achievetodo.locked_message.throw_wind_charge.description": "Возможность метнуть заряд ветра",
-  "achievetodo.locked_message.throw_wind_charge": "Вы сейчас не можете метнуть заряд ветра",
-
-  "achievetodo.locked_message.use_ominous_bottle.title": "Зловещая бутылочка",
-  "achievetodo.locked_message.use_ominous_bottle.description": "Возможность выпить зловещую бутылочку",
-  "achievetodo.locked_message.use_ominous_bottle": "Вы сейчас не можете выпить зловещую бутылочку",
-
-  "achievetodo.locked_message.equip_turtle_helmet.title": "Черепаший панцирь",
-  "achievetodo.locked_message.equip_turtle_helmet.description": "Возможность надевать черепаший панцирь",
-  "achievetodo.locked_message.equip_turtle_helmet": "Вы сейчас не можете надеть черепаший панцирь",
-
-  "achievetodo.locked_message.attack_with_mace.title": "Булава",
-  "achievetodo.locked_message.attack_with_mace.description": "Возможность атаковать булавой",
-  "achievetodo.locked_message.attack_with_mace": "Вы сейчас не можете атаковать булавой",
-
-  "achievetodo.locked_message.trade_with_wandering_trader.title": "Странствующий торговец",
-  "achievetodo.locked_message.trade_with_wandering_trader.description": "Возможность торговли со странствующим торговцем",
-  "achievetodo.locked_message.trade_with_wandering_trader": "Вы сейчас не можете торговать со странствующим торговцем",
-
-  "achievetodo.unlocked.food": "Доступна еда",
-  "achievetodo.unlocked.action": "Доступно действие",
-  "achievetodo.unlocked.item": "Доступен предмет",
-  "achievetodo.unlocked.block": "Доступен блок",
-  "achievetodo.unlocked.tool": "Доступен инструмент",
-  "achievetodo.unlocked.weapon": "Доступно оружие",
-  "achievetodo.unlocked.equipment": "Доступно снаряжение",
-  "achievetodo.unlocked.portal": "Доступен портал",
-  "achievetodo.unlocked.trading": "Доступна торговля",
-
-  "achievetodo.locked_message.left": "Осталось выполнить достижений: ",
-
-  "%1$s has unblocked %2$s%3$s%4$s": "%1$s разблокировал %2$s%3$s%4$s",
-
-  "achievetodo.pending_tab.biomes": "Убейте моба, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.adventure": "Убейте моба, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.weaponry": "Добудьте меч, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.husbandry": "Съешьте что-нибудь, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.monsters": "Добудьте меч, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.mining": "Добудьте кирку, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.building": "Добудьте верстак, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.farming": "Добудьте мотыгу, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.nether": "Переместитесь в Незер, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.end": "Переместитесь в Энд, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.statistics": "Переживите первую ночь, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.redstone": "Добудьте редстоун, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.potion": "Сварите зелье, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.enchanting": "Зачаруйте предмет на столе зачарования, чтобы разблокировать вкладку",
-  "achievetodo.pending_tab.challenges": "Убейте эндер-дракона, чтобы разблокировать вкладку",
+  "achievetodo.ability.eat_apple.name": "Яблоко",
+  "achievetodo.ability.eat_apple.description": "Возможность съесть яблоко",
+  "achievetodo.ability.eat_apple.locked_message": "Вы сейчас не можете съесть яблоко",
+
+  "achievetodo.ability.eat_baked_potato.name": "Печёный картофель",
+  "achievetodo.ability.eat_baked_potato.description": "Возможность съесть печёный картофель",
+  "achievetodo.ability.eat_baked_potato.locked_message": "Вы сейчас не можете съесть печёный картофель",
+
+  "achievetodo.ability.eat_beef.name": "Сырая говядина",
+  "achievetodo.ability.eat_beef.description": "Возможность съесть сырую говядину",
+  "achievetodo.ability.eat_beef.locked_message": "Вы сейчас не можете съесть сырую говядину",
+
+  "achievetodo.ability.eat_beetroot.name": "Свёкла",
+  "achievetodo.ability.eat_beetroot.description": "Возможность съесть свёклу",
+  "achievetodo.ability.eat_beetroot.locked_message": "Вы сейчас не можете съесть свёклу",
+
+  "achievetodo.ability.eat_beetroot_soup.name": "Свекольный суп",
+  "achievetodo.ability.eat_beetroot_soup.description": "Возможность съесть свекольный суп",
+  "achievetodo.ability.eat_beetroot_soup.locked_message": "Вы сейчас не можете съесть свекольный суп",
+
+  "achievetodo.ability.eat_bread.name": "Хлеб",
+  "achievetodo.ability.eat_bread.description": "Возможность съесть хлеб",
+  "achievetodo.ability.eat_bread.locked_message": "Вы сейчас не можете съесть хлеб",
+
+  "achievetodo.ability.eat_carrot.name": "Морковь",
+  "achievetodo.ability.eat_carrot.description": "Возможность съесть морковь",
+  "achievetodo.ability.eat_carrot.locked_message": "Вы сейчас не можете съесть морковь",
+
+  "achievetodo.ability.eat_chicken.name": "Курятина",
+  "achievetodo.ability.eat_chicken.description": "Возможность съесть курятину",
+  "achievetodo.ability.eat_chicken.locked_message": "Вы сейчас не можете съесть курятину",
+
+  "achievetodo.ability.eat_chorus_fruit.name": "Плод хоруса",
+  "achievetodo.ability.eat_chorus_fruit.description": "Возможность съесть плод хоруса",
+  "achievetodo.ability.eat_chorus_fruit.locked_message": "Вы сейчас не можете съесть плод хоруса",
+
+  "achievetodo.ability.eat_cod.name": "Сырая треска",
+  "achievetodo.ability.eat_cod.description": "Возможность съесть сырую треску",
+  "achievetodo.ability.eat_cod.locked_message": "Вы сейчас не можете съесть сырую треску",
+
+  "achievetodo.ability.eat_cooked_beef.name": "Стейк",
+  "achievetodo.ability.eat_cooked_beef.description": "Возможность съесть стейк",
+  "achievetodo.ability.eat_cooked_beef.locked_message": "Вы сейчас не можете съесть стейк",
+
+  "achievetodo.ability.eat_cooked_chicken.name": "Жареная курица",
+  "achievetodo.ability.eat_cooked_chicken.description": "Возможность съесть жареную курицу",
+  "achievetodo.ability.eat_cooked_chicken.locked_message": "Вы сейчас не можете съесть жареную курицу",
+
+  "achievetodo.ability.eat_cooked_cod.name": "Жареная треска",
+  "achievetodo.ability.eat_cooked_cod.description": "Возможность съесть жареную треску",
+  "achievetodo.ability.eat_cooked_cod.locked_message": "Вы сейчас не можете съесть жареную треску",
+
+  "achievetodo.ability.eat_cooked_mutton.name": "Жареная баранина",
+  "achievetodo.ability.eat_cooked_mutton.description": "Возможность съесть жареную баранину",
+  "achievetodo.ability.eat_cooked_mutton.locked_message": "Вы сейчас не можете съесть жареную баранину",
+
+  "achievetodo.ability.eat_cooked_porkchop.name": "Жареная свинина",
+  "achievetodo.ability.eat_cooked_porkchop.description": "Возможность съесть жареную свинину",
+  "achievetodo.ability.eat_cooked_porkchop.locked_message": "Вы сейчас не можете съесть жареную свинину",
+
+  "achievetodo.ability.eat_cooked_rabbit.name": "Жареная крольчатина",
+  "achievetodo.ability.eat_cooked_rabbit.description": "Возможность съесть жареную крольчатину",
+  "achievetodo.ability.eat_cooked_rabbit.locked_message": "Вы сейчас не можете съесть жареную крольчатину",
+
+  "achievetodo.ability.eat_cooked_salmon.name": "Жареный лосось",
+  "achievetodo.ability.eat_cooked_salmon.description": "Возможность съесть жареного лосося",
+  "achievetodo.ability.eat_cooked_salmon.locked_message": "Вы сейчас не можете съесть жареного лосося",
+
+  "achievetodo.ability.eat_cookie.name": "Печенье",
+  "achievetodo.ability.eat_cookie.description": "Возможность съесть печенье",
+  "achievetodo.ability.eat_cookie.locked_message": "Вы сейчас не можете съесть печенье",
+
+  "achievetodo.ability.eat_dried_kelp.name": "Сушёная ламинария",
+  "achievetodo.ability.eat_dried_kelp.description": "Возможность съесть сушёную ламинарию",
+  "achievetodo.ability.eat_dried_kelp.locked_message": "Вы сейчас не можете съесть сушёную ламинарию",
+
+  "achievetodo.ability.eat_enchanted_golden_apple.name": "Зачарованное золотое\nяблоко",
+  "achievetodo.ability.eat_enchanted_golden_apple.description": "Возможность съесть зачарованное золотое яблоко",
+  "achievetodo.ability.eat_enchanted_golden_apple.locked_message": "Вы сейчас не можете съесть зачарованное золотое яблоко",
+
+  "achievetodo.ability.eat_glow_berries.name": "Светящиеся ягоды",
+  "achievetodo.ability.eat_glow_berries.description": "Возможность съесть светящиеся ягоды",
+  "achievetodo.ability.eat_glow_berries.locked_message": "Вы сейчас не можете съесть светящиеся ягоды",
+
+  "achievetodo.ability.eat_golden_apple.name": "Золотое яблоко",
+  "achievetodo.ability.eat_golden_apple.description": "Возможность съесть золотое яблоко",
+  "achievetodo.ability.eat_golden_apple.locked_message": "Вы сейчас не можете съесть золотое яблоко",
+
+  "achievetodo.ability.eat_golden_carrot.name": "Золотая морковь",
+  "achievetodo.ability.eat_golden_carrot.description": "Возможность съесть золотую морковь",
+  "achievetodo.ability.eat_golden_carrot.locked_message": "Вы сейчас не можете съесть золотую морковь",
+
+  "achievetodo.ability.eat_honey.name": "Мёд",
+  "achievetodo.ability.eat_honey.description": "Возможность съесть мёд",
+  "achievetodo.ability.eat_honey.locked_message": "Вы сейчас не можете съесть мёд",
+
+  "achievetodo.ability.eat_melon_slice.name": "Ломтик арбуза",
+  "achievetodo.ability.eat_melon_slice.description": "Возможность съесть ломтик арбуза",
+  "achievetodo.ability.eat_melon_slice.locked_message": "Вы сейчас не можете съесть ломтик арбуза",
+
+  "achievetodo.ability.eat_mushroom_stew.name": "Тушёные грибы",
+  "achievetodo.ability.eat_mushroom_stew.description": "Возможность съесть тушёные грибы",
+  "achievetodo.ability.eat_mushroom_stew.locked_message": "Вы сейчас не можете съесть тушёные грибы",
+
+  "achievetodo.ability.eat_mutton.name": "Сырая баранина",
+  "achievetodo.ability.eat_mutton.description": "Возможность съесть сырую баранину",
+  "achievetodo.ability.eat_mutton.locked_message": "Вы сейчас не можете съесть сырую баранину",
+
+  "achievetodo.ability.eat_poisonous_potato.name": "Ядовитый картофель",
+  "achievetodo.ability.eat_poisonous_potato.description": "Возможность съесть ядовитый картофель",
+  "achievetodo.ability.eat_poisonous_potato.locked_message": "Вы сейчас не можете съесть ядовитый картофель",
+
+  "achievetodo.ability.eat_porkchop.name": "Сырая свинина",
+  "achievetodo.ability.eat_porkchop.description": "Возможность съесть сырую свинину",
+  "achievetodo.ability.eat_porkchop.locked_message": "Вы сейчас не можете съесть сырую свинину",
+
+  "achievetodo.ability.eat_potato.name": "Картофель",
+  "achievetodo.ability.eat_potato.description": "Возможность съесть картофель",
+  "achievetodo.ability.eat_potato.locked_message": "Вы сейчас не можете съесть картофель",
+
+  "achievetodo.ability.eat_pufferfish.name": "Иглобрюх",
+  "achievetodo.ability.eat_pufferfish.description": "Возможность съесть иглобрюха",
+  "achievetodo.ability.eat_pufferfish.locked_message": "Вы сейчас не можете съесть иглобрюха",
+
+  "achievetodo.ability.eat_pumpkin_pie.name": "Тыквенный пирог",
+  "achievetodo.ability.eat_pumpkin_pie.description": "Возможность съесть тыквенный пирог",
+  "achievetodo.ability.eat_pumpkin_pie.locked_message": "Вы сейчас не можете съесть тыквенный пирог",
+
+  "achievetodo.ability.eat_rabbit.name": "Сырая крольчатина",
+  "achievetodo.ability.eat_rabbit.description": "Возможность съесть сырую крольчатину",
+  "achievetodo.ability.eat_rabbit.locked_message": "Вы сейчас не можете съесть сырую крольчатину",
+
+  "achievetodo.ability.eat_rabbit_stew.name": "Тушёный кролик",
+  "achievetodo.ability.eat_rabbit_stew.description": "Возможность съесть тушёного кролика",
+  "achievetodo.ability.eat_rabbit_stew.locked_message": "Вы сейчас не можете съесть тушёного кролика",
+
+  "achievetodo.ability.eat_rotten_flesh.name": "Гнилая плоть",
+  "achievetodo.ability.eat_rotten_flesh.description": "Возможность съесть гнилую плоть",
+  "achievetodo.ability.eat_rotten_flesh.locked_message": "Вы сейчас не можете съесть гнилую плоть",
+
+  "achievetodo.ability.eat_salmon.name": "Сырой лосось",
+  "achievetodo.ability.eat_salmon.description": "Возможность съесть сырого лосося",
+  "achievetodo.ability.eat_salmon.locked_message": "Вы сейчас не можете съесть сырого лосося",
+
+  "achievetodo.ability.eat_spider_eye.name": "Паучий глаз",
+  "achievetodo.ability.eat_spider_eye.description": "Возможность съесть паучий глаз",
+  "achievetodo.ability.eat_spider_eye.locked_message": "Вы сейчас не можете съесть паучий глаз",
+
+  "achievetodo.ability.eat_suspicious_stew.name": "Загадочное рагу",
+  "achievetodo.ability.eat_suspicious_stew.description": "Возможность съесть загадочное рагу",
+  "achievetodo.ability.eat_suspicious_stew.locked_message": "Вы сейчас не можете съесть загадочное рагу",
+
+  "achievetodo.ability.eat_sweet_berries.name": "Сладкие ягоды",
+  "achievetodo.ability.eat_sweet_berries.description": "Возможность съесть сладкие ягоды",
+  "achievetodo.ability.eat_sweet_berries.locked_message": "Вы сейчас не можете съесть сладкие ягоды",
+
+  "achievetodo.ability.eat_tropical_fish.name": "Тропическая рыба",
+  "achievetodo.ability.eat_tropical_fish.description": "Возможность съесть тропическую рыбу",
+  "achievetodo.ability.eat_tropical_fish.locked_message": "Вы сейчас не можете съесть тропическую рыбу",
+
+  "achievetodo.ability.trade_with_armorer.name": "Бронник",
+  "achievetodo.ability.trade_with_armorer.description": "Возможность торговли с бронником",
+  "achievetodo.ability.trade_with_armorer.locked_message": "Вы сейчас не можете торговать с бронником",
+
+  "achievetodo.ability.trade_with_butcher.name": "Мясник",
+  "achievetodo.ability.trade_with_butcher.description": "Возможность торговли с мясником",
+  "achievetodo.ability.trade_with_butcher.locked_message": "Вы сейчас не можете торговать с мясником",
+
+  "achievetodo.ability.trade_with_cartographer.name": "Картограф",
+  "achievetodo.ability.trade_with_cartographer.description": "Возможность торговли с картографом",
+  "achievetodo.ability.trade_with_cartographer.locked_message": "Вы сейчас не можете торговать с картографом",
+
+  "achievetodo.ability.trade_with_cleric.name": "Священник",
+  "achievetodo.ability.trade_with_cleric.description": "Возможность торговли со священником",
+  "achievetodo.ability.trade_with_cleric.locked_message": "Вы сейчас не можете торговать со священником",
+
+  "achievetodo.ability.trade_with_farmer.name": "Фермер",
+  "achievetodo.ability.trade_with_farmer.description": "Возможность торговли с фермером",
+  "achievetodo.ability.trade_with_farmer.locked_message": "Вы сейчас не можете торговать с фермером",
+
+  "achievetodo.ability.trade_with_fisherman.name": "Рыбак",
+  "achievetodo.ability.trade_with_fisherman.description": "Возможность торговли с рыбаком",
+  "achievetodo.ability.trade_with_fisherman.locked_message": "Вы сейчас не можете торговать с рыбаком",
+
+  "achievetodo.ability.trade_with_fletcher.name": "Лучник",
+  "achievetodo.ability.trade_with_fletcher.description": "Возможность торговли с лучником",
+  "achievetodo.ability.trade_with_fletcher.locked_message": "Вы сейчас не можете торговать с лучником",
+
+  "achievetodo.ability.trade_with_leatherworker.name": "Кожевник",
+  "achievetodo.ability.trade_with_leatherworker.description": "Возможность торговли с кожевником",
+  "achievetodo.ability.trade_with_leatherworker.locked_message": "Вы сейчас не можете торговать с кожевником",
+
+  "achievetodo.ability.trade_with_librarian.name": "Библиотекарь",
+  "achievetodo.ability.trade_with_librarian.description": "Возможность торговли с библиотекарем",
+  "achievetodo.ability.trade_with_librarian.locked_message": "Вы сейчас не можете торговать с библиотекарем",
+
+  "achievetodo.ability.trade_with_mason.name": "Каменщик",
+  "achievetodo.ability.trade_with_mason.description": "Возможность торговли с каменщиком",
+  "achievetodo.ability.trade_with_mason.locked_message": "Вы сейчас не можете торговать с каменщиком",
+
+  "achievetodo.ability.trade_with_shepherd.name": "Пастух",
+  "achievetodo.ability.trade_with_shepherd.description": "Возможность торговли с пастухом",
+  "achievetodo.ability.trade_with_shepherd.locked_message": "Вы сейчас не можете торговать с пастухом",
+
+  "achievetodo.ability.trade_with_toolsmith.name": "Инструментальщик",
+  "achievetodo.ability.trade_with_toolsmith.description": "Возможность торговли с инструментальщиком",
+  "achievetodo.ability.trade_with_toolsmith.locked_message": "Вы сейчас не можете торговать с инструментальщиком",
+
+  "achievetodo.ability.trade_with_weaponsmith.name": "Оружейник",
+  "achievetodo.ability.trade_with_weaponsmith.description": "Возможность торговли с оружейником",
+  "achievetodo.ability.trade_with_weaponsmith.locked_message": "Вы сейчас не можете торговать с оружейником",
+
+  "achievetodo.ability.jump.name": "Прыжок",
+  "achievetodo.ability.jump.description": "Возможность прыгать",
+  "achievetodo.ability.jump.locked_message": "Вы сейчас не можете прыгнуть",
+
+  "achievetodo.ability.break_blocks_in_negative_y.name": "Ломать блоки ниже\nнулевой высоты",
+  "achievetodo.ability.break_blocks_in_negative_y.description": "Возможность ломать блоки ниже нулевой высоты",
+  "achievetodo.ability.break_blocks_in_negative_y.locked_message": "Вы сейчас не можете сломать блок ниже нулевой высоты",
+
+  "achievetodo.ability.break_blocks.name": "Ломать блоки",
+  "achievetodo.ability.break_blocks.description": "Возможность ломать блоки",
+  "achievetodo.ability.break_blocks.locked_message": "Вы сейчас не можете сломать блок",
+
+  "achievetodo.ability.open_crafting_table.name": "Верстак",
+  "achievetodo.ability.open_crafting_table.description": "Возможность пользоваться интерфейсом верстака",
+  "achievetodo.ability.open_crafting_table.locked_message": "Вы сейчас не можете открыть верстак",
+
+  "achievetodo.ability.open_furnace.name": "Печь",
+  "achievetodo.ability.open_furnace.description": "Возможность пользоваться интерфейсом печи",
+  "achievetodo.ability.open_furnace.locked_message": "Вы сейчас не можете открыть печь",
+
+  "achievetodo.ability.use_stone_tools.name": "Каменные инструменты",
+  "achievetodo.ability.use_stone_tools.description": "Возможность пользоваться каменными инструментами",
+  "achievetodo.ability.use_stone_tools.locked_message": "Вы сейчас не можете пользоваться каменными инструментами",
+
+  "achievetodo.ability.get_into_boat.name": "Садиться в лодку",
+  "achievetodo.ability.get_into_boat.description": "Возможность садиться в лодку",
+  "achievetodo.ability.get_into_boat.locked_message": "Вы сейчас не можете сесть в лодку",
+
+  "achievetodo.ability.use_shield.name": "Щит",
+  "achievetodo.ability.use_shield.description": "Возможность пользоваться щитом",
+  "achievetodo.ability.use_shield.locked_message": "Вы сейчас не можете пользоваться щитом",
+
+  "achievetodo.ability.enter_end.name": "Портал в Энд",
+  "achievetodo.ability.enter_end.description": "Возможность пользоваться порталом в Энд",
+  "achievetodo.ability.enter_end.locked_message": "Вы сейчас не можете пользоваться порталом в Энд",
+
+  "achievetodo.ability.teleport_outer_islands.name": "Портал в Дальний Энд",
+  "achievetodo.ability.teleport_outer_islands.description": "Возможность пользоваться порталом в Дальний Энд",
+  "achievetodo.ability.teleport_outer_islands.locked_message": "Вы сейчас не можете пользоваться порталом в Дальний Энд",
+
+  "achievetodo.ability.equip_diamond_armor.name": "Алмазная броня",
+  "achievetodo.ability.equip_diamond_armor.description": "Возможность надевать алмазную броню",
+  "achievetodo.ability.equip_diamond_armor.locked_message": "Вы сейчас не можете надеть алмазную броню",
+
+  "achievetodo.ability.equip_elytra.name": "Элитры",
+  "achievetodo.ability.equip_elytra.description": "Возможность надевать элитры",
+  "achievetodo.ability.equip_elytra.locked_message": "Вы сейчас не можете надеть элитры",
+
+  "achievetodo.ability.equip_iron_armor.name": "Железная броня",
+  "achievetodo.ability.equip_iron_armor.description": "Возможность надевать железную броню",
+  "achievetodo.ability.equip_iron_armor.locked_message": "Вы сейчас не можете надеть железную броню",
+
+  "achievetodo.ability.equip_netherite_armor.name": "Незеритовая броня",
+  "achievetodo.ability.equip_netherite_armor.description": "Возможность надевать незеритовую броню",
+  "achievetodo.ability.equip_netherite_armor.locked_message": "Вы сейчас не можете надеть незеритовую броню",
+
+  "achievetodo.ability.enter_nether.name": "Портал в Незер",
+  "achievetodo.ability.enter_nether.description": "Возможность пользоваться порталом в Незер",
+  "achievetodo.ability.enter_nether.locked_message": "Вы сейчас не можете пользоваться порталом в Незер",
+
+  "achievetodo.ability.open_anvil.name": "Наковальня",
+  "achievetodo.ability.open_anvil.description": "Возможность пользоваться интерфейсом наковальни",
+  "achievetodo.ability.open_anvil.locked_message": "Вы сейчас не можете открыть наковальню",
+
+  "achievetodo.ability.open_beacon.name": "Маяк",
+  "achievetodo.ability.open_beacon.description": "Возможность пользоваться интерфейсом маяка",
+  "achievetodo.ability.open_beacon.locked_message": "Вы сейчас не можете открыть маяк",
+
+  "achievetodo.ability.open_blast_furnace.name": "Плавильная печь",
+  "achievetodo.ability.open_blast_furnace.description": "Возможность пользоваться интерфейсом плавильной печи",
+  "achievetodo.ability.open_blast_furnace.locked_message": "Вы сейчас не можете открыть плавильную печь",
+
+  "achievetodo.ability.shoot_bow.name": "Лук",
+  "achievetodo.ability.shoot_bow.description": "Возможность стрелять из лука",
+  "achievetodo.ability.shoot_bow.locked_message": "Вы сейчас не можете стрелять из лука",
+
+  "achievetodo.ability.open_brewing_stand.name": "Зельеварка",
+  "achievetodo.ability.open_brewing_stand.description": "Возможность пользоваться интерфейсом зельеварки",
+  "achievetodo.ability.open_brewing_stand.locked_message": "Вы сейчас не можете открыть зельеварку",
+
+  "achievetodo.ability.use_diamond_tools.name": "Алмазные инструменты",
+  "achievetodo.ability.use_diamond_tools.description": "Возможность пользоваться алмазными инструментами",
+  "achievetodo.ability.use_diamond_tools.locked_message": "Вы сейчас не можете пользоваться алмазными инструментами",
+
+  "achievetodo.ability.open_enchanting_table.name": "Чародейский стол",
+  "achievetodo.ability.open_enchanting_table.description": "Возможность пользоваться интерфейсом чародейского стола",
+  "achievetodo.ability.open_enchanting_table.locked_message": "Вы сейчас не можете открыть чародейский стол",
+
+  "achievetodo.ability.open_ender_chest.name": "Эндер-сундук",
+  "achievetodo.ability.open_ender_chest.description": "Возможность открывать эндер-сундук",
+  "achievetodo.ability.open_ender_chest.locked_message": "Вы сейчас не можете открыть эндер-сундук",
+
+  "achievetodo.ability.glide_with_fireworks.name": "Фейерверк при полёте",
+  "achievetodo.ability.glide_with_fireworks.description": "Возможность пользоваться фейерверком при полёте",
+  "achievetodo.ability.glide_with_fireworks.locked_message": "Вы сейчас не можете пользоваться фейерверком при полёте",
+
+  "achievetodo.ability.use_iron_tools.name": "Железные инструменты",
+  "achievetodo.ability.use_iron_tools.description": "Возможность пользоваться железными инструментами",
+  "achievetodo.ability.use_iron_tools.locked_message": "Вы сейчас не можете пользоваться железными инструментами",
+
+  "achievetodo.ability.use_netherite_tools.name": "Незеритовые инструменты",
+  "achievetodo.ability.use_netherite_tools.description": "Возможность пользоваться незеритовыми инструментами",
+  "achievetodo.ability.use_netherite_tools.locked_message": "Вы сейчас не можете пользоваться незеритовыми инструментами",
+
+  "achievetodo.ability.open_shulker_box.name": "Шалкеровый ящик",
+  "achievetodo.ability.open_shulker_box.description": "Возможность открывать шалкеровый ящик",
+  "achievetodo.ability.open_shulker_box.locked_message": "Вы сейчас не можете открыть шалкеровый ящик",
+
+  "achievetodo.ability.open_smoker.name": "Коптильня",
+  "achievetodo.ability.open_smoker.description": "Возможность пользоваться интерфейсом коптильни",
+  "achievetodo.ability.open_smoker.locked_message": "Вы сейчас не можете открыть коптильню",
+
+  "achievetodo.ability.use_water_bucket.name": "Разливать воду",
+  "achievetodo.ability.use_water_bucket.description": "Возможность разливать воду из ведра",
+  "achievetodo.ability.use_water_bucket.locked_message": "Вы сейчас не можете разлить воду из ведра",
+
+  "achievetodo.ability.open_door.name": "Открывать дверь",
+  "achievetodo.ability.open_door.description": "Возможность открывать дверь",
+  "achievetodo.ability.open_door.locked_message": "Вы сейчас не можете открыть дверь",
+
+  "achievetodo.ability.sleep.name": "Ложиться спать",
+  "achievetodo.ability.sleep.description": "Возможность ложиться спать",
+  "achievetodo.ability.sleep.locked_message": "Вы сейчас не можете лечь спать",
+
+  "achievetodo.ability.open_inventory.name": "Открывать инвентарь",
+  "achievetodo.ability.open_inventory.description": "Возможность открывать инвентарь",
+  "achievetodo.ability.open_inventory.locked_message": "Вы сейчас не можете открыть инвентарь",
+
+  "achievetodo.ability.use_shears.name": "Ножницы",
+  "achievetodo.ability.use_shears.description": "Возможность пользоваться ножницами",
+  "achievetodo.ability.use_shears.locked_message": "Вы сейчас не можете пользоваться ножницами",
+
+  "achievetodo.ability.shoot_crossbow.name": "Арбалет",
+  "achievetodo.ability.shoot_crossbow.description": "Возможность стрелять из арбалета",
+  "achievetodo.ability.shoot_crossbow.locked_message": "Вы сейчас не можете стрелять из арбалета",
+
+  "achievetodo.ability.use_fishing_rod.name": "Удочка",
+  "achievetodo.ability.use_fishing_rod.description": "Возможность пользоваться удочкой",
+  "achievetodo.ability.use_fishing_rod.locked_message": "Вы сейчас не можете пользоваться удочкой",
+
+  "achievetodo.ability.use_brush.name": "Кисть",
+  "achievetodo.ability.use_brush.description": "Возможность пользоваться кистью",
+  "achievetodo.ability.use_brush.locked_message": "Вы сейчас не можете пользоваться кистью",
+
+  "achievetodo.ability.use_spyglass.name": "Подзорная труба",
+  "achievetodo.ability.use_spyglass.description": "Возможность пользоваться подзорной трубой",
+  "achievetodo.ability.use_spyglass.locked_message": "Вы сейчас не можете пользоваться подзорной трубой",
+
+  "achievetodo.ability.attack_with_trident.name": "Трезубец",
+  "achievetodo.ability.attack_with_trident.description": "Возможность атаковать трезубцем",
+  "achievetodo.ability.attack_with_trident.locked_message": "Вы сейчас не можете атаковать трезубцем",
+
+  "achievetodo.ability.throw_ender_pearl.name": "Эндер-жемчуг",
+  "achievetodo.ability.throw_ender_pearl.description": "Возможность бросить эндер-жемчуг",
+  "achievetodo.ability.throw_ender_pearl.locked_message": "Вы сейчас не можете бросить эндер-жемчуг",
+
+  "achievetodo.ability.use_golden_tools.name": "Золотые инструменты",
+  "achievetodo.ability.use_golden_tools.description": "Возможность пользоваться золотыми инструментами",
+  "achievetodo.ability.use_golden_tools.locked_message": "Вы сейчас не можете пользоваться золотыми инструментами",
+
+  "achievetodo.ability.equip_golden_armor.name": "Золотая броня",
+  "achievetodo.ability.equip_golden_armor.description": "Возможность надевать золотую броню",
+  "achievetodo.ability.equip_golden_armor.locked_message": "Вы сейчас не можете надеть золотую броню",
+
+  "achievetodo.ability.equip_leather_armor.name": "Кожаная броня",
+  "achievetodo.ability.equip_leather_armor.description": "Возможность надевать кожаную броню",
+  "achievetodo.ability.equip_leather_armor.locked_message": "Вы сейчас не можете надеть кожаную броню",
+
+  "achievetodo.ability.use_wooden_tools.name": "Деревянные инструменты",
+  "achievetodo.ability.use_wooden_tools.description": "Возможность пользоваться деревянными инструментами",
+  "achievetodo.ability.use_wooden_tools.locked_message": "Вы сейчас не можете пользоваться деревянными инструментами",
+
+  "achievetodo.ability.equip_chainmail_armor.name": "Кольчужная броня",
+  "achievetodo.ability.equip_chainmail_armor.description": "Возможность надевать кольчужную броню",
+  "achievetodo.ability.equip_chainmail_armor.locked_message": "Вы сейчас не можете надеть кольчужную броню",
+
+  "achievetodo.ability.open_chest.name": "Сундук",
+  "achievetodo.ability.open_chest.description": "Возможность открывать сундук",
+  "achievetodo.ability.open_chest.locked_message": "Вы сейчас не можете открыть сундук",
+
+  "achievetodo.ability.open_stonecutter.name": "Камнерез",
+  "achievetodo.ability.open_stonecutter.description": "Возможность пользоваться интерфейсом камнереза",
+  "achievetodo.ability.open_stonecutter.locked_message": "Вы сейчас не можете открыть камнерез",
+
+  "achievetodo.ability.open_grindstone.name": "Точило",
+  "achievetodo.ability.open_grindstone.description": "Возможность пользоваться интерфейсом точила",
+  "achievetodo.ability.open_grindstone.locked_message": "Вы сейчас не можете открыть точило",
+
+  "achievetodo.ability.open_loom.name": "Ткацкий станок",
+  "achievetodo.ability.open_loom.description": "Возможность пользоваться интерфейсом ткацкого станка",
+  "achievetodo.ability.open_loom.locked_message": "Вы сейчас не можете открыть ткацкий станок",
+
+  "achievetodo.ability.open_cartography_table.name": "Стол картографа",
+  "achievetodo.ability.open_cartography_table.description": "Возможность пользоваться интерфейсом стола картографа",
+  "achievetodo.ability.open_cartography_table.locked_message": "Вы сейчас не можете открыть стол картографа",
+
+  "achievetodo.ability.open_smithing_table.name": "Стол кузнеца",
+  "achievetodo.ability.open_smithing_table.description": "Возможность пользоваться интерфейсом стола кузнеца",
+  "achievetodo.ability.open_smithing_table.locked_message": "Вы сейчас не можете открыть стол кузнеца",
+
+  "achievetodo.ability.vision.name": "Зрение",
+  "achievetodo.ability.vision.description": "Возможность видеть",
+  "achievetodo.ability.vision.locked_message": "Вы сейчас не можете видеть",
+
+  "achievetodo.ability.swim.name": "Плавание",
+  "achievetodo.ability.swim.description": "Возможность плавать",
+  "achievetodo.ability.swim.locked_message": "Вы сейчас не можете плавать",
+
+  "achievetodo.ability.sneak.name": "Приседание",
+  "achievetodo.ability.sneak.description": "Возможность приседать",
+  "achievetodo.ability.sneak.locked_message": "Вы сейчас не можете присесть",
+
+  "achievetodo.ability.sprint.name": "Бег",
+  "achievetodo.ability.sprint.description": "Возможность бегать",
+  "achievetodo.ability.sprint.locked_message": "Вы сейчас не можете бегать",
+
+  "achievetodo.ability.unlock_vault.name": "Хранилище",
+  "achievetodo.ability.unlock_vault.description": "Возможность отпирать хранилище",
+  "achievetodo.ability.unlock_vault.locked_message": "Вы сейчас не можете отпереть хранилище",
+
+  "achievetodo.ability.use_campfire.name": "Костёр",
+  "achievetodo.ability.use_campfire.description": "Возможность жарить еду на костре",
+  "achievetodo.ability.use_campfire.locked_message": "Вы сейчас не можете пожарить еду на костре",
+
+  "achievetodo.ability.use_cauldron.name": "Котёл",
+  "achievetodo.ability.use_cauldron.description": "Возможность пользоваться котлом",
+  "achievetodo.ability.use_cauldron.locked_message": "Вы сейчас не можете пользоваться котлом",
+
+  "achievetodo.ability.use_jukebox.name": "Проигрыватель",
+  "achievetodo.ability.use_jukebox.description": "Возможность пользоваться проигрывателем",
+  "achievetodo.ability.use_jukebox.locked_message": "Вы сейчас не можете пользоваться проигрывателем",
+
+  "achievetodo.ability.use_composter.name": "Компостница",
+  "achievetodo.ability.use_composter.description": "Возможность пользоваться компостницей",
+  "achievetodo.ability.use_composter.locked_message": "Вы сейчас не можете пользоваться компостницей",
+
+  "achievetodo.ability.place_end_crystal.name": "Кристалл Энда",
+  "achievetodo.ability.place_end_crystal.description": "Возможность разместить кристалл Энда",
+  "achievetodo.ability.place_end_crystal.locked_message": "Вы сейчас не можете разместить кристалл Энда",
+
+  "achievetodo.ability.use_ender_eye.name": "Око Эндера",
+  "achievetodo.ability.use_ender_eye.description": "Возможность запустить око Эндера",
+  "achievetodo.ability.use_ender_eye.locked_message": "Вы сейчас не можете запустить око Эндера",
+
+  "achievetodo.ability.charge_respawn_anchor.name": "Якорь возрождения",
+  "achievetodo.ability.charge_respawn_anchor.description": "Возможность заряжать якорь возрождения",
+  "achievetodo.ability.charge_respawn_anchor.locked_message": "Вы сейчас не можете зарядить якорь возрождения",
+
+  "achievetodo.ability.open_barrel.name": "Бочка",
+  "achievetodo.ability.open_barrel.description": "Возможность открывать бочку",
+  "achievetodo.ability.open_barrel.locked_message": "Вы сейчас не можете открыть бочку",
+
+  "achievetodo.ability.ignite_tnt.name": "Динамит",
+  "achievetodo.ability.ignite_tnt.description": "Возможность поджигать динамит",
+  "achievetodo.ability.ignite_tnt.locked_message": "Вы сейчас не можете поджечь динамит",
+
+  "achievetodo.ability.open_trapdoor.name": "Открывать люк",
+  "achievetodo.ability.open_trapdoor.description": "Возможность открывать люк",
+  "achievetodo.ability.open_trapdoor.locked_message": "Вы сейчас не можете открыть люк",
+
+  "achievetodo.ability.open_fence_gate.name": "Открывать калитку",
+  "achievetodo.ability.open_fence_gate.description": "Возможность открывать калитку",
+  "achievetodo.ability.open_fence_gate.locked_message": "Вы сейчас не можете открыть калитку",
+
+  "achievetodo.ability.get_into_minecart.name": "Садиться в вагонетку",
+  "achievetodo.ability.get_into_minecart.description": "Возможность садиться в вагонетку",
+  "achievetodo.ability.get_into_minecart.locked_message": "Вы сейчас не можете сесть в вагонетку",
+
+  "achievetodo.ability.use_flint_and_steel.name": "Огниво",
+  "achievetodo.ability.use_flint_and_steel.description": "Возможность пользоваться огнивом",
+  "achievetodo.ability.use_flint_and_steel.locked_message": "Вы сейчас не можете пользоваться огнивом",
+
+  "achievetodo.ability.put_in_bundle.name": "Мешок",
+  "achievetodo.ability.put_in_bundle.description": "Возможность класть вещи в мешок",
+  "achievetodo.ability.put_in_bundle.locked_message": "Вы сейчас не можете класть вещи в мешок",
+
+  "achievetodo.ability.throw_egg.name": "Яйцо",
+  "achievetodo.ability.throw_egg.description": "Возможность бросить яйцо",
+  "achievetodo.ability.throw_egg.locked_message": "Вы сейчас не можете бросить яйцо",
+
+  "achievetodo.ability.throw_snowball.name": "Снежок",
+  "achievetodo.ability.throw_snowball.description": "Возможность бросить снежок",
+  "achievetodo.ability.throw_snowball.locked_message": "Вы сейчас не можете бросить снежок",
+
+  "achievetodo.ability.throw_wind_charge.name": "Заряд ветра",
+  "achievetodo.ability.throw_wind_charge.description": "Возможность метнуть заряд ветра",
+  "achievetodo.ability.throw_wind_charge.locked_message": "Вы сейчас не можете метнуть заряд ветра",
+
+  "achievetodo.ability.use_ominous_bottle.name": "Зловещая бутылочка",
+  "achievetodo.ability.use_ominous_bottle.description": "Возможность выпить зловещую бутылочку",
+  "achievetodo.ability.use_ominous_bottle.locked_message": "Вы сейчас не можете выпить зловещую бутылочку",
+
+  "achievetodo.ability.equip_turtle_helmet.name": "Черепаший панцирь",
+  "achievetodo.ability.equip_turtle_helmet.description": "Возможность надевать черепаший панцирь",
+  "achievetodo.ability.equip_turtle_helmet.locked_message": "Вы сейчас не можете надеть черепаший панцирь",
+
+  "achievetodo.ability.attack_with_mace.name": "Булава",
+  "achievetodo.ability.attack_with_mace.description": "Возможность атаковать булавой",
+  "achievetodo.ability.attack_with_mace.locked_message": "Вы сейчас не можете атаковать булавой",
+
+  "achievetodo.ability.trade_with_wandering_trader.name": "Странствующий торговец",
+  "achievetodo.ability.trade_with_wandering_trader.description": "Возможность торговли со странствующим торговцем",
+  "achievetodo.ability.trade_with_wandering_trader.locked_message": "Вы сейчас не можете торговать со странствующим торговцем",
+
+  "achievetodo.ability_unlocked_toast.action": "Доступно действие",
+  "achievetodo.ability_unlocked_toast.item": "Доступен предмет",
+  "achievetodo.ability_unlocked_toast.food": "Доступна еда",
+  "achievetodo.ability_unlocked_toast.tool": "Доступен инструмент",
+  "achievetodo.ability_unlocked_toast.weapon": "Доступно оружие",
+  "achievetodo.ability_unlocked_toast.equipment": "Доступно снаряжение",
+  "achievetodo.ability_unlocked_toast.block": "Доступен блок",
+  "achievetodo.ability_unlocked_toast.trading": "Доступна торговля",
+  "achievetodo.ability_unlocked_toast.portal": "Доступен портал",
+
+  "achievetodo.ability.left_to_unlock": "Осталось выполнить достижений: ",
+
+  "%1$s has unlocked %2$s%3$s%4$s": "%1$s разблокировал %2$s%3$s%4$s",
+
+  "achievetodo.locked_tab_tooltip.biomes": "Убейте моба, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.adventure": "Убейте моба, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.weaponry": "Добудьте меч, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.husbandry": "Съешьте что-нибудь, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.monsters": "Добудьте меч, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.mining": "Добудьте кирку, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.building": "Добудьте верстак, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.farming": "Добудьте мотыгу, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.nether": "Переместитесь в Незер, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.end": "Переместитесь в Энд, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.statistics": "Переживите первую ночь, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.redstone": "Добудьте редстоун, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.potion": "Сварите зелье, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.enchanting": "Зачаруйте предмет на чародейском столе, чтобы разблокировать эту вкладку",
+  "achievetodo.locked_tab_tooltip.challenges": "Убейте эндер-дракона, чтобы разблокировать эту вкладку",
 
   "achievetodo.suggest_install_advancements_search_mod": "Для перехода к достижениям установите "
 }

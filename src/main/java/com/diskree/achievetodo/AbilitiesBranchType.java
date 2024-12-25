@@ -1,6 +1,7 @@
 package com.diskree.achievetodo;
 
-public enum TreeLine {
+public enum AbilitiesBranchType {
+
     MAIN(1),
     ACTIONS(2),
     BLOCKS(2),
@@ -10,7 +11,7 @@ public enum TreeLine {
 
     private final int sublistCount;
 
-    TreeLine(int sublistCount) {
+    AbilitiesBranchType(int sublistCount) {
         this.sublistCount = sublistCount;
     }
 

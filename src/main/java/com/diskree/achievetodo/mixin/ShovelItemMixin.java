@@ -51,7 +51,7 @@ public class ShovelItemMixin {
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player
     ) {
-        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(material))) {
+        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }
@@ -70,7 +70,7 @@ public class ShovelItemMixin {
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player
     ) {
-        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(material))) {
+        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

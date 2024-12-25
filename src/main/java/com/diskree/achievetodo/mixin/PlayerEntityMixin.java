@@ -63,12 +63,12 @@ public class PlayerEntityMixin {
         }
         Item item = player.getMainHandStack().getItem();
         if (item instanceof SwordItemImpl swordItem &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(swordItem.achievetodo$getMaterial()))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(swordItem.achievetodo$getMaterial()))
         ) {
             return true;
         }
         if (item instanceof MiningToolItemImpl toolItem &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(toolItem.achievetodo$getMaterial()))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(toolItem.achievetodo$getMaterial()))
         ) {
             return true;
         }
@@ -95,11 +95,11 @@ public class PlayerEntityMixin {
         } else if (item == Items.MACE && AchieveToDo.isAbilityLocked(player, AbilityType.ATTACK_WITH_MACE)) {
             info.cancel();
         } else if (item instanceof SwordItemImpl swordItem &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(swordItem.achievetodo$getMaterial()))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(swordItem.achievetodo$getMaterial()))
         ) {
             info.cancel();
         } else if (item instanceof MiningToolItemImpl toolItem &&
-            AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(toolItem.achievetodo$getMaterial()))
+            AchieveToDo.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(toolItem.achievetodo$getMaterial()))
         ) {
             info.cancel();
         }

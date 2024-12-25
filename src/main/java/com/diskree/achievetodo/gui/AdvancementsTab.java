@@ -54,13 +54,14 @@ public enum AdvancementsTab {
         return order;
     }
 
-    public @NotNull Identifier getPendingTabId() {
-        return Identifier.of(BuildConfig.MOD_ID + "_pending", name().toLowerCase() + "/root");
+    public @NotNull Identifier getLockedTabId() {
+        return Identifier.of(BuildConfig.MOD_ID + "_locked_tab", name().toLowerCase() + "/root");
     }
 
-    public @NotNull Text getPendingHelp() {
-        return Text.translatable("achievetodo.pending_tab." + name().toLowerCase())
-            .formatted(Formatting.ITALIC).formatted(Formatting.GRAY);
+    public @NotNull Text getLockedTabTooltipText() {
+        return Text.translatable("achievetodo.locked_tab_tooltip." + name().toLowerCase())
+            .formatted(Formatting.ITALIC)
+            .formatted(Formatting.GRAY);
     }
 
     public static @Nullable AdvancementsTab findByAdvancement(@NotNull Identifier advancementId) {

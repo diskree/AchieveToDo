@@ -63,7 +63,7 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
     private @NotNull String buildFunction(@NotNull AbilityType ability) {
         String function = """
             tellraw @a {
-                "translate":"%1$s has unblocked %2$s%3$s%4$s",
+                "translate":"%1$s has unlocked %2$s%3$s%4$s",
                 "with":[
                     {
                         "selector":"@s"

@@ -35,8 +35,7 @@ public class AdvancementToastMixin {
 
     @Inject(
         method = "<init>",
-        at = @At(
-            value = "TAIL")
+        at = @At(value = "TAIL")
     )
     private void findAbility(AdvancementEntry advancement, CallbackInfo ci) {
         ability = AbilityType.findByAdvancement(advancement);
@@ -64,10 +63,7 @@ public class AdvancementToastMixin {
         index = 1
     )
     private Text setCustomTitleForAbilityUnlockedNotification(Text original) {
-        if (ability != null) {
-            return Text.translatable(ability.getCategory().getUnblockPopupTitle().getString());
-        }
-        return original;
+        return ability != null ? ability.getUnlockToastType().getToastTitle() : original;
     }
 
     @ModifyVariable(

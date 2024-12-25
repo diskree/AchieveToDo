@@ -33,17 +33,17 @@ import java.util.Optional;
 public abstract class AdvancementsScreenMixin extends Screen {
 
     @Unique
-    private final Identifier PENDING_TAB_ICON = Identifier.of(BuildConfig.MOD_ID, "pending_tab_icon");
+    private final Identifier LOCKED_TAB_ICON = Identifier.of(BuildConfig.MOD_ID, "locked_tab_icon");
 
     @Shadow
     @Final
     private Map<AdvancementEntry, AdvancementTab> tabs;
 
     @Unique
-    private boolean isPendingTab(@NotNull AdvancementTab tab) {
+    private boolean isLockedTab(@NotNull AdvancementTab tab) {
         Identifier advancementId = tab.getRoot().getAdvancementEntry().id();
-        AdvancementsTab maybePendingTab = AdvancementsTab.findByAdvancement(advancementId);
-        return maybePendingTab != null && maybePendingTab.getPendingTabId().equals(advancementId);
+        AdvancementsTab advancementsTab = AdvancementsTab.findByAdvancement(advancementId);
+        return advancementsTab != null && advancementsTab.getLockedTabId().equals(advancementId);
     }
 
     public AdvancementsScreenMixin() {
@@ -58,7 +58,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
             shift = At.Shift.AFTER
         )
     )
-    public void addPendingTabs(CallbackInfo ci) {
+    public void addLockedTabs(CallbackInfo ci) {
         if (client == null) {
             return;
         }
@@ -66,7 +66,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
         for (AdvancementsTab tab : AdvancementsTab.values()) {
             AdvancementDisplay advancementDisplay = new AdvancementDisplay(
                 new ItemStack(Items.AIR),
-                tab.getPendingHelp(),
+                tab.getLockedTabTooltipText(),
                 Text.empty(),
                 Optional.empty(),
                 AdvancementFrame.TASK,
@@ -78,7 +78,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
                 Advancement.Builder
                     .createUntelemetered()
                     .display(advancementDisplay)
-                    .build(tab.getPendingTabId()),
+                    .build(tab.getLockedTabId()),
                 null
             );
             tabs.put(
@@ -99,17 +99,17 @@ public abstract class AdvancementsScreenMixin extends Screen {
         method = "onRootAdded",
         at = @At(value = "HEAD")
     )
-    public void removePendingTab(@NotNull PlacedAdvancement root, CallbackInfo ci) {
+    public void removeLockedTab(@NotNull PlacedAdvancement root, CallbackInfo ci) {
         AdvancementsTab tab = AdvancementsTab.findByAdvancement(root.getAdvancementEntry().id());
-        AdvancementEntry pendingTabToRemove = null;
+        AdvancementEntry lockedRoot = null;
         for (AdvancementEntry advancementEntry : tabs.keySet()) {
-            if (tab != null && tab.getPendingTabId().equals(advancementEntry.id())) {
-                pendingTabToRemove = advancementEntry;
+            if (tab != null && tab.getLockedTabId().equals(advancementEntry.id())) {
+                lockedRoot = advancementEntry;
                 break;
             }
         }
-        if (pendingTabToRemove != null) {
-            tabs.remove(pendingTabToRemove);
+        if (lockedRoot != null) {
+            tabs.remove(lockedRoot);
         }
     }
 
@@ -136,7 +136,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
             target = "Lnet/minecraft/client/gui/screen/advancement/AdvancementTab;isClickOnTab(IIDD)Z"
         )
     )
-    public boolean disallowClickOnPendingTab(
+    public boolean disallowClickOnLockedTab(
         @NotNull AdvancementTab tab,
         int screenX,
         int screenY,
@@ -144,7 +144,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
         double mouseY,
         Operation<Boolean> original
     ) {
-        return !isPendingTab(tab) && original.call(tab, screenX, screenY, mouseX, mouseY);
+        return !isLockedTab(tab) && original.call(tab, screenX, screenY, mouseX, mouseY);
     }
 
     @WrapOperation(
@@ -154,7 +154,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
             target = "Lnet/minecraft/client/gui/screen/advancement/AdvancementTab;drawBackground(Lnet/minecraft/client/gui/DrawContext;IIZ)V"
         )
     )
-    public void renderPendingTab(
+    public void renderLockedTab(
         AdvancementTab tab,
         DrawContext context,
         int x,
@@ -162,8 +162,8 @@ public abstract class AdvancementsScreenMixin extends Screen {
         boolean selected,
         @NotNull Operation<Void> original
     ) {
-        boolean isPendingTab = isPendingTab(tab);
-        if (isPendingTab) {
+        boolean isLockedTab = isLockedTab(tab);
+        if (isLockedTab) {
             context.draw();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
@@ -187,10 +187,10 @@ public abstract class AdvancementsScreenMixin extends Screen {
                     maskX += 6;
                     maskY += 5;
             }
-            context.drawGuiTexture(RenderLayer::getGuiTextured, PENDING_TAB_ICON, maskX, maskY, 16, 16);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, LOCKED_TAB_ICON, maskX, maskY, 16, 16);
         }
         original.call(tab, context, x, y, selected);
-        if (isPendingTab) {
+        if (isLockedTab) {
             context.draw();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.disableBlend();

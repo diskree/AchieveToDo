@@ -2,7 +2,7 @@ package com.diskree.achievetodo.datagen;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.TreeLine;
+import com.diskree.achievetodo.AbilitiesBranchType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
@@ -37,15 +37,15 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
     public static final Block BACKGROUND = Blocks.PALE_MOSS_BLOCK;
 
     public static @NotNull List<List<AbilityType>> getAbilitiesTree() {
-        Map<TreeLine, List<AbilityType>> grouped = Arrays
+        Map<AbilitiesBranchType, List<AbilityType>> grouped = Arrays
             .stream(AbilityType.values())
-            .collect(Collectors.groupingBy(AbilityType::getTreeLine));
-        for (Map.Entry<TreeLine, List<AbilityType>> entry : grouped.entrySet()) {
+            .collect(Collectors.groupingBy(AbilityType::getBranchType));
+        for (Map.Entry<AbilitiesBranchType, List<AbilityType>> entry : grouped.entrySet()) {
             entry.getValue().sort(Comparator.comparing(AbilityType::getRequiredAdvancementsCount));
         }
 
-        Map<TreeLine, List<List<AbilityType>>> splittedMap = new HashMap<>();
-        for (TreeLine line : TreeLine.values()) {
+        Map<AbilitiesBranchType, List<List<AbilityType>>> splittedMap = new HashMap<>();
+        for (AbilitiesBranchType line : AbilitiesBranchType.values()) {
             List<AbilityType> abilities = grouped.getOrDefault(line, Collections.emptyList());
             int sublistCount = line.getSublistCount();
             if (sublistCount == 1) {
@@ -71,7 +71,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
         List<List<AbilityType>> center = new ArrayList<>();
         List<List<AbilityType>> right = new ArrayList<>();
 
-        for (TreeLine line : TreeLine.values()) {
+        for (AbilitiesBranchType line : AbilitiesBranchType.values()) {
             List<List<AbilityType>> branch = splittedMap.get(line);
             int count = line.getSublistCount();
             if (count == 1) {
@@ -117,7 +117,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             .display(
                 Items.BARRIER,
                 Text.of(BuildConfig.MOD_NAME),
-                Text.translatable(BuildConfig.MOD_ID + ".root.description"),
+                Text.translatable(BuildConfig.MOD_ID + ".advancements_tab.root.description"),
                 Identifier.ofVanilla(
                     "textures/block/" + Registries.BLOCK.getId(BACKGROUND).getPath() + ".png"
                 ),

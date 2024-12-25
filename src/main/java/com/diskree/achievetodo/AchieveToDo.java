@@ -109,7 +109,7 @@ public class AchieveToDo implements ModInitializer {
         if (checkOnly) {
             return true;
         }
-        player.sendMessage(ability.buildLockedDescription(getObtainedAdvancementsCount(player)), true);
+        player.sendMessage(ability.getLockedMessage(getObtainedAdvancementsCount(player)), true);
         if (player.getWorld().isClient) {
             ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
         } else if (player instanceof ServerPlayerEntity serverPlayer) {

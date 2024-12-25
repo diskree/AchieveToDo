@@ -110,7 +110,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
                         }
                     }
                 )
-                .tooltip(inGameDownloadSupported ? null : Tooltip.of(Text.translatable("achievetodo.downloader.download_tooltip")))
+                .tooltip(inGameDownloadSupported ? null : Tooltip.of(Text.translatable("achievetodo.downloader.download.tooltip")))
                 .dimensions(
                     selectFileButtonX - BUTTON_MARGIN - BUTTON_WIDTH,
                     y,
@@ -168,7 +168,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
                     Text.translatable("achievetodo.downloader.learn_more"),
                     button -> Util.getOperatingSystem().open(externalPack.getPageUrl())
                 )
-                .tooltip(Tooltip.of(Text.translatable("achievetodo.downloader.learn_more_tooltip")))
+                .tooltip(Tooltip.of(Text.translatable("achievetodo.downloader.learn_more.tooltip")))
                 .dimensions(
                     selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN,
                     y + BUTTON_HEIGHT + BUTTON_MARGIN,

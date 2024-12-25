@@ -55,7 +55,7 @@ public class AxeItemMixin {
         BlockState state,
         CallbackInfoReturnable<Optional<BlockState>> cir
     ) {
-        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.findToolUsageAbility(material))) {
+        if (player != null && AchieveToDo.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))) {
             cir.setReturnValue(Optional.empty());
         }
     }
