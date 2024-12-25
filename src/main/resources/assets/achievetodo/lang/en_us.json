@@ -589,5 +589,6 @@
   "achievetodo.ability_unlocked_toast.trading": "Trading available",
   "achievetodo.ability_unlocked_toast.portal": "Portal available",
 
+  "achievetodo.tab_unlocked_chat_message": "Tab %s%s%s is unlocked",
   "achievetodo.ability_unlocked_chat_message": "%s has unlocked %s%s%s"
 }

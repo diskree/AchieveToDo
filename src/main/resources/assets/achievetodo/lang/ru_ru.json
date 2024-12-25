@@ -589,5 +589,6 @@
   "achievetodo.ability_unlocked_toast.trading": "Доступна торговля",
   "achievetodo.ability_unlocked_toast.portal": "Доступен портал",
 
+  "achievetodo.tab_unlocked_chat_message": "Разблокирована вкладка %s%s%s",
   "achievetodo.ability_unlocked_chat_message": "%s разблокировал %s%s%s"
 }
