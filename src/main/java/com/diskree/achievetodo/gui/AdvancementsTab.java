@@ -17,20 +17,19 @@ public enum AdvancementsTab {
     HUSBANDRY(AdvancementTabType.LEFT),
     MONSTERS(AdvancementTabType.LEFT),
 
+    ABILITIES(AdvancementTabType.ABOVE),
     MINING(AdvancementTabType.ABOVE),
     BUILDING(AdvancementTabType.ABOVE),
     FARMING(AdvancementTabType.ABOVE),
     NETHER(AdvancementTabType.ABOVE),
     END(AdvancementTabType.ABOVE),
 
-    ABILITIES(AdvancementTabType.RIGHT),
-    BACAP(AdvancementTabType.RIGHT),
-
-    STATISTICS(AdvancementTabType.BELOW),
     REDSTONE(AdvancementTabType.BELOW),
     POTION(AdvancementTabType.BELOW),
     ENCHANTING(AdvancementTabType.BELOW),
-    CHALLENGES(AdvancementTabType.BELOW);
+    CHALLENGES(AdvancementTabType.BELOW),
+    STATISTICS(AdvancementTabType.BELOW),
+    BACAP(AdvancementTabType.BELOW);
 
     private final AdvancementTabType position;
 
