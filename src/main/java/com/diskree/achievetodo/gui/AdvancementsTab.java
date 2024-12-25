@@ -11,25 +11,25 @@ import org.jetbrains.annotations.Nullable;
 
 public enum AdvancementsTab {
 
-    BIOMES(AdvancementTabType.LEFT),
-    ADVENTURE(AdvancementTabType.LEFT),
-    WEAPONRY(AdvancementTabType.LEFT),
-    HUSBANDRY(AdvancementTabType.LEFT),
-    MONSTERS(AdvancementTabType.LEFT),
+    ABILITIES(AdvancementTabType.LEFT),
+    BACAP(AdvancementTabType.LEFT),
+    STATISTICS(AdvancementTabType.LEFT),
 
-    ABILITIES(AdvancementTabType.ABOVE),
-    MINING(AdvancementTabType.ABOVE),
     BUILDING(AdvancementTabType.ABOVE),
     FARMING(AdvancementTabType.ABOVE),
-    NETHER(AdvancementTabType.ABOVE),
-    END(AdvancementTabType.ABOVE),
+    HUSBANDRY(AdvancementTabType.ABOVE),
+    BIOMES(AdvancementTabType.ABOVE),
+    ADVENTURE(AdvancementTabType.ABOVE),
+    MONSTERS(AdvancementTabType.ABOVE),
+    WEAPONRY(AdvancementTabType.ABOVE),
 
+    MINING(AdvancementTabType.BELOW),
     REDSTONE(AdvancementTabType.BELOW),
-    POTION(AdvancementTabType.BELOW),
     ENCHANTING(AdvancementTabType.BELOW),
-    CHALLENGES(AdvancementTabType.BELOW),
-    STATISTICS(AdvancementTabType.BELOW),
-    BACAP(AdvancementTabType.BELOW);
+    NETHER(AdvancementTabType.BELOW),
+    POTION(AdvancementTabType.BELOW),
+    END(AdvancementTabType.BELOW),
+    CHALLENGES(AdvancementTabType.BELOW);
 
     private final AdvancementTabType position;
 
