@@ -15,6 +15,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,11 +101,20 @@ public class AchieveToDo implements ModInitializer {
     }
 
     public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability, boolean checkOnly) {
-        if (ability == null ||
-            player.isCreative() ||
-            player.isSpectator() ||
-            getObtainedAdvancementsCount(player) >= ability.getRequiredAdvancementsCount()
-        ) {
+        if (ability == null || player.isCreative() || player.isSpectator()) {
+            return false;
+        }
+        if (player.getWorld().isClient && AchieveToDoClient.isNotReady()) {
+            if (ability != AbilityType.VISION) {
+                player.sendMessage(
+                    Text.translatable("achievetodo.error.not_ready_yet")
+                        .formatted(Formatting.RED),
+                    true
+                );
+            }
+            return true;
+        }
+        if (getObtainedAdvancementsCount(player) >= ability.getRequiredAdvancementsCount()) {
             return false;
         }
         if (checkOnly) {

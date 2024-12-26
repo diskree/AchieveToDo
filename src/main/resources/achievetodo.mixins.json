@@ -93,7 +93,7 @@
     "client.CraftPlanksTutorialStepHandlerMixin",
     "client.CreateWorldScreenMixin",
     "client.FindTreeTutorialStepHandlerMixin",
-    "client.InGameHudMixin",
+    "client.GameRendererMixin",
     "client.MinecraftClientMixin",
     "client.OpenInventoryTutorialStepHandlerMixin",
     "client.PackScreenMixin",

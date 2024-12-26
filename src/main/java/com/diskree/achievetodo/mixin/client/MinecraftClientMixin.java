@@ -2,14 +2,18 @@ package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
+import com.diskree.achievetodo.AchieveToDoClient;
 import com.diskree.achievetodo.injection.CreateWorldScreenImpl;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +35,16 @@ public class MinecraftClientMixin {
         cancellable = true
     )
     public void setScreenInject(Screen screen, CallbackInfo ci) {
-        if (screen instanceof CreateWorldScreen createWorldScreen &&
+        if (screen instanceof AdvancementsScreen && AchieveToDoClient.isNotReady()) {
+            if (player != null) {
+                player.sendMessage(
+                    Text.translatable("achievetodo.error.not_ready_yet")
+                        .formatted(Formatting.RED),
+                    true
+                );
+            }
+            ci.cancel();
+        } else if (screen instanceof CreateWorldScreen createWorldScreen &&
             screen instanceof CreateWorldScreenImpl createWorldScreenImpl &&
             createWorldScreenImpl.achievetodo$isWaitingDatapack()
         ) {

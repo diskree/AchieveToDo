@@ -39,6 +39,7 @@
   "achievetodo.error.title": "Oops!",
   "achievetodo.error.wrong_datapack_file": "This file is incorrect. Please check that you downloaded the file using the «Download» button, then try again.",
   "achievetodo.error.integrity_check_failed": "This world cannot be loaded because the integrity check failed.",
+  "achievetodo.error.not_ready_yet": "Unavailable: advancements count hasn’t been loaded yet",
   "achievetodo.error.unknown": "Unknown error. Please check your free disk space or reboot your computer and try again.",
 
   "achievetodo.description": "All your favorite Minecraft mechanics are locked away! Complete advancements to reclaim them.",
