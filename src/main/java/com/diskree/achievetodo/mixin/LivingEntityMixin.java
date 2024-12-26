@@ -30,6 +30,22 @@ public class LivingEntityMixin {
     }
 
     @Inject(
+        method = "setSprinting",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    public void lockSprint(boolean sprinting, CallbackInfo ci) {
+        if (sprinting) {
+            LivingEntity livingEntity = (LivingEntity) (Object) this;
+            if (livingEntity instanceof PlayerEntity player &&
+                AchieveToDo.isAbilityLocked(player, player.isSubmergedInWater() ? AbilityType.SWIM : AbilityType.SPRINT)
+            ) {
+                ci.cancel();
+            }
+        }
+    }
+
+    @Inject(
         method = "canEquipFromDispenser",
         at = @At("HEAD"),
         cancellable = true

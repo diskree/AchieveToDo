@@ -26,6 +26,7 @@
     "CampfireBlockMixin",
     "CartographyTableBlockMixin",
     "ChestBlockMixin",
+    "ClientPlayerEntityMixin",
     "CommandManagerMixin",
     "ComposterBlockMixin",
     "ConsumableComponentMixin",

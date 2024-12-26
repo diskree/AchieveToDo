@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.mixin;
 
-import com.diskree.achievetodo.AchieveToDo;
 import com.diskree.achievetodo.AbilityType;
+import com.diskree.achievetodo.AchieveToDo;
 import net.minecraft.block.Portal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,11 +27,25 @@ public class EntityMixin {
     }
 
     @Inject(
+        method = "setSneaking",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    public void lockSneaking(boolean sneaking, CallbackInfo ci) {
+        if (sneaking) {
+            Entity entity = (Entity) (Object) this;
+            if (entity instanceof PlayerEntity player && AchieveToDo.isAbilityLocked(player, AbilityType.SNEAK)) {
+                ci.cancel();
+            }
+        }
+    }
+
+    @Inject(
         method = "tryUsePortal",
         at = @At("HEAD"),
         cancellable = true
     )
-    private void blockPortal(Portal portal, BlockPos pos, CallbackInfo ci) {
+    private void lockPortal(Portal portal, BlockPos pos, CallbackInfo ci) {
         Entity teleportEntity = (Entity) (Object) this;
         EnderPearlEntity enderPearl = null;
         if (teleportEntity instanceof EnderPearlEntity enderPearlEntity) {
