@@ -96,8 +96,7 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
         if (originalTabs.length >= 0) {
             System.arraycopy(originalTabs, 0, newTabs, 0, originalTabs.length);
         }
-        AchieveToDoClient.createWorldTab = new CreateWorldTab(createWorldScreen);
-        newTabs[originalTabs.length] = AchieveToDoClient.createWorldTab;
+        newTabs[originalTabs.length] = new CreateWorldTab(createWorldScreen);
         args.set(0, newTabs);
     }
 

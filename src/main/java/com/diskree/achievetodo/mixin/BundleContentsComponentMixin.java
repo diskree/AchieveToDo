@@ -5,6 +5,7 @@ import com.diskree.achievetodo.AchieveToDo;
 import net.minecraft.component.type.BundleContentsComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,6 +25,9 @@ public class BundleContentsComponentMixin {
         CallbackInfoReturnable<Integer> cir
     ) {
         if (AchieveToDo.isAbilityLocked(player, AbilityType.PUT_IN_BUNDLE)) {
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.closeHandledScreen();
+            }
             cir.setReturnValue(0);
         }
     }

@@ -1,6 +1,5 @@
 package com.diskree.achievetodo;
 
-import com.diskree.achievetodo.gui.CreateWorldTab;
 import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -13,7 +12,6 @@ import net.minecraft.util.Identifier;
 public class AchieveToDoClient implements ClientModInitializer {
 
     public static int obtainedAdvancementsCount = -1;
-    public static CreateWorldTab createWorldTab;
 
     public static boolean isNotReady() {
         return obtainedAdvancementsCount == -1;

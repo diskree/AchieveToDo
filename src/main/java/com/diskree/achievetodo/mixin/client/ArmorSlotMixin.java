@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.ArmorSlot;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,6 +34,9 @@ public class ArmorSlotMixin {
         if (entity instanceof PlayerEntity player &&
             AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(stack.getItem()))
         ) {
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.closeHandledScreen();
+            }
             cir.setReturnValue(false);
         }
     }
@@ -50,7 +54,15 @@ public class ArmorSlotMixin {
         @NotNull Operation<Boolean> original,
         @Local @NotNull ItemStack itemStack
     ) {
-        return original.call(armorSlot, player) &&
-            !AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(itemStack.getItem()));
+        if (!original.call(armorSlot, player)) {
+            return false;
+        }
+        if (AchieveToDo.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(itemStack.getItem()))) {
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.closeHandledScreen();
+            }
+            return false;
+        }
+        return true;
     }
 }
