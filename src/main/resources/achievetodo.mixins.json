@@ -96,6 +96,7 @@
     "client.FindTreeTutorialStepHandlerMixin",
     "client.GameRendererMixin",
     "client.MinecraftClientMixin",
+    "client.MovementTutorialStepHandlerMixin",
     "client.OpenInventoryTutorialStepHandlerMixin",
     "client.PackScreenMixin",
     "client.PunchTreeTutorialStepHandlerMixin",
