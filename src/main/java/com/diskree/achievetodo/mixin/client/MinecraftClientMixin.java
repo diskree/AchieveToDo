@@ -4,6 +4,7 @@ import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDo;
 import com.diskree.achievetodo.AchieveToDoClient;
 import com.diskree.achievetodo.injection.CreateWorldScreenImpl;
+import com.diskree.achievetodo.injection.MovementTutorialStepHandlerImpl;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.MinecraftClient;
@@ -35,15 +36,20 @@ public class MinecraftClientMixin {
         cancellable = true
     )
     public void setScreenInject(Screen screen, CallbackInfo ci) {
-        if (screen instanceof AdvancementsScreen && AchieveToDoClient.isNotReady()) {
-            if (player != null) {
-                player.sendMessage(
-                    Text.translatable("achievetodo.error.not_ready_yet")
-                        .formatted(Formatting.RED),
-                    true
-                );
+        MinecraftClient client = (MinecraftClient) (Object) this;
+        if (screen instanceof AdvancementsScreen) {
+            if (AchieveToDoClient.isNotReady()) {
+                if (player != null) {
+                    player.sendMessage(
+                        Text.translatable("achievetodo.error.not_ready_yet")
+                            .formatted(Formatting.RED),
+                        true
+                    );
+                }
+                ci.cancel();
+            } else if (client.getTutorialManager().currentHandler instanceof MovementTutorialStepHandlerImpl handler) {
+                handler.achievetodo$onAdvancementsOpened();
             }
-            ci.cancel();
         } else if (screen instanceof CreateWorldScreen createWorldScreen &&
             screen instanceof CreateWorldScreenImpl createWorldScreenImpl &&
             createWorldScreenImpl.achievetodo$isWaitingDatapack()

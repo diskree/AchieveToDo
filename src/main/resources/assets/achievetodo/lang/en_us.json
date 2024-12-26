@@ -42,6 +42,9 @@
   "achievetodo.error.not_ready_yet": "Unavailable: advancements count hasn’t been loaded yet",
   "achievetodo.error.unknown": "Unknown error. Please check your free disk space or reboot your computer and try again.",
 
+  "achievetodo.tutorial.open_advancements.title": "Open advancements",
+  "achievetodo.tutorial.open_advancements.description": "Press %s",
+
   "achievetodo.description": "All your favorite Minecraft mechanics are locked away! Complete advancements to reclaim them.",
 
   "achievetodo.locked_tab_tooltip.biomes": "Kill a mob to unlock this tab",

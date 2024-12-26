@@ -42,6 +42,9 @@
   "achievetodo.error.not_ready_yet": "Недоступно: данные о количестве достижений ещё не получены",
   "achievetodo.error.unknown": "Неизвестная ошибка. Проверьте свободное место на диске или перезагрузите компьютер и повторите попытку.",
 
+  "achievetodo.tutorial.open_advancements.title": "Откройте достижения",
+  "achievetodo.tutorial.open_advancements.description": "Нажмите %s",
+
   "achievetodo.description": "Все знакомые механики Minecraft теперь заблокированы! Выполняйте достижения, чтобы вернуть их.",
 
   "achievetodo.locked_tab_tooltip.biomes": "Убейте моба, чтобы разблокировать эту вкладку",
