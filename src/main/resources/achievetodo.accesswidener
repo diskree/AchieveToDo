@@ -9,3 +9,4 @@ accessible method net/minecraft/client/gui/screen/world/CreateWorldScreen create
 
 accessible field net/minecraft/scoreboard/ServerScoreboard server Lnet/minecraft/server/MinecraftServer;
 accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;
+accessible field net/minecraft/client/gui/widget/TabNavigationWidget tabManager Lnet/minecraft/client/gui/tab/TabManager;

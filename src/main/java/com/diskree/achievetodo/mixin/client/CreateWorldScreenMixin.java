@@ -1,6 +1,5 @@
 package com.diskree.achievetodo.mixin.client;
 
-import com.diskree.achievetodo.AchieveToDoClient;
 import com.diskree.achievetodo.ExternalPack;
 import com.diskree.achievetodo.InternalPack;
 import com.diskree.achievetodo.gui.CreateWorldTab;
@@ -10,14 +9,17 @@ import com.diskree.achievetodo.injection.WorldCreatorImpl;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.screen.world.WorldCreator;
 import net.minecraft.client.gui.tab.Tab;
+import net.minecraft.client.gui.widget.TabNavigationWidget;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.resource.DataConfiguration;
 import net.minecraft.resource.DataPackSettings;
 import net.minecraft.resource.ResourcePackManager;
+import net.minecraft.text.Text;
 import net.minecraft.world.level.LevelInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,10 +44,25 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Mixin(value = CreateWorldScreen.class, priority = 500)
-public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
+public abstract class CreateWorldScreenMixin extends Screen implements CreateWorldScreenImpl {
 
     @Unique
     private boolean isWaitingDatapack;
+
+    @Unique
+    private CreateWorldTab createWorldTab;
+
+    protected CreateWorldScreenMixin(Text title) {
+        super(title);
+    }
+
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderBackground(context, mouseX, mouseY, delta);
+        if (createWorldTab != null && tabNavigation != null && tabNavigation.tabManager.getCurrentTab() == createWorldTab) {
+            createWorldTab.render(context);
+        }
+    }
 
     @Override
     public boolean achievetodo$isWaitingDatapack() {
@@ -63,6 +80,9 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
 
     @Shadow
     private @Nullable ResourcePackManager packManager;
+
+    @Shadow
+    private @Nullable TabNavigationWidget tabNavigation;
 
     @Shadow
     public abstract void createLevel();
@@ -96,7 +116,7 @@ public abstract class CreateWorldScreenMixin implements CreateWorldScreenImpl {
         if (originalTabs.length >= 0) {
             System.arraycopy(originalTabs, 0, newTabs, 0, originalTabs.length);
         }
-        newTabs[originalTabs.length] = new CreateWorldTab(createWorldScreen);
+        newTabs[originalTabs.length] = createWorldTab = new CreateWorldTab(createWorldScreen);
         args.set(0, newTabs);
     }
 
