@@ -5,4 +5,5 @@ import net.minecraft.item.ToolMaterial;
 public interface MiningToolItemImpl {
 
     ToolMaterial achievetodo$getMaterial();
+
 }

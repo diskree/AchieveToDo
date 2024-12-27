@@ -33,4 +33,5 @@ public interface WorldCreatorImpl {
     void achievetodo$setNullscapeEnabled(boolean isNullscapeEnabled);
 
     void achievetodo$setCooperativeModeEnabled(boolean isCooperativeModeEnabled);
+
 }

@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class AchieveToDoClient implements ClientModInitializer {
         return obtainedAdvancementsCount;
     }
 
-    public static int getDynamicProgress(DynamicProgressType progressType) {
+    public static int getDynamicProgress(@NotNull DynamicProgressType progressType) {
         return dynamicProgresses.getOrDefault(progressType, 0);
     }
 

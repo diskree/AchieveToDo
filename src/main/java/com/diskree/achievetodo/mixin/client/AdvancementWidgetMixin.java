@@ -75,9 +75,7 @@ public class AdvancementWidgetMixin {
         AdvancementDisplay display,
         CallbackInfo ci
     ) {
-        dynamicProgressType = DynamicProgressType.findByAdvancementRequirements(
-            advancement.getAdvancementEntry().value().requirements()
-        );
+        dynamicProgressType = DynamicProgressType.findByAdvancementId(advancement.getAdvancementEntry().id());
         if (dynamicProgressType == null) {
             ability = AbilityType.findByAdvancement(advancement);
         }

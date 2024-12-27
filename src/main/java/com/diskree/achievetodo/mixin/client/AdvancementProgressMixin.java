@@ -3,21 +3,22 @@ package com.diskree.achievetodo.mixin.client;
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDoClient;
 import com.diskree.achievetodo.DynamicProgressType;
+import com.diskree.achievetodo.injection.AdvancementProgressImpl;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.AdvancementRequirements;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AdvancementProgress.class)
-public abstract class AdvancementProgressMixin {
+public abstract class AdvancementProgressMixin implements AdvancementProgressImpl {
 
     @Unique
     private AbilityType ability;
@@ -25,19 +26,16 @@ public abstract class AdvancementProgressMixin {
     @Unique
     private DynamicProgressType dynamicProgressType;
 
-    @Shadow
-    public abstract boolean isDone();
-
-    @Inject(
-        method = "init",
-        at = @At("TAIL")
-    )
-    public void findAbility(AdvancementRequirements requirements, CallbackInfo ci) {
-        dynamicProgressType = DynamicProgressType.findByAdvancementRequirements(requirements);
+    @Override
+    public void achievetodo$setAdvancementId(Identifier advancementId) {
+        dynamicProgressType = DynamicProgressType.findByAdvancementId(advancementId);
         if (dynamicProgressType == null) {
-            ability = AbilityType.findByAdvancementRequirements(requirements);
+            ability = AbilityType.findByAdvancementId(advancementId);
         }
     }
+
+    @Shadow
+    public abstract boolean isDone();
 
     @Inject(
         method = "countObtainedRequirements",

@@ -8,4 +8,5 @@ public interface ArmorItemImpl {
     ArmorMaterial achievetodo$getMaterial();
 
     EquipmentType achievetodo$getEquipmentType();
+
 }

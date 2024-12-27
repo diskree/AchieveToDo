@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+import java.util.List;
+
 @Mixin(Scoreboard.class)
 public class ScoreboardMixin {
 
@@ -55,9 +57,29 @@ public class ScoreboardMixin {
                         AchieveToDo.setObtainedAdvancementsCount(serverPlayer, score);
                     }
                 } else if (scoreHolder instanceof ServerPlayerEntity serverPlayer) {
-                    DynamicProgressType progress = DynamicProgressType.findByObjectiveName(objectiveName);
-                    if (progress != null) {
-                        AchieveToDo.setDynamicProgress(serverPlayer, progress, score);
+                    List<DynamicProgressType> progressTypes = DynamicProgressType.findByObjectiveName(objectiveName);
+                    if (progressTypes != null) {
+                        for (DynamicProgressType progressType : progressTypes) {
+                            if (progressType == DynamicProgressType.ON_A_RAIL) {
+                                ReadableScoreboardScore eligibleXScore = scoreboard.getScore(scoreHolder, scoreboard.getNullableObjective("bac_oar_eligible_x"));
+                                ReadableScoreboardScore eligibleZScore = scoreboard.getScore(scoreHolder, scoreboard.getNullableObjective("bac_oar_eligible_z"));
+                                ReadableScoreboardScore currentXScore = scoreboard.getScore(scoreHolder, scoreboard.getNullableObjective("bac_oar_current_x"));
+                                ReadableScoreboardScore currentZScore = scoreboard.getScore(scoreHolder, scoreboard.getNullableObjective("bac_oar_current_z"));
+                                if (eligibleXScore == null || eligibleZScore == null || currentXScore == null || currentZScore == null) {
+                                    continue;
+                                }
+                                if (eligibleXScore.getScore() == 1) {
+                                    score = Math.abs(currentXScore.getScore());
+                                } else if (eligibleZScore.getScore() == 1) {
+                                    score = Math.abs(currentZScore.getScore());
+                                } else {
+                                    score = 0;
+                                }
+                            } else if (progressType == DynamicProgressType.LOSER) {
+                                score = score <= 10 ? 1 : 0;
+                            }
+                            AchieveToDo.setDynamicProgress(serverPlayer, progressType, score);
+                        }
                     }
                 }
             }
