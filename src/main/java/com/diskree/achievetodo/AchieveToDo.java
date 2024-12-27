@@ -3,6 +3,7 @@ package com.diskree.achievetodo;
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.networking.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
+import com.diskree.achievetodo.networking.SyncDynamicProgressPayload;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -21,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,7 +35,9 @@ public class AchieveToDo implements ModInitializer {
     public static ScoreboardObjective currentScoreboardObjective;
     public static ScoreboardDisplaySlot currentScoreboardDisplaySlot;
 
-    private static final Map<UUID, Integer> advancementsCountByPlayerUUID = new Object2IntOpenHashMap<>();
+    private static final Map<UUID, Integer> advancementsCounts = new Object2IntOpenHashMap<>();
+    private static final EnumMap<DynamicProgressType, Map<UUID, Integer>> dynamicProgresses =
+        new EnumMap<>(DynamicProgressType.class);
 
     public static void prepareScoreboard(ServerScoreboard scoreboard) {
         AdvancementsMode oldAdvancementsMode = currentAdvancementsMode;
@@ -78,12 +83,9 @@ public class AchieveToDo implements ModInitializer {
     }
 
     public static void setObtainedAdvancementsCount(@NotNull ServerPlayerEntity player, int count) {
-        if (count == 0) {
-            return;
-        }
         UUID playerUuid = player.getUuid();
-        int oldCount = advancementsCountByPlayerUUID.getOrDefault(playerUuid, 0);
-        advancementsCountByPlayerUUID.put(playerUuid, count);
+        int oldCount = advancementsCounts.getOrDefault(playerUuid, 0);
+        advancementsCounts.put(playerUuid, count);
         if (oldCount != 0) {
             for (AbilityType ability : AbilityType.values()) {
                 if (count >= ability.getRequiredAdvancementsCount() &&
@@ -94,6 +96,22 @@ public class AchieveToDo implements ModInitializer {
             }
         }
         ServerPlayNetworking.send(player, new SyncAdvancementsCountPayload(count));
+    }
+
+    public static void setDynamicProgress(
+        @NotNull ServerPlayerEntity player,
+        @NotNull DynamicProgressType progressType,
+        int progress
+    ) {
+        if (progressType.isPercentage()) {
+            progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / progressType.getFinalValue())));
+        }
+        Map<UUID, Integer> progressByPlayers = dynamicProgresses.computeIfAbsent(progressType, k -> new HashMap<>());
+        Integer currentProgress = progressByPlayers.get(player.getUuid());
+        if (currentProgress == null || !currentProgress.equals(progress)) {
+            progressByPlayers.put(player.getUuid(), progress);
+            ServerPlayNetworking.send(player, new SyncDynamicProgressPayload(progressType, progress));
+        }
     }
 
     public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability) {
@@ -136,9 +154,13 @@ public class AchieveToDo implements ModInitializer {
             context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
         );
         PayloadTypeRegistry.playS2C().register(SyncAdvancementsCountPayload.ID, SyncAdvancementsCountPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(
+            SyncDynamicProgressPayload.ID,
+            SyncDynamicProgressPayload.CODEC
+        );
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            advancementsCountByPlayerUUID.clear();
+            advancementsCounts.clear();
             prepareScoreboard(server.getScoreboard());
         });
         ServerPlayConnectionEvents.JOIN.register(
@@ -201,10 +223,10 @@ public class AchieveToDo implements ModInitializer {
 
     private static int getObtainedAdvancementsCount(@NotNull PlayerEntity player) {
         if (player.getWorld().isClient && player instanceof ClientPlayerEntity) {
-            return AchieveToDoClient.obtainedAdvancementsCount;
+            return AchieveToDoClient.getObtainedAdvancementsCount();
         }
         if (player instanceof ServerPlayerEntity) {
-            return advancementsCountByPlayerUUID.get(player.getUuid());
+            return advancementsCounts.get(player.getUuid());
         }
         return 0;
     }

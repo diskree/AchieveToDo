@@ -2,6 +2,7 @@ package com.diskree.achievetodo.mixin;
 
 import com.diskree.achievetodo.AchieveToDo;
 import com.diskree.achievetodo.AdvancementsMode;
+import com.diskree.achievetodo.DynamicProgressType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.scoreboard.*;
@@ -32,23 +33,32 @@ public class ScoreboardMixin {
             @NotNull Operation<Void> original
         ) {
             original.call(scoreboard, scoreHolder, objective, scoreboardScore);
-            if (scoreboard instanceof ServerScoreboard serverScoreboard &&
-                AchieveToDo.currentAdvancementsMode != null &&
-                AchieveToDo.currentAdvancementsMode == AdvancementsMode.findByObjectiveName(objective.getName())
-            ) {
-                if (AchieveToDo.currentAdvancementsMode.isTeamsMode()) {
-                    Team team = scoreboard.getScoreHolderTeam(scoreHolder.getNameForScoreboard());
-                    if (team != null) {
-                        PlayerManager playerManager = serverScoreboard.server.getPlayerManager();
-                        for (String playerName : team.getPlayerList()) {
-                            ServerPlayerEntity serverPlayer = playerManager.getPlayer(playerName);
-                            if (serverPlayer != null) {
-                                AchieveToDo.setObtainedAdvancementsCount(serverPlayer, scoreboardScore.getScore());
+
+            if (scoreboard instanceof ServerScoreboard serverScoreboard) {
+                int score = scoreboardScore.getScore();
+                String objectiveName = objective.getName();
+                if (AchieveToDo.currentAdvancementsMode != null &&
+                    AchieveToDo.currentAdvancementsMode == AdvancementsMode.findByObjectiveName(objectiveName)
+                ) {
+                    if (AchieveToDo.currentAdvancementsMode.isTeamsMode()) {
+                        Team team = scoreboard.getScoreHolderTeam(scoreHolder.getNameForScoreboard());
+                        if (team != null) {
+                            PlayerManager playerManager = serverScoreboard.server.getPlayerManager();
+                            for (String playerName : team.getPlayerList()) {
+                                ServerPlayerEntity serverPlayer = playerManager.getPlayer(playerName);
+                                if (serverPlayer != null) {
+                                    AchieveToDo.setObtainedAdvancementsCount(serverPlayer, score);
+                                }
                             }
                         }
+                    } else if (scoreHolder instanceof ServerPlayerEntity serverPlayer) {
+                        AchieveToDo.setObtainedAdvancementsCount(serverPlayer, score);
                     }
                 } else if (scoreHolder instanceof ServerPlayerEntity serverPlayer) {
-                    AchieveToDo.setObtainedAdvancementsCount(serverPlayer, scoreboardScore.getScore());
+                    DynamicProgressType progress = DynamicProgressType.findByObjectiveName(objectiveName);
+                    if (progress != null) {
+                        AchieveToDo.setDynamicProgress(serverPlayer, progress, score);
+                    }
                 }
             }
         }

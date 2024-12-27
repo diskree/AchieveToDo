@@ -1,8 +1,6 @@
 package com.diskree.achievetodo.mixin.client;
 
-import com.diskree.achievetodo.AbilityType;
-import com.diskree.achievetodo.AchieveToDo;
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.*;
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -16,6 +14,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.advancement.AdvancementTab;
 import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,11 +40,11 @@ public class AdvancementWidgetMixin {
     private AbilityType ability;
 
     @Unique
+    private DynamicProgressType dynamicProgressType;
+
+    @Unique
     private boolean shouldRenderMystifiedMask() {
-        if (progress == null ||
-            client.player == null ||
-            !AchieveToDo.isAbilityLocked(client.player, ability, true)
-        ) {
+        if (progress == null || client.player == null || !AchieveToDo.isAbilityLocked(client.player, ability, true)) {
             return false;
         }
         CriterionProgress demystifiedCriterionProgress = progress.getCriterionProgress(
@@ -72,11 +71,16 @@ public class AdvancementWidgetMixin {
     private void findAbility(
         AdvancementTab tab,
         MinecraftClient client,
-        PlacedAdvancement advancement,
+        @NotNull PlacedAdvancement advancement,
         AdvancementDisplay display,
         CallbackInfo ci
     ) {
-        ability = AbilityType.findByAdvancement(advancement);
+        dynamicProgressType = DynamicProgressType.findByAdvancementRequirements(
+            advancement.getAdvancementEntry().value().requirements()
+        );
+        if (dynamicProgressType == null) {
+            ability = AbilityType.findByAdvancement(advancement);
+        }
     }
 
     @WrapOperation(
@@ -86,11 +90,22 @@ public class AdvancementWidgetMixin {
             target = "Lnet/minecraft/advancement/AdvancementRequirements;getLength()I"
         )
     )
-    public int overrideRequirementsCountForAbility(
-        AdvancementRequirements requirements,
-        Operation<Integer> original
-    ) {
+    public int setCustomRequirementsCount(AdvancementRequirements requirements, Operation<Integer> original) {
+        if (dynamicProgressType != null) {
+            return dynamicProgressType.getFinalValue();
+        }
         return ability != null ? ability.getRequiredAdvancementsCount() : original.call(requirements);
+    }
+
+    @Inject(
+        method = "getProgressWidth",
+        at = @At(value = "HEAD"),
+        cancellable = true
+    )
+    public void setDynamicProgressPercentageTextWidth(CallbackInfoReturnable<Integer> cir) {
+        if (dynamicProgressType != null && dynamicProgressType.isPercentage()) {
+            cir.setReturnValue(8 + client.textRenderer.getWidth(Text.translatable("mco.upload.percent", 100)));
+        }
     }
 
     @ModifyArg(
