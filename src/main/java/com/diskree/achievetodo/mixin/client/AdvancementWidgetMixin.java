@@ -36,11 +36,14 @@ public class AdvancementWidgetMixin {
         Identifier.of(BuildConfig.MOD_ID, "ability_mystified_mask");
 
     @Unique
-    @Nullable
-    private AbilityType ability;
+    private TrackedScoreType trackedScoreType;
 
     @Unique
-    private DynamicProgressType dynamicProgressType;
+    private TrackedNearbyEntitiesType trackedNearbyEntitiesType;
+
+    @Unique
+    @Nullable
+    private AbilityType ability;
 
     @Unique
     private boolean shouldRenderMystifiedMask() {
@@ -75,9 +78,13 @@ public class AdvancementWidgetMixin {
         AdvancementDisplay display,
         CallbackInfo ci
     ) {
-        dynamicProgressType = DynamicProgressType.findByAdvancementId(advancement.getAdvancementEntry().id());
-        if (dynamicProgressType == null) {
-            ability = AbilityType.findByAdvancement(advancement);
+        Identifier advancementId = advancement.getAdvancementEntry().id();
+        trackedScoreType = TrackedScoreType.findByAdvancementId(advancementId);
+        if (trackedScoreType == null) {
+            trackedNearbyEntitiesType = TrackedNearbyEntitiesType.findByAdvancementId(advancementId);
+            if (trackedNearbyEntitiesType == null) {
+                ability = AbilityType.findByAdvancementId(advancementId);
+            }
         }
     }
 
@@ -89,10 +96,16 @@ public class AdvancementWidgetMixin {
         )
     )
     public int setCustomRequirementsCount(AdvancementRequirements requirements, Operation<Integer> original) {
-        if (dynamicProgressType != null) {
-            return dynamicProgressType.getFinalValue();
+        if (trackedScoreType != null) {
+            return trackedScoreType.getFinalValue();
         }
-        return ability != null ? ability.getRequiredAdvancementsCount() : original.call(requirements);
+        if (trackedNearbyEntitiesType != null) {
+            return trackedNearbyEntitiesType.getEntitiesCount();
+        }
+        if (ability != null) {
+            return ability.getRequiredAdvancementsCount();
+        }
+        return original.call(requirements);
     }
 
     @Inject(
@@ -100,8 +113,8 @@ public class AdvancementWidgetMixin {
         at = @At(value = "HEAD"),
         cancellable = true
     )
-    public void setDynamicProgressPercentageTextWidth(CallbackInfoReturnable<Integer> cir) {
-        if (dynamicProgressType != null && dynamicProgressType.isPercentage()) {
+    public void setTrackedScorePercentageTextWidth(CallbackInfoReturnable<Integer> cir) {
+        if (trackedScoreType != null && trackedScoreType.isPercentage()) {
             cir.setReturnValue(8 + client.textRenderer.getWidth(Text.translatable("mco.upload.percent", 100)));
         }
     }

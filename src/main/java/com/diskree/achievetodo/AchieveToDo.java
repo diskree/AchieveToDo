@@ -3,7 +3,7 @@ package com.diskree.achievetodo;
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.networking.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
-import com.diskree.achievetodo.networking.SyncDynamicProgressPayload;
+import com.diskree.achievetodo.networking.SyncScorePayload;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -36,8 +36,8 @@ public class AchieveToDo implements ModInitializer {
     public static ScoreboardDisplaySlot currentScoreboardDisplaySlot;
 
     private static final Map<UUID, Integer> advancementsCounts = new Object2IntOpenHashMap<>();
-    private static final EnumMap<DynamicProgressType, Map<UUID, Integer>> dynamicProgresses =
-        new EnumMap<>(DynamicProgressType.class);
+    private static final EnumMap<TrackedScoreType, Map<UUID, Integer>> trackedScores =
+        new EnumMap<>(TrackedScoreType.class);
 
     public static void prepareScoreboard(ServerScoreboard scoreboard) {
         AdvancementsMode oldAdvancementsMode = currentAdvancementsMode;
@@ -98,19 +98,19 @@ public class AchieveToDo implements ModInitializer {
         ServerPlayNetworking.send(player, new SyncAdvancementsCountPayload(count));
     }
 
-    public static void setDynamicProgress(
+    public static void setScore(
         @NotNull ServerPlayerEntity player,
-        @NotNull DynamicProgressType progressType,
+        @NotNull TrackedScoreType progressType,
         int progress
     ) {
         if (progressType.isPercentage()) {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / progressType.getFinalValue())));
         }
-        Map<UUID, Integer> progressByPlayers = dynamicProgresses.computeIfAbsent(progressType, k -> new HashMap<>());
+        Map<UUID, Integer> progressByPlayers = trackedScores.computeIfAbsent(progressType, k -> new HashMap<>());
         Integer currentProgress = progressByPlayers.get(player.getUuid());
         if (currentProgress == null || !currentProgress.equals(progress)) {
             progressByPlayers.put(player.getUuid(), progress);
-            ServerPlayNetworking.send(player, new SyncDynamicProgressPayload(progressType, progress));
+            ServerPlayNetworking.send(player, new SyncScorePayload(progressType, progress));
         }
     }
 
@@ -155,8 +155,8 @@ public class AchieveToDo implements ModInitializer {
         );
         PayloadTypeRegistry.playS2C().register(SyncAdvancementsCountPayload.ID, SyncAdvancementsCountPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(
-            SyncDynamicProgressPayload.ID,
-            SyncDynamicProgressPayload.CODEC
+            SyncScorePayload.ID,
+            SyncScorePayload.CODEC
         );
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {

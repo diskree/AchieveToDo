@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public enum DynamicProgressType {
+public enum TrackedScoreType {
 
     AN_APPLE_A_DAY(
         "blazeandcave:farming/an_apple_a_day",
@@ -199,15 +199,15 @@ public enum DynamicProgressType {
     );
 
     private final String advancementId;
-    private final List<String> objectiveNames;
     private final int finalValue;
     private final boolean isPercentage;
+    private final List<String> objectiveNames;
 
-    DynamicProgressType(String advancementId, int finalValue, boolean isPercentage, String... trackedObjectiveNames) {
+    TrackedScoreType(String advancementId, int finalValue, boolean isPercentage, String... objectiveNames) {
         this.advancementId = advancementId;
         this.finalValue = finalValue;
         this.isPercentage = isPercentage;
-        this.objectiveNames = Arrays.stream(trackedObjectiveNames).toList();
+        this.objectiveNames = Arrays.stream(objectiveNames).toList();
     }
 
     public int getFinalValue() {
@@ -219,23 +219,23 @@ public enum DynamicProgressType {
     }
 
     @Nullable
-    public static DynamicProgressType findByAdvancementId(@NotNull Identifier advancementId) {
-        for (DynamicProgressType progress : DynamicProgressType.values()) {
-            if (advancementId.toString().equals(progress.advancementId)) {
-                return progress;
+    public static TrackedScoreType findByAdvancementId(@NotNull Identifier advancementId) {
+        for (TrackedScoreType type : TrackedScoreType.values()) {
+            if (advancementId.toString().equals(type.advancementId)) {
+                return type;
             }
         }
         return null;
     }
 
-    public static @Nullable List<DynamicProgressType> findByObjectiveName(String objectiveName) {
-        List<DynamicProgressType> progressTypes = null;
-        for (DynamicProgressType progress : values()) {
-            if (progress.objectiveNames.contains(objectiveName)) {
+    public static @Nullable List<TrackedScoreType> findByObjectiveName(String objectiveName) {
+        List<TrackedScoreType> progressTypes = null;
+        for (TrackedScoreType type : values()) {
+            if (type.objectiveNames.contains(objectiveName)) {
                 if (progressTypes == null) {
                     progressTypes = new ArrayList<>();
                 }
-                progressTypes.add(progress);
+                progressTypes.add(type);
             }
         }
         return progressTypes;

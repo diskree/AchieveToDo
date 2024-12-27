@@ -2,7 +2,8 @@ package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.AbilityType;
 import com.diskree.achievetodo.AchieveToDoClient;
-import com.diskree.achievetodo.DynamicProgressType;
+import com.diskree.achievetodo.TrackedNearbyEntitiesType;
+import com.diskree.achievetodo.TrackedScoreType;
 import com.diskree.achievetodo.injection.AdvancementProgressImpl;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -21,16 +22,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class AdvancementProgressMixin implements AdvancementProgressImpl {
 
     @Unique
-    private AbilityType ability;
+    private TrackedScoreType trackedScoreType;
 
     @Unique
-    private DynamicProgressType dynamicProgressType;
+    private TrackedNearbyEntitiesType trackedNearbyEntitiesType;
+
+    @Unique
+    private AbilityType ability;
 
     @Override
     public void achievetodo$setAdvancementId(Identifier advancementId) {
-        dynamicProgressType = DynamicProgressType.findByAdvancementId(advancementId);
-        if (dynamicProgressType == null) {
-            ability = AbilityType.findByAdvancementId(advancementId);
+        trackedScoreType = TrackedScoreType.findByAdvancementId(advancementId);
+        if (trackedScoreType == null) {
+            trackedNearbyEntitiesType = TrackedNearbyEntitiesType.findByAdvancementId(advancementId);
+            if (trackedNearbyEntitiesType == null) {
+                ability = AbilityType.findByAdvancementId(advancementId);
+            }
         }
     }
 
@@ -43,11 +50,17 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
         cancellable = true
     )
     public void setCustomObtainedRequirementsCount(CallbackInfoReturnable<Integer> cir) {
-        if (dynamicProgressType != null) {
+        if (trackedScoreType != null) {
             if (isDone()) {
-                cir.setReturnValue(dynamicProgressType.getFinalValue());
+                cir.setReturnValue(trackedScoreType.getFinalValue());
             } else {
-                cir.setReturnValue(AchieveToDoClient.getDynamicProgress(dynamicProgressType));
+                cir.setReturnValue(AchieveToDoClient.getTrackedScore(trackedScoreType));
+            }
+        } else if (trackedNearbyEntitiesType != null) {
+            if (isDone()) {
+                cir.setReturnValue(trackedNearbyEntitiesType.getEntitiesCount());
+            } else {
+                cir.setReturnValue(AchieveToDoClient.getTrackedNearbyEntitiesCount(trackedNearbyEntitiesType));
             }
         } else if (ability != null) {
             cir.setReturnValue(
@@ -70,10 +83,16 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
         AdvancementRequirements requirements,
         Operation<Integer> original
     ) {
-        if (dynamicProgressType != null) {
-            return dynamicProgressType.getFinalValue();
+        if (trackedScoreType != null) {
+            return trackedScoreType.getFinalValue();
         }
-        return ability != null ? ability.getRequiredAdvancementsCount() : original.call(requirements);
+        if (trackedNearbyEntitiesType != null) {
+            return trackedNearbyEntitiesType.getEntitiesCount();
+        }
+        if (ability != null) {
+            return ability.getRequiredAdvancementsCount();
+        }
+        return original.call(requirements);
     }
 
     @Inject(
@@ -81,9 +100,9 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
         at = @At("HEAD"),
         cancellable = true
     )
-    public void setDynamicProgressPercentage(CallbackInfoReturnable<Float> cir) {
-        if (dynamicProgressType != null && dynamicProgressType.isPercentage()) {
-            cir.setReturnValue(isDone() ? 100f : AchieveToDoClient.getDynamicProgress(dynamicProgressType) / 100f);
+    public void setTrackedScorePercentage(CallbackInfoReturnable<Float> cir) {
+        if (trackedScoreType != null && trackedScoreType.isPercentage()) {
+            cir.setReturnValue(isDone() ? 100f : AchieveToDoClient.getTrackedScore(trackedScoreType) / 100f);
         }
     }
 
@@ -92,11 +111,11 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
         at = @At("HEAD"),
         cancellable = true
     )
-    public void setDynamicProgressPercentageText(CallbackInfoReturnable<Text> cir) {
-        if (dynamicProgressType != null && dynamicProgressType.isPercentage()) {
+    public void setTrackedScorePercentageText(CallbackInfoReturnable<Text> cir) {
+        if (trackedScoreType != null && trackedScoreType.isPercentage()) {
             cir.setReturnValue(Text.translatable(
                 "mco.upload.percent",
-                isDone() ? 100 : AchieveToDoClient.getDynamicProgress(dynamicProgressType)
+                isDone() ? 100 : AchieveToDoClient.getTrackedScore(trackedScoreType)
             ));
         }
     }

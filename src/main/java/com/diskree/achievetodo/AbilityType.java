@@ -5,8 +5,6 @@ import com.diskree.achievetodo.injection.ArmorItemImpl;
 import com.diskree.achievetodo.injection.MiningToolItemImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.AdvancementEntry;
-import net.minecraft.advancement.AdvancementRequirements;
-import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.block.*;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
@@ -957,10 +955,6 @@ public enum AbilityType {
         return null;
     }
 
-    public static AbilityType findByAdvancement(@NotNull PlacedAdvancement advancement) {
-        return findByAdvancement(advancement.getAdvancementEntry());
-    }
-
     public static AbilityType findByAdvancement(@NotNull AdvancementEntry advancement) {
         return findByAdvancementId(advancement.id());
     }
@@ -974,37 +968,6 @@ public enum AbilityType {
             return findByName(path.split(AbilityAdvancementsGenerator.ABILITY_PATH_PREFIX)[1]);
         }
         return null;
-    }
-
-    public static @Nullable AbilityType findByAdvancementRequirements(
-        @NotNull AdvancementRequirements advancementRequirements
-    ) {
-        if (advancementRequirements.requirements().size() != 2) {
-            return null;
-        }
-        String abilityName = null;
-        boolean isUnlockedCriterionFound = false;
-        for (List<String> requirement : advancementRequirements.requirements()) {
-            if (requirement.size() != 1) {
-                return null;
-            }
-            String criteriaName = requirement.getFirst();
-            if (abilityName == null &&
-                criteriaName.startsWith(AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX)
-            ) {
-                abilityName = criteriaName.split(AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX)[1];
-            } else if (!isUnlockedCriterionFound &&
-                criteriaName.equals(AbilityAdvancementsGenerator.UNLOCKED_CRITERION)
-            ) {
-                isUnlockedCriterionFound = true;
-            } else {
-                return null;
-            }
-        }
-        if (abilityName == null || !isUnlockedCriterionFound) {
-            return null;
-        }
-        return findByName(abilityName);
     }
 
     @Nullable
