@@ -1,12 +1,13 @@
 package com.diskree.achievetodo;
 
+import net.minecraft.scoreboard.ReadableScoreboardScore;
+import net.minecraft.scoreboard.ScoreHolder;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public enum TrackedScoreType {
 
@@ -198,10 +199,20 @@ public enum TrackedScoreType {
         "bac_loser"
     );
 
+    public static final Map<String, List<TrackedScoreType>> SCORES = new HashMap<>();
+
     private final String advancementId;
     private final int finalValue;
     private final boolean isPercentage;
     private final List<String> objectiveNames;
+
+    static {
+        for (TrackedScoreType type : values()) {
+            for (String objectiveName : type.objectiveNames) {
+                SCORES.computeIfAbsent(objectiveName, k -> new ArrayList<>()).add(type);
+            }
+        }
+    }
 
     TrackedScoreType(String advancementId, int finalValue, boolean isPercentage, String... objectiveNames) {
         this.advancementId = advancementId;
@@ -216,6 +227,44 @@ public enum TrackedScoreType {
 
     public boolean isPercentage() {
         return isPercentage;
+    }
+
+    public int fixScore(Scoreboard scoreboard, ScoreHolder scoreHolder, int score) {
+        if (this == TrackedScoreType.ON_A_RAIL) {
+            ReadableScoreboardScore eligibleXScore = scoreboard.getScore(
+                scoreHolder, scoreboard.getNullableObjective("bac_oar_eligible_x")
+            );
+            if (eligibleXScore != null) {
+                if (eligibleXScore.getScore() == 1) {
+                    ReadableScoreboardScore currentXScore = scoreboard.getScore(
+                        scoreHolder, scoreboard.getNullableObjective("bac_oar_current_x")
+                    );
+                    if (currentXScore != null) {
+                        score = Math.abs(currentXScore.getScore());
+                    }
+                } else {
+                    ReadableScoreboardScore eligibleZScore = scoreboard.getScore(
+                        scoreHolder, scoreboard.getNullableObjective("bac_oar_eligible_z")
+                    );
+                    if (eligibleZScore != null) {
+                        if (eligibleZScore.getScore() == 1) {
+                            ReadableScoreboardScore currentZScore = scoreboard.getScore(
+                                scoreHolder, scoreboard.getNullableObjective("bac_oar_current_z")
+                            );
+                            if (currentZScore == null) {
+                                return score;
+                            }
+                            score = Math.abs(currentZScore.getScore());
+                        } else {
+                            score = 0;
+                        }
+                    }
+                }
+            }
+        } else if (this == TrackedScoreType.LOSER) {
+            score = score <= 10 ? 1 : 0;
+        }
+        return score;
     }
 
     @Nullable

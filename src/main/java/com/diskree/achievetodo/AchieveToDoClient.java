@@ -2,6 +2,7 @@ package com.diskree.achievetodo;
 
 import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
 import com.diskree.achievetodo.networking.SyncScorePayload;
+import com.diskree.achievetodo.networking.SyncStatPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -16,14 +17,18 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AchieveToDoClient implements ClientModInitializer {
 
     private static int obtainedAdvancementsCount = -1;
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
+    private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
 
     public static boolean isNotReady() {
         return obtainedAdvancementsCount == -1;
@@ -37,13 +42,18 @@ public class AchieveToDoClient implements ClientModInitializer {
         return trackedScores.getOrDefault(progressType, 0);
     }
 
+    public static int getTrackedStat(@NotNull TrackedStatType statType) {
+        return trackedStats.getOrDefault(statType, 0);
+    }
+
     public static int getTrackedNearbyEntitiesCount(TrackedNearbyEntitiesType type) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null || player.isSpectator()) {
             return 0;
         }
         int radius = type.getRadius();
-        Box area = new Box(player.getPos(), player.getPos()).expand(radius);
+        Vec3d playerPos = player.getPos();
+        Box area = new Box(playerPos, playerPos).expand(radius);
         List<EntityType<?>> trackedEntities = type.getEntities();
         boolean isBabySeparated = type.isBabySeparated();
         Map<EntityType<?>, Map<Boolean, Boolean>> trackedMap = new HashMap<>();
@@ -55,7 +65,7 @@ public class AchieveToDoClient implements ClientModInitializer {
             }
             trackedMap.put(entityType, babyAndAdultMap);
         }
-        int count = 0;
+        int entitiesCount = 0;
         List<Entity> entities = player.getWorld().getEntitiesByType(
             TypeFilter.instanceOf(Entity.class),
             area,
@@ -63,20 +73,20 @@ public class AchieveToDoClient implements ClientModInitializer {
         );
         for (Entity entity : entities) {
             if (entity instanceof LivingEntity livingEntity) {
-                if (player.getPos().distanceTo(entity.getPos()) > radius) {
+                if (playerPos.distanceTo(entity.getPos()) > radius) {
                     continue;
                 }
-                EntityType<?> entityType = entity.getType();
-                boolean isBaby = livingEntity.isBaby();
-                Map<Boolean, Boolean> stateMap = trackedMap.get(entityType);
-
-                if (stateMap != null && !stateMap.getOrDefault(isBabySeparated && isBaby, false)) {
-                    count++;
-                    stateMap.put(isBabySeparated && isBaby, true);
+                Map<Boolean, Boolean> stateMap = trackedMap.get(entity.getType());
+                if (stateMap != null) {
+                    boolean isBaby = isBabySeparated && livingEntity.isBaby();
+                    if (!stateMap.getOrDefault(isBaby, false)) {
+                        stateMap.put(isBaby, true);
+                        entitiesCount++;
+                    }
                 }
             }
         }
-        return count;
+        return entitiesCount;
     }
 
     @Override
@@ -87,7 +97,10 @@ public class AchieveToDoClient implements ClientModInitializer {
             context.client().execute(() -> obtainedAdvancementsCount = payload.count())
         );
         ClientPlayNetworking.registerGlobalReceiver(SyncScorePayload.ID, (payload, context) ->
-            context.client().execute(() -> trackedScores.put(payload.progressType(), payload.score()))
+            context.client().execute(() -> trackedScores.put(payload.progressType(), payload.progress()))
+        );
+        ClientPlayNetworking.registerGlobalReceiver(SyncStatPayload.ID, (payload, context) ->
+            context.client().execute(() -> trackedStats.put(payload.statType(), payload.progress()))
         );
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> obtainedAdvancementsCount = -1);

@@ -72,6 +72,7 @@
     "SnowballItemMixin",
     "SnowGolemEntityMixin",
     "SpyglassItemMixin",
+    "StatHandlerMixin",
     "StonecutterBlockMixin",
     "SwordItemMixin",
     "TntBlockMixin",

@@ -60,44 +60,11 @@ public class ScoreboardMixin {
                     List<TrackedScoreType> progressTypes = TrackedScoreType.findByObjectiveName(objectiveName);
                     if (progressTypes != null) {
                         for (TrackedScoreType progressType : progressTypes) {
-                            if (progressType == TrackedScoreType.ON_A_RAIL) {
-                                ReadableScoreboardScore eligibleXScore = scoreboard.getScore(
-                                    scoreHolder, scoreboard.getNullableObjective("bac_oar_eligible_x")
-                                );
-                                if (eligibleXScore == null) {
-                                    continue;
-                                }
-                                if (eligibleXScore.getScore() == 1) {
-                                    ReadableScoreboardScore currentXScore = scoreboard.getScore(
-                                        scoreHolder, scoreboard.getNullableObjective("bac_oar_current_x")
-                                    );
-                                    if (currentXScore == null) {
-                                        continue;
-                                    }
-                                    score = Math.abs(currentXScore.getScore());
-                                } else {
-                                    ReadableScoreboardScore eligibleZScore = scoreboard.getScore(
-                                        scoreHolder, scoreboard.getNullableObjective("bac_oar_eligible_z")
-                                    );
-                                    if (eligibleZScore == null) {
-                                        continue;
-                                    }
-                                    if (eligibleZScore.getScore() == 1) {
-                                        ReadableScoreboardScore currentZScore = scoreboard.getScore(
-                                            scoreHolder, scoreboard.getNullableObjective("bac_oar_current_z")
-                                        );
-                                        if (currentZScore == null) {
-                                            continue;
-                                        }
-                                        score = Math.abs(currentZScore.getScore());
-                                    } else {
-                                        score = 0;
-                                    }
-                                }
-                            } else if (progressType == TrackedScoreType.LOSER) {
-                                score = score <= 10 ? 1 : 0;
-                            }
-                            AchieveToDo.setScore(serverPlayer, progressType, score);
+                            AchieveToDo.setScore(
+                                serverPlayer,
+                                progressType,
+                                progressType.fixScore(scoreboard, scoreHolder, score)
+                            );
                         }
                     }
                 }

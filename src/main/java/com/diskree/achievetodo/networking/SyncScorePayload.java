@@ -8,10 +8,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public record SyncScorePayload(
-    TrackedScoreType progressType,
-    int score
-) implements CustomPayload {
+public record SyncScorePayload(TrackedScoreType progressType, int progress) implements CustomPayload {
 
     public static final Id<SyncScorePayload> ID =
         new Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_score"));
@@ -28,7 +25,7 @@ public record SyncScorePayload(
 
     private void write(@NotNull PacketByteBuf buf) {
         buf.writeEnumConstant(progressType);
-        buf.writeInt(score);
+        buf.writeInt(progress);
     }
 
     @Override

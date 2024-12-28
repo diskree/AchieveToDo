@@ -4,6 +4,7 @@ import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.networking.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
 import com.diskree.achievetodo.networking.SyncScorePayload;
+import com.diskree.achievetodo.networking.SyncStatPayload;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -16,16 +17,15 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.stat.ServerStatHandler;
+import net.minecraft.stat.Stat;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class AchieveToDo implements ModInitializer {
 
@@ -38,6 +38,8 @@ public class AchieveToDo implements ModInitializer {
     private static final Map<UUID, Integer> advancementsCounts = new Object2IntOpenHashMap<>();
     private static final EnumMap<TrackedScoreType, Map<UUID, Integer>> trackedScores =
         new EnumMap<>(TrackedScoreType.class);
+    private static final EnumMap<TrackedStatType, Map<UUID, Integer>> trackedStats =
+        new EnumMap<>(TrackedStatType.class);
 
     public static void prepareScoreboard(ServerScoreboard scoreboard) {
         AdvancementsMode oldAdvancementsMode = currentAdvancementsMode;
@@ -114,6 +116,22 @@ public class AchieveToDo implements ModInitializer {
         }
     }
 
+    public static void setStat(
+        @NotNull ServerPlayerEntity player,
+        @NotNull TrackedStatType statType,
+        int progress
+    ) {
+        if (statType.isPercentage()) {
+            progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / statType.getFinalValue())));
+        }
+        Map<UUID, Integer> progressByPlayers = trackedStats.computeIfAbsent(statType, k -> new HashMap<>());
+        Integer currentProgress = progressByPlayers.get(player.getUuid());
+        if (currentProgress == null || !currentProgress.equals(progress)) {
+            progressByPlayers.put(player.getUuid(), progress);
+            ServerPlayNetworking.send(player, new SyncStatPayload(statType, progress));
+        }
+    }
+
     public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability) {
         return isAbilityLocked(player, ability, false);
     }
@@ -154,17 +172,38 @@ public class AchieveToDo implements ModInitializer {
             context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
         );
         PayloadTypeRegistry.playS2C().register(SyncAdvancementsCountPayload.ID, SyncAdvancementsCountPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(
-            SyncScorePayload.ID,
-            SyncScorePayload.CODEC
-        );
+        PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             advancementsCounts.clear();
             prepareScoreboard(server.getScoreboard());
         });
         ServerPlayConnectionEvents.JOIN.register(
-            (handler, sender, server) -> updateObtainedAdvancementsCount(server.getScoreboard(), handler.player)
+            (handler, sender, server) -> {
+                ServerPlayerEntity player = handler.player;
+                updateObtainedAdvancementsCount(server.getScoreboard(), player);
+                ScoreHolder scoreHolder = ScoreHolder.fromName(player.getNameForScoreboard());
+                Scoreboard scoreboard = player.getScoreboard();
+                for (Map.Entry<String, List<TrackedScoreType>> scoreTypeEntry : TrackedScoreType.SCORES.entrySet()) {
+                    ReadableScoreboardScore scoreboardScore = scoreboard.getScore(
+                        scoreHolder, scoreboard.getNullableObjective(scoreTypeEntry.getKey())
+                    );
+                    if (scoreboardScore != null) {
+                        int score = scoreboardScore.getScore();
+                        for (TrackedScoreType type : scoreTypeEntry.getValue()) {
+                            setScore(player, type, type.fixScore(scoreboard, scoreHolder, score));
+                        }
+                    }
+                }
+                ServerStatHandler serverStatHandler = player.getStatHandler();
+                for (Map.Entry<Stat<?>, List<TrackedStatType>> statTypeEntry : TrackedStatType.STATS.entrySet()) {
+                    int statValue = serverStatHandler.getStat(statTypeEntry.getKey());
+                    for (TrackedStatType trackedStatType : statTypeEntry.getValue()) {
+                        setStat(player, trackedStatType, statValue);
+                    }
+                }
+            }
         );
     }
 

@@ -42,7 +42,9 @@ public class AdvancementWidgetMixin {
     private TrackedNearbyEntitiesType trackedNearbyEntitiesType;
 
     @Unique
-    @Nullable
+    private TrackedStatType trackedStatType;
+
+    @Unique
     private AbilityType ability;
 
     @Unique
@@ -83,7 +85,10 @@ public class AdvancementWidgetMixin {
         if (trackedScoreType == null) {
             trackedNearbyEntitiesType = TrackedNearbyEntitiesType.findByAdvancementId(advancementId);
             if (trackedNearbyEntitiesType == null) {
-                ability = AbilityType.findByAdvancementId(advancementId);
+                trackedStatType = TrackedStatType.findByAdvancementId(advancementId);
+                if (trackedStatType == null) {
+                    ability = AbilityType.findByAdvancementId(advancementId);
+                }
             }
         }
     }
@@ -102,6 +107,9 @@ public class AdvancementWidgetMixin {
         if (trackedNearbyEntitiesType != null) {
             return trackedNearbyEntitiesType.getEntitiesCount();
         }
+        if (trackedStatType != null) {
+            return trackedStatType.getFinalValue();
+        }
         if (ability != null) {
             return ability.getRequiredAdvancementsCount();
         }
@@ -115,6 +123,9 @@ public class AdvancementWidgetMixin {
     )
     public void setTrackedScorePercentageTextWidth(CallbackInfoReturnable<Integer> cir) {
         if (trackedScoreType != null && trackedScoreType.isPercentage()) {
+            cir.setReturnValue(8 + client.textRenderer.getWidth(Text.translatable("mco.upload.percent", 100)));
+        }
+        if (trackedStatType != null && trackedStatType.isPercentage()) {
             cir.setReturnValue(8 + client.textRenderer.getWidth(Text.translatable("mco.upload.percent", 100)));
         }
     }
