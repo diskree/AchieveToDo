@@ -91,7 +91,15 @@ public enum ExternalPack {
     private final String sha1;
     private final boolean inGameDownloadSupported;
 
-    ExternalPack(String name, Formatting color, String pageUrl, String downloadUrl, String wrapperSha1, String sha1, boolean inGameDownloadSupported) {
+    ExternalPack(
+        String name,
+        Formatting color,
+        String pageUrl,
+        String downloadUrl,
+        String wrapperSha1,
+        String sha1,
+        boolean inGameDownloadSupported
+    ) {
         this.name = name;
         this.color = color;
         this.pageUrl = pageUrl;

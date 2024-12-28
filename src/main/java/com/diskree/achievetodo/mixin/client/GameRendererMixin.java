@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
-public class GameRendererMixin {
+public abstract class GameRendererMixin {
 
     @Unique
     private float blackOverlayAlpha = 0.0f;
@@ -42,6 +42,9 @@ public class GameRendererMixin {
     @Shadow
     @Final
     private MinecraftClient client;
+
+    @Shadow
+    protected abstract void updateWorldIcon();
 
     @Inject(
         method = "renderHand",
@@ -69,7 +72,24 @@ public class GameRendererMixin {
             blackOverlayAlpha -= 0.02f * tickDelta;
             blackOverlayAlpha = Math.max(blackOverlayAlpha, 0.0f);
             drawBlackOverlay(stack);
+            if (blackOverlayAlpha == 0.0f) {
+                updateWorldIcon();
+            }
+        }
+    }
+
+    @Inject(
+        method = "updateWorldIcon()V",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/Util;getMeasuringTimeMs()J",
+            shift = At.Shift.AFTER
+        ),
+        cancellable = true
+    )
+    private void cancelIconUpdateIfVisionLocked(CallbackInfo ci) {
+        if (blackOverlayAlpha != 0) {
+            ci.cancel();
         }
     }
 }
-
