@@ -1,7 +1,6 @@
 package com.diskree.achievetodo.server;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.ability.AbilitiesTreeBranchType;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoImpl;
@@ -24,10 +23,8 @@ import net.minecraft.stat.Stat;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class AchieveToDoServer implements ServerModInitializer {
 
@@ -132,55 +129,6 @@ public class AchieveToDoServer implements ServerModInitializer {
         }
     }
 
-    public @Nullable List<List<AbilityType>> buildAbilitiesTree() {
-        if (isNotReady()) {
-            return null;
-        }
-        Map<AbilitiesTreeBranchType, List<AbilityType>> abilitiesByBranches = Arrays.stream(AbilityType.values())
-            .collect(Collectors.groupingBy(AbilityType::getBranchType));
-        List<List<AbilityType>> tree = new ArrayList<>();
-        for (AbilitiesTreeBranchType category : AbilitiesTreeBranchType.values()) {
-            List<AbilityType> abilities = abilitiesByBranches.getOrDefault(category, Collections.emptyList()).stream()
-                .sorted(Comparator.comparingInt((AbilityType ability) -> {
-                        int requiredAdvancementsCount = abilitiesConfiguration.getOrDefault(ability, 0);
-                        if (requiredAdvancementsCount == 0) {
-                            return 0;
-                        }
-                        if (requiredAdvancementsCount > 0) {
-                            return 1;
-                        }
-                        return 2;
-                    })
-                    .thenComparingInt(abilitiesConfiguration::get)
-                    .thenComparing(Enum::ordinal))
-                .toList();
-            if (category == AbilitiesTreeBranchType.MAIN) {
-                tree.add(abilities);
-            } else {
-                int rowsCount = category.getRowsCount();
-                if (abilities.size() % rowsCount != 0) {
-                    throw new IllegalStateException(
-                        "Abilities in category " + category +
-                            " cannot be evenly distributed across " + rowsCount + " rows."
-                    );
-                }
-                int rowSize = abilities.size() / rowsCount;
-                List<List<AbilityType>> branches = new ArrayList<>(rowsCount);
-                for (int i = 0; i < rowsCount; i++) {
-                    branches.add(new ArrayList<>(rowSize));
-                }
-                for (int i = 0; i < abilities.size(); i++) {
-                    int branchIndex = i / rowSize;
-                    branches.get(branchIndex).add(abilities.get(i));
-                }
-                int half = rowsCount / 2;
-                tree.addAll(0, branches.subList(0, half));
-                tree.addAll(branches.subList(half, rowsCount));
-            }
-        }
-        return tree;
-    }
-
     public boolean isNotReady() {
         return abilitiesConfiguration.isEmpty() ||
             currentAdvancementsMode == null ||
@@ -193,6 +141,12 @@ public class AchieveToDoServer implements ServerModInitializer {
     }
 
     public boolean isAbilityLocked(@NotNull ServerPlayerEntity player, AbilityType ability, boolean checkOnly) {
+        if (ability == null || player.isCreative() || player.isSpectator()) {
+            return false;
+        }
+        if (ability != AbilityType.VISION) {
+            System.out.println("isAbilityLocked check on server:" + ability.getLowerCaseName());
+        }
         if (isNotReady()) {
             player.sendMessage(
                 Text.translatable("achievetodo.error.not_ready_yet")

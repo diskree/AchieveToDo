@@ -45,19 +45,10 @@ public class AchieveToDoMod implements ModInitializer {
     }
 
     public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability, boolean checkOnly) {
-        if (ability == null || player.isCreative() || player.isSpectator()) {
-            return false;
-        }
         if (player.getWorld().isClient) {
-            if (ability != AbilityType.VISION) {
-                System.out.println("isAbilityLocked check on client:" + ability.getLowerCaseName());
-            }
             return AchieveToDoClient.isAbilityLocked(ability);
         }
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            if (ability != AbilityType.VISION) {
-                System.out.println("isAbilityLocked check on server:" + ability.getLowerCaseName());
-            }
             return server.isAbilityLocked(serverPlayer, ability, checkOnly);
         }
         return true;

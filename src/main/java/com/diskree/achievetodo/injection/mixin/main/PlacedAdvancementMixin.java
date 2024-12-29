@@ -1,9 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.client.gui.AdvancementsTab;
-import com.diskree.achievetodo.injection.extension.main.PlacedAdvancementImpl;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.util.Identifier;
@@ -18,17 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.*;
 
 @Mixin(PlacedAdvancement.class)
-public abstract class PlacedAdvancementMixin implements PlacedAdvancementImpl {
+public abstract class PlacedAdvancementMixin {
 
     @Unique
     private static final Map<String, List<String>> customChildrenOrderMap = new HashMap<>();
-
-    @Unique
-    private List<PlacedAdvancement> allAbilityAdvancements;
-
-    public List<PlacedAdvancement> achievetodo$getAllAbilityAdvancements() {
-        return allAbilityAdvancements;
-    }
 
     static {
         customChildrenOrderMap.put("blazeandcave:statistics/root", List.of(
@@ -76,86 +66,33 @@ public abstract class PlacedAdvancementMixin implements PlacedAdvancementImpl {
         at = @At("HEAD"),
         cancellable = true
     )
-    public void modifyChildren(CallbackInfoReturnable<Iterable<PlacedAdvancement>> cir) {
-        if (sortedChildren != null) {
-            cir.setReturnValue(sortedChildren);
+    public void sortChildren(CallbackInfoReturnable<Iterable<PlacedAdvancement>> cir) {
+        if (children.size() <= 1) {
             return;
         }
-
-        PlacedAdvancement placedAdvancement = (PlacedAdvancement) (Object) this;
-        Identifier advancementId = advancementEntry.id();
-        AdvancementsTab tab = AdvancementsTab.findByAdvancement(advancementId);
-        List<PlacedAdvancement> sortedChildren = new ArrayList<>(children);
-
-        if (tab == AdvancementsTab.ABILITIES) {
-            if (advancementEntry.value().isRoot()) {
-                allAbilityAdvancements = children.stream().toList();
-                List<List<AbilityType>> tree = AchieveToDoMod.getServer().buildAbilitiesTree();
-                if (tree == null) {
-                    return;
-                }
-                sortedChildren.clear();
-                for (List<AbilityType> row : tree) {
-                    AbilityType firstAbility = row.getFirst();
-                    for (PlacedAdvancement abilityAdvancement : children) {
-                        if (AbilityType.findByAdvancement(abilityAdvancement) == firstAbility) {
-                            sortedChildren.add(abilityAdvancement);
-                        }
-                    }
-                }
-            } else {
-                sortedChildren.clear();
-                if (getRoot() instanceof PlacedAdvancementImpl rootAdvancement) {
-                    List<PlacedAdvancement> allAbilityAdvancements =
-                        rootAdvancement.achievetodo$getAllAbilityAdvancements();
-                    List<List<AbilityType>> tree = AchieveToDoMod.getServer().buildAbilitiesTree();
-                    if (tree == null) {
-                        return;
-                    }
-                    for (List<AbilityType> row : tree) {
-                        int index = row.indexOf(AbilityType.findByAdvancement(placedAdvancement));
-                        if (index != -1 && index < row.size() - 1) {
-                            AbilityType nextAbility = row.get(index + 1);
-                            for (PlacedAdvancement advancement : allAbilityAdvancements) {
-                                if (AbilityType.findByAdvancement(advancement) == nextAbility) {
-                                    sortedChildren.add(advancement);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            if (children.size() <= 1) {
-                return;
-            }
+        if (sortedChildren == null) {
+            sortedChildren = new ArrayList<>(children);
+            Identifier advancementId = advancementEntry.id();
             if (customChildrenOrderMap.containsKey(advancementId.toString())) {
-                List<String> childOrder = customChildrenOrderMap.get(advancementId.toString());
-                List<String> actualChildIds = children.stream()
+                List<String> customChildrenIds = customChildrenOrderMap.get(advancementId.toString());
+                List<String> realChildrenIds = children.stream()
                     .map(child -> child.getAdvancementEntry().id().toString())
                     .toList();
-                for (String childId : actualChildIds) {
-                    if (!childOrder.contains(childId)) {
-                        AchieveToDoMod.logger.error("Child ID '{}' is missing in childOrder for parent '{}'",
-                            childId, advancementId
+                for (String realChildId : realChildrenIds) {
+                    if (!customChildrenIds.contains(realChildId)) {
+                        AchieveToDoMod.logger.error("Child ID '{}' is missing in customChildrenIds for parent '{}'",
+                            realChildId, advancementId
                         );
                         return;
                     }
                 }
-                List<String> filteredChildOrder = childOrder.stream()
-                    .filter(actualChildIds::contains)
-                    .toList();
                 sortedChildren.sort(Comparator.comparingInt(child ->
-                    filteredChildOrder.indexOf(child.getAdvancementEntry().id().toString())
+                    customChildrenIds.indexOf(child.getAdvancementEntry().id().toString())
                 ));
             } else {
-                sortedChildren.sort(Comparator.comparing(advancement ->
-                    advancement.getAdvancementEntry().id()
-                ));
+                sortedChildren.sort(Comparator.comparing(advancement -> advancement.getAdvancementEntry().id()));
             }
         }
-        this.sortedChildren = sortedChildren;
         cir.setReturnValue(sortedChildren);
     }
 }

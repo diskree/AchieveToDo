@@ -1,6 +1,7 @@
 package com.diskree.achievetodo.client;
 
 import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.ability.AbilitiesTreeCategoryType;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.SyncAbilitiesConfigurationPayload;
@@ -26,10 +27,10 @@ import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AchieveToDoClient implements ClientModInitializer {
 
@@ -37,6 +38,8 @@ public class AchieveToDoClient implements ClientModInitializer {
     private static int obtainedAdvancementsCount = -1;
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
     private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
+
+    private static List<List<AbilityType>> abilityRows;
 
     public static int getRequiredAdvancementsCount(AbilityType ability) {
         return abilitiesConfiguration.getOrDefault(ability, 0);
@@ -106,7 +109,10 @@ public class AchieveToDoClient implements ClientModInitializer {
         registerInternalDataPacks();
 
         ClientPlayNetworking.registerGlobalReceiver(SyncAbilitiesConfigurationPayload.ID, (payload, context) ->
-            context.client().execute(() -> abilitiesConfiguration = payload.abilitiesConfiguration())
+            context.client().execute(() -> {
+                abilitiesConfiguration = payload.abilitiesConfiguration();
+                abilityRows.clear();
+            })
         );
         ClientPlayNetworking.registerGlobalReceiver(SyncAdvancementsCountPayload.ID, (payload, context) ->
             context.client().execute(() -> obtainedAdvancementsCount = payload.count())
@@ -143,6 +149,13 @@ public class AchieveToDoClient implements ClientModInitializer {
     }
 
     public static boolean isAbilityLocked(AbilityType ability, boolean checkOnly) {
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if (ability == null || player == null || player.isCreative() || player.isSpectator()) {
+            return false;
+        }
+        if (ability != AbilityType.VISION) {
+            System.out.println("isAbilityLocked check on client:" + ability.getLowerCaseName());
+        }
         if (isNotReady()) {
             return true;
         }
@@ -153,11 +166,59 @@ public class AchieveToDoClient implements ClientModInitializer {
         if (checkOnly) {
             return true;
         }
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (player != null) {
-            player.sendMessage(ability.getLockedMessage(requiredAdvancementsCount - obtainedAdvancementsCount), true);
-        }
+        player.sendMessage(ability.getLockedMessage(requiredAdvancementsCount - obtainedAdvancementsCount), true);
         ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
         return true;
+    }
+
+    public static @Nullable List<List<AbilityType>> getAbilityRows() {
+        if (isNotReady()) {
+            return null;
+        }
+        if (abilityRows == null) {
+            abilityRows = new ArrayList<>();
+            Map<AbilitiesTreeCategoryType, List<AbilityType>> abilitiesByCategory = Arrays
+                .stream(AbilityType.values())
+                .sorted(Comparator.comparingInt((AbilityType ability) -> {
+                        int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
+                        if (requiredAdvancementsCount == 0) {
+                            return 0;
+                        }
+                        if (requiredAdvancementsCount > 0) {
+                            return 1;
+                        }
+                        return 2;
+                    })
+                    .thenComparingInt(abilitiesConfiguration::get)
+                    .thenComparing(Enum::ordinal))
+                .collect(Collectors.groupingBy(AbilityType::getCategory));
+            for (AbilitiesTreeCategoryType category : AbilitiesTreeCategoryType.values()) {
+                List<AbilityType> categoryAbilities = abilitiesByCategory.get(category);
+                if (category == AbilitiesTreeCategoryType.MAIN) {
+                    abilityRows.add(categoryAbilities);
+                } else {
+                    int categoryRowsCount = category.getRowsCount();
+                    if (categoryAbilities.size() % categoryRowsCount != 0) {
+                        throw new IllegalStateException(
+                            "Abilities in category " + category +
+                                " cannot be evenly distributed across " + categoryRowsCount + " rows."
+                        );
+                    }
+                    int rowLength = categoryAbilities.size() / categoryRowsCount;
+                    List<List<AbilityType>> categoryRows = new ArrayList<>(categoryRowsCount);
+                    for (int i = 0; i < categoryRowsCount; i++) {
+                        categoryRows.add(new ArrayList<>(rowLength));
+                    }
+                    for (int i = 0; i < categoryAbilities.size(); i++) {
+                        int rowIndex = i / rowLength;
+                        categoryRows.get(rowIndex).add(categoryAbilities.get(i));
+                    }
+                    int half = categoryRowsCount / 2;
+                    abilityRows.addAll(0, categoryRows.subList(0, half));
+                    abilityRows.addAll(categoryRows.subList(half, categoryRowsCount));
+                }
+            }
+        }
+        return abilityRows;
     }
 }

@@ -14,3 +14,5 @@ accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/cl
 accessible field net/minecraft/client/gui/widget/TabNavigationWidget tabManager Lnet/minecraft/client/gui/tab/TabManager;
 accessible field net/minecraft/client/tutorial/TutorialManager currentHandler Lnet/minecraft/client/tutorial/TutorialStepHandler;
 accessible field net/minecraft/advancement/PlacedAdvancement children Ljava/util/Set;
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget parent Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget advancement Lnet/minecraft/advancement/PlacedAdvancement;

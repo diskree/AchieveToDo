@@ -32,523 +32,523 @@ public enum AbilityType {
 
     VISION(
         1, 1, 2,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.MAIN, Items.ENDER_EYE
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.ENDER_EYE
     ),
     EAT_SALMON(
         2, 2, 3,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.SALMON
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.SALMON
     ),
     EAT_COD(
         3, 3, 4,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COD
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COD
     ),
     EAT_TROPICAL_FISH(
         5, 5, 5,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.TROPICAL_FISH
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.TROPICAL_FISH
     ),
     JUMP(
         8, 8, 8,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.MAIN, Items.SLIME_BLOCK
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.SLIME_BLOCK
     ),
     SWIM(
         9, 9, 9,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.MAIN, Items.HEART_OF_THE_SEA
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.HEART_OF_THE_SEA
     ),
     EAT_ROTTEN_FLESH(
         10, 10, 10,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.ROTTEN_FLESH
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.ROTTEN_FLESH
     ),
     EAT_SPIDER_EYE(
         11, 11, 11,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.SPIDER_EYE
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.SPIDER_EYE
     ),
     EAT_SWEET_BERRIES(
         12, 12, 12,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.SWEET_BERRIES
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.SWEET_BERRIES
     ),
     OPEN_DOOR(
         13, 13, 13,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.ACTIONS, Items.PALE_OAK_DOOR
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.PALE_OAK_DOOR
     ),
     EAT_GLOW_BERRIES(
         14, 14, 14,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.GLOW_BERRIES
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.GLOW_BERRIES
     ),
     EAT_PUFFERFISH(
         15, 15, 15,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.PUFFERFISH
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.PUFFERFISH
     ),
     SLEEP(
         16, 16, 16,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.MAIN, Items.LIGHT_GRAY_BED
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.LIGHT_GRAY_BED
     ),
     EAT_POISONOUS_POTATO(
         17, 17, 17,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.POISONOUS_POTATO
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.POISONOUS_POTATO
     ),
     SPRINT(
         18, 18, 18,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.MAIN, Items.CHAINMAIL_BOOTS
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.CHAINMAIL_BOOTS
     ),
     SNEAK(
         20, 20, 20,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.MAIN, Items.CHAINMAIL_LEGGINGS
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.CHAINMAIL_LEGGINGS
     ),
     OPEN_INVENTORY(
         22, 22, 22,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.MAIN, Items.LIGHT_GRAY_BUNDLE
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.LIGHT_GRAY_BUNDLE
     ),
     BREAK_BLOCKS(
         24, 24, 24,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.ACTIONS, Items.COBBLESTONE
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.COBBLESTONE
     ),
     EAT_SUSPICIOUS_STEW(
         26, 26, 26,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.SUSPICIOUS_STEW
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.SUSPICIOUS_STEW
     ),
     OPEN_BARREL(
         28, 28, 28,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.BARREL
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.BARREL
     ),
     EAT_BEETROOT(
         30, 30, 30,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.BEETROOT
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BEETROOT
     ),
     EAT_CARROT(
         35, 35, 35,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.CARROT
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.CARROT
     ),
     EQUIP_GOLDEN_ARMOR(
         40, 40, 40,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, ArmorMaterials.GOLD
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.GOLD
     ),
     EAT_CHICKEN(
         45, 45, 45,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.CHICKEN
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.CHICKEN
     ),
     EAT_DRIED_KELP(
         50, 50, 50,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.DRIED_KELP
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.DRIED_KELP
     ),
     OPEN_CRAFTING_TABLE(
         55, 55, 55,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.CRAFTING_TABLE
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CRAFTING_TABLE
     ),
     USE_GOLDEN_TOOLS(
         60, 60, 60,
-        AbilityUnlockedToastType.TOOL, AbilitiesTreeBranchType.UPGRADE, ToolMaterial.GOLD
+        AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.GOLD
     ),
     EAT_POTATO(
         65, 65, 65,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.POTATO
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.POTATO
     ),
     OPEN_STONECUTTER(
         70, 70, 70,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.STONECUTTER
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.STONECUTTER
     ),
     GET_INTO_BOAT(
         75, 75, 75,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.PALE_OAK_BOAT
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.PALE_OAK_BOAT
     ),
     EAT_APPLE(
         80, 80, 80,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.APPLE
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.APPLE
     ),
     OPEN_CHEST(
         85, 85, 85,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.CHEST
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CHEST
     ),
     USE_SHIELD(
         90, 90, 90,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, Items.SHIELD
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, Items.SHIELD
     ),
     EAT_MELON_SLICE(
         95, 95, 95,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.MELON_SLICE
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.MELON_SLICE
     ),
     OPEN_FURNACE(
         100, 100, 100,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.FURNACE
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.FURNACE
     ),
     EAT_COOKIE(
         105, 105, 105,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COOKIE
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKIE
     ),
     EAT_MUSHROOM_STEW(
         110, 110, 110,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.MUSHROOM_STEW
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.MUSHROOM_STEW
     ),
     EAT_BEETROOT_SOUP(
         115, 115, 115,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.BEETROOT_SOUP
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BEETROOT_SOUP
     ),
     PUT_IN_BUNDLE(
         120, 120, 120,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.BUNDLE
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.BUNDLE
     ),
     EAT_RABBIT_STEW(
         125, 125, 125,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.RABBIT_STEW
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.RABBIT_STEW
     ),
     OPEN_TRAPDOOR(
         130, 130, 130,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.ACTIONS, Items.PALE_OAK_TRAPDOOR
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.PALE_OAK_TRAPDOOR
     ),
     USE_WOODEN_TOOLS(
         135, 135, 135,
-        AbilityUnlockedToastType.TOOL, AbilitiesTreeBranchType.UPGRADE, ToolMaterial.WOOD
+        AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.WOOD
     ),
     EAT_HONEY(
         140, 140, 140,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.HONEY_BOTTLE
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.HONEY_BOTTLE
     ),
     USE_WATER_BUCKET(
         145, 145, 145,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.ACTIONS, Items.WATER_BUCKET
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.WATER_BUCKET
     ),
     EAT_MUTTON(
         150, 150, 150,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.MUTTON
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.MUTTON
     ),
     THROW_SNOWBALL(
         155, 155, 155,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.SNOWBALL
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.SNOWBALL
     ),
     EQUIP_LEATHER_ARMOR(
         160, 160, 160,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, ArmorMaterials.LEATHER
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.LEATHER
     ),
     OPEN_FENCE_GATE(
         165, 165, 165,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.ACTIONS, Items.PALE_OAK_FENCE_GATE
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.PALE_OAK_FENCE_GATE
     ),
     EAT_PUMPKIN_PIE(
         170, 170, 170,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.PUMPKIN_PIE
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.PUMPKIN_PIE
     ),
     EAT_GOLDEN_APPLE(
         175, 175, 175,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.GOLDEN_APPLE
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.GOLDEN_APPLE
     ),
     USE_SHEARS(
         180, 180, 180,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.SHEARS
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.SHEARS
     ),
     BREAK_BLOCKS_IN_NEGATIVE_Y(
         190, 190, 190,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.ACTIONS, Items.COBBLED_DEEPSLATE
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.COBBLED_DEEPSLATE
     ),
     EAT_ENCHANTED_GOLDEN_APPLE(
         200, 200, 200,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.ENCHANTED_GOLDEN_APPLE
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.ENCHANTED_GOLDEN_APPLE
     ),
     THROW_EGG(
         210, 210, 210,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.EGG
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.EGG
     ),
     USE_STONE_TOOLS(
         220, 220, 220,
-        AbilityUnlockedToastType.TOOL, AbilitiesTreeBranchType.UPGRADE, ToolMaterial.STONE
+        AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.STONE
     ),
     OPEN_GRINDSTONE(
         230, 230, 230,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.GRINDSTONE
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.GRINDSTONE
     ),
     SHOOT_CROSSBOW(
         240, 240, 240,
-        AbilityUnlockedToastType.WEAPON, AbilitiesTreeBranchType.UPGRADE, Items.CROSSBOW
+        AbilityUnlockedToastType.WEAPON, AbilitiesTreeCategoryType.UPGRADE, Items.CROSSBOW
     ),
     EAT_RABBIT(
         250, 250, 250,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.RABBIT
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.RABBIT
     ),
     EQUIP_CHAINMAIL_ARMOR(
         260, 260, 260,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, ArmorMaterials.CHAIN
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.CHAIN
     ),
     OPEN_ANVIL(
         270, 270, 270,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.ANVIL
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ANVIL
     ),
     USE_FLINT_AND_STEEL(
         280, 280, 280,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.FLINT_AND_STEEL
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.FLINT_AND_STEEL
     ),
     IGNITE_TNT(
         290, 290, 290,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.TNT
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.TNT
     ),
     ENTER_NETHER(
         300, 300, 300,
-        AbilityUnlockedToastType.PORTAL, AbilitiesTreeBranchType.UPGRADE, NetherPortalBlock.class
+        AbilityUnlockedToastType.PORTAL, AbilitiesTreeCategoryType.UPGRADE, NetherPortalBlock.class
     ),
     TRADE_WITH_WANDERING_TRADER(
         310, 310, 310,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, Items.WANDERING_TRADER_SPAWN_EGG
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, Items.WANDERING_TRADER_SPAWN_EGG
     ),
     GET_INTO_MINECART(
         320, 320, 320,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.MINECART
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.MINECART
     ),
     USE_OMINOUS_BOTTLE(
         330, 330, 330,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.OMINOUS_BOTTLE
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.OMINOUS_BOTTLE
     ),
     USE_IRON_TOOLS(
         340, 340, 340,
-        AbilityUnlockedToastType.TOOL, AbilitiesTreeBranchType.UPGRADE, ToolMaterial.IRON
+        AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.IRON
     ),
     ATTACK_WITH_TRIDENT(
         350, 350, 350,
-        AbilityUnlockedToastType.WEAPON, AbilitiesTreeBranchType.UPGRADE, Items.TRIDENT
+        AbilityUnlockedToastType.WEAPON, AbilitiesTreeCategoryType.UPGRADE, Items.TRIDENT
     ),
     EQUIP_IRON_ARMOR(
         360, 360, 360,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, ArmorMaterials.IRON
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.IRON
     ),
     SHOOT_BOW(
         370, 370, 370,
-        AbilityUnlockedToastType.WEAPON, AbilitiesTreeBranchType.UPGRADE, Items.BOW
+        AbilityUnlockedToastType.WEAPON, AbilitiesTreeCategoryType.UPGRADE, Items.BOW
     ),
     USE_JUKEBOX(
         380, 380, 380,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.JUKEBOX
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.JUKEBOX
     ),
     THROW_ENDER_PEARL(
         390, 390, 390,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.ENDER_PEARL
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.ENDER_PEARL
     ),
     USE_COMPOSTER(
         400, 400, 400,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.COMPOSTER
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.COMPOSTER
     ),
     CHARGE_RESPAWN_ANCHOR(
         410, 410, 410,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.RESPAWN_ANCHOR
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.RESPAWN_ANCHOR
     ),
     EAT_BEEF(
         420, 420, 420,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.BEEF
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BEEF
     ),
     TRADE_WITH_MASON(
         430, 430, 430,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.MASON
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.MASON
     ),
     USE_FISHING_ROD(
         440, 440, 440,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.FISHING_ROD
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.FISHING_ROD
     ),
     EAT_PORKCHOP(
         450, 450, 450,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.PORKCHOP
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.PORKCHOP
     ),
     TRADE_WITH_CARTOGRAPHER(
         460, 460, 460,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.CARTOGRAPHER
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.CARTOGRAPHER
     ),
     USE_DIAMOND_TOOLS(
         470, 470, 470,
-        AbilityUnlockedToastType.TOOL, AbilitiesTreeBranchType.UPGRADE, ToolMaterial.DIAMOND
+        AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.DIAMOND
     ),
     USE_CAULDRON(
         480, 480, 480,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.CAULDRON
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CAULDRON
     ),
     EAT_BAKED_POTATO(
         490, 490, 490,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.BAKED_POTATO
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BAKED_POTATO
     ),
     OPEN_SMOKER(
         500, 500, 500,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.SMOKER
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.SMOKER
     ),
     EQUIP_TURTLE_HELMET(
         510, 510, 510,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, Items.TURTLE_HELMET
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, Items.TURTLE_HELMET
     ),
     USE_BRUSH(
         520, 520, 520,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.BRUSH
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.BRUSH
     ),
     EQUIP_DIAMOND_ARMOR(
         530, 530, 530,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, ArmorMaterials.DIAMOND
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.DIAMOND
     ),
     UNLOCK_VAULT(
         540, 540, 540,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.VAULT
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.VAULT
     ),
     OPEN_BLAST_FURNACE(
         550, 550, 550,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.BLAST_FURNACE
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.BLAST_FURNACE
     ),
     TRADE_WITH_LEATHERWORKER(
         560, 560, 560,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.LEATHERWORKER
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.LEATHERWORKER
     ),
     USE_SPYGLASS(
         570, 570, 570,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.SPYGLASS
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.SPYGLASS
     ),
     OPEN_BEACON(
         580, 580, 580,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.BEACON
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.BEACON
     ),
     THROW_WIND_CHARGE(
         590, 590, 590,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.WIND_CHARGE
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.WIND_CHARGE
     ),
     ENTER_END(
         600, 600, 600,
-        AbilityUnlockedToastType.PORTAL, AbilitiesTreeBranchType.UPGRADE, EndPortalBlock.class
+        AbilityUnlockedToastType.PORTAL, AbilitiesTreeCategoryType.UPGRADE, EndPortalBlock.class
     ),
     OPEN_CARTOGRAPHY_TABLE(
         610, 610, 610,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.CARTOGRAPHY_TABLE
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CARTOGRAPHY_TABLE
     ),
     EAT_COOKED_SALMON(
         620, 620, 620,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COOKED_SALMON
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_SALMON
     ),
     EQUIP_ELYTRA(
         630, 630, 630,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, Items.ELYTRA
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, Items.ELYTRA
     ),
     TRADE_WITH_SHEPHERD(
         640, 640, 640,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.SHEPHERD
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.SHEPHERD
     ),
     TRADE_WITH_BUTCHER(
         650, 650, 650,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.BUTCHER
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.BUTCHER
     ),
     OPEN_ENDER_CHEST(
         660, 660, 660,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.ENDER_CHEST
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ENDER_CHEST
     ),
     ATTACK_WITH_MACE(
         670, 670, 670,
-        AbilityUnlockedToastType.WEAPON, AbilitiesTreeBranchType.UPGRADE, Items.MACE
+        AbilityUnlockedToastType.WEAPON, AbilitiesTreeCategoryType.UPGRADE, Items.MACE
     ),
     USE_ENDER_EYE(
         680, 680, 680,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.ENDER_EYE
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.ENDER_EYE
     ),
     TELEPORT_OUTER_ISLANDS(
         690, 690, 690,
-        AbilityUnlockedToastType.PORTAL, AbilitiesTreeBranchType.UPGRADE, EndGatewayBlock.class
+        AbilityUnlockedToastType.PORTAL, AbilitiesTreeCategoryType.UPGRADE, EndGatewayBlock.class
     ),
     USE_NETHERITE_TOOLS(
         700, 700, 700,
-        AbilityUnlockedToastType.TOOL, AbilitiesTreeBranchType.UPGRADE, ToolMaterial.NETHERITE
+        AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.NETHERITE
     ),
     EAT_COOKED_COD(
         710, 710, 710,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COOKED_COD
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_COD
     ),
     TRADE_WITH_FARMER(
         720, 720, 720,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.FARMER
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.FARMER
     ),
     GLIDE_WITH_FIREWORKS(
         730, 730, 730,
-        AbilityUnlockedToastType.ACTION, AbilitiesTreeBranchType.ACTIONS, Items.FIREWORK_ROCKET
+        AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.FIREWORK_ROCKET
     ),
     TRADE_WITH_CLERIC(
         740, 740, 740,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.CLERIC
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.CLERIC
     ),
     EQUIP_NETHERITE_ARMOR(
         750, 750, 750,
-        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeBranchType.UPGRADE, ArmorMaterials.NETHERITE
+        AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.NETHERITE
     ),
     OPEN_BREWING_STAND(
         760, 760, 760,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.BREWING_STAND
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.BREWING_STAND
     ),
     EAT_COOKED_RABBIT(
         770, 770, 770,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COOKED_RABBIT
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_RABBIT
     ),
     PLACE_END_CRYSTAL(
         780, 780, 780,
-        AbilityUnlockedToastType.ITEM, AbilitiesTreeBranchType.ACTIONS, Items.END_CRYSTAL
+        AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.END_CRYSTAL
     ),
     TRADE_WITH_FISHERMAN(
         790, 790, 790,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.FISHERMAN
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.FISHERMAN
     ),
     OPEN_SMITHING_TABLE(
         800, 800, 800,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.SMITHING_TABLE
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.SMITHING_TABLE
     ),
     EAT_COOKED_CHICKEN(
         810, 810, 810,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COOKED_CHICKEN
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_CHICKEN
     ),
     EAT_CHORUS_FRUIT(
         820, 820, 820,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.CHORUS_FRUIT
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.CHORUS_FRUIT
     ),
     TRADE_WITH_FLETCHER(
         830, 830, 830,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.FLETCHER
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.FLETCHER
     ),
     EAT_COOKED_MUTTON(
         840, 840, 840,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COOKED_MUTTON
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_MUTTON
     ),
     TRADE_WITH_ARMORER(
         850, 850, 850,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.ARMORER
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.ARMORER
     ),
     EAT_COOKED_PORKCHOP(
         860, 860, 860,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COOKED_PORKCHOP
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_PORKCHOP
     ),
     EAT_BREAD(
         870, 870, 870,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.BREAD
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BREAD
     ),
     TRADE_WITH_WEAPONSMITH(
         880, 880, 880,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.WEAPONSMITH
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.WEAPONSMITH
     ),
     EAT_COOKED_BEEF(
         890, 890, 890,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.COOKED_BEEF
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_BEEF
     ),
     OPEN_LOOM(
         900, 900, 900,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.LOOM
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.LOOM
     ),
     USE_CAMPFIRE(
         910, 910, 910,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.CAMPFIRE
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CAMPFIRE
     ),
     OPEN_SHULKER_BOX(
         920, 920, 920,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.LIGHT_GRAY_SHULKER_BOX
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.LIGHT_GRAY_SHULKER_BOX
     ),
     EAT_GOLDEN_CARROT(
         930, 930, 930,
-        AbilityUnlockedToastType.FOOD, AbilitiesTreeBranchType.FOOD, FoodComponents.GOLDEN_CARROT
+        AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.GOLDEN_CARROT
     ),
     TRADE_WITH_TOOLSMITH(
         940, 940, 940,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.TOOLSMITH
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.TOOLSMITH
     ),
     TRADE_WITH_LIBRARIAN(
         950, 950, 950,
-        AbilityUnlockedToastType.TRADING, AbilitiesTreeBranchType.TRADING, VillagerProfession.LIBRARIAN
+        AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.LIBRARIAN
     ),
     OPEN_ENCHANTING_TABLE(
         960, 960, 960,
-        AbilityUnlockedToastType.BLOCK, AbilitiesTreeBranchType.BLOCKS, Blocks.ENCHANTING_TABLE
+        AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ENCHANTING_TABLE
     );
 
     private final int easyCount, normalCount, hardCount;
-    private final AbilitiesTreeBranchType branchType;
+    private final AbilitiesTreeCategoryType category;
     private final AbilityUnlockedToastType unlockToastType;
     private final Item item;
     private final Block block;
@@ -560,78 +560,78 @@ public enum AbilityType {
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
-        AbilityUnlockedToastType unlockToastType, AbilitiesTreeBranchType branchType, Item item
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Item item
     ) {
         this(
             easyCount, normalCount, hardCount,
-            unlockToastType, branchType, item, null, null, null, null, null, null
+            unlockToastType, category, item, null, null, null, null, null, null
         );
     }
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
-        AbilityUnlockedToastType unlockToastType, AbilitiesTreeBranchType branchType, Block block
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Block block
     ) {
         this(
             easyCount, normalCount, hardCount,
-            unlockToastType, branchType, null, null, block, null, null, null, null
+            unlockToastType, category, null, null, block, null, null, null, null
         );
     }
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
-        AbilityUnlockedToastType unlockToastType, AbilitiesTreeBranchType branchType, FoodComponent food
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, FoodComponent food
     ) {
         this(
             easyCount, normalCount, hardCount,
-            unlockToastType, branchType, null, food, null, null, null, null, null
+            unlockToastType, category, null, food, null, null, null, null, null
         );
     }
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
-        AbilityUnlockedToastType unlockToastType, AbilitiesTreeBranchType branchType, ToolMaterial toolMaterial
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, ToolMaterial toolMaterial
     ) {
         this(
             easyCount, normalCount, hardCount,
-            unlockToastType, branchType, null, null, null, toolMaterial, null, null, null
+            unlockToastType, category, null, null, null, toolMaterial, null, null, null
         );
     }
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
-        AbilityUnlockedToastType unlockToastType, AbilitiesTreeBranchType branchType, ArmorMaterial armorMaterial
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, ArmorMaterial armorMaterial
     ) {
         this(
             easyCount, normalCount, hardCount,
-            unlockToastType, branchType, null, null, null, null, armorMaterial, null, null
+            unlockToastType, category, null, null, null, null, armorMaterial, null, null
         );
     }
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
-        AbilityUnlockedToastType unlockToastType, AbilitiesTreeBranchType branchType, Class<? extends Portal> portal
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Class<? extends Portal> portal
     ) {
         this(
             easyCount, normalCount, hardCount,
-            unlockToastType, branchType, null, null, null, null, null, portal, null
+            unlockToastType, category, null, null, null, null, null, portal, null
         );
     }
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
-        AbilityUnlockedToastType unlockToastType, AbilitiesTreeBranchType branchType, VillagerProfession villager
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, VillagerProfession villager
     ) {
         this(
             easyCount, normalCount, hardCount,
-            unlockToastType, branchType, null, null, null, null, null, null, villager
+            unlockToastType, category, null, null, null, null, null, null, villager
         );
     }
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         AbilityUnlockedToastType unlockToastType,
-        AbilitiesTreeBranchType branchType,
+        AbilitiesTreeCategoryType category,
         Item item,
         FoodComponent food,
         Block block,
@@ -643,7 +643,7 @@ public enum AbilityType {
         this.easyCount = easyCount;
         this.normalCount = normalCount;
         this.hardCount = hardCount;
-        this.branchType = branchType;
+        this.category = category;
         this.unlockToastType = unlockToastType;
         this.item = item;
         this.food = food;
@@ -662,8 +662,8 @@ public enum AbilityType {
         };
     }
 
-    public AbilitiesTreeBranchType getBranchType() {
-        return branchType;
+    public AbilitiesTreeCategoryType getCategory() {
+        return category;
     }
 
     public AbilityUnlockedToastType getUnlockToastType() {
