@@ -9,13 +9,13 @@ public enum AbilitiesBranchType {
     FOOD(4),
     TRADING(2);
 
-    private final int sublistCount;
+    private final int rowsCount;
 
-    AbilitiesBranchType(int sublistCount) {
-        this.sublistCount = sublistCount;
+    AbilitiesBranchType(int rowsCount) {
+        this.rowsCount = rowsCount;
     }
 
-    public int getSublistCount() {
-        return sublistCount;
+    public int getRowsCount() {
+        return rowsCount;
     }
 }

@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.mixin.client;
 
+import com.diskree.achievetodo.DifficultyType;
 import com.diskree.achievetodo.injection.WorldCreatorImpl;
 import net.minecraft.client.gui.screen.world.WorldCreator;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,6 +8,9 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(WorldCreator.class)
 public class WorldCreatorMixin implements WorldCreatorImpl {
+
+    @Unique
+    private String configName = DifficultyType.NORMAL.getLowerCaseName();
 
     @Unique
     private boolean isItemRewardsEnabled;
@@ -28,6 +32,11 @@ public class WorldCreatorMixin implements WorldCreatorImpl {
 
     @Unique
     private boolean isCooperativeModeEnabled = true;
+
+    @Override
+    public String achievetodo$getConfigName() {
+        return configName;
+    }
 
     @Override
     public boolean achievetodo$isItemRewardsEnabled() {
@@ -62,6 +71,11 @@ public class WorldCreatorMixin implements WorldCreatorImpl {
     @Override
     public boolean achievetodo$isCooperativeModeEnabled() {
         return isCooperativeModeEnabled;
+    }
+
+    @Override
+    public void achievetodo$setConfigName(String configName) {
+        this.configName = configName;
     }
 
     @Override

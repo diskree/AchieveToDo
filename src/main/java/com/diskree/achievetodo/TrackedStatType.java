@@ -408,7 +408,7 @@ public enum TrackedStatType {
     }
 
     @Nullable
-    public static TrackedStatType findByAdvancementId(@NotNull Identifier advancementId) {
+    public static TrackedStatType findByAdvancement(@NotNull Identifier advancementId) {
         for (TrackedStatType type : TrackedStatType.values()) {
             if (advancementId.toString().equals(type.advancementId)) {
                 return type;

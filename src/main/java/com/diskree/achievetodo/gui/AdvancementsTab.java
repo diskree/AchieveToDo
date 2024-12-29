@@ -55,13 +55,17 @@ public enum AdvancementsTab {
     }
 
     public @NotNull Identifier getLockedTabId() {
-        return Identifier.of(BuildConfig.MOD_ID + "_locked_tab", name().toLowerCase() + "/root");
+        return Identifier.of(BuildConfig.MOD_ID + "_locked_tab", getLowerCaseName() + "/root");
     }
 
     public @NotNull Text getLockedTabTooltipText() {
-        return Text.translatable("achievetodo.locked_tab_tooltip." + name().toLowerCase())
+        return Text.translatable("achievetodo.locked_tab_tooltip." + getLowerCaseName())
             .formatted(Formatting.ITALIC)
             .formatted(Formatting.GRAY);
+    }
+
+    public @NotNull String getLowerCaseName() {
+        return name().toLowerCase();
     }
 
     public static @Nullable AdvancementsTab findByAdvancement(@NotNull PlacedAdvancement advancement) {

@@ -1,5 +1,6 @@
 package com.diskree.achievetodo;
 
+import com.diskree.achievetodo.networking.SyncAbilitiesConfigurationPayload;
 import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
 import com.diskree.achievetodo.networking.SyncScorePayload;
 import com.diskree.achievetodo.networking.SyncStatPayload;
@@ -26,12 +27,17 @@ import java.util.Map;
 
 public class AchieveToDoClient implements ClientModInitializer {
 
+    private static Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
     private static int obtainedAdvancementsCount = -1;
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
     private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
 
+    public static int getRequiredAdvancementsCount(AbilityType ability) {
+        return abilitiesConfiguration.getOrDefault(ability, 0);
+    }
+
     public static boolean isNotReady() {
-        return obtainedAdvancementsCount == -1;
+        return abilitiesConfiguration.isEmpty() || obtainedAdvancementsCount == -1;
     }
 
     public static int getObtainedAdvancementsCount() {
@@ -93,6 +99,9 @@ public class AchieveToDoClient implements ClientModInitializer {
     public void onInitializeClient() {
         registerInternalDataPacks();
 
+        ClientPlayNetworking.registerGlobalReceiver(SyncAbilitiesConfigurationPayload.ID, (payload, context) ->
+            context.client().execute(() -> abilitiesConfiguration = payload.abilitiesConfiguration())
+        );
         ClientPlayNetworking.registerGlobalReceiver(SyncAdvancementsCountPayload.ID, (payload, context) ->
             context.client().execute(() -> obtainedAdvancementsCount = payload.count())
         );

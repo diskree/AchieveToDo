@@ -69,11 +69,11 @@ public abstract class GameRendererMixin {
             blackOverlayAlpha = 1.0f;
             drawBlackOverlay(stack);
         } else if (blackOverlayAlpha > 0) {
-            blackOverlayAlpha -= 0.02f * tickDelta;
-            blackOverlayAlpha = Math.max(blackOverlayAlpha, 0.0f);
-            drawBlackOverlay(stack);
-            if (blackOverlayAlpha == 0.0f) {
+            blackOverlayAlpha = Math.max(blackOverlayAlpha - 0.02f * tickDelta, 0);
+            if (blackOverlayAlpha == 0) {
                 updateWorldIcon();
+            } else {
+                drawBlackOverlay(stack);
             }
         }
     }
@@ -87,7 +87,7 @@ public abstract class GameRendererMixin {
         ),
         cancellable = true
     )
-    private void cancelIconUpdateIfVisionLocked(CallbackInfo ci) {
+    private void scheduleWorldIconUpdateUntilVisionAbilityUnlocked(CallbackInfo ci) {
         if (blackOverlayAlpha != 0) {
             ci.cancel();
         }

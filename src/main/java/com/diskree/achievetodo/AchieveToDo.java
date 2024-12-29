@@ -1,10 +1,8 @@
 package com.diskree.achievetodo;
 
 import com.diskree.achievetodo.datagen.AbilityAdvancementsGenerator;
-import com.diskree.achievetodo.networking.DemystifyAbilityPayload;
-import com.diskree.achievetodo.networking.SyncAdvancementsCountPayload;
-import com.diskree.achievetodo.networking.SyncScorePayload;
-import com.diskree.achievetodo.networking.SyncStatPayload;
+import com.diskree.achievetodo.injection.LevelInfoImpl;
+import com.diskree.achievetodo.networking.*;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -22,24 +20,27 @@ import net.minecraft.stat.Stat;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AchieveToDo implements ModInitializer {
 
     public static Logger logger = LoggerFactory.getLogger(BuildConfig.MOD_NAME);
 
-    public static AdvancementsMode currentAdvancementsMode;
-    public static ScoreboardObjective currentScoreboardObjective;
-    public static ScoreboardDisplaySlot currentScoreboardDisplaySlot;
-
+    private static Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
     private static final Map<UUID, Integer> advancementsCounts = new Object2IntOpenHashMap<>();
     private static final EnumMap<TrackedScoreType, Map<UUID, Integer>> trackedScores =
         new EnumMap<>(TrackedScoreType.class);
     private static final EnumMap<TrackedStatType, Map<UUID, Integer>> trackedStats =
         new EnumMap<>(TrackedStatType.class);
+
+    public static AdvancementsMode currentAdvancementsMode;
+    public static ScoreboardObjective currentScoreboardObjective;
+    public static ScoreboardDisplaySlot currentScoreboardDisplaySlot;
 
     public static void prepareScoreboard(ServerScoreboard scoreboard) {
         AdvancementsMode oldAdvancementsMode = currentAdvancementsMode;
@@ -90,9 +91,8 @@ public class AchieveToDo implements ModInitializer {
         advancementsCounts.put(playerUuid, count);
         if (oldCount != 0) {
             for (AbilityType ability : AbilityType.values()) {
-                if (count >= ability.getRequiredAdvancementsCount() &&
-                    oldCount < ability.getRequiredAdvancementsCount()
-                ) {
+                int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
+                if (count >= requiredAdvancementsCount && oldCount < requiredAdvancementsCount) {
                     unlockAbility(player, ability);
                 }
             }
@@ -140,7 +140,7 @@ public class AchieveToDo implements ModInitializer {
         if (ability == null || player.isCreative() || player.isSpectator()) {
             return false;
         }
-        if (player.getWorld().isClient && AchieveToDoClient.isNotReady()) {
+        if (AchieveToDoClient.isNotReady()) {
             if (ability != AbilityType.VISION) {
                 player.sendMessage(
                     Text.translatable("achievetodo.error.not_ready_yet")
@@ -150,13 +150,17 @@ public class AchieveToDo implements ModInitializer {
             }
             return true;
         }
-        if (getObtainedAdvancementsCount(player) >= ability.getRequiredAdvancementsCount()) {
+        int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
+        if (getObtainedAdvancementsCount(player) >= requiredAdvancementsCount) {
             return false;
         }
         if (checkOnly) {
             return true;
         }
-        player.sendMessage(ability.getLockedMessage(getObtainedAdvancementsCount(player)), true);
+        player.sendMessage(
+            ability.getLockedMessage(requiredAdvancementsCount - getObtainedAdvancementsCount(player)),
+            true
+        );
         if (player.getWorld().isClient) {
             ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
         } else if (player instanceof ServerPlayerEntity serverPlayer) {
@@ -165,23 +169,81 @@ public class AchieveToDo implements ModInitializer {
         return true;
     }
 
+    public static @Nullable List<List<AbilityType>> buildAbilitiesTree() {
+        if (abilitiesConfiguration.isEmpty()) {
+            return null;
+        }
+        Map<AbilitiesBranchType, List<AbilityType>> abilitiesByBranches = Arrays.stream(AbilityType.values())
+            .collect(Collectors.groupingBy(AbilityType::getBranchType));
+        List<List<AbilityType>> tree = new ArrayList<>();
+        for (AbilitiesBranchType category : AbilitiesBranchType.values()) {
+            List<AbilityType> abilities = abilitiesByBranches.getOrDefault(category, Collections.emptyList()).stream()
+                .sorted(Comparator.comparingInt((AbilityType ability) -> {
+                        int requiredAdvancementsCount = abilitiesConfiguration.getOrDefault(ability, 0);
+                        if (requiredAdvancementsCount == 0) {
+                            return 0;
+                        }
+                        if (requiredAdvancementsCount > 0) {
+                            return 1;
+                        }
+                        return 2;
+                    })
+                    .thenComparingInt(abilitiesConfiguration::get)
+                    .thenComparing(Enum::ordinal))
+                .toList();
+            if (category == AbilitiesBranchType.MAIN) {
+                tree.add(abilities);
+            } else {
+                int rowsCount = category.getRowsCount();
+                if (abilities.size() % rowsCount != 0) {
+                    throw new IllegalStateException("Abilities in category " + category +
+                        " cannot be evenly distributed across " + rowsCount + " rows."
+                    );
+                }
+                int rowSize = abilities.size() / rowsCount;
+                List<List<AbilityType>> branches = new ArrayList<>(rowsCount);
+                for (int i = 0; i < rowsCount; i++) {
+                    branches.add(new ArrayList<>(rowSize));
+                }
+                for (int i = 0; i < abilities.size(); i++) {
+                    int branchIndex = i / rowSize;
+                    branches.get(branchIndex).add(abilities.get(i));
+                }
+                int half = rowsCount / 2;
+                tree.addAll(0, branches.subList(0, half));
+                tree.addAll(branches.subList(half, rowsCount));
+            }
+        }
+        System.out.println(tree);
+        return tree;
+    }
+
     @Override
     public void onInitialize() {
         PayloadTypeRegistry.playC2S().register(DemystifyAbilityPayload.ID, DemystifyAbilityPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
             context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
         );
+        PayloadTypeRegistry.playS2C().register(
+            SyncAbilitiesConfigurationPayload.ID, SyncAbilitiesConfigurationPayload.CODEC
+        );
         PayloadTypeRegistry.playS2C().register(SyncAdvancementsCountPayload.ID, SyncAdvancementsCountPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            if (server.getSaveProperties().getLevelInfo() instanceof LevelInfoImpl levelInfoImpl) {
+                abilitiesConfiguration = levelInfoImpl.achievetodo$getAbilitiesConfiguration();
+            }
             advancementsCounts.clear();
+            trackedScores.clear();
+            trackedStats.clear();
             prepareScoreboard(server.getScoreboard());
         });
         ServerPlayConnectionEvents.JOIN.register(
             (handler, sender, server) -> {
                 ServerPlayerEntity player = handler.player;
+                ServerPlayNetworking.send(player, new SyncAbilitiesConfigurationPayload(abilitiesConfiguration));
                 updateObtainedAdvancementsCount(server.getScoreboard(), player);
                 ScoreHolder scoreHolder = ScoreHolder.fromName(player.getNameForScoreboard());
                 Scoreboard scoreboard = player.getScoreboard();

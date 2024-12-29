@@ -21,6 +21,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${minMinecraftVersion}+build.${mappingsBuild}:v2"
     modImplementation "net.fabricmc:fabric-loader:${minLoaderVersion}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${apiVersion}+${minMinecraftVersion}"
+    implementation "com.moandjiezana.toml:toml4j:${toml_version}"
 }
 
 processResources {

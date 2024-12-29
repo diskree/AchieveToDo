@@ -6,6 +6,8 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public interface WorldCreatorImpl {
 
+    String achievetodo$getConfigName();
+
     boolean achievetodo$isItemRewardsEnabled();
 
     boolean achievetodo$isExperienceRewardsEnabled();
@@ -19,6 +21,8 @@ public interface WorldCreatorImpl {
     boolean achievetodo$isNullscapeEnabled();
 
     boolean achievetodo$isCooperativeModeEnabled();
+
+    void achievetodo$setConfigName(String configName);
 
     void achievetodo$setItemRewardsEnabled(boolean isItemRewardsEnabled);
 

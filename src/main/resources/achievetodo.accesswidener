@@ -4,10 +4,13 @@ accessible class net/minecraft/screen/slot/ArmorSlot
 accessible class net/minecraft/client/gui/screen/world/WorldScreenOptionGrid
 accessible class net/minecraft/client/gui/screen/advancement/AdvancementTabType
 accessible class net/minecraft/advancement/AdvancementDisplays$Status
+extendable class net/minecraft/world/level/LevelInfo
 
 accessible method net/minecraft/client/gui/screen/world/CreateWorldScreen createLevel ()V
+accessible method net/minecraft/server/dedicated/AbstractPropertiesHandler getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
 accessible field net/minecraft/scoreboard/ServerScoreboard server Lnet/minecraft/server/MinecraftServer;
 accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;
 accessible field net/minecraft/client/gui/widget/TabNavigationWidget tabManager Lnet/minecraft/client/gui/tab/TabManager;
 accessible field net/minecraft/client/tutorial/TutorialManager currentHandler Lnet/minecraft/client/tutorial/TutorialStepHandler;
+accessible field net/minecraft/advancement/PlacedAdvancement children Ljava/util/Set;

@@ -13,8 +13,8 @@
   "achievetodo.world_creation_tab.generation.nether.tooltip": "Amplified Nether — мечта любого путешественника по Незеру: удвоенная высота мира и «усиленный» ландшафт. Разве нужно что-то ещё?",
   "achievetodo.world_creation_tab.generation.end": "Энд",
   "achievetodo.world_creation_tab.generation.end.tooltip": "Nullscape — преображает скучный стандартный Энд в инопланетное измерение с невероятно сюрреалистичным рельефом, добавляя несколько новых биомов и при этом сохраняя пустынную атмосферу.",
-  "achievetodo.world_creation_tab.lan.cooperative_mode": "Кооперативный режим",
-  "achievetodo.world_creation_tab.lan.cooperative_mode.tooltip": "Если вы играете по локальной сети, можно включить коллективный режим достижений. Тогда любое достижение, полученное одним игроком, автоматически засчитывается всем остальным. Если же вы хотите соревноваться, выключите эту опцию — и достижения будут у каждого свои.",
+  "achievetodo.world_creation_tab.cooperative_mode": "Кооперативный режим",
+  "achievetodo.world_creation_tab.cooperative_mode.tooltip": "Если вы играете по локальной сети, можно включить коллективный режим достижений. Тогда любое достижение, полученное одним игроком, автоматически засчитывается всем остальным. Если же вы хотите соревноваться, выключите эту опцию — и достижения будут у каждого свои.",
 
   "achievetodo.downloader.download": "Загрузить",
   "achievetodo.downloader.download.tooltip": "Файл будет загружен через ваш браузер.",

@@ -137,8 +137,8 @@ public enum ExternalPack {
         return inGameDownloadSupported;
     }
 
-    public String getFileName() {
-        return name().toLowerCase() + ".zip";
+    public @NotNull String getFileName() {
+        return getLowerCaseName() + ".zip";
     }
 
     public @NotNull String getDatapackName() {
@@ -146,7 +146,11 @@ public enum ExternalPack {
     }
 
     public @NotNull String getReasonKey() {
-        return "achievetodo.downloader.reason." + name().toLowerCase();
+        return "achievetodo.downloader.reason." + getLowerCaseName();
+    }
+
+    private @NotNull String getLowerCaseName() {
+        return name().toLowerCase();
     }
 
     public static ExternalPack mapFromFileName(String fileName) {

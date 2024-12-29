@@ -13,8 +13,8 @@
   "achievetodo.world_creation_tab.generation.nether.tooltip": "Amplified Nether - The nether explorer's simple dream: doubled height and amplified terrain. What more is needed?",
   "achievetodo.world_creation_tab.generation.end": "End",
   "achievetodo.world_creation_tab.generation.end.tooltip": "Nullscape - Transforms the boring Vanilla end into an alien dimension with the most surreal terrain imaginable. Topped with a couple of new biomes to add to the experience, whilst keeping the end desolate.",
-  "achievetodo.world_creation_tab.lan.cooperative_mode": "Cooperative mode",
-  "achievetodo.world_creation_tab.lan.cooperative_mode.tooltip": "When playing over LAN, you can enable a cooperative advancements mode. In this mode, any advancement earned by one player is automatically shared with everyone else. If you prefer a competitive approach, simply turn this mode off, and each player keeps their own separate advancement.",
+  "achievetodo.world_creation_tab.cooperative_mode": "Cooperative mode",
+  "achievetodo.world_creation_tab.cooperative_mode.tooltip": "When playing over LAN, you can enable a cooperative advancements mode. In this mode, any advancement earned by one player is automatically shared with everyone else. If you prefer a competitive approach, simply turn this mode off, and each player keeps their own separate advancement.",
 
   "achievetodo.downloader.download": "Download",
   "achievetodo.downloader.download.tooltip": "This file will be downloaded using your browser.",

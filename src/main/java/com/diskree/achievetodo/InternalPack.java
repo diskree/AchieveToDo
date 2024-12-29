@@ -19,6 +19,10 @@ public enum InternalPack {
     BACAP_COOPERATIVE_MODE;
 
     public @NotNull String getDatapackName() {
-        return Identifier.of(BuildConfig.MOD_ID, name().toLowerCase()).toString();
+        return Identifier.of(BuildConfig.MOD_ID, getLowerCaseName()).toString();
+    }
+
+    private @NotNull String getLowerCaseName() {
+        return name().toLowerCase();
     }
 }

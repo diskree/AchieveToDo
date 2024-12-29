@@ -32,13 +32,13 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
 
     @Override
     public void achievetodo$setAdvancementId(Identifier advancementId) {
-        trackedScoreType = TrackedScoreType.findByAdvancementId(advancementId);
+        trackedScoreType = TrackedScoreType.findByAdvancement(advancementId);
         if (trackedScoreType == null) {
-            trackedNearbyEntitiesType = TrackedNearbyEntitiesType.findByAdvancementId(advancementId);
+            trackedNearbyEntitiesType = TrackedNearbyEntitiesType.findByAdvancement(advancementId);
             if (trackedNearbyEntitiesType == null) {
-                trackedStatType = TrackedStatType.findByAdvancementId(advancementId);
+                trackedStatType = TrackedStatType.findByAdvancement(advancementId);
                 if (trackedStatType == null) {
-                    ability = AbilityType.findByAdvancementId(advancementId);
+                    ability = AbilityType.findByAdvancement(advancementId);
                 }
             }
         }
@@ -73,7 +73,10 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
             }
         } else if (ability != null) {
             cir.setReturnValue(
-                Math.min(AchieveToDoClient.getObtainedAdvancementsCount(), ability.getRequiredAdvancementsCount())
+                Math.min(
+                    AchieveToDoClient.getObtainedAdvancementsCount(),
+                    AchieveToDoClient.getRequiredAdvancementsCount(ability)
+                )
             );
         }
     }
@@ -102,7 +105,7 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
             return trackedStatType.getFinalValue();
         }
         if (ability != null) {
-            return ability.getRequiredAdvancementsCount();
+            return AchieveToDoClient.getRequiredAdvancementsCount(ability);
         }
         return original.call(requirements);
     }

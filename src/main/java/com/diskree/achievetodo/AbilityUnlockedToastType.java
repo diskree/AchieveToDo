@@ -16,11 +16,11 @@ public enum AbilityUnlockedToastType {
     PORTAL;
 
     public @NotNull Text getToastTitle() {
-        return Text.translatable("achievetodo.ability_unlocked_toast." + getName())
+        return Text.translatable("achievetodo.ability_unlocked_toast." + getLowerCaseName())
             .append("!");
     }
 
-    public @NotNull String getName() {
+    private @NotNull String getLowerCaseName() {
         return name().toLowerCase();
     }
 }

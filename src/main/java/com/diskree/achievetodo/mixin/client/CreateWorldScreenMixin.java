@@ -2,10 +2,12 @@ package com.diskree.achievetodo.mixin.client;
 
 import com.diskree.achievetodo.ExternalPack;
 import com.diskree.achievetodo.InternalPack;
-import com.diskree.achievetodo.gui.CreateWorldTab;
 import com.diskree.achievetodo.gui.ExternalPackDownloader;
+import com.diskree.achievetodo.gui.WorldCreationTab;
 import com.diskree.achievetodo.injection.CreateWorldScreenImpl;
+import com.diskree.achievetodo.injection.LevelInfoImpl;
 import com.diskree.achievetodo.injection.WorldCreatorImpl;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.MinecraftClient;
@@ -50,7 +52,7 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
     private boolean isWaitingDatapack;
 
     @Unique
-    private CreateWorldTab createWorldTab;
+    private WorldCreationTab worldCreationTab;
 
     protected CreateWorldScreenMixin(Text title) {
         super(title);
@@ -59,8 +61,11 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderBackground(context, mouseX, mouseY, delta);
-        if (createWorldTab != null && tabNavigation != null && tabNavigation.tabManager.getCurrentTab() == createWorldTab) {
-            createWorldTab.render(context);
+        if (worldCreationTab != null &&
+            tabNavigation != null &&
+            tabNavigation.tabManager.getCurrentTab() == worldCreationTab
+        ) {
+            worldCreationTab.render(context);
         }
     }
 
@@ -116,7 +121,7 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
         if (originalTabs.length >= 0) {
             System.arraycopy(originalTabs, 0, newTabs, 0, originalTabs.length);
         }
-        newTabs[originalTabs.length] = createWorldTab = new CreateWorldTab(createWorldScreen);
+        newTabs[originalTabs.length] = worldCreationTab = new WorldCreationTab(createWorldScreen);
         args.set(0, newTabs);
     }
 
@@ -141,6 +146,12 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
                 if (enabledPacks != null) {
                     WorldCreator worldCreator = createWorldScreen.getWorldCreator();
                     if (worldCreator instanceof WorldCreatorImpl worldCreatorImpl) {
+                        if (levelInfo instanceof LevelInfoImpl levelInfoImpl) {
+                            worldCreatorImpl.achievetodo$setConfigName(
+                                levelInfoImpl.achievetodo$getConfigName()
+                            );
+                        }
+
                         worldCreatorImpl.achievetodo$setTerralithEnabled(
                             enabledPacks.contains(ExternalPack.BACAP_TERRALITH.getDatapackName())
                         );
@@ -286,5 +297,21 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
                 ci.cancel();
             }
         }
+    }
+
+    @ModifyReturnValue(
+        method = "createLevelInfo",
+        at = @At(
+            value = "RETURN",
+            ordinal = 1
+        )
+    )
+    private LevelInfo setConfigName(LevelInfo levelInfo) {
+        if (worldCreator instanceof WorldCreatorImpl worldCreatorImpl &&
+            levelInfo instanceof LevelInfoImpl levelInfoImpl
+        ) {
+            levelInfoImpl.achievetodo$setConfigName(worldCreatorImpl.achievetodo$getConfigName());
+        }
+        return levelInfo;
     }
 }
