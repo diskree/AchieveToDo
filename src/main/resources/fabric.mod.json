@@ -15,13 +15,13 @@
 	"environment": "*",
 	"entrypoints": {
 		"fabric-datagen": [
-			"com.diskree.achievetodo.datagen.AbilitiesGenerator"
+			"com.diskree.achievetodo.ability.generation.AbilitiesGenerator"
 		],
 		"main": [
-			"com.diskree.achievetodo.AchieveToDo"
+			"com.diskree.achievetodo.AchieveToDoMod"
 		],
 		"client": [
-			"com.diskree.achievetodo.AchieveToDoClient"
+			"com.diskree.achievetodo.client.AchieveToDoClient"
 		]
 	},
 	"mixins": [

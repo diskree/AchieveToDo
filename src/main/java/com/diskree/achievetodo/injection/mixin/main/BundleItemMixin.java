@@ -1,0 +1,41 @@
+package com.diskree.achievetodo.injection.mixin.main;
+
+import com.diskree.achievetodo.ability.AbilityType;
+import com.diskree.achievetodo.AchieveToDoMod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BundleItem;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(BundleItem.class)
+public class BundleItemMixin {
+
+    @WrapOperation(
+        method = "onClicked",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/screen/slot/Slot;canTakePartial(Lnet/minecraft/entity/player/PlayerEntity;)Z",
+            ordinal = 0
+        )
+    )
+    public boolean lockBundle(
+        Slot instance,
+        PlayerEntity player,
+        @NotNull Operation<Boolean> original
+    ) {
+        if (original.call(instance, player)) {
+            if (!AchieveToDoMod.isAbilityLocked(player, AbilityType.PUT_IN_BUNDLE)) {
+                return true;
+            }
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.closeHandledScreen();
+            }
+        }
+        return false;
+    }
+}
