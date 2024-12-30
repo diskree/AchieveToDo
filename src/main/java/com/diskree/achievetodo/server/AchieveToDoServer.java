@@ -3,7 +3,7 @@ package com.diskree.achievetodo.server;
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
-import com.diskree.achievetodo.injection.extension.main.LevelInfoImpl;
+import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.SyncAbilitiesConfigurationPayload;
 import com.diskree.achievetodo.networking.s2c.SyncAdvancementsCountPayload;
@@ -174,8 +174,8 @@ public class AchieveToDoServer implements ServerModInitializer {
             context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
         );
         ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
-            if (server.getSaveProperties().getLevelInfo() instanceof LevelInfoImpl levelInfoImpl) {
-                abilitiesConfiguration = levelInfoImpl.achievetodo$getAbilitiesConfiguration();
+            if (server.getSaveProperties().getLevelInfo() instanceof LevelInfoExtension levelInfoExtension) {
+                abilitiesConfiguration = levelInfoExtension.achievetodo$getAbilitiesConfiguration(server.getSaveProperties().getGeneratorOptions().getSeed());
             }
             advancementsCounts.clear();
             trackedScores.clear();

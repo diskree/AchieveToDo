@@ -1,4 +1,14 @@
 {
+  "achievetodo.world_creation_tab.difficulty.chaos": "Chaos",
+  "achievetodo.world_creation_tab.difficulty.easy.tooltip": "In this mode, the most difficult BlazeandCaves advancements was removed. Abilities unlock quickly, and basic skills are available from the start.",
+  "achievetodo.world_creation_tab.difficulty.normal.tooltip": "You begin the game without even being able to jump. Abilities unlock gradually, do not require collecting all advancements, and the most grind-heavy ones have been removed.",
+  "achievetodo.world_creation_tab.difficulty.hard.tooltip": "This mode assumes completing the entire original BlazeandCaves. You'll need persistence and a tolerance for grinding, and you'll have to earn your first advancement blindly!",
+  "achievetodo.world_creation_tab.difficulty.chaos.tooltip": "Prepare for chaos! All abilities are shuffled, and each one requires a random number of advancements to unlock.",
+  "achievetodo.world_creation_tab.difficulty.custom.tooltip": "User-created configuration",
+
+  "achievetodo.world_creation_tab.cooperative_mode": "Cooperative mode",
+  "achievetodo.world_creation_tab.cooperative_mode.tooltip": "When playing over LAN, you can enable a cooperative advancements mode. In this mode, any advancement earned by one player is automatically shared with everyone else. If you prefer a competitive approach, simply turn this mode off, and each player keeps their own separate advancement.",
+
   "achievetodo.world_creation_tab.rewards.title": "Rewards",
   "achievetodo.world_creation_tab.rewards.items": "Items",
   "achievetodo.world_creation_tab.rewards.items.tooltip": "You will receive items for completing advancements. For example, several logs for the first felling of a tree.",
@@ -6,6 +16,7 @@
   "achievetodo.world_creation_tab.rewards.experience.tooltip": "You will receive experience for completing advancements. The most difficult advancements are especially well rewarded.",
   "achievetodo.world_creation_tab.rewards.trophy": "Trophies",
   "achievetodo.world_creation_tab.rewards.trophy.tooltip": "You will receive exclusive collectibles for completing advancements. Perfect for those who love gathering rare trophies—and who might even build their very own hall of fame!",
+
   "achievetodo.world_creation_tab.generation.title": "Custom generation",
   "achievetodo.world_creation_tab.generation.overworld": "Overworld",
   "achievetodo.world_creation_tab.generation.overworld.tooltip": "Terralith - Explore almost 100 new biomes consisting of both realism and light fantasy, using just Vanilla blocks.",
@@ -13,8 +24,6 @@
   "achievetodo.world_creation_tab.generation.nether.tooltip": "Amplified Nether - The nether explorer's simple dream: doubled height and amplified terrain. What more is needed?",
   "achievetodo.world_creation_tab.generation.end": "End",
   "achievetodo.world_creation_tab.generation.end.tooltip": "Nullscape - Transforms the boring Vanilla end into an alien dimension with the most surreal terrain imaginable. Topped with a couple of new biomes to add to the experience, whilst keeping the end desolate.",
-  "achievetodo.world_creation_tab.cooperative_mode": "Cooperative mode",
-  "achievetodo.world_creation_tab.cooperative_mode.tooltip": "When playing over LAN, you can enable a cooperative advancements mode. In this mode, any advancement earned by one player is automatically shared with everyone else. If you prefer a competitive approach, simply turn this mode off, and each player keeps their own separate advancement.",
 
   "achievetodo.downloader.download": "Download",
   "achievetodo.downloader.download.tooltip": "This file will be downloaded using your browser.",

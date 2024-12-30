@@ -4,9 +4,9 @@ import com.diskree.achievetodo.client.ExternalPack;
 import com.diskree.achievetodo.client.InternalPack;
 import com.diskree.achievetodo.client.gui.ExternalPackDownloader;
 import com.diskree.achievetodo.client.gui.WorldCreationTab;
-import com.diskree.achievetodo.injection.extension.client.CreateWorldScreenImpl;
-import com.diskree.achievetodo.injection.extension.main.LevelInfoImpl;
-import com.diskree.achievetodo.injection.extension.client.WorldCreatorImpl;
+import com.diskree.achievetodo.injection.extension.client.CreateWorldScreenExtension;
+import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
+import com.diskree.achievetodo.injection.extension.client.WorldCreatorExtension;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Mixin(value = CreateWorldScreen.class, priority = 500)
-public abstract class CreateWorldScreenMixin extends Screen implements CreateWorldScreenImpl {
+public abstract class CreateWorldScreenMixin extends Screen implements CreateWorldScreenExtension {
 
     @Unique
     private boolean isWaitingDatapack;
@@ -145,33 +145,33 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
                 List<String> enabledPacks = dataPackSettings.getEnabled();
                 if (enabledPacks != null) {
                     WorldCreator worldCreator = createWorldScreen.getWorldCreator();
-                    if (worldCreator instanceof WorldCreatorImpl worldCreatorImpl) {
-                        if (levelInfo instanceof LevelInfoImpl levelInfoImpl) {
-                            worldCreatorImpl.achievetodo$setConfigName(
-                                levelInfoImpl.achievetodo$getConfigName()
+                    if (worldCreator instanceof WorldCreatorExtension worldCreatorExtension) {
+                        if (levelInfo instanceof LevelInfoExtension levelInfoExtension) {
+                            worldCreatorExtension.achievetodo$setConfigName(
+                                levelInfoExtension.achievetodo$getConfigName()
                             );
                         }
 
-                        worldCreatorImpl.achievetodo$setTerralithEnabled(
+                        worldCreatorExtension.achievetodo$setTerralithEnabled(
                             enabledPacks.contains(ExternalPack.BACAP_TERRALITH.getDatapackName())
                         );
-                        worldCreatorImpl.achievetodo$setAmplifiedNetherEnabled(
+                        worldCreatorExtension.achievetodo$setAmplifiedNetherEnabled(
                             enabledPacks.contains(ExternalPack.BACAP_AMPLIFIED_NETHER.getDatapackName())
                         );
-                        worldCreatorImpl.achievetodo$setNullscapeEnabled(
+                        worldCreatorExtension.achievetodo$setNullscapeEnabled(
                             enabledPacks.contains(ExternalPack.BACAP_NULLSCAPE.getDatapackName())
                         );
 
-                        worldCreatorImpl.achievetodo$setItemRewardsEnabled(
+                        worldCreatorExtension.achievetodo$setItemRewardsEnabled(
                             enabledPacks.contains(InternalPack.BACAP_REWARDS_ITEM.getDatapackName())
                         );
-                        worldCreatorImpl.achievetodo$setExperienceRewardsEnabled(
+                        worldCreatorExtension.achievetodo$setExperienceRewardsEnabled(
                             enabledPacks.contains(InternalPack.BACAP_REWARDS_EXPERIENCE.getDatapackName())
                         );
-                        worldCreatorImpl.achievetodo$setTrophyRewardsEnabled(
+                        worldCreatorExtension.achievetodo$setTrophyRewardsEnabled(
                             enabledPacks.contains(InternalPack.BACAP_REWARDS_TROPHY.getDatapackName())
                         );
-                        worldCreatorImpl.achievetodo$setCooperativeModeEnabled(
+                        worldCreatorExtension.achievetodo$setCooperativeModeEnabled(
                             enabledPacks.contains(InternalPack.BACAP_COOPERATIVE_MODE.getDatapackName())
                         );
                     }
@@ -187,7 +187,7 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
     )
     private void prepareDatapacks(CallbackInfo ci) {
         CreateWorldScreen createWorldScreen = (CreateWorldScreen) (Object) this;
-        WorldCreatorImpl worldCreatorImpl = (WorldCreatorImpl) worldCreator;
+        WorldCreatorExtension worldCreatorExtension = (WorldCreatorExtension) worldCreator;
         MinecraftClient client = createWorldScreen.client;
         if (client == null) {
             ci.cancel();
@@ -195,9 +195,9 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
         }
 
         boolean isHardcoreEnabled = worldCreator.isHardcore();
-        boolean isTerralithEnabled = worldCreatorImpl.achievetodo$isTerralithEnabled();
-        boolean isAmplifiedNetherEnabled = worldCreatorImpl.achievetodo$isAmplifiedNetherEnabled();
-        boolean isNullscapeEnabled = worldCreatorImpl.achievetodo$isNullscapeEnabled();
+        boolean isTerralithEnabled = worldCreatorExtension.achievetodo$isTerralithEnabled();
+        boolean isAmplifiedNetherEnabled = worldCreatorExtension.achievetodo$isAmplifiedNetherEnabled();
+        boolean isNullscapeEnabled = worldCreatorExtension.achievetodo$isNullscapeEnabled();
 
         Path globalPacksDirectory = new File(client.runDirectory, "datapacks").toPath();
         List<ExternalPack> requiredPacks = new ArrayList<>();
@@ -278,16 +278,16 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
                     packManager.enable(ExternalPack.BACAP_NULLSCAPE.getDatapackName());
                     packManager.enable(InternalPack.BACAP_NULLSCAPE_OVERRIDE.getDatapackName());
                 }
-                if (worldCreatorImpl.achievetodo$isItemRewardsEnabled()) {
+                if (worldCreatorExtension.achievetodo$isItemRewardsEnabled()) {
                     packManager.enable(InternalPack.BACAP_REWARDS_ITEM.getDatapackName());
                 }
-                if (worldCreatorImpl.achievetodo$isExperienceRewardsEnabled()) {
+                if (worldCreatorExtension.achievetodo$isExperienceRewardsEnabled()) {
                     packManager.enable(InternalPack.BACAP_REWARDS_EXPERIENCE.getDatapackName());
                 }
-                if (worldCreatorImpl.achievetodo$isTrophyRewardsEnabled()) {
+                if (worldCreatorExtension.achievetodo$isTrophyRewardsEnabled()) {
                     packManager.enable(InternalPack.BACAP_REWARDS_TROPHY.getDatapackName());
                 }
-                if (worldCreatorImpl.achievetodo$isCooperativeModeEnabled()) {
+                if (worldCreatorExtension.achievetodo$isCooperativeModeEnabled()) {
                     packManager.enable(InternalPack.BACAP_COOPERATIVE_MODE.getDatapackName());
                 }
 
@@ -307,10 +307,10 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
         )
     )
     private LevelInfo setConfigName(LevelInfo levelInfo) {
-        if (worldCreator instanceof WorldCreatorImpl worldCreatorImpl &&
-            levelInfo instanceof LevelInfoImpl levelInfoImpl
+        if (worldCreator instanceof WorldCreatorExtension worldCreatorExtension &&
+            levelInfo instanceof LevelInfoExtension levelInfoExtension
         ) {
-            levelInfoImpl.achievetodo$setConfigName(worldCreatorImpl.achievetodo$getConfigName());
+            levelInfoExtension.achievetodo$setConfigName(worldCreatorExtension.achievetodo$getConfigName());
         }
         return levelInfo;
     }

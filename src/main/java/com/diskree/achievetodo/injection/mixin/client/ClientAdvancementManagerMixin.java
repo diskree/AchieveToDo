@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
-import com.diskree.achievetodo.injection.extension.main.AdvancementProgressImpl;
+import com.diskree.achievetodo.injection.extension.main.AdvancementProgressExtension;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -29,8 +29,8 @@ public class ClientAdvancementManagerMixin {
         @Local PlacedAdvancement placedAdvancement
     ) {
         original.call(progress, requirements);
-        if (progress instanceof AdvancementProgressImpl advancementProgress) {
-            advancementProgress.achievetodo$setAdvancementId(placedAdvancement.getAdvancementEntry().id());
+        if (progress instanceof AdvancementProgressExtension advancementProgressExtension) {
+            advancementProgressExtension.achievetodo$setAdvancementId(placedAdvancement.getAdvancementEntry().id());
         }
     }
 }

@@ -1,10 +1,10 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.DifficultyType;
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.ability.AbilityType;
+import com.diskree.achievetodo.ability.DifficultyType;
+import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.server.Constants;
-import com.diskree.achievetodo.injection.extension.main.LevelInfoImpl;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.moandjiezana.toml.Toml;
@@ -21,15 +21,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @Mixin(LevelInfo.class)
-public abstract class LevelInfoMixin implements LevelInfoImpl {
+public abstract class LevelInfoMixin implements LevelInfoExtension {
 
     @Unique
     private static final String CONFIG_VERSION_KEY = "version";
 
     @Unique
     private static final String CONFIG_ABILITIES_KEY = "abilities";
+
+    @Unique
+    private static final double CHAOS_UNLOCKED_BY_DEFAULT_CHANCE_PERCENT = 1.0;
+
+    @Unique
+    private static final double CHAOS_PERMANENTLY_LOCKED_CHANCE_PERCENT = 0.1;
 
     @Unique
     private String configName;
@@ -45,7 +52,7 @@ public abstract class LevelInfoMixin implements LevelInfoImpl {
     }
 
     @Override
-    public Map<AbilityType, Integer> achievetodo$getAbilitiesConfiguration() {
+    public Map<AbilityType, Integer> achievetodo$getAbilitiesConfiguration(long seed) {
         if (TextUtils.isEmpty(configName)) {
             throw new IllegalStateException("Cannot get the config name of the level nbt!");
         }
@@ -58,7 +65,13 @@ public abstract class LevelInfoMixin implements LevelInfoImpl {
             }
         }
         DifficultyType difficulty = DifficultyType.findByName(configName);
-        Path configFile = configDir.resolve(configName + ".toml");
+        String fileName = configName;
+        Random chaosRandom = null;
+        if (difficulty == DifficultyType.CHAOS) {
+            fileName += "_" + seed;
+            chaosRandom = new Random(seed);
+        }
+        Path configFile = configDir.resolve(fileName + Constants.FileExtension.TOML);
         Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
         Map<String, Object> abilitiesMap = null;
         if (difficulty != null) {
@@ -82,7 +95,23 @@ public abstract class LevelInfoMixin implements LevelInfoImpl {
                     .append("[" + CONFIG_ABILITIES_KEY + "]")
                     .append("\n");
                 for (AbilityType ability : AbilityType.values()) {
-                    int requiredAdvancementsCount = ability.getRequiredAdvancementsCount(difficulty);
+                    int requiredAdvancementsCount;
+                    if (difficulty == DifficultyType.CHAOS) {
+                        double unlockedByDefaultChance = ability.canBeUnlockedByDefaultInChaos() ?
+                            CHAOS_UNLOCKED_BY_DEFAULT_CHANCE_PERCENT : 0;
+                        double permanentlyLockedChance = ability.canBePermanentlyLockedInChaos() ?
+                            CHAOS_PERMANENTLY_LOCKED_CHANCE_PERCENT : 0;
+                        double roll = chaosRandom.nextDouble() * 100.0;
+                        if (roll < permanentlyLockedChance) {
+                            requiredAdvancementsCount = -1;
+                        } else if (roll < permanentlyLockedChance + unlockedByDefaultChance) {
+                            requiredAdvancementsCount = 0;
+                        } else {
+                            requiredAdvancementsCount = ability.getRequiredAdvancementsCountInChaos(chaosRandom);
+                        }
+                    } else {
+                        requiredAdvancementsCount = ability.getRequiredAdvancementsCount(difficulty);
+                    }
                     abilitiesConfiguration.put(ability, requiredAdvancementsCount);
                     configTomlContents
                         .append(ability.getLowerCaseName())
@@ -124,8 +153,8 @@ public abstract class LevelInfoMixin implements LevelInfoImpl {
         at = @At("RETURN")
     )
     private static LevelInfo readConfigName(LevelInfo levelInfo, @Local(argsOnly = true) Dynamic<?> dynamic) {
-        if (levelInfo instanceof LevelInfoImpl levelInfoImpl) {
-            levelInfoImpl.achievetodo$setConfigName(dynamic.get(Constants.CONFIG_NAME_LEVEL_NBT_KEY).asString(""));
+        if (levelInfo instanceof LevelInfoExtension levelInfoExtension) {
+            levelInfoExtension.achievetodo$setConfigName(dynamic.get(Constants.CONFIG_NAME_LEVEL_NBT_KEY).asString(""));
         }
         return levelInfo;
     }
@@ -140,8 +169,8 @@ public abstract class LevelInfoMixin implements LevelInfoImpl {
         at = @At("RETURN")
     )
     private LevelInfo keepConfigNameOnRecreate(LevelInfo levelInfo) {
-        if (levelInfo instanceof LevelInfoImpl levelInfoImpl) {
-            levelInfoImpl.achievetodo$setConfigName(configName);
+        if (levelInfo instanceof LevelInfoExtension levelInfoExtension) {
+            levelInfoExtension.achievetodo$setConfigName(configName);
         }
         return levelInfo;
     }

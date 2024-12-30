@@ -2,8 +2,8 @@ package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.injection.extension.main.MiningToolItemImpl;
-import com.diskree.achievetodo.injection.extension.main.SwordItemImpl;
+import com.diskree.achievetodo.injection.extension.main.MiningToolItemExtension;
+import com.diskree.achievetodo.injection.extension.main.SwordItemExtension;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Either;
@@ -62,13 +62,17 @@ public class PlayerEntityMixin {
             return true;
         }
         Item item = player.getMainHandStack().getItem();
-        if (item instanceof SwordItemImpl swordItem &&
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(swordItem.achievetodo$getMaterial()))
+        if (item instanceof SwordItemExtension swordItemExtension &&
+            AchieveToDoMod.isAbilityLocked(
+                player, AbilityType.findToolMaterialUsageAbility(swordItemExtension.achievetodo$getMaterial())
+            )
         ) {
             return true;
         }
-        if (item instanceof MiningToolItemImpl toolItem &&
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(toolItem.achievetodo$getMaterial()))
+        if (item instanceof MiningToolItemExtension toolItem &&
+            AchieveToDoMod.isAbilityLocked(
+                player, AbilityType.findToolMaterialUsageAbility(toolItem.achievetodo$getMaterial())
+            )
         ) {
             return true;
         }
@@ -94,12 +98,16 @@ public class PlayerEntityMixin {
             info.cancel();
         } else if (item == Items.MACE && AchieveToDoMod.isAbilityLocked(player, AbilityType.ATTACK_WITH_MACE)) {
             info.cancel();
-        } else if (item instanceof SwordItemImpl swordItem &&
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(swordItem.achievetodo$getMaterial()))
+        } else if (item instanceof SwordItemExtension swordItemExtension &&
+            AchieveToDoMod.isAbilityLocked(
+                player, AbilityType.findToolMaterialUsageAbility(swordItemExtension.achievetodo$getMaterial())
+            )
         ) {
             info.cancel();
-        } else if (item instanceof MiningToolItemImpl toolItem &&
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(toolItem.achievetodo$getMaterial()))
+        } else if (item instanceof MiningToolItemExtension miningToolItemExtension &&
+            AchieveToDoMod.isAbilityLocked(
+                player, AbilityType.findToolMaterialUsageAbility(miningToolItemExtension.achievetodo$getMaterial())
+            )
         ) {
             info.cancel();
         }

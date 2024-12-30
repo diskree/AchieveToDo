@@ -7,7 +7,8 @@ public enum DifficultyType {
 
     EASY(1),
     NORMAL(1),
-    HARD(1);
+    HARD(1),
+    CHAOS(1);
 
     private final int version;
 
@@ -31,8 +32,14 @@ public enum DifficultyType {
         return version;
     }
 
-    public @NotNull Text getName() {
-        return Text.translatable("options.difficulty." + getLowerCaseName());
+    public @NotNull Text getDisplayedText() {
+        return Text.translatable(this == CHAOS ? "achievetodo.world_creation_tab.difficulty.chaos" :
+            "options.difficulty." + getLowerCaseName()
+        );
+    }
+
+    public @NotNull Text getTooltipText() {
+        return Text.translatable("achievetodo.world_creation_tab.difficulty." + getLowerCaseName() + ".tooltip");
     }
 
     public @NotNull String getLowerCaseName() {

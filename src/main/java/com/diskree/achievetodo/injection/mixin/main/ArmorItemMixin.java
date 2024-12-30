@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.injection.extension.main.ArmorItemImpl;
+import com.diskree.achievetodo.injection.extension.main.ArmorItemExtension;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.equipment.ArmorMaterial;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ArmorItem.class)
-public class ArmorItemMixin implements ArmorItemImpl {
+public class ArmorItemMixin implements ArmorItemExtension {
 
     @Unique
     private ArmorMaterial material;

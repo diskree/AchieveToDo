@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.injection.extension.main.MiningToolItemImpl;
+import com.diskree.achievetodo.injection.extension.main.MiningToolItemExtension;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.MiningToolItem;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MiningToolItem.class)
-public class MiningToolItemMixin implements MiningToolItemImpl {
+public class MiningToolItemMixin implements MiningToolItemExtension {
 
     @Unique
     private ToolMaterial material;

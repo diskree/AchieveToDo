@@ -2,7 +2,7 @@ package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
-import com.diskree.achievetodo.injection.extension.client.MovementTutorialStepHandlerImpl;
+import com.diskree.achievetodo.injection.extension.client.MovementTutorialStepHandlerExtension;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.MinecraftClient;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MovementTutorialStepHandler.class)
-public class MovementTutorialStepHandlerMixin implements MovementTutorialStepHandlerImpl {
+public class MovementTutorialStepHandlerMixin implements MovementTutorialStepHandlerExtension {
 
     @Unique
     private static final Text OPEN_ADVANCEMENTS_TITLE =

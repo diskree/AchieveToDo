@@ -2,7 +2,7 @@ package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
-import com.diskree.achievetodo.injection.extension.main.AdvancementProgressImpl;
+import com.diskree.achievetodo.injection.extension.main.AdvancementProgressExtension;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import com.diskree.achievetodo.tracking.TrackedStatType;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AdvancementProgress.class)
-public abstract class AdvancementProgressMixin implements AdvancementProgressImpl {
+public abstract class AdvancementProgressMixin implements AdvancementProgressExtension {
 
     @Unique
     private TrackedScoreType trackedScoreType;

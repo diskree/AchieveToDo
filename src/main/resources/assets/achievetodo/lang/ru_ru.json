@@ -1,4 +1,14 @@
 {
+  "achievetodo.world_creation_tab.difficulty.chaos": "Хаос",
+  "achievetodo.world_creation_tab.difficulty.easy.tooltip": "В этом режиме удалены самые сложные достижения из BlazeandCaves. Способности открываются быстро, а базовые навыки доступны с самого начала.",
+  "achievetodo.world_creation_tab.difficulty.normal.tooltip": "Вы начинаете игру, не умея даже прыгать. Способности открываются постепенно и не требуют полного сбора всех достижений, а самые гриндовые из них были удалены.",
+  "achievetodo.world_creation_tab.difficulty.hard.tooltip": "Этот режим предполагает полное прохождение оригинального BlazeandCaves. Придётся потрудиться и привыкнуть к гринду, а первое достижение предстоит выполнить вслепую!",
+  "achievetodo.world_creation_tab.difficulty.chaos.tooltip": "Приготовьтесь к хаосу! Все способности перемешаны, и каждая из них требует случайное количество достижений для разблокировки.",
+  "achievetodo.world_creation_tab.difficulty.custom.tooltip": "Пользовательская конфигурация",
+
+  "achievetodo.world_creation_tab.cooperative_mode": "Кооперативный режим",
+  "achievetodo.world_creation_tab.cooperative_mode.tooltip": "Если вы играете по локальной сети, можно включить коллективный режим достижений. Тогда любое достижение, полученное одним игроком, автоматически засчитывается всем остальным. Если же вы хотите соревноваться, выключите эту опцию — и достижения будут у каждого свои.",
+
   "achievetodo.world_creation_tab.rewards.title": "Награды",
   "achievetodo.world_creation_tab.rewards.items": "Предметы",
   "achievetodo.world_creation_tab.rewards.items.tooltip": "За выполнение достижений вы будете получать внутриигровые предметы. Например, при первой вырубке дерева вам достанутся несколько брёвен.",
@@ -6,6 +16,7 @@
   "achievetodo.world_creation_tab.rewards.experience.tooltip": "За выполнение достижений вы будете получать опыт. Самые сложные из них приносят особенно щедрые награды.",
   "achievetodo.world_creation_tab.rewards.trophy": "Трофеи",
   "achievetodo.world_creation_tab.rewards.trophy.tooltip": "За выполнение достижений вы будете получать коллекционные предметы. Это отлично подойдёт для тех, кто обожает собирать редкие трофеи — а может, вы даже решите построить для них собственный зал славы!",
+
   "achievetodo.world_creation_tab.generation.title": "Кастомная генерация",
   "achievetodo.world_creation_tab.generation.overworld": "Обычный мир",
   "achievetodo.world_creation_tab.generation.overworld.tooltip": "Terralith — исследуйте почти сотню новых биомов, сочетающих реализм и нотку фэнтези, причём всё построено только из ванильных блоков.",
@@ -13,8 +24,6 @@
   "achievetodo.world_creation_tab.generation.nether.tooltip": "Amplified Nether — мечта любого путешественника по Незеру: удвоенная высота мира и «усиленный» ландшафт. Разве нужно что-то ещё?",
   "achievetodo.world_creation_tab.generation.end": "Энд",
   "achievetodo.world_creation_tab.generation.end.tooltip": "Nullscape — преображает скучный стандартный Энд в инопланетное измерение с невероятно сюрреалистичным рельефом, добавляя несколько новых биомов и при этом сохраняя пустынную атмосферу.",
-  "achievetodo.world_creation_tab.cooperative_mode": "Кооперативный режим",
-  "achievetodo.world_creation_tab.cooperative_mode.tooltip": "Если вы играете по локальной сети, можно включить коллективный режим достижений. Тогда любое достижение, полученное одним игроком, автоматически засчитывается всем остальным. Если же вы хотите соревноваться, выключите эту опцию — и достижения будут у каждого свои.",
 
   "achievetodo.downloader.download": "Загрузить",
   "achievetodo.downloader.download.tooltip": "Файл будет загружен через ваш браузер.",

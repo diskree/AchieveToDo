@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.injection.extension.main.SwordItemImpl;
+import com.diskree.achievetodo.injection.extension.main.SwordItemExtension;
 import net.minecraft.item.Item;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SwordItem.class)
-public class SwordItemMixin implements SwordItemImpl {
+public class SwordItemMixin implements SwordItemExtension {
 
     @Unique
     private ToolMaterial material;

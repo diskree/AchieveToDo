@@ -4,6 +4,7 @@ import com.diskree.achievetodo.client.ExternalPack;
 import com.diskree.achievetodo.client.Utils;
 import com.diskree.achievetodo.client.gui.ErrorScreen;
 import com.diskree.achievetodo.client.gui.ExternalPackDownloader;
+import com.diskree.achievetodo.server.Constants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.minecraft.client.gui.screen.world.WorldListWidget;
@@ -82,7 +83,7 @@ public abstract class WorldListWidgetMixin {
         try (Stream<Path> stream = Files.list(worldPacksDirectory)) {
             worldPackFileNames = stream
                 .filter(Files::isRegularFile)
-                .filter(path -> path.toString().endsWith(".zip"))
+                .filter(path -> path.toString().endsWith(Constants.FileExtension.ZIP))
                 .map(path -> path.getFileName().toString())
                 .toList();
         } catch (IOException e) {

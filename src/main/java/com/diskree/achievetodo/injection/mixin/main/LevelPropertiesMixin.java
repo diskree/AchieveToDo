@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.server.Constants;
-import com.diskree.achievetodo.injection.extension.main.LevelInfoImpl;
+import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.world.level.LevelInfo;
@@ -28,8 +28,8 @@ public class LevelPropertiesMixin {
         NbtCompound playerNbt,
         CallbackInfo ci
     ) {
-        if (levelInfo instanceof LevelInfoImpl levelInfoImpl) {
-            String configName = levelInfoImpl.achievetodo$getConfigName();
+        if (levelInfo instanceof LevelInfoExtension levelInfoExtension) {
+            String configName = levelInfoExtension.achievetodo$getConfigName();
             if (configName != null) {
                 levelNbt.putString(Constants.CONFIG_NAME_LEVEL_NBT_KEY, configName);
             }

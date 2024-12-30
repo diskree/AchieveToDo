@@ -2,8 +2,8 @@ package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
-import com.diskree.achievetodo.injection.extension.client.CreateWorldScreenImpl;
-import com.diskree.achievetodo.injection.extension.client.MovementTutorialStepHandlerImpl;
+import com.diskree.achievetodo.injection.extension.client.CreateWorldScreenExtension;
+import com.diskree.achievetodo.injection.extension.client.MovementTutorialStepHandlerExtension;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.MinecraftClient;
@@ -46,15 +46,17 @@ public class MinecraftClientMixin {
                     );
                 }
                 ci.cancel();
-            } else if (client.getTutorialManager().currentHandler instanceof MovementTutorialStepHandlerImpl handler) {
-                handler.achievetodo$onAdvancementsOpened();
+            } else if (client.getTutorialManager().currentHandler
+                instanceof MovementTutorialStepHandlerExtension movementTutorialStepHandlerExtension
+            ) {
+                movementTutorialStepHandlerExtension.achievetodo$onAdvancementsOpened();
             }
         } else if (screen instanceof CreateWorldScreen createWorldScreen &&
-            screen instanceof CreateWorldScreenImpl createWorldScreenImpl &&
-            createWorldScreenImpl.achievetodo$isWaitingDatapack()
+            screen instanceof CreateWorldScreenExtension createWorldScreenExtension &&
+            createWorldScreenExtension.achievetodo$isWaitingDatapack()
         ) {
             createWorldScreen.createLevel();
-            createWorldScreenImpl.achievetodo$setWaitingDatapack(false);
+            createWorldScreenExtension.achievetodo$setWaitingDatapack(false);
             ci.cancel();
         }
     }

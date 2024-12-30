@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.server.Constants;
-import com.diskree.achievetodo.injection.extension.main.LevelInfoImpl;
+import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -40,8 +40,8 @@ public class MainMixin {
         LevelInfo levelInfo = original.call(
             name, gameMode, hardcore, difficulty, allowCommands, gameRules, dataConfiguration
         );
-        if (levelInfo instanceof LevelInfoImpl levelInfoImpl) {
-            levelInfoImpl.achievetodo$setConfigName(
+        if (levelInfo instanceof LevelInfoExtension levelInfoExtension) {
+            levelInfoExtension.achievetodo$setConfigName(
                 serverPropertiesHandler.getString(Constants.CONFIG_NAME_LEVEL_NBT_KEY, "")
             );
         }

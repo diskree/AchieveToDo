@@ -1,13 +1,14 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.ability.DifficultyType;
-import com.diskree.achievetodo.injection.extension.client.WorldCreatorImpl;
+import com.diskree.achievetodo.injection.extension.client.WorldCreatorExtension;
 import net.minecraft.client.gui.screen.world.WorldCreator;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(WorldCreator.class)
-public class WorldCreatorMixin implements WorldCreatorImpl {
+public abstract class WorldCreatorMixin implements WorldCreatorExtension {
 
     @Unique
     private String configName = DifficultyType.NORMAL.getLowerCaseName();
@@ -76,6 +77,7 @@ public class WorldCreatorMixin implements WorldCreatorImpl {
     @Override
     public void achievetodo$setConfigName(String configName) {
         this.configName = configName;
+        update();
     }
 
     @Override
@@ -112,4 +114,7 @@ public class WorldCreatorMixin implements WorldCreatorImpl {
     public void achievetodo$setCooperativeModeEnabled(boolean isCooperativeModeEnabled) {
         this.isCooperativeModeEnabled = isCooperativeModeEnabled;
     }
+
+    @Shadow
+    public abstract void update();
 }

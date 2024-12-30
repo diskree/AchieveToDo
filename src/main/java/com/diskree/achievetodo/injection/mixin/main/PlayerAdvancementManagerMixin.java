@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.injection.extension.main.AdvancementProgressImpl;
+import com.diskree.achievetodo.injection.extension.main.AdvancementProgressExtension;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.PlayerAdvancementTracker;
@@ -25,8 +25,8 @@ public class PlayerAdvancementManagerMixin {
         AdvancementProgress progress,
         CallbackInfo ci
     ) {
-        if (progress instanceof AdvancementProgressImpl advancementProgress) {
-            advancementProgress.achievetodo$setAdvancementId(advancement.id());
+        if (progress instanceof AdvancementProgressExtension advancementProgressExtension) {
+            advancementProgressExtension.achievetodo$setAdvancementId(advancement.id());
         }
     }
 }

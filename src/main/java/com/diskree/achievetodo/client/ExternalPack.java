@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.client;
 
+import com.diskree.achievetodo.server.Constants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Formatting;
@@ -138,7 +139,7 @@ public enum ExternalPack {
     }
 
     public @NotNull String getFileName() {
-        return getLowerCaseName() + ".zip";
+        return getLowerCaseName() + Constants.FileExtension.ZIP;
     }
 
     public @NotNull String getDatapackName() {

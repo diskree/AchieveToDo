@@ -19,10 +19,6 @@ public enum AdvancementsMode {
         this.isTeamsMode = isTeamsMode;
     }
 
-    public String getObjectiveName() {
-        return objectiveName;
-    }
-
     public boolean isTeamsMode() {
         return isTeamsMode;
     }
