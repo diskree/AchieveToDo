@@ -6,13 +6,13 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "main.ArmorSlotMixin",
     "main.AbstractBoatEntityMixin",
     "main.AbstractCauldronBlockMixin",
     "main.AbstractFurnaceBlockMixin",
     "main.AdvancementDisplaysMixin",
     "main.AnvilBlockMixin",
     "main.ArmorItemMixin",
+    "main.ArmorSlotMixin",
     "main.AxeItemMixin",
     "main.BarrelBlockMixin",
     "main.BeaconBlockMixin",
@@ -99,6 +99,7 @@
     "client.ClientAdvancementManagerMixin",
     "client.CraftPlanksTutorialStepHandlerMixin",
     "client.CreateWorldScreenMixin",
+    "client.DeathScreenMixin",
     "client.FindTreeTutorialStepHandlerMixin",
     "client.GameRendererMixin",
     "client.MinecraftClientMixin",

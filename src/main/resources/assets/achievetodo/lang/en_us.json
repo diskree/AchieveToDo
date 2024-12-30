@@ -1,9 +1,10 @@
 {
   "achievetodo.world_creation_tab.difficulty.chaos": "Chaos",
-  "achievetodo.world_creation_tab.difficulty.easy.tooltip": "In this mode, the most difficult BlazeandCaves advancements was removed. Abilities unlock quickly, and basic skills are available from the start.",
-  "achievetodo.world_creation_tab.difficulty.normal.tooltip": "You begin the game without even being able to jump. Abilities unlock gradually, do not require collecting all advancements, and the most grind-heavy ones have been removed.",
-  "achievetodo.world_creation_tab.difficulty.hard.tooltip": "This mode assumes completing the entire original BlazeandCaves. You'll need persistence and a tolerance for grinding, and you'll have to earn your first advancement blindly!",
-  "achievetodo.world_creation_tab.difficulty.chaos.tooltip": "Prepare for chaos! All abilities are shuffled, and each one requires a random number of advancements to unlock.",
+
+  "achievetodo.world_creation_tab.difficulty.easy.tooltip": "This mode is ideal for those experiencing BlazeandCaves for the first time. Basic abilities are unlocked right from the start, and the rest become available faster than they do in Normal. While BlazeandCaves does contain plenty of challenging achievements, they aren’t required to progress through abilities—feel free to skip anything too tough!",
+  "achievetodo.world_creation_tab.difficulty.normal.tooltip": "In this mode, abilities unlock gradually, keeping you consistently engaged—you’ll often be just a bit short of the next unlock. There’s no need to collect every achievement to sense real progress, as essential skills become available long before complete completion.",
+  "achievetodo.world_creation_tab.difficulty.hard.tooltip": "In this mode, abilities are paced to cover all BlazeandCaves achievements. You’ll have to tackle even the hardest challenges if you want to unlock the full array of skills!",
+  "achievetodo.world_creation_tab.difficulty.chaos.tooltip": "In this mode, abilities are randomly shuffled based on the world seed. Some advanced skills might be yours from the very beginning, while others remain locked forever. The random generator shows no mercy, so get ready for the most absurd yet thrilling scenarios!",
   "achievetodo.world_creation_tab.difficulty.custom.tooltip": "User-created configuration",
 
   "achievetodo.world_creation_tab.cooperative_mode": "Cooperative mode",
