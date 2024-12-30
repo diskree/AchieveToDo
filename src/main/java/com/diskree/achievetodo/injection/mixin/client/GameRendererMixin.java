@@ -28,11 +28,11 @@ public abstract class GameRendererMixin {
         VertexConsumerProvider.Immediate immediate = buffers.getEntityVertexConsumers();
         Matrix4f matrix = stack.peek().getPositionMatrix();
         VertexConsumer vertexConsumer = immediate.getBuffer(RenderLayer.getGui());
-        int blackColor = (int) (blackOverlayAlpha * 255.0F) << 24;
-        vertexConsumer.vertex(matrix, -1.0F, -1.0F, -0.1F).color(blackColor);
-        vertexConsumer.vertex(matrix, 1.0F, -1.0F, -0.1F).color(blackColor);
-        vertexConsumer.vertex(matrix, 1.0F, 1.0F, -0.1F).color(blackColor);
-        vertexConsumer.vertex(matrix, -1.0F, 1.0F, -0.1F).color(blackColor);
+        int blackColor = (int) (blackOverlayAlpha * 255.0f) << 24;
+        vertexConsumer.vertex(matrix, -1.0f, -1.0f, -0.1f).color(blackColor);
+        vertexConsumer.vertex(matrix, 1.0f, -1.0f, -0.1f).color(blackColor);
+        vertexConsumer.vertex(matrix, 1.0f, 1.0f, -0.1f).color(blackColor);
+        vertexConsumer.vertex(matrix, -1.0f, 1.0f, -0.1f).color(blackColor);
         immediate.draw();
     }
 

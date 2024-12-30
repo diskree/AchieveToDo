@@ -404,7 +404,7 @@ public enum TrackedStatType {
 
     @Nullable
     public static List<TrackedStatType> findByStat(Stat<?> stat) {
-        return STATS.getOrDefault(stat, null);
+        return STATS.get(stat);
     }
 
     @Nullable

@@ -22,6 +22,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
@@ -42,7 +43,7 @@ public class AchieveToDoClient implements ClientModInitializer {
     private static List<List<AbilityType>> abilityRows;
 
     public static int getRequiredAdvancementsCount(AbilityType ability) {
-        return abilitiesConfiguration.getOrDefault(ability, 0);
+        return abilitiesConfiguration.get(ability);
     }
 
     public static boolean isNotReady() {
@@ -153,21 +154,26 @@ public class AchieveToDoClient implements ClientModInitializer {
         if (ability == null || player == null || player.isCreative() || player.isSpectator()) {
             return false;
         }
-        if (ability != AbilityType.VISION) {
-            System.out.println("isAbilityLocked check on client:" + ability.getLowerCaseName());
-        }
         if (isNotReady()) {
             return true;
         }
         int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
-        if (obtainedAdvancementsCount >= requiredAdvancementsCount) {
+        if (requiredAdvancementsCount == 0 ||
+            requiredAdvancementsCount > 0 && obtainedAdvancementsCount >= requiredAdvancementsCount
+        ) {
             return false;
         }
-        if (checkOnly) {
-            return true;
+        if (!checkOnly) {
+            Text lockedMessageText;
+            if (requiredAdvancementsCount == -1) {
+                lockedMessageText = ability.buildPermanentlyLockedMessage();
+            } else {
+                int leftAdvancementsCount = requiredAdvancementsCount - obtainedAdvancementsCount;
+                lockedMessageText = ability.buildUnlockProgressMessage(leftAdvancementsCount);
+            }
+            player.sendMessage(lockedMessageText, true);
+            ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
         }
-        player.sendMessage(ability.getLockedMessage(requiredAdvancementsCount - obtainedAdvancementsCount), true);
-        ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
         return true;
     }
 

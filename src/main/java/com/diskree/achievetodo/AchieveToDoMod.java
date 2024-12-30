@@ -25,6 +25,7 @@ public class AchieveToDoMod implements ModInitializer {
     @Override
     public void onInitialize() {
         PayloadTypeRegistry.playC2S().register(DemystifyAbilityPayload.ID, DemystifyAbilityPayload.CODEC);
+
         PayloadTypeRegistry.playS2C().register(
             SyncAbilitiesConfigurationPayload.ID, SyncAbilitiesConfigurationPayload.CODEC
         );

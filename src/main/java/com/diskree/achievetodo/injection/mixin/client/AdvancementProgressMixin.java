@@ -2,8 +2,8 @@ package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
-import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.injection.extension.main.AdvancementProgressImpl;
+import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import com.diskree.achievetodo.tracking.TrackedStatType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -56,7 +56,7 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
         at = @At("HEAD"),
         cancellable = true
     )
-    public void setCustomObtainedRequirementsCount(CallbackInfoReturnable<Integer> cir) {
+    public void overrideObtainedRequirementsCount(CallbackInfoReturnable<Integer> cir) {
         if (trackedScoreType != null) {
             if (isDone()) {
                 cir.setReturnValue(trackedScoreType.getFinalValue());
@@ -95,7 +95,7 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
             target = "Lnet/minecraft/advancement/AdvancementRequirements;getLength()I"
         )
     )
-    public int setCustomRequiredAdvancementsCount(
+    public int overrideRequiredAdvancementsCount(
         AdvancementRequirements requirements,
         Operation<Integer> original
     ) {
@@ -119,12 +119,18 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
         at = @At("HEAD"),
         cancellable = true
     )
-    public void setTrackedScorePercentage(CallbackInfoReturnable<Float> cir) {
-        if (trackedScoreType != null && trackedScoreType.isPercentage()) {
-            cir.setReturnValue(isDone() ? 100f : AchieveToDoClient.getTrackedScore(trackedScoreType) / 100f);
-        }
-        if (trackedStatType != null && trackedStatType.isPercentage()) {
-            cir.setReturnValue(isDone() ? 100f : AchieveToDoClient.getTrackedStat(trackedStatType) / 100f);
+    public void overrideProgressPercentage(CallbackInfoReturnable<Float> cir) {
+        if (ability != null) {
+            int requiredAdvancementsCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
+            if (requiredAdvancementsCount == -1) {
+                cir.setReturnValue(0.0f);
+            } else if (requiredAdvancementsCount == 0) {
+                cir.setReturnValue(1.0f);
+            }
+        } else if (trackedScoreType != null && trackedScoreType.isPercentage()) {
+            cir.setReturnValue(isDone() ? 1.0f : AchieveToDoClient.getTrackedScore(trackedScoreType) / 100.0f);
+        } else if (trackedStatType != null && trackedStatType.isPercentage()) {
+            cir.setReturnValue(isDone() ? 1.0f : AchieveToDoClient.getTrackedStat(trackedStatType) / 100.0f);
         }
     }
 
@@ -133,14 +139,15 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressImp
         at = @At("HEAD"),
         cancellable = true
     )
-    public void setTrackedScorePercentageText(CallbackInfoReturnable<Text> cir) {
-        if (trackedScoreType != null && trackedScoreType.isPercentage()) {
+    public void overrideProgressText(CallbackInfoReturnable<Text> cir) {
+        if (ability != null && AchieveToDoClient.getRequiredAdvancementsCount(ability) <= 0) {
+            cir.setReturnValue(null);
+        } else if (trackedScoreType != null && trackedScoreType.isPercentage()) {
             cir.setReturnValue(Text.translatable(
                 "mco.upload.percent",
                 isDone() ? 100 : AchieveToDoClient.getTrackedScore(trackedScoreType)
             ));
-        }
-        if (trackedStatType != null && trackedStatType.isPercentage()) {
+        } else if (trackedStatType != null && trackedStatType.isPercentage()) {
             cir.setReturnValue(Text.translatable(
                 "mco.upload.percent",
                 isDone() ? 100 : AchieveToDoClient.getTrackedStat(trackedStatType)

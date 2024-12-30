@@ -27,7 +27,7 @@ public record SyncAbilitiesConfigurationPayload(
 
     private void write(@NotNull PacketByteBuf buf) {
         for (AbilityType ability : AbilityType.values()) {
-            buf.writeInt(abilitiesConfiguration.getOrDefault(ability, 0));
+            buf.writeInt(abilitiesConfiguration.get(ability));
         }
     }
 

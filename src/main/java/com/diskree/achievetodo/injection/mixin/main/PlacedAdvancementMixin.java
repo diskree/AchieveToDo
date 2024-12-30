@@ -45,6 +45,16 @@ public abstract class PlacedAdvancementMixin {
             "blazeandcave:statistics/novice_enchanter",
             "blazeandcave:statistics/the_haggler"
         ));
+        customChildrenOrderMap.put("blazeandcave:challenges/root", List.of(
+            "blazeandcave:challenges/nuclear_fusion",
+            "blazeandcave:challenges/ad_astra",
+            "blazeandcave:challenges/all_the_blocks",
+            "blazeandcave:challenges/constellation",
+            "blazeandcave:challenges/ultimate_enchanter",
+            "blazeandcave:challenges/i_am_loot",
+            "blazeandcave:challenges/telescopic",
+            "blazeandcave:challenges/were_in_the_endgame_now"
+        ));
     }
 
     @Unique

@@ -7,6 +7,7 @@ import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import com.diskree.achievetodo.tracking.TrackedStatType;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.advancement.AdvancementDisplay;
@@ -19,7 +20,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.advancement.AdvancementTab;
 import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +57,11 @@ public class AdvancementWidgetMixin {
 
     @Unique
     private boolean shouldRenderMystifiedMask() {
-        if (progress == null || ability == null || !AchieveToDoClient.isAbilityLocked(ability, true)) {
+        if (progress == null ||
+            ability == null ||
+            !AchieveToDoClient.isAbilityLocked(ability, true) ||
+            AchieveToDoClient.getRequiredAdvancementsCount(ability) <= 0
+        ) {
             return false;
         }
         CriterionProgress demystifiedCriterionProgress = progress.getCriterionProgress(
@@ -99,13 +106,47 @@ public class AdvancementWidgetMixin {
     }
 
     @WrapOperation(
+        method = "<init>",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/advancement/AdvancementDisplay;getDescription()Lnet/minecraft/text/Text;"
+        )
+    )
+    private @Nullable Text appendAbilityInfoToDescription(
+        AdvancementDisplay display,
+        @NotNull Operation<Text> original
+    ) {
+        Text originalText = original.call(display);
+        if (ability != null) {
+            int requiredAdvancementsCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
+            if (requiredAdvancementsCount <= 0) {
+                Text abilityInfo;
+                if (requiredAdvancementsCount == 0) {
+                    abilityInfo = Text.translatable("achievetodo.ability.initially_unlocked")
+                        .formatted(Formatting.ITALIC)
+                        .formatted(Formatting.GRAY);
+                } else {
+                    abilityInfo = Text.translatable("achievetodo.ability.permanently_locked")
+                        .formatted(Formatting.ITALIC)
+                        .formatted(Formatting.RED);
+                }
+                originalText = originalText.copy()
+                    .append(ScreenTexts.LINE_BREAK)
+                    .append(ScreenTexts.LINE_BREAK)
+                    .append(abilityInfo);
+            }
+        }
+        return originalText;
+    }
+
+    @WrapOperation(
         method = "getProgressWidth",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/advancement/AdvancementRequirements;getLength()I"
         )
     )
-    public int setCustomRequirementsCount(AdvancementRequirements requirements, Operation<Integer> original) {
+    public int overrideRequirementsCount(AdvancementRequirements requirements, Operation<Integer> original) {
         if (trackedScoreType != null) {
             return trackedScoreType.getFinalValue();
         }
@@ -126,11 +167,12 @@ public class AdvancementWidgetMixin {
         at = @At(value = "HEAD"),
         cancellable = true
     )
-    public void setTrackedScorePercentageTextWidth(CallbackInfoReturnable<Integer> cir) {
-        if (trackedScoreType != null && trackedScoreType.isPercentage()) {
-            cir.setReturnValue(8 + client.textRenderer.getWidth(Text.translatable("mco.upload.percent", 100)));
-        }
-        if (trackedStatType != null && trackedStatType.isPercentage()) {
+    public void overrideProgressTextWidth(CallbackInfoReturnable<Integer> cir) {
+        if (ability != null && AchieveToDoClient.getRequiredAdvancementsCount(ability) <= 0) {
+            cir.setReturnValue(0);
+        } else if (trackedScoreType != null && trackedScoreType.isPercentage() ||
+            trackedStatType != null && trackedStatType.isPercentage()
+        ) {
             cir.setReturnValue(8 + client.textRenderer.getWidth(Text.translatable("mco.upload.percent", 100)));
         }
     }
@@ -143,7 +185,7 @@ public class AdvancementWidgetMixin {
         ),
         index = 1
     )
-    private Identifier renderMystifiedMaskInsteadFrameIfNeeded(Identifier original) {
+    private Identifier renderMystifiedMask(Identifier original) {
         return shouldRenderMystifiedMask() ? ABILITY_MYSTIFIED_MASK_TEXTURE : original;
     }
 
@@ -155,25 +197,22 @@ public class AdvancementWidgetMixin {
         )
     )
     private void hideAdvancementIconForMystifiedAbility(
-        DrawContext instance, ItemStack stack, int x, int y, Operation<Void> original
+        DrawContext instance,
+        ItemStack stack,
+        int x,
+        int y,
+        Operation<Void> original
     ) {
         if (!shouldRenderMystifiedMask()) {
             original.call(instance, stack, x, y);
         }
     }
 
-    @Inject(
+    @ModifyReturnValue(
         method = "shouldRender",
-        at = @At("RETURN"),
-        cancellable = true
+        at = @At("RETURN")
     )
-    private void doNotRenderTooltipForMystifiedAbility(
-        int originX,
-        int originY,
-        int mouseX,
-        int mouseY,
-        @NotNull CallbackInfoReturnable<Boolean> cir
-    ) {
-        cir.setReturnValue(cir.getReturnValue() && !shouldRenderMystifiedMask());
+    private boolean hideTooltipForMystifiedAbility(boolean original) {
+        return original && !shouldRenderMystifiedMask();
     }
 }

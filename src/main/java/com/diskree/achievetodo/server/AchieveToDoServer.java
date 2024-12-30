@@ -76,8 +76,8 @@ public class AchieveToDoServer implements ServerModInitializer {
             currentScoreboardObjective != oldScoreboardObjective ||
             currentScoreboardDisplaySlot != oldScoreboardDisplaySlot
         ) {
-            for (ServerPlayerEntity serverPlayerEntity : scoreboard.server.getPlayerManager().getPlayerList()) {
-                updateObtainedAdvancementsCount(scoreboard, serverPlayerEntity);
+            for (ServerPlayerEntity serverPlayer : scoreboard.server.getPlayerManager().getPlayerList()) {
+                updateObtainedAdvancementsCount(scoreboard, serverPlayer);
             }
         }
     }
@@ -89,7 +89,10 @@ public class AchieveToDoServer implements ServerModInitializer {
         if (oldCount != 0 && abilitiesConfiguration != null) {
             for (AbilityType ability : AbilityType.values()) {
                 int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
-                if (count >= requiredAdvancementsCount && oldCount < requiredAdvancementsCount) {
+                if (requiredAdvancementsCount > 0 &&
+                    count >= requiredAdvancementsCount &&
+                    oldCount < requiredAdvancementsCount
+                ) {
                     unlockAbility(player, ability);
                 }
             }
@@ -97,11 +100,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         ServerPlayNetworking.send(player, new SyncAdvancementsCountPayload(count));
     }
 
-    public void setScore(
-        @NotNull ServerPlayerEntity player,
-        @NotNull TrackedScoreType progressType,
-        int progress
-    ) {
+    public void setScore(@NotNull ServerPlayerEntity player, @NotNull TrackedScoreType progressType, int progress) {
         if (progressType.isPercentage()) {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / progressType.getFinalValue())));
         }
@@ -113,11 +112,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         }
     }
 
-    public void setStat(
-        @NotNull ServerPlayerEntity player,
-        @NotNull TrackedStatType statType,
-        int progress
-    ) {
+    public void setStat(@NotNull ServerPlayerEntity player, @NotNull TrackedStatType statType, int progress) {
         if (statType.isPercentage()) {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / statType.getFinalValue())));
         }
@@ -144,9 +139,6 @@ public class AchieveToDoServer implements ServerModInitializer {
         if (ability == null || player.isCreative() || player.isSpectator()) {
             return false;
         }
-        if (ability != AbilityType.VISION) {
-            System.out.println("isAbilityLocked check on server:" + ability.getLowerCaseName());
-        }
         if (isNotReady()) {
             player.sendMessage(
                 Text.translatable("achievetodo.error.not_ready_yet")
@@ -155,18 +147,24 @@ public class AchieveToDoServer implements ServerModInitializer {
             );
             return true;
         }
+        int obtainedAdvancementsCount = getObtainedAdvancementsCount(player);
         int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
-        if (getObtainedAdvancementsCount(player) >= requiredAdvancementsCount) {
+        if (requiredAdvancementsCount == 0 ||
+            requiredAdvancementsCount > 0 && obtainedAdvancementsCount >= requiredAdvancementsCount
+        ) {
             return false;
         }
-        if (checkOnly) {
-            return true;
+        if (!checkOnly) {
+            Text lockedMessageText;
+            if (requiredAdvancementsCount == -1) {
+                lockedMessageText = ability.buildPermanentlyLockedMessage();
+            } else {
+                int leftAdvancementsCount = requiredAdvancementsCount - obtainedAdvancementsCount;
+                lockedMessageText = ability.buildUnlockProgressMessage(leftAdvancementsCount);
+            }
+            player.sendMessage(lockedMessageText, true);
+            demystifyAbility(player, ability);
         }
-        player.sendMessage(
-            ability.getLockedMessage(requiredAdvancementsCount - getObtainedAdvancementsCount(player)),
-            true
-        );
-        demystifyAbility(player, ability);
         return true;
     }
 
@@ -176,15 +174,13 @@ public class AchieveToDoServer implements ServerModInitializer {
             context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
         );
         ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+            if (server.getSaveProperties().getLevelInfo() instanceof LevelInfoImpl levelInfoImpl) {
+                abilitiesConfiguration = levelInfoImpl.achievetodo$getAbilitiesConfiguration();
+            }
             advancementsCounts.clear();
             trackedScores.clear();
             trackedStats.clear();
             prepareScoreboard(server.getScoreboard());
-        });
-        ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
-            if (server.getSaveProperties().getLevelInfo() instanceof LevelInfoImpl levelInfoImpl) {
-                abilitiesConfiguration = levelInfoImpl.achievetodo$getAbilitiesConfiguration();
-            }
         });
         ServerPlayConnectionEvents.JOIN.register(
             (handler, sender, server) -> {
@@ -270,6 +266,6 @@ public class AchieveToDoServer implements ServerModInitializer {
     }
 
     private int getObtainedAdvancementsCount(@NotNull ServerPlayerEntity player) {
-        return advancementsCounts.getOrDefault(player.getUuid(), 0);
+        return advancementsCounts.get(player.getUuid());
     }
 }

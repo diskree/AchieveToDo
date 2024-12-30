@@ -17,6 +17,7 @@ import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.ArmorMaterials;
 import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.registry.Registries;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -670,12 +671,22 @@ public enum AbilityType {
         return unlockToastType;
     }
 
-    public Text getLockedMessage(int leftCount) {
-        return Text.translatable("achievetodo.ability." + getLowerCaseName() + ".locked_message").copy()
-            .append(Text.of("." + (FabricLoader.getInstance().isModLoaded("multilineactionbar") ? "\n" : " ")))
-            .append(Text.translatable("achievetodo.ability.left_to_unlock"))
-            .append(Text.of(String.valueOf(leftCount)))
+    public Text buildUnlockProgressMessage(int leftCount) {
+        return buildLockedMessagePrefix()
+            .append(Text.translatable("achievetodo.ability.left_to_unlock", leftCount))
             .formatted(Formatting.YELLOW);
+    }
+
+    public Text buildPermanentlyLockedMessage() {
+        return buildLockedMessagePrefix()
+            .append(Text.translatable("achievetodo.ability.permanently_locked"))
+            .formatted(Formatting.RED);
+    }
+
+    private MutableText buildLockedMessagePrefix() {
+        return Text.translatable("achievetodo.ability." + getLowerCaseName() + ".locked_message").copy()
+            .append(Text.of("."))
+            .append(Text.of((FabricLoader.getInstance().isModLoaded("multilineactionbar") ? "\n" : " ")));
     }
 
     public @NotNull String getLowerCaseName() {
