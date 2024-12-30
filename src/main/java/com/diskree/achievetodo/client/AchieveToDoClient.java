@@ -40,7 +40,7 @@ public class AchieveToDoClient implements ClientModInitializer {
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
     private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
 
-    private static List<List<AbilityType>> abilityRows;
+    private static final List<List<AbilityType>> abilityRows = new ArrayList<>();
 
     public static int getRequiredAdvancementsCount(AbilityType ability) {
         return abilitiesConfiguration.get(ability);
@@ -181,8 +181,7 @@ public class AchieveToDoClient implements ClientModInitializer {
         if (isNotReady()) {
             return null;
         }
-        if (abilityRows == null) {
-            abilityRows = new ArrayList<>();
+        if (abilityRows.isEmpty()) {
             Map<AbilitiesTreeCategoryType, List<AbilityType>> abilitiesByCategory = Arrays
                 .stream(AbilityType.values())
                 .sorted(Comparator.comparingInt((AbilityType ability) -> {
