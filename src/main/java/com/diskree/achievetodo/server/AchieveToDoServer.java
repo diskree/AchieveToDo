@@ -2,26 +2,32 @@ package com.diskree.achievetodo.server;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
+import com.diskree.achievetodo.ability.DungeonType;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
-import com.diskree.achievetodo.networking.s2c.SyncAbilitiesConfigurationPayload;
-import com.diskree.achievetodo.networking.s2c.SyncAdvancementsCountPayload;
-import com.diskree.achievetodo.networking.s2c.SyncScorePayload;
-import com.diskree.achievetodo.networking.s2c.SyncStatPayload;
+import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import com.diskree.achievetodo.tracking.TrackedStatType;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.ServerStatHandler;
 import net.minecraft.stat.Stat;
+import net.minecraft.structure.StructureStart;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockBox;
+import net.minecraft.world.gen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -168,6 +174,12 @@ public class AchieveToDoServer implements ServerModInitializer {
         return true;
     }
 
+    public void addDungeon(@NotNull ServerWorld world, DungeonType dungeon, BlockBox blockBox) {
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            ServerPlayNetworking.send(player, new SyncDungeonBoundingBoxPayload(dungeon, blockBox));
+        }
+    }
+
     @Override
     public void onInitializeServer() {
         ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
@@ -175,7 +187,9 @@ public class AchieveToDoServer implements ServerModInitializer {
         );
         ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
             if (server.getSaveProperties().getLevelInfo() instanceof LevelInfoExtension levelInfoExtension) {
-                abilitiesConfiguration = levelInfoExtension.achievetodo$getAbilitiesConfiguration(server.getSaveProperties().getGeneratorOptions().getSeed());
+                abilitiesConfiguration = levelInfoExtension.achievetodo$getAbilitiesConfiguration(
+                    server.getSaveProperties().getGeneratorOptions().getSeed()
+                );
             }
             advancementsCounts.clear();
             trackedScores.clear();
@@ -209,13 +223,22 @@ public class AchieveToDoServer implements ServerModInitializer {
                 }
             }
         );
-
+        ServerChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
+            Registry<Structure> structureRegistry = world.getRegistryManager().getOrThrow(RegistryKeys.STRUCTURE);
+            for (Map.Entry<Structure, StructureStart> entry : chunk.getStructureStarts().entrySet()) {
+                StructureStart structureStart = entry.getValue();
+                if (structureStart.hasChildren()) {
+                    RegistryKey<Structure> structure = structureRegistry.getKey(entry.getKey()).orElse(null);
+                    DungeonType dungeon = DungeonType.findByStructure(structure);
+                    if (dungeon != null) {
+                        addDungeon(world, dungeon, structureStart.getBoundingBox());
+                    }
+                }
+            }
+        });
     }
 
-    private void updateObtainedAdvancementsCount(
-        ServerScoreboard scoreboard,
-        @NotNull ServerPlayerEntity player
-    ) {
+    private void updateObtainedAdvancementsCount(ServerScoreboard scoreboard, @NotNull ServerPlayerEntity player) {
         if (isNotReady()) {
             return;
         }
