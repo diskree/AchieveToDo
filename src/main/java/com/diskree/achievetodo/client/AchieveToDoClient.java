@@ -4,7 +4,6 @@ import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.AbilitiesTreeCategoryType;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.ability.DungeonType;
-import com.diskree.achievetodo.client.gui.BoxBorderRenderer;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
@@ -13,14 +12,11 @@ import com.diskree.achievetodo.tracking.TrackedStatType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -63,6 +59,10 @@ public class AchieveToDoClient implements ClientModInitializer {
 
     public static int getTrackedStat(@NotNull TrackedStatType statType) {
         return trackedStats.getOrDefault(statType, 0);
+    }
+
+    public static Map<DungeonType, List<Box>> getLockedDungeons() {
+        return lockedDungeons;
     }
 
     public static int getTrackedNearbyEntitiesCount(TrackedNearbyEntitiesType type) {
@@ -138,17 +138,6 @@ public class AchieveToDoClient implements ClientModInitializer {
             obtainedAdvancementsCount = -1;
             trackedScores.clear();
             trackedStats.clear();
-        });
-        WorldRenderEvents.LAST.register(context -> {
-            MatrixStack matrices = context.matrixStack();
-            Camera camera = context.camera();
-            for (Map.Entry<DungeonType, List<Box>> lockedDungeonEntry : lockedDungeons.entrySet()) {
-                for (Box blockBox : lockedDungeonEntry.getValue()) {
-                    Vec3d cameraPos = camera.getPos();
-                    Box adjustedBox = blockBox.offset(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-                    BoxBorderRenderer.renderBoxBorder(matrices, adjustedBox, 1.0F, 1.0F, 0.0F, 0.5F);
-                }
-            }
         });
     }
 

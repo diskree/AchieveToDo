@@ -93,7 +93,8 @@
     "main.VillagerEntityMixin",
     "main.WanderingTraderEntityMixin",
     "main.WindChargeItemMixin",
-    "main.WolfEntityMixin"
+    "main.WolfEntityMixin",
+    "main.WorldChunkMixin"
   ],
   "client": [
     "client.AdvancementProgressMixin",
@@ -113,6 +114,7 @@
     "client.PackScreenMixin",
     "client.PunchTreeTutorialStepHandlerMixin",
     "client.WorldCreatorMixin",
-    "client.WorldListWidgetMixin"
+    "client.WorldListWidgetMixin",
+    "client.WorldRendererMixin"
   ]
 }

@@ -4,6 +4,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.world.gen.structure.StructureKeys;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -11,6 +12,10 @@ import java.util.Set;
 
 public enum DungeonType {
 
+    RUINED_PORTAL(World.OVERWORLD, StructureKeys.RUINED_PORTAL),
+    ANCIENT_CITY(World.OVERWORLD, StructureKeys.ANCIENT_CITY),
+    MONUMENT(World.OVERWORLD, StructureKeys.MONUMENT),
+    DESERT_WELL(World.OVERWORLD, Feature.DESERT_WELL),
     ;
 
     public static final Set<Feature<?>> FEATURES = new HashSet<>();
