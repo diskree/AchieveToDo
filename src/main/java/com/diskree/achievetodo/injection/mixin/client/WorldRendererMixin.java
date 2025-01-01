@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
@@ -36,13 +37,14 @@ public abstract class WorldRendererMixin {
     private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK_CULLING = createLockedDungeonBorder(true, true);
 
     @Unique
-    private static final int LOCKED_DUNGEON_BORDER_ANIMATION_SPEED = 3000;
+    private static final long LOCKED_DUNGEON_BORDER_ANIMATION_DURATION = TimeUnit.SECONDS.toMillis(3);
 
     @Unique
     private static final float ENTER_LOCKED_DUNGEON_BORDER_FADE_ALPHA_SPEED = 0.003f;
 
     @Unique
-    private static final Identifier FORCEFIELD_TEXTURE = Identifier.ofVanilla("textures/misc/forcefield.png");
+    private static final Identifier LOCKED_DUNGEON_BORDER_TEXTURE =
+        Identifier.ofVanilla("textures/misc/forcefield.png");
 
     @Unique
     private boolean wasInsideLockedDungeon = false;
@@ -92,7 +94,7 @@ public abstract class WorldRendererMixin {
         Fog fog,
         float tickDelta,
         Vec3d cameraPos,
-        int maxVisibleDistance,
+        int visibleDistanceThreshold,
         float farPlaneDistance,
         CallbackInfo ci
     ) {
@@ -115,31 +117,33 @@ public abstract class WorldRendererMixin {
                     double closestX = Math.clamp(cameraPos.x, box.minX, box.maxX);
                     double closestY = Math.clamp(cameraPos.y, box.minY, box.maxY);
                     double closestZ = Math.clamp(cameraPos.z, box.minZ, box.maxZ);
-                    double distance = cameraPos.distanceTo(new Vec3d(closestX, closestY, closestZ));
-                    if (distance >= maxVisibleDistance) {
+
+                    double distance = Math.sqrt(cameraPos.squaredDistanceTo(closestX, closestY, closestZ));
+                    if (distance >= visibleDistanceThreshold) {
                         continue;
                     }
                     alpha = 1.0f;
-                    double fadeStart = maxVisibleDistance * 0.5f;
+                    double fadeStart = visibleDistanceThreshold * 0.5f;
                     if (distance > fadeStart) {
-                        alpha -= (distance - fadeStart) / (maxVisibleDistance - fadeStart);
+                        alpha -= (distance - fadeStart) / (visibleDistanceThreshold - fadeStart);
                     }
                 }
 
                 if (renderLayer == null) {
-                    RenderSystem.setShaderTexture(0, FORCEFIELD_TEXTURE);
+                    RenderSystem.setShaderTexture(0, LOCKED_DUNGEON_BORDER_TEXTURE);
                     renderLayer = getLockedDungeonBorder(MinecraftClient.isFabulousGraphicsOrBetter(), !isCameraInside);
                     renderLayer.startDrawing();
-                    int animationDurationMs = LOCKED_DUNGEON_BORDER_ANIMATION_SPEED;
+                    long animationDurationMs = LOCKED_DUNGEON_BORDER_ANIMATION_DURATION;
                     if (isCameraInside) {
                         animationDurationMs *= 2;
                     }
                     animationTime = (float) (Util.getMeasuringTimeMs() % animationDurationMs) / animationDurationMs;
                 }
-                int yellowRGB = DyeColor.YELLOW.getEntityColor();
-                float r = ((yellowRGB >> 16) & 0xFF) / 255.0F;
-                float g = ((yellowRGB >> 8) & 0xFF) / 255.0F;
-                float b = (yellowRGB & 0xFF) / 255.0F;
+
+                int yellowColor = DyeColor.YELLOW.getEntityColor();
+                float r = ((yellowColor >> 16) & 0xFF) / 255.0F;
+                float g = ((yellowColor >> 8) & 0xFF) / 255.0F;
+                float b = (yellowColor & 0xFF) / 255.0F;
                 RenderSystem.setShaderColor(r, g, b, (float) alpha);
 
                 BufferBuilder bufferBuilder = Tessellator.getInstance()
@@ -152,7 +156,7 @@ public abstract class WorldRendererMixin {
                 float minZ = (float) (box.minZ - cameraPos.z);
                 float maxZ = (float) (box.maxZ - cameraPos.z);
 
-                if (isCameraInside || cameraPos.x > box.maxX - maxVisibleDistance) {
+                if (isCameraInside || cameraPos.x > box.maxX - visibleDistanceThreshold) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -184,7 +188,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInside || cameraPos.x < box.minX + maxVisibleDistance) {
+                if (isCameraInside || cameraPos.x < box.minX + visibleDistanceThreshold) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -216,7 +220,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInside || cameraPos.z > box.maxZ - maxVisibleDistance) {
+                if (isCameraInside || cameraPos.z > box.maxZ - visibleDistanceThreshold) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -248,7 +252,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInside || cameraPos.z < box.minZ + maxVisibleDistance) {
+                if (isCameraInside || cameraPos.z < box.minZ + visibleDistanceThreshold) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -280,7 +284,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInside || cameraPos.y < box.minY + maxVisibleDistance) {
+                if (isCameraInside || cameraPos.y < box.minY + visibleDistanceThreshold) {
                     for (float z = minZ; z < maxZ; ) {
                         float segmentZ = Math.min(1.0f, maxZ - z);
                         float textureU = 0f;
@@ -312,7 +316,7 @@ public abstract class WorldRendererMixin {
                         z += segmentZ;
                     }
                 }
-                if (isCameraInside || cameraPos.y > box.maxY - maxVisibleDistance) {
+                if (isCameraInside || cameraPos.y > box.maxY - visibleDistanceThreshold) {
                     for (float z = minZ; z < maxZ; ) {
                         float segmentZ = Math.min(1.0f, maxZ - z);
                         float textureU = 0f;

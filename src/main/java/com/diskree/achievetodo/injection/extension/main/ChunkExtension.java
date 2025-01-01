@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface ChunkExtension {
-
     void achievetodo$setFeatureBlockBoxes(ServerWorld world, Map<Feature<?>, List<BlockBox>> featureBlockBoxes);
 
     Map<Feature<?>, List<BlockBox>> achievetodo$getFeatureBlockBoxes();
