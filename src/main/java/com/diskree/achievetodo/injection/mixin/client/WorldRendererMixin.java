@@ -24,7 +24,30 @@ import java.util.List;
 public abstract class WorldRendererMixin {
 
     @Unique
-    private static @NotNull RenderLayer createLockedDungeonBorder(boolean allMask) {
+    private static final RenderLayer DUNGEON_BORDER_COLOR_MASK = createLockedDungeonBorder(false, false);
+
+    @Unique
+    private static final RenderLayer DUNGEON_BORDER_ALL_MASK = createLockedDungeonBorder(true, false);
+
+    @Unique
+    private static final RenderLayer DUNGEON_BORDER_COLOR_MASK_CULLING = createLockedDungeonBorder(false, true);
+
+    @Unique
+    private static final RenderLayer DUNGEON_BORDER_ALL_MASK_CULLING = createLockedDungeonBorder(true, true);
+
+    @Unique
+    private static final Identifier FORCEFIELD_TEXTURE = Identifier.ofVanilla("textures/misc/forcefield.png");
+
+    @Unique
+    private static RenderLayer getDungeonBorder(boolean allMask, boolean isCullingEnabled) {
+        if (allMask) {
+            return isCullingEnabled ? DUNGEON_BORDER_ALL_MASK_CULLING : DUNGEON_BORDER_ALL_MASK;
+        }
+        return isCullingEnabled ? DUNGEON_BORDER_COLOR_MASK_CULLING : DUNGEON_BORDER_COLOR_MASK;
+    }
+
+    @Unique
+    private static @NotNull RenderLayer createLockedDungeonBorder(boolean allMask, boolean isCullingEnabled) {
         return RenderLayer.of(
             BuildConfig.MOD_ID + "_locked_dungeon_border",
             VertexFormats.POSITION_TEXTURE,
@@ -40,13 +63,10 @@ public abstract class WorldRendererMixin {
                 .target(RenderPhase.WEATHER_TARGET)
                 .writeMaskState(allMask ? RenderPhase.ALL_MASK : RenderPhase.COLOR_MASK)
                 .layering(RenderPhase.WORLD_BORDER_LAYERING)
-                .cull(RenderPhase.ENABLE_CULLING)
+                .cull(isCullingEnabled ? RenderPhase.ENABLE_CULLING : RenderPhase.DISABLE_CULLING)
                 .build(false)
         );
     }
-
-    @Unique
-    private static final Identifier FORCEFIELD_TEXTURE = Identifier.ofVanilla("textures/misc/forcefield.png");
 
     @Inject(
         method = "method_62216",
@@ -75,9 +95,11 @@ public abstract class WorldRendererMixin {
                     continue;
                 }
                 if (renderLayer == null) {
-                    RenderSystem.enableCull();
                     RenderSystem.setShaderTexture(0, FORCEFIELD_TEXTURE);
-                    renderLayer = createLockedDungeonBorder(MinecraftClient.isFabulousGraphicsOrBetter());
+                    renderLayer = getDungeonBorder(
+                        MinecraftClient.isFabulousGraphicsOrBetter(),
+                        !box.contains(cameraPos)
+                    );
                     renderLayer.startDrawing();
                 }
                 double alpha = 1.0f;
@@ -150,7 +172,7 @@ public abstract class WorldRendererMixin {
                             bufferBuilder
                                 .vertex(minX, y, z + segmentZ)
                                 .normal(-1.0f, 0.0f, 0.0f)
-                                .texture(animationTime - textureU, animationTime );
+                                .texture(animationTime - textureU, animationTime);
                             bufferBuilder
                                 .vertex(minX, y + segmentY, z + segmentZ)
                                 .normal(-1.0f, 0.0f, 0.0f)
@@ -158,7 +180,7 @@ public abstract class WorldRendererMixin {
                             bufferBuilder
                                 .vertex(minX, y + segmentY, z)
                                 .normal(-1.0f, 0.0f, 0.0f)
-                                .texture(animationTime - textureU + halfSegmentZ, animationTime + halfSegmentY );
+                                .texture(animationTime - textureU + halfSegmentZ, animationTime + halfSegmentY);
 
                             z += segmentZ;
                             textureU += 0.5f;
@@ -182,7 +204,7 @@ public abstract class WorldRendererMixin {
                             bufferBuilder
                                 .vertex(x + segmentX, y, maxZ)
                                 .normal(0.0f, 0.0f, 1.0f)
-                                .texture(animationTime - textureU, animationTime );
+                                .texture(animationTime - textureU, animationTime);
                             bufferBuilder
                                 .vertex(x + segmentX, y + segmentY, maxZ)
                                 .normal(0.0f, 0.0f, 1.0f)
@@ -190,7 +212,7 @@ public abstract class WorldRendererMixin {
                             bufferBuilder
                                 .vertex(x, y + segmentY, maxZ)
                                 .normal(0.0f, 0.0f, 1.0f)
-                                .texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentY );
+                                .texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentY);
 
                             x += segmentX;
                             textureU += 0.5f;
