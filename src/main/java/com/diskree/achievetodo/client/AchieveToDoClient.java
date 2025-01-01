@@ -20,6 +20,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
@@ -106,6 +107,10 @@ public class AchieveToDoClient implements ClientModInitializer {
             }
         }
         return entitiesCount;
+    }
+
+    public static @NotNull MutableText translateModKey(String key, Object... args) {
+        return Text.translatable(BuildConfig.MOD_ID + "." + key, args);
     }
 
     @Override

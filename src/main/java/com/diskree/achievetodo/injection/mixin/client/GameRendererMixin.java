@@ -1,10 +1,8 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.NotNull;
@@ -39,10 +37,6 @@ public abstract class GameRendererMixin {
     @Shadow
     @Final
     private BufferBuilderStorage buffers;
-
-    @Shadow
-    @Final
-    private MinecraftClient client;
 
     @Shadow
     protected abstract void updateWorldIcon();

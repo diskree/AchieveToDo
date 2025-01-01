@@ -1,6 +1,9 @@
 package com.diskree.achievetodo.ability.generation;
 
+import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.AbilityType;
+import com.diskree.achievetodo.client.gui.DesignCodePalette;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingOutputStream;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -32,7 +35,8 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
         return CompletableFuture.runAsync(() -> {
             try {
                 createFunctions(writer);
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                AchieveToDoMod.logger.error("Error while generating AbilityUnlockMessages:", e);
             }
         }, Util.getMainWorkerExecutor());
     }
@@ -63,18 +67,18 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
     private @NotNull String buildFunction(@NotNull AbilityType ability) {
         String function = """
             tellraw @a {
-                "translate":"achievetodo.ability_unlocked_chat_message",
+                "translate":"{MOD_ID}.ability_unlocked_chat_message",
                 "with":[
                     {
                         "selector":"@s"
                     },
                     {
-                        "color":"yellow",
+                        "color":"{COLOR}",
                         "text":"["
                     },
                     {
-                        "color":"yellow",
-                        "translate":"achievetodo.ability.{NAME}.name",
+                        "color":"{COLOR}",
+                        "translate":"{MOD_ID}.ability.{NAME}.name",
                         "clickEvent":{
                             "action":"run_command",
                             "value":"/advancementssearch highlight {ADVANCEMENT_ID} obtained_status"
@@ -82,15 +86,15 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
                         "hoverEvent":{
                             "action":"show_text",
                             "contents":{
-                                "color":"yellow",
-                                "translate":"achievetodo.ability.{NAME}.name",
+                                "color":"{COLOR}",
+                                "translate":"{MOD_ID}.ability.{NAME}.name",
                                 "extra":[
                                     {
                                         "text":"\\n"
                                     },
                                     {
-                                        "color":"yellow",
-                                        "translate":"achievetodo.ability.{NAME}.description"
+                                        "color":"{COLOR}",
+                                        "translate":"{MOD_ID}.ability.{NAME}.description"
                                     },
                                     {
                                         "text":"\\n\\n"
@@ -101,7 +105,7 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
                                         "translate":"%1$s tab",
                                         "with":[
                                             {
-                                                "text":"AchieveToDo"
+                                                "text":"{MOD_NAME}"
                                             }
                                         ]
                                     }
@@ -110,14 +114,17 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
                         }
                     },
                     {
-                        "color":"yellow",
+                        "color":"{COLOR}",
                         "text":"]"
                     }
                 ]
             }
             """
-            .replace("{NAME}", ability.getLowerCaseName())
-            .replace("{ADVANCEMENT_ID}", AbilityAdvancementsGenerator.buildAdvancementId(ability).toString());
+            .replace("{NAME}", ability.getName())
+            .replace("{ADVANCEMENT_ID}", AbilityAdvancementsGenerator.buildAdvancementId(ability).toString())
+            .replace("{COLOR}", DesignCodePalette.TEXT_COLOR_NAME)
+            .replace("{MOD_NAME}", BuildConfig.MOD_NAME)
+            .replace("{MOD_ID}", BuildConfig.MOD_ID);
         return String.join("", Arrays.stream(function.split("\\R")).map(String::trim).toArray(String[]::new));
     }
 }

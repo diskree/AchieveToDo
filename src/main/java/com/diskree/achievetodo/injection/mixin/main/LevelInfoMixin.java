@@ -114,7 +114,7 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
                     }
                     abilitiesConfiguration.put(ability, requiredAdvancementsCount);
                     configTomlContents
-                        .append(ability.getLowerCaseName())
+                        .append(ability.getName())
                         .append(" = ")
                         .append(requiredAdvancementsCount)
                         .append("\n");

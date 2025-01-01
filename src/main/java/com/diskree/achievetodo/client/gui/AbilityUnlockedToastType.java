@@ -1,7 +1,10 @@
 package com.diskree.achievetodo.client.gui;
 
+import com.diskree.achievetodo.client.AchieveToDoClient;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 
 public enum AbilityUnlockedToastType {
 
@@ -16,11 +19,11 @@ public enum AbilityUnlockedToastType {
     PORTAL;
 
     public @NotNull Text getToastTitle() {
-        return Text.translatable("achievetodo.ability_unlocked_toast." + getLowerCaseName())
+        return AchieveToDoClient.translateModKey("ability_unlocked_toast." + getName())
             .append("!");
     }
 
-    private @NotNull String getLowerCaseName() {
-        return name().toLowerCase();
+    private @NotNull String getName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 }

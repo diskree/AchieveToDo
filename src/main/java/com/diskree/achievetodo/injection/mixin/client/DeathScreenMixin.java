@@ -1,12 +1,12 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.client.AchieveToDoClient;
+import com.diskree.achievetodo.client.gui.DesignCodePalette;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,8 +36,8 @@ public class DeathScreenMixin {
             return Text.translatable("key.advancements")
                 .append(": ")
                 .append(
-                    Text.of(String.valueOf(AchieveToDoClient.getObtainedAdvancementsCount())).copy()
-                        .formatted(Formatting.YELLOW)
+                    Text.literal(String.valueOf(AchieveToDoClient.getObtainedAdvancementsCount()))
+                        .formatted(DesignCodePalette.TEXT_COLOR)
                 );
         }
         return original.call(key, args);

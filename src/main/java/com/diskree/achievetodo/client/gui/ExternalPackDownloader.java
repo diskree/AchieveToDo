@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.client.gui;
 
+import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.client.ExternalPack;
 import com.diskree.achievetodo.client.Utils;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
@@ -55,32 +56,35 @@ public class ExternalPackDownloader extends ConfirmScreen {
 
     public ExternalPackDownloader(
         Screen parent,
-        @NotNull ExternalPack externalPack,
+        @NotNull ExternalPack pack,
         BooleanConsumer exitCallback,
         boolean isOutdatedVersion
     ) {
         super(
             null,
-            Text.translatable("achievetodo.downloader.title_prefix")
+            AchieveToDoClient.translateModKey("downloader.title_prefix")
                 .append(
-                    Text.of(externalPack.getName()).copy()
-                        .formatted(externalPack.getColor(), Formatting.ITALIC)
+                    Text.literal(pack.getTitle())
+                        .formatted(pack.getColor(), Formatting.ITALIC)
                 ),
-            Text.translatable(isOutdatedVersion ? "achievetodo.downloader.reason.outdated" : externalPack.getReasonKey())
+            AchieveToDoClient.translateModKey(
+                    isOutdatedVersion ? "downloader.reason.outdated" : pack.getReasonKey()
+                )
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(
-                    Text.translatable(externalPack.isInGameDownloadSupported() ? "achievetodo.downloader.automatically_info" : "achievetodo.downloader.manually_info").copy()
-                        .formatted(Formatting.YELLOW)
+                    AchieveToDoClient.translateModKey(
+                        pack.isInGameDownloadSupported() ? "downloader.automatically_info" : "downloader.manually_info"
+                    ).formatted(DesignCodePalette.TEXT_COLOR)
                 )
         );
         this.parent = parent;
-        this.externalPack = externalPack;
+        this.externalPack = pack;
         this.exitCallback = exitCallback;
-        inGameDownloadSupported = externalPack.isInGameDownloadSupported();
+        inGameDownloadSupported = pack.isInGameDownloadSupported();
     }
 
     @Override
@@ -97,7 +101,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
 
         downloadButton = addDrawableChild(
             ButtonWidget.builder(
-                    Text.translatable("achievetodo.downloader.download"),
+                    AchieveToDoClient.translateModKey("downloader.download"),
                     button -> {
                         if (inGameDownloadSupported) {
                             backButton.setMessage(ScreenTexts.CANCEL);
@@ -108,7 +112,9 @@ public class ExternalPackDownloader extends ConfirmScreen {
                         }
                     }
                 )
-                .tooltip(inGameDownloadSupported ? null : Tooltip.of(Text.translatable("achievetodo.downloader.download.tooltip")))
+                .tooltip(inGameDownloadSupported ? null :
+                    Tooltip.of(AchieveToDoClient.translateModKey("downloader.download.tooltip"))
+                )
                 .dimensions(
                     selectFileButtonX - BUTTON_MARGIN - BUTTON_WIDTH,
                     y,
@@ -121,7 +127,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
         if (!inGameDownloadSupported) {
             addDrawableChild(
                 ButtonWidget.builder(
-                        Text.translatable("achievetodo.downloader.select_file"),
+                        AchieveToDoClient.translateModKey("downloader.select_file"),
                         button -> {
                             try (MemoryStack stack = MemoryStack.stackPush()) {
                                 PointerBuffer filters = stack.mallocPointer(1);
@@ -129,7 +135,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
 
                                 @SuppressWarnings("DataFlowIssue")
                                 String selectedFilePath = TinyFileDialogs.tinyfd_openFileDialog(
-                                    Text.translatable("achievetodo.downloader.select_file").getString(),
+                                    AchieveToDoClient.translateModKey("downloader.select_file").getString(),
                                     System.getProperty("user.home"),
                                     filters,
                                     null,
@@ -163,10 +169,10 @@ public class ExternalPackDownloader extends ConfirmScreen {
 
         addDrawableChild(
             ButtonWidget.builder(
-                    Text.translatable("achievetodo.downloader.learn_more"),
+                    AchieveToDoClient.translateModKey("downloader.learn_more"),
                     button -> Util.getOperatingSystem().open(externalPack.getPageUrl())
                 )
-                .tooltip(Tooltip.of(Text.translatable("achievetodo.downloader.learn_more.tooltip")))
+                .tooltip(Tooltip.of(AchieveToDoClient.translateModKey("downloader.learn_more.tooltip")))
                 .dimensions(
                     selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN,
                     y + BUTTON_HEIGHT + BUTTON_MARGIN,
@@ -207,7 +213,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
             }
             isWrapper = sha1.equals(externalPack.getWrapperSha1());
             if (!isWrapper && !sha1.equalsIgnoreCase(externalPack.getSha1())) {
-                client.setScreen(new ErrorScreen(this, "achievetodo.error.wrong_datapack_file"));
+                client.setScreen(new ErrorScreen(this, "error.wrong_datapack_file"));
                 return;
             }
         } catch (Exception e) {
@@ -310,7 +316,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
 
                         int progress = (downloadedBytes * 100) / totalBytes;
                         client.execute(() -> downloadButton.setMessage(
-                            Text.translatable("mco.download.downloading").append(Text.of(": " + progress + "%")))
+                            Text.translatable("mco.download.downloading").append(": " + progress + "%"))
                         );
                     }
 

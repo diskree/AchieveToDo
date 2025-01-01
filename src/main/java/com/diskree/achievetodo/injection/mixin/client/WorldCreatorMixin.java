@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class WorldCreatorMixin implements WorldCreatorExtension {
 
     @Unique
-    private String configName = DifficultyType.NORMAL.getLowerCaseName();
+    private String configName = DifficultyType.NORMAL.getName();
 
     @Unique
     private boolean isItemRewardsEnabled;

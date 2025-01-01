@@ -21,6 +21,7 @@ import net.minecraft.client.gui.screen.advancement.AdvancementTab;
 import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -65,7 +66,7 @@ public class AdvancementWidgetMixin {
             return false;
         }
         CriterionProgress demystifiedCriterionProgress = progress.getCriterionProgress(
-            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getLowerCaseName()
+            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getName()
         );
         return demystifiedCriterionProgress != null && !demystifiedCriterionProgress.isObtained();
     }
@@ -109,28 +110,25 @@ public class AdvancementWidgetMixin {
         method = "<init>",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/advancement/AdvancementDisplay;getDescription()Lnet/minecraft/text/Text;"
+            target = "Lnet/minecraft/text/Text;copy()Lnet/minecraft/text/MutableText;"
         )
     )
-    private @Nullable Text appendAbilityInfoToDescription(
-        AdvancementDisplay display,
-        @NotNull Operation<Text> original
-    ) {
-        Text originalText = original.call(display);
+    private MutableText appendAbilityInfoToDescription(Text text, @NotNull Operation<MutableText> original) {
+        MutableText originalText = original.call(text);
         if (ability != null) {
             int requiredAdvancementsCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
             if (requiredAdvancementsCount <= 0) {
                 Text abilityInfo;
                 if (requiredAdvancementsCount == 0) {
-                    abilityInfo = Text.translatable("achievetodo.ability.initially_unlocked")
+                    abilityInfo = AchieveToDoClient.translateModKey("ability.initially_unlocked")
                         .formatted(Formatting.ITALIC)
                         .formatted(Formatting.GRAY);
                 } else {
-                    abilityInfo = Text.translatable("achievetodo.ability.permanently_locked")
+                    abilityInfo = AchieveToDoClient.translateModKey("ability.permanently_locked")
                         .formatted(Formatting.ITALIC)
                         .formatted(Formatting.RED);
                 }
-                originalText = originalText.copy()
+                originalText = originalText
                     .append(ScreenTexts.LINE_BREAK)
                     .append(ScreenTexts.LINE_BREAK)
                     .append(abilityInfo);

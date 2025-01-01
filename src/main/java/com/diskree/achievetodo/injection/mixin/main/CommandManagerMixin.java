@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
+import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.ContextChain;
@@ -40,13 +41,15 @@ public class CommandManagerMixin {
             ServerPlayerEntity player = source.getPlayer();
             if (player != null) {
                 player.sendMessage(
-                    Text.translatable("achievetodo.suggest_install_advancements_search_mod")
-                        .append(Text.literal("AdvancementsSearch").styled(style -> style
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/advancementssearch"))
+                    AchieveToDoClient.translateModKey("suggest_install_advancements_search_mod")
+                        .append(Text.literal("AdvancementsSearch").styled(style ->
+                            style
+                                .withClickEvent(new ClickEvent(
+                                    ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/advancementssearch")
+                                )
                                 .withUnderline(true)
                                 .withColor(Formatting.GOLD)
-                            )
-                        )
+                        ))
                 );
             }
             cir.setReturnValue(null);

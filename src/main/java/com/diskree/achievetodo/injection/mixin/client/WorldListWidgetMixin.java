@@ -33,12 +33,12 @@ public abstract class WorldListWidgetMixin {
 
     @Unique
     private void showUnknownError() {
-        client.setScreen(new ErrorScreen(screen, "achievetodo.error.unknown"));
+        client.setScreen(new ErrorScreen(screen, "error.unknown"));
     }
 
     @Unique
     private void showIntegrityCheckFailed() {
-        client.setScreen(new ErrorScreen(screen, "achievetodo.error.integrity_check_failed"));
+        client.setScreen(new ErrorScreen(screen, "error.integrity_check_failed"));
     }
 
     @Shadow

@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,7 @@ public class MinecraftClientMixin {
             if (AchieveToDoClient.isNotReady()) {
                 if (player != null) {
                     player.sendMessage(
-                        Text.translatable("achievetodo.error.not_ready_yet")
+                        AchieveToDoClient.translateModKey("error.not_ready_yet")
                             .formatted(Formatting.RED),
                         true
                     );

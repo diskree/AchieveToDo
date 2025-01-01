@@ -1,7 +1,10 @@
 package com.diskree.achievetodo.ability;
 
+import com.diskree.achievetodo.client.AchieveToDoClient;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 
 public enum DifficultyType {
 
@@ -33,16 +36,17 @@ public enum DifficultyType {
     }
 
     public @NotNull Text getDisplayedText() {
-        return Text.translatable(this == CHAOS ? "achievetodo.world_creation_tab.difficulty.chaos" :
-            "options.difficulty." + getLowerCaseName()
-        );
+        if (this == CHAOS) {
+            return AchieveToDoClient.translateModKey("world_creation_tab.difficulty.chaos");
+        }
+        return Text.translatable("options.difficulty." + getName());
     }
 
     public @NotNull Text getTooltipText() {
-        return Text.translatable("achievetodo.world_creation_tab.difficulty." + getLowerCaseName() + ".tooltip");
+        return AchieveToDoClient.translateModKey("world_creation_tab.difficulty." + getName() + ".tooltip");
     }
 
-    public @NotNull String getLowerCaseName() {
-        return name().toLowerCase();
+    public @NotNull String getName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 }

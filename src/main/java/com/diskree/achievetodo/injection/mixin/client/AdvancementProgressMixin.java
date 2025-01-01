@@ -127,10 +127,16 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressExt
             } else if (requiredAdvancementsCount == 0) {
                 cir.setReturnValue(1.0f);
             }
-        } else if (trackedScoreType != null && trackedScoreType.isPercentage()) {
-            cir.setReturnValue(isDone() ? 1.0f : AchieveToDoClient.getTrackedScore(trackedScoreType) / 100.0f);
-        } else if (trackedStatType != null && trackedStatType.isPercentage()) {
-            cir.setReturnValue(isDone() ? 1.0f : AchieveToDoClient.getTrackedStat(trackedStatType) / 100.0f);
+        } else if (!isDone()) {
+            int completionPercent = 0;
+            if (trackedScoreType != null && trackedScoreType.isPercentage()) {
+                completionPercent = AchieveToDoClient.getTrackedScore(trackedScoreType);
+            } else if (trackedStatType != null && trackedStatType.isPercentage()) {
+                completionPercent = AchieveToDoClient.getTrackedStat(trackedStatType);
+            }
+            if (completionPercent > 0) {
+                cir.setReturnValue(completionPercent / 100.0f);
+            }
         }
     }
 
@@ -142,16 +148,21 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressExt
     public void overrideProgressText(CallbackInfoReturnable<Text> cir) {
         if (ability != null && AchieveToDoClient.getRequiredAdvancementsCount(ability) <= 0) {
             cir.setReturnValue(null);
-        } else if (trackedScoreType != null && trackedScoreType.isPercentage()) {
-            cir.setReturnValue(Text.translatable(
-                "mco.upload.percent",
-                isDone() ? 100 : AchieveToDoClient.getTrackedScore(trackedScoreType)
-            ));
-        } else if (trackedStatType != null && trackedStatType.isPercentage()) {
-            cir.setReturnValue(Text.translatable(
-                "mco.upload.percent",
-                isDone() ? 100 : AchieveToDoClient.getTrackedStat(trackedStatType)
-            ));
+        } else {
+            boolean isScore = trackedScoreType != null && trackedScoreType.isPercentage();
+            boolean isStat = trackedStatType != null && trackedStatType.isPercentage();
+            if (!isScore && !isStat) {
+                return;
+            }
+            int completionPercent;
+            if (isDone()) {
+                completionPercent = 100;
+            } else if (isScore) {
+                completionPercent = AchieveToDoClient.getTrackedScore(trackedScoreType);
+            } else {
+                completionPercent = AchieveToDoClient.getTrackedStat(trackedStatType);
+            }
+            cir.setReturnValue(Text.translatable("mco.upload.percent", completionPercent));
         }
     }
 }

@@ -4,6 +4,7 @@ import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.ability.DungeonType;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
+import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
@@ -147,7 +148,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         }
         if (isNotReady()) {
             player.sendMessage(
-                Text.translatable("achievetodo.error.not_ready_yet")
+                AchieveToDoClient.translateModKey("error.not_ready_yet")
                     .formatted(Formatting.RED),
                 true
             );
@@ -276,7 +277,7 @@ public class AchieveToDoServer implements ServerModInitializer {
             .get(AbilityAdvancementsGenerator.buildAdvancementId(ability));
         player.getAdvancementTracker().grantCriterion(
             advancement,
-            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getLowerCaseName()
+            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getName()
         );
     }
 

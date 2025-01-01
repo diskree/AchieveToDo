@@ -2,6 +2,7 @@ package com.diskree.achievetodo.ability.generation;
 
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.client.AchieveToDoClient;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
@@ -40,7 +41,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
     }
 
     public static @NotNull Identifier buildAdvancementId(@NotNull AbilityType ability) {
-        return buildAdvancementId(ability.getLowerCaseName());
+        return buildAdvancementId(ability.getName());
     }
 
     private static @NotNull Identifier buildAdvancementId(String suffix) {
@@ -56,8 +57,8 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             .createUntelemetered()
             .display(
                 Items.BARRIER,
-                Text.of(BuildConfig.MOD_NAME),
-                Text.translatable(BuildConfig.MOD_ID + ".description"),
+                Text.literal(BuildConfig.MOD_NAME),
+                AchieveToDoClient.translateModKey("description"),
                 Identifier.ofVanilla("textures/block/" + Registries.BLOCK.getId(TAB_BACKGROUND).getPath() + ".png"),
                 AdvancementFrame.TASK,
                 false,
@@ -85,7 +86,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
                 )
                 .rewards(AdvancementRewards.Builder.function(advancementId))
                 .criterion(
-                    DEMYSTIFIED_CRITERION_PREFIX + ability.getLowerCaseName(),
+                    DEMYSTIFIED_CRITERION_PREFIX + ability.getName(),
                     Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions())
                 )
                 .criterion(

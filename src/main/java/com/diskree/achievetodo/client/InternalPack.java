@@ -6,6 +6,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 @Environment(EnvType.CLIENT)
 public enum InternalPack {
 
@@ -20,10 +22,10 @@ public enum InternalPack {
     BACAP_COOPERATIVE_MODE;
 
     public @NotNull String getDatapackName() {
-        return Identifier.of(BuildConfig.MOD_ID, getLowerCaseName()).toString();
+        return Identifier.of(BuildConfig.MOD_ID, getName()).toString();
     }
 
-    private @NotNull String getLowerCaseName() {
-        return name().toLowerCase();
+    private @NotNull String getName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 }

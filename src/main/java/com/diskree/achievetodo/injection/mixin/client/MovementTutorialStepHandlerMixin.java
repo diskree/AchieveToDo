@@ -26,12 +26,12 @@ public class MovementTutorialStepHandlerMixin implements MovementTutorialStepHan
 
     @Unique
     private static final Text OPEN_ADVANCEMENTS_TITLE =
-        Text.translatable("achievetodo.tutorial.open_advancements.title");
+        AchieveToDoClient.translateModKey("tutorial.open_advancements.title");
 
     @Unique
     private static final Text OPEN_ADVANCEMENTS_DESCRIPTION =
-        Text.translatable(
-            "achievetodo.tutorial.open_advancements.description",
+        AchieveToDoClient.translateModKey(
+            "tutorial.open_advancements.description",
             TutorialManager.keyToText("advancements")
         );
 

@@ -2,7 +2,9 @@ package com.diskree.achievetodo.ability;
 
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
+import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.client.gui.AbilityUnlockedToastType;
+import com.diskree.achievetodo.client.gui.DesignCodePalette;
 import com.diskree.achievetodo.injection.extension.main.ArmorItemExtension;
 import com.diskree.achievetodo.injection.extension.main.MiningToolItemExtension;
 import net.fabricmc.loader.api.FabricLoader;
@@ -28,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public enum AbilityType {
@@ -981,24 +984,23 @@ public enum AbilityType {
 
     public Text buildUnlockProgressMessage(int leftCount) {
         return buildLockedMessagePrefix()
-            .append(Text.translatable("achievetodo.ability.left_to_unlock", leftCount))
-            .formatted(Formatting.YELLOW);
+            .append(AchieveToDoClient.translateModKey("ability.left_to_unlock", leftCount))
+            .formatted(DesignCodePalette.TEXT_COLOR);
     }
 
     public Text buildPermanentlyLockedMessage() {
         return buildLockedMessagePrefix()
-            .append(Text.translatable("achievetodo.ability.permanently_locked"))
+            .append(AchieveToDoClient.translateModKey("ability.permanently_locked"))
             .formatted(Formatting.RED);
     }
 
     private MutableText buildLockedMessagePrefix() {
-        return Text.translatable("achievetodo.ability." + getLowerCaseName() + ".locked_message").copy()
-            .append(Text.of("."))
-            .append(Text.of((FabricLoader.getInstance().isModLoaded("multilineactionbar") ? "\n" : " ")));
+        return AchieveToDoClient.translateModKey("ability." + getName() + ".locked_message")
+            .append("." + (FabricLoader.getInstance().isModLoaded("multilineactionbar") ? "\n" : " "));
     }
 
-    public @NotNull String getLowerCaseName() {
-        return name().toLowerCase();
+    public @NotNull String getName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     @Nullable
@@ -1055,11 +1057,11 @@ public enum AbilityType {
     }
 
     public @NotNull Text getTitle() {
-        return Text.translatable("achievetodo.ability." + getLowerCaseName() + ".name");
+        return AchieveToDoClient.translateModKey("ability." + getName() + ".name");
     }
 
     public @NotNull Text getDescription() {
-        return Text.translatable("achievetodo.ability." + getLowerCaseName() + ".description");
+        return AchieveToDoClient.translateModKey("ability." + getName() + ".description");
     }
 
     public static AbilityType findByName(String name) {

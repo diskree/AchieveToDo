@@ -2,14 +2,15 @@ package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.client.AchieveToDoClient;
+import com.diskree.achievetodo.client.gui.DesignCodePalette;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TriState;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -140,11 +141,12 @@ public abstract class WorldRendererMixin {
                     animationTime = (float) (Util.getMeasuringTimeMs() % animationDurationMs) / animationDurationMs;
                 }
 
-                int yellowColor = DyeColor.YELLOW.getEntityColor();
-                float r = ((yellowColor >> 16) & 0xFF) / 255.0F;
-                float g = ((yellowColor >> 8) & 0xFF) / 255.0F;
-                float b = (yellowColor & 0xFF) / 255.0F;
-                RenderSystem.setShaderColor(r, g, b, (float) alpha);
+                RenderSystem.setShaderColor(
+                    ColorHelper.getRedFloat(DesignCodePalette.IN_WORLD_RGB),
+                    ColorHelper.getGreenFloat(DesignCodePalette.IN_WORLD_RGB),
+                    ColorHelper.getBlueFloat(DesignCodePalette.IN_WORLD_RGB),
+                    (float) alpha
+                );
 
                 BufferBuilder bufferBuilder = Tessellator.getInstance()
                     .begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);

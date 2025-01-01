@@ -7,6 +7,7 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 @Environment(EnvType.CLIENT)
 public enum ExternalPack {
@@ -84,7 +85,7 @@ public enum ExternalPack {
         true
     );
 
-    private final String name;
+    private final String title;
     private final Formatting color;
     private final String pageUrl;
     private final String downloadUrl;
@@ -93,7 +94,7 @@ public enum ExternalPack {
     private final boolean inGameDownloadSupported;
 
     ExternalPack(
-        String name,
+        String title,
         Formatting color,
         String pageUrl,
         String downloadUrl,
@@ -101,7 +102,7 @@ public enum ExternalPack {
         String sha1,
         boolean inGameDownloadSupported
     ) {
-        this.name = name;
+        this.title = title;
         this.color = color;
         this.pageUrl = pageUrl;
         this.downloadUrl = downloadUrl;
@@ -110,8 +111,8 @@ public enum ExternalPack {
         this.inGameDownloadSupported = inGameDownloadSupported;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public Formatting getColor() {
@@ -139,7 +140,7 @@ public enum ExternalPack {
     }
 
     public @NotNull String getFileName() {
-        return getLowerCaseName() + Constants.FileExtension.ZIP;
+        return getName() + Constants.FileExtension.ZIP;
     }
 
     public @NotNull String getDatapackName() {
@@ -147,11 +148,11 @@ public enum ExternalPack {
     }
 
     public @NotNull String getReasonKey() {
-        return "achievetodo.downloader.reason." + getLowerCaseName();
+        return "downloader.reason." + getName();
     }
 
-    private @NotNull String getLowerCaseName() {
-        return name().toLowerCase();
+    private @NotNull String getName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static ExternalPack mapFromFileName(String fileName) {
