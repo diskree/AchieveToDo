@@ -24,32 +24,38 @@ import java.util.List;
 public abstract class WorldRendererMixin {
 
     @Unique
-    private static final RenderLayer DUNGEON_BORDER_COLOR_MASK = createLockedDungeonBorder(false, false);
+    private static final RenderLayer LOCKED_DUNGEON_BORDER_COLOR_MASK = createLockedDungeonBorder(false, false);
 
     @Unique
-    private static final RenderLayer DUNGEON_BORDER_ALL_MASK = createLockedDungeonBorder(true, false);
+    private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK = createLockedDungeonBorder(true, false);
 
     @Unique
-    private static final RenderLayer DUNGEON_BORDER_COLOR_MASK_CULLING = createLockedDungeonBorder(false, true);
+    private static final RenderLayer LOCKED_DUNGEON_BORDER_COLOR_MASK_CULLING = createLockedDungeonBorder(false, true);
 
     @Unique
-    private static final RenderLayer DUNGEON_BORDER_ALL_MASK_CULLING = createLockedDungeonBorder(true, true);
+    private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK_CULLING = createLockedDungeonBorder(true, true);
+
+    @Unique
+    private static final int LOCKED_DUNGEON_BORDER_ANIMATION_SPEED = 3000;
+
+    @Unique
+    private static final float ENTER_LOCKED_DUNGEON_BORDER_FADE_ALPHA_SPEED = 0.003f;
 
     @Unique
     private static final Identifier FORCEFIELD_TEXTURE = Identifier.ofVanilla("textures/misc/forcefield.png");
 
     @Unique
-    private boolean wasInside = false;
+    private boolean wasInsideLockedDungeon = false;
 
     @Unique
-    private float fadeInsideAlpha = 1.0f;
+    private float fadeInsideLockedDungeonAlpha = 1.0f;
 
     @Unique
-    private static RenderLayer getDungeonBorder(boolean allMask, boolean isCullingEnabled) {
+    private static RenderLayer getLockedDungeonBorder(boolean allMask, boolean isCullingEnabled) {
         if (allMask) {
-            return isCullingEnabled ? DUNGEON_BORDER_ALL_MASK_CULLING : DUNGEON_BORDER_ALL_MASK;
+            return isCullingEnabled ? LOCKED_DUNGEON_BORDER_ALL_MASK_CULLING : LOCKED_DUNGEON_BORDER_ALL_MASK;
         }
-        return isCullingEnabled ? DUNGEON_BORDER_COLOR_MASK_CULLING : DUNGEON_BORDER_COLOR_MASK;
+        return isCullingEnabled ? LOCKED_DUNGEON_BORDER_COLOR_MASK_CULLING : LOCKED_DUNGEON_BORDER_COLOR_MASK;
     }
 
     @Unique
@@ -82,7 +88,7 @@ public abstract class WorldRendererMixin {
             shift = At.Shift.AFTER
         )
     )
-    public void renderLockedDungeonBoxes(
+    public void renderLockedDungeonBorders(
         Fog fog,
         float tickDelta,
         Vec3d cameraPos,
@@ -92,19 +98,19 @@ public abstract class WorldRendererMixin {
     ) {
         RenderLayer renderLayer = null;
         float animationTime = 0.0f;
-        boolean insideNow = false;
-        for (List<Box> lockedDungeonBoxes : AchieveToDoClient.getLockedDungeons().values()) {
-            for (Box box : lockedDungeonBoxes) {
-                boolean isCameraInsideBox = box.contains(cameraPos);
+        boolean isInsideLockedDungeon = false;
+        for (List<Box> boxes : AchieveToDoClient.getLockedDungeons().values()) {
+            for (Box box : boxes) {
+                boolean isCameraInside = box.contains(cameraPos);
                 double alpha;
-                if (isCameraInsideBox) {
-                    if (!insideNow) {
-                        insideNow = true;
-                        if (!wasInside) {
-                            fadeInsideAlpha = 0.0f;
+                if (isCameraInside) {
+                    if (!isInsideLockedDungeon) {
+                        isInsideLockedDungeon = true;
+                        if (!wasInsideLockedDungeon) {
+                            fadeInsideLockedDungeonAlpha = 0.0f;
                         }
                     }
-                    alpha = fadeInsideAlpha;
+                    alpha = fadeInsideLockedDungeonAlpha;
                 } else {
                     double closestX = Math.clamp(cameraPos.x, box.minX, box.maxX);
                     double closestY = Math.clamp(cameraPos.y, box.minY, box.maxY);
@@ -122,9 +128,13 @@ public abstract class WorldRendererMixin {
 
                 if (renderLayer == null) {
                     RenderSystem.setShaderTexture(0, FORCEFIELD_TEXTURE);
-                    renderLayer = getDungeonBorder(MinecraftClient.isFabulousGraphicsOrBetter(), !isCameraInsideBox);
+                    renderLayer = getLockedDungeonBorder(MinecraftClient.isFabulousGraphicsOrBetter(), !isCameraInside);
                     renderLayer.startDrawing();
-                    animationTime = (float) (Util.getMeasuringTimeMs() % 3000L) / 3000.0f;
+                    int animationDurationMs = LOCKED_DUNGEON_BORDER_ANIMATION_SPEED;
+                    if (isCameraInside) {
+                        animationDurationMs *= 2;
+                    }
+                    animationTime = (float) (Util.getMeasuringTimeMs() % animationDurationMs) / animationDurationMs;
                 }
                 int yellowRGB = DyeColor.YELLOW.getEntityColor();
                 float r = ((yellowRGB >> 16) & 0xFF) / 255.0F;
@@ -142,7 +152,7 @@ public abstract class WorldRendererMixin {
                 float minZ = (float) (box.minZ - cameraPos.z);
                 float maxZ = (float) (box.maxZ - cameraPos.z);
 
-                if (isCameraInsideBox || cameraPos.x > box.maxX - maxVisibleDistance) {
+                if (isCameraInside || cameraPos.x > box.maxX - maxVisibleDistance) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -174,7 +184,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInsideBox || cameraPos.x < box.minX + maxVisibleDistance) {
+                if (isCameraInside || cameraPos.x < box.minX + maxVisibleDistance) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -206,7 +216,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInsideBox || cameraPos.z > box.maxZ - maxVisibleDistance) {
+                if (isCameraInside || cameraPos.z > box.maxZ - maxVisibleDistance) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -238,7 +248,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInsideBox || cameraPos.z < box.minZ + maxVisibleDistance) {
+                if (isCameraInside || cameraPos.z < box.minZ + maxVisibleDistance) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -270,7 +280,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInsideBox || cameraPos.y < box.minY + maxVisibleDistance) {
+                if (isCameraInside || cameraPos.y < box.minY + maxVisibleDistance) {
                     for (float z = minZ; z < maxZ; ) {
                         float segmentZ = Math.min(1.0f, maxZ - z);
                         float textureU = 0f;
@@ -302,7 +312,7 @@ public abstract class WorldRendererMixin {
                         z += segmentZ;
                     }
                 }
-                if (isCameraInsideBox || cameraPos.y > box.maxY - maxVisibleDistance) {
+                if (isCameraInside || cameraPos.y > box.maxY - maxVisibleDistance) {
                     for (float z = minZ; z < maxZ; ) {
                         float segmentZ = Math.min(1.0f, maxZ - z);
                         float textureU = 0f;
@@ -335,25 +345,25 @@ public abstract class WorldRendererMixin {
                     }
                 }
 
-                BuiltBuffer builtBuffer = bufferBuilder.endNullable();
-                if (builtBuffer != null) {
-                    BufferRenderer.drawWithGlobalProgram(builtBuffer);
+                BuiltBuffer buffer = bufferBuilder.endNullable();
+                if (buffer != null) {
+                    BufferRenderer.drawWithGlobalProgram(buffer);
                 }
             }
         }
         if (renderLayer != null) {
             renderLayer.endDrawing();
             RenderSystem.disableCull();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
-        if (insideNow) {
-            fadeInsideAlpha += 0.003f * tickDelta;
-            if (fadeInsideAlpha > 1.0f) {
-                fadeInsideAlpha = 1.0f;
+        if (isInsideLockedDungeon) {
+            fadeInsideLockedDungeonAlpha += ENTER_LOCKED_DUNGEON_BORDER_FADE_ALPHA_SPEED * tickDelta;
+            if (fadeInsideLockedDungeonAlpha > 1.0f) {
+                fadeInsideLockedDungeonAlpha = 1.0f;
             }
         } else {
-            fadeInsideAlpha = 1.0f;
+            fadeInsideLockedDungeonAlpha = 1.0f;
         }
-        wasInside = insideNow;
+        wasInsideLockedDungeon = isInsideLockedDungeon;
     }
 }
