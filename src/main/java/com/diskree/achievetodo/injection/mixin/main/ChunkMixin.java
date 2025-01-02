@@ -1,13 +1,15 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.ability.DungeonType;
+import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.Feature;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,6 +22,7 @@ import java.util.Map;
 @Mixin(Chunk.class)
 public abstract class ChunkMixin implements ChunkExtension {
 
+    @Shadow @Final protected ChunkPos pos;
     @Unique
     private Map<Feature<?>, List<BlockBox>> featureBlockBoxes;
 
@@ -31,10 +34,10 @@ public abstract class ChunkMixin implements ChunkExtension {
         this.featureBlockBoxes = featureBlockBoxes;
 
         for (Map.Entry<Feature<?>, List<BlockBox>> featureBlockBoxEntry : featureBlockBoxes.entrySet()) {
-            DungeonType dungeon = DungeonType.findByFeature(featureBlockBoxEntry.getKey());
-            if (dungeon != null) {
+            LandmarkType landmark = LandmarkType.findByFeature(featureBlockBoxEntry.getKey());
+            if (landmark != null) {
                 for (BlockBox blockBox : featureBlockBoxEntry.getValue()) {
-                    AchieveToDoMod.getServer().addDungeon(world, dungeon, blockBox);
+                    AchieveToDoMod.getServer().addDungeon(world, pos, landmark, blockBox, true);
                 }
             }
         }
@@ -48,13 +51,13 @@ public abstract class ChunkMixin implements ChunkExtension {
 
     @Override
     public void achievetodo$addFeatureBlockBox(ServerWorld world, Feature<?> feature, BlockBox box) {
-        DungeonType dungeon = DungeonType.findByFeature(feature);
-        if (dungeon != null) {
+        LandmarkType landmark = LandmarkType.findByFeature(feature);
+        if (landmark != null) {
             if (featureBlockBoxes == null) {
                 featureBlockBoxes = new HashMap<>();
             }
             featureBlockBoxes.computeIfAbsent(feature, k -> new ArrayList<>()).add(box);
-            AchieveToDoMod.getServer().addDungeon(world, dungeon, box);
+            AchieveToDoMod.getServer().addDungeon(world, pos, landmark, box, true);
         }
         markNeedsSaving();
     }

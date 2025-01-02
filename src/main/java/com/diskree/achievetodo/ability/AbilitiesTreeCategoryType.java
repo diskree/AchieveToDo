@@ -7,7 +7,8 @@ public enum AbilitiesTreeCategoryType {
     BLOCKS(2),
     UPGRADE(2),
     FOOD(4),
-    TRADING(2);
+    TRADING(2),
+    LANDMARK(2);
 
     private final int rowsCount;
 

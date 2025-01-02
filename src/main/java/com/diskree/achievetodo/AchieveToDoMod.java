@@ -29,7 +29,7 @@ public class AchieveToDoMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(SyncAdvancementsCountPayload.ID, SyncAdvancementsCountPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(SyncDungeonBoundingBoxPayload.ID, SyncDungeonBoundingBoxPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(SyncLockedLandmarkBoxPayload.ID, SyncLockedLandmarkBoxPayload.CODEC);
 
         server = new AchieveToDoServer();
         server.onInitializeServer();

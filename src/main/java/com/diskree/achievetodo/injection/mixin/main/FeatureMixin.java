@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.DungeonType;
+import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import com.diskree.achievetodo.injection.extension.main.FeatureGenerationTracker;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -34,7 +34,7 @@ public class FeatureMixin {
         @Local(argsOnly = true) StructureWorldAccess world,
         @Local(argsOnly = true) BlockPos pos
     ) {
-        boolean shouldSave = DungeonType.FEATURES.contains(feature);
+        boolean shouldSave = LandmarkType.FEATURES.contains(feature);
         if (shouldSave && world instanceof FeatureGenerationTracker featureGenerationTracker) {
             featureGenerationTracker.achievetodo$setTrackFeatureGeneration(true);
         }

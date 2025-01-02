@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
+import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -13,8 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.List;
 
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
@@ -41,28 +40,29 @@ public class InGameHudMixin {
         if (entity != null) {
             Vec3d entityPos = entity.getPos();
             float maxVignetteAlpha = 0.0f;
-            for (List<Box> boxes : AchieveToDoClient.getLockedDungeons().values()) {
-                for (Box box : boxes) {
+
+            for (LandmarkType landmarkType : AchieveToDoClient.getLockedLandmarkBoxes().keySet()) {
+                if (entity.getWorld().getRegistryKey() != landmarkType.getDimension()) {
+                    continue;
+                }
+                for (Box box : AchieveToDoClient.getLockedLandmarkBoxes().get(landmarkType)) {
                     if (box.contains(entityPos)) {
                         maxVignetteAlpha = 1.0f;
-                    } else {
-                        double closestX = Math.clamp(entityPos.x, box.minX, box.maxX);
-                        double closestY = Math.clamp(entityPos.y, box.minY, box.maxY);
-                        double closestZ = Math.clamp(entityPos.z, box.minZ, box.maxZ);
-                        double distance = Math.sqrt(entityPos.squaredDistanceTo(closestX, closestY, closestZ));
-                        if (distance > 0 && distance < LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD) {
-                            float vignetteAlpha = (float)
-                                ((LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD - distance) /
-                                    LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD);
-                            maxVignetteAlpha = Math.max(maxVignetteAlpha, vignetteAlpha);
-                        }
-                    }
-                    if (maxVignetteAlpha == 1.0f) {
                         break;
                     }
-                }
-                if (maxVignetteAlpha == 1.0f) {
-                    break;
+                    double closestX = Math.clamp(entityPos.x, box.minX, box.maxX);
+                    double closestY = Math.clamp(entityPos.y, box.minY, box.maxY);
+                    double closestZ = Math.clamp(entityPos.z, box.minZ, box.maxZ);
+                    double distance = Math.sqrt(entityPos.squaredDistanceTo(closestX, closestY, closestZ));
+                    if (distance > 0 && distance < LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD) {
+                        float vignetteAlpha = (float)
+                            ((LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD - distance) /
+                                LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD);
+                        maxVignetteAlpha = Math.max(maxVignetteAlpha, vignetteAlpha);
+                        if (maxVignetteAlpha == 1.0f) {
+                            break;
+                        }
+                    }
                 }
             }
             if (maxVignetteAlpha > 0.0f) {

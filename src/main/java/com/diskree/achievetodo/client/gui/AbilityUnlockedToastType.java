@@ -16,7 +16,8 @@ public enum AbilityUnlockedToastType {
     EQUIPMENT,
     BLOCK,
     TRADING,
-    PORTAL;
+    PORTAL,
+    LANDMARK;
 
     public @NotNull Text getToastTitle() {
         return AchieveToDoClient.translateModKey("ability_unlocked_toast." + getName())

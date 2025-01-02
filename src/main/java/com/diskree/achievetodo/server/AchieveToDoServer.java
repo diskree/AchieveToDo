@@ -2,9 +2,9 @@ package com.diskree.achievetodo.server;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.ability.DungeonType;
+import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
-import com.diskree.achievetodo.client.AchieveToDoClient;
+import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
@@ -16,8 +16,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.PlayerAdvancementTracker;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.scoreboard.*;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -26,8 +26,10 @@ import net.minecraft.stat.ServerStatHandler;
 import net.minecraft.stat.Stat;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,11 +38,14 @@ import java.util.*;
 public class AchieveToDoServer implements ServerModInitializer {
 
     private Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
-    private final Map<UUID, Integer> advancementsCounts = new Object2IntOpenHashMap<>();
+    private final Map<UUID, Integer> advancementsCountByPlayers = new Object2IntOpenHashMap<>();
     private final EnumMap<TrackedScoreType, Map<UUID, Integer>> trackedScores =
         new EnumMap<>(TrackedScoreType.class);
     private final EnumMap<TrackedStatType, Map<UUID, Integer>> trackedStats =
         new EnumMap<>(TrackedStatType.class);
+
+    private final Map<ChunkPos, Map<LandmarkType, List<BlockBox>>> landmarksByChunks = new HashMap<>();
+    private final Map<UUID, List<LandmarkType>> lockedLandmarkTypesByPlayers = new HashMap<>();
 
     public AdvancementsMode currentAdvancementsMode;
     public ScoreboardObjective currentScoreboardObjective;
@@ -90,17 +95,59 @@ public class AchieveToDoServer implements ServerModInitializer {
     }
 
     public void setObtainedAdvancementsCount(@NotNull ServerPlayerEntity player, int count) {
+        if (abilitiesConfiguration == null) {
+            return;
+        }
         UUID playerUuid = player.getUuid();
-        int oldCount = advancementsCounts.getOrDefault(playerUuid, 0);
-        advancementsCounts.put(playerUuid, count);
-        if (oldCount != 0 && abilitiesConfiguration != null) {
-            for (AbilityType ability : AbilityType.values()) {
-                int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
-                if (requiredAdvancementsCount > 0 &&
-                    count >= requiredAdvancementsCount &&
-                    oldCount < requiredAdvancementsCount
-                ) {
-                    unlockAbility(player, ability);
+        int oldCount = advancementsCountByPlayers.getOrDefault(playerUuid, 0);
+        advancementsCountByPlayers.put(playerUuid, count);
+        for (AbilityType ability : AbilityType.values()) {
+            int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
+            if (requiredAdvancementsCount <= 0) {
+                continue;
+            }
+            boolean isLock;
+            if (count >= requiredAdvancementsCount && oldCount < requiredAdvancementsCount) {
+                isLock = false;
+            } else if (oldCount == 0 || count < requiredAdvancementsCount && oldCount >= requiredAdvancementsCount) {
+                isLock = true;
+            } else {
+                continue;
+            }
+            if (oldCount != 0) {
+                setAbilityLocked(player, ability, isLock);
+            }
+            LandmarkType abilityLandmark = ability.getLandmark();
+            if (abilityLandmark != null) {
+                if (isLock) {
+                    lockedLandmarkTypesByPlayers.computeIfAbsent(playerUuid, k -> new ArrayList<>())
+                        .add(abilityLandmark);
+                } else {
+                    List<LandmarkType> landmarkTypes = lockedLandmarkTypesByPlayers.get(playerUuid);
+                    if (landmarkTypes != null) {
+                        landmarkTypes.remove(abilityLandmark);
+                        if (landmarkTypes.isEmpty()) {
+                            lockedLandmarkTypesByPlayers.remove(playerUuid);
+                        }
+                    }
+                }
+                for (Map<LandmarkType, List<BlockBox>> landmarks : landmarksByChunks.values()) {
+                    for (LandmarkType landmarkType : landmarks.keySet()) {
+                        if (abilityLandmark == landmarkType) {
+                            for (BlockBox blockBox : landmarks.get(landmarkType)) {
+                                ServerPlayNetworking.send(player, new SyncLockedLandmarkBoxPayload(
+                                    landmarkType,
+                                    blockBox,
+                                    isLock
+                                ));
+                            }
+                            abilityLandmark = null;
+                            break;
+                        }
+                    }
+                    if (abilityLandmark == null) {
+                        break;
+                    }
                 }
             }
         }
@@ -147,11 +194,7 @@ public class AchieveToDoServer implements ServerModInitializer {
             return false;
         }
         if (isNotReady()) {
-            player.sendMessage(
-                AchieveToDoClient.translateModKey("error.not_ready_yet")
-                    .formatted(Formatting.RED),
-                true
-            );
+            AchieveToDoMod.logger.error("Advancements count hasn’t been loaded yet");
             return true;
         }
         int obtainedAdvancementsCount = getObtainedAdvancementsCount(player);
@@ -175,9 +218,40 @@ public class AchieveToDoServer implements ServerModInitializer {
         return true;
     }
 
-    public void addDungeon(@NotNull ServerWorld world, DungeonType dungeon, BlockBox blockBox) {
-        for (ServerPlayerEntity player : world.getPlayers()) {
-            ServerPlayNetworking.send(player, new SyncDungeonBoundingBoxPayload(dungeon, blockBox));
+    public void addDungeon(
+        @NotNull ServerWorld world,
+        @NotNull ChunkPos chunkPos,
+        LandmarkType type,
+        BlockBox blockBox,
+        boolean add
+    ) {
+        if (add) {
+            Map<LandmarkType, List<BlockBox>> landmarks =
+                landmarksByChunks.computeIfAbsent(chunkPos, k -> new HashMap<>());
+            List<BlockBox> blockBoxes = landmarks.computeIfAbsent(type, k -> new ArrayList<>());
+            blockBoxes.add(blockBox);
+        } else {
+            Map<LandmarkType, List<BlockBox>> landmarksMap = landmarksByChunks.get(chunkPos);
+            if (landmarksMap != null) {
+                List<BlockBox> boxes = landmarksMap.get(type);
+                if (boxes != null) {
+                    boxes.remove(blockBox);
+                    if (boxes.isEmpty()) {
+                        landmarksMap.remove(type);
+                        if (landmarksMap.isEmpty()) {
+                            landmarksByChunks.remove(chunkPos);
+                        }
+                    }
+                }
+            }
+        }
+        for (Map.Entry<UUID, List<LandmarkType>> entry : lockedLandmarkTypesByPlayers.entrySet()) {
+            if (entry.getValue().contains(type)) {
+                ServerPlayerEntity player = world.getServer().getPlayerManager().getPlayer(entry.getKey());
+                if (player != null) {
+                    ServerPlayNetworking.send(player, new SyncLockedLandmarkBoxPayload(type, blockBox, add));
+                }
+            }
         }
     }
 
@@ -192,51 +266,69 @@ public class AchieveToDoServer implements ServerModInitializer {
                     server.getSaveProperties().getGeneratorOptions().getSeed()
                 );
             }
-            advancementsCounts.clear();
+            advancementsCountByPlayers.clear();
             trackedScores.clear();
             trackedStats.clear();
             prepareScoreboard(server.getScoreboard());
         });
-        ServerPlayConnectionEvents.JOIN.register(
-            (handler, sender, server) -> {
-                ServerPlayerEntity player = handler.player;
-                ServerPlayNetworking.send(player, new SyncAbilitiesConfigurationPayload(abilitiesConfiguration));
-                updateObtainedAdvancementsCount(server.getScoreboard(), player);
-                ScoreHolder scoreHolder = ScoreHolder.fromName(player.getNameForScoreboard());
-                Scoreboard scoreboard = player.getScoreboard();
-                for (Map.Entry<String, List<TrackedScoreType>> scoreTypeEntry : TrackedScoreType.SCORES.entrySet()) {
-                    ReadableScoreboardScore scoreboardScore = scoreboard.getScore(
-                        scoreHolder, scoreboard.getNullableObjective(scoreTypeEntry.getKey())
-                    );
-                    if (scoreboardScore != null) {
-                        int score = scoreboardScore.getScore();
-                        for (TrackedScoreType type : scoreTypeEntry.getValue()) {
-                            setScore(player, type, type.fixScore(scoreboard, scoreHolder, score));
-                        }
-                    }
-                }
-                ServerStatHandler serverStatHandler = player.getStatHandler();
-                for (Map.Entry<Stat<?>, List<TrackedStatType>> statTypeEntry : TrackedStatType.STATS.entrySet()) {
-                    int statValue = serverStatHandler.getStat(statTypeEntry.getKey());
-                    for (TrackedStatType trackedStatType : statTypeEntry.getValue()) {
-                        setStat(player, trackedStatType, statValue);
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ServerPlayerEntity player = handler.player;
+            ServerPlayNetworking.send(player, new SyncAbilitiesConfigurationPayload(abilitiesConfiguration));
+            updateObtainedAdvancementsCount(server.getScoreboard(), player);
+            ScoreHolder scoreHolder = ScoreHolder.fromName(player.getNameForScoreboard());
+            Scoreboard scoreboard = player.getScoreboard();
+            for (Map.Entry<String, List<TrackedScoreType>> scoreTypeEntry : TrackedScoreType.SCORES.entrySet()) {
+                ReadableScoreboardScore scoreboardScore = scoreboard.getScore(
+                    scoreHolder, scoreboard.getNullableObjective(scoreTypeEntry.getKey())
+                );
+                if (scoreboardScore != null) {
+                    int score = scoreboardScore.getScore();
+                    for (TrackedScoreType type : scoreTypeEntry.getValue()) {
+                        setScore(player, type, type.fixScore(scoreboard, scoreHolder, score));
                     }
                 }
             }
-        );
-        ServerChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
-            Registry<Structure> structureRegistry = world.getRegistryManager().getOrThrow(RegistryKeys.STRUCTURE);
-            for (Map.Entry<Structure, StructureStart> entry : chunk.getStructureStarts().entrySet()) {
-                StructureStart structureStart = entry.getValue();
-                if (structureStart.hasChildren()) {
-                    RegistryKey<Structure> structure = structureRegistry.getKey(entry.getKey()).orElse(null);
-                    DungeonType dungeon = DungeonType.findByStructure(structure);
-                    if (dungeon != null) {
-                        addDungeon(world, dungeon, structureStart.getBoundingBox());
-                    }
+            ServerStatHandler serverStatHandler = player.getStatHandler();
+            for (Map.Entry<Stat<?>, List<TrackedStatType>> statTypeEntry : TrackedStatType.STATS.entrySet()) {
+                int statValue = serverStatHandler.getStat(statTypeEntry.getKey());
+                for (TrackedStatType trackedStatType : statTypeEntry.getValue()) {
+                    setStat(player, trackedStatType, statValue);
                 }
             }
         });
+        ServerChunkEvents.CHUNK_LOAD.register((world, chunk) -> onChunkLoadedOrUnloaded(world, chunk, true));
+        ServerChunkEvents.CHUNK_UNLOAD.register((world, chunk) -> onChunkLoadedOrUnloaded(world, chunk, false));
+    }
+
+    private void onChunkLoadedOrUnloaded(@NotNull ServerWorld world, @NotNull Chunk chunk, boolean loaded) {
+        Registry<Structure> structureRegistry = null;
+        for (Map.Entry<Structure, StructureStart> entry : chunk.getStructureStarts().entrySet()) {
+            StructureStart structureStart = entry.getValue();
+            if (structureStart.hasChildren()) {
+                if (structureRegistry == null) {
+                    structureRegistry = world.getRegistryManager().getOrThrow(RegistryKeys.STRUCTURE);
+                }
+                LandmarkType landmark = LandmarkType.findByStructure(
+                    structureRegistry.getKey(entry.getKey()).orElse(null)
+                );
+                if (landmark != null) {
+                    addDungeon(world, chunk.getPos(), landmark, structureStart.getBoundingBox(), loaded);
+                }
+            }
+        }
+        if (chunk instanceof ChunkExtension chunkExtension) {
+            Map<Feature<?>, List<BlockBox>> featureBlockBoxes = chunkExtension.achievetodo$getFeatureBlockBoxes();
+            if (featureBlockBoxes != null) {
+                for (Map.Entry<Feature<?>, List<BlockBox>> entry : featureBlockBoxes.entrySet()) {
+                    LandmarkType landmark = LandmarkType.findByFeature(entry.getKey());
+                    if (landmark != null) {
+                        for (BlockBox blockBox : entry.getValue()) {
+                            addDungeon(world, chunk.getPos(), landmark, blockBox, loaded);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void updateObtainedAdvancementsCount(ServerScoreboard scoreboard, @NotNull ServerPlayerEntity player) {
@@ -281,15 +373,20 @@ public class AchieveToDoServer implements ServerModInitializer {
         );
     }
 
-    private void unlockAbility(@NotNull ServerPlayerEntity player, @NotNull AbilityType ability) {
+    private void setAbilityLocked(@NotNull ServerPlayerEntity player, @NotNull AbilityType ability, boolean lock) {
         AdvancementEntry advancement = player.server.getAdvancementLoader()
             .get(AbilityAdvancementsGenerator.buildAdvancementId(ability));
-        for (String criterion : player.getAdvancementTracker().getProgress(advancement).getUnobtainedCriteria()) {
-            player.getAdvancementTracker().grantCriterion(advancement, criterion);
+        PlayerAdvancementTracker advancementTracker = player.getAdvancementTracker();
+        if (lock) {
+            advancementTracker.revokeCriterion(advancement, AbilityAdvancementsGenerator.UNLOCKED_CRITERION);
+        } else {
+            for (String criterion : advancementTracker.getProgress(advancement).getUnobtainedCriteria()) {
+                advancementTracker.grantCriterion(advancement, criterion);
+            }
         }
     }
 
     private int getObtainedAdvancementsCount(@NotNull ServerPlayerEntity player) {
-        return advancementsCounts.get(player.getUuid());
+        return advancementsCountByPlayers.get(player.getUuid());
     }
 }

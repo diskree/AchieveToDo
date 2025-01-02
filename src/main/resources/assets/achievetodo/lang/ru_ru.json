@@ -604,6 +604,7 @@
   "achievetodo.ability_unlocked_toast.block": "Доступен блок",
   "achievetodo.ability_unlocked_toast.trading": "Доступна торговля",
   "achievetodo.ability_unlocked_toast.portal": "Доступен портал",
+  "achievetodo.ability_unlocked_toast.landmark": "Доступна структура",
 
   "achievetodo.tab_unlocked_chat_message": "Разблокирована вкладка %s%s%s",
   "achievetodo.ability_unlocked_chat_message": "%s разблокировал %s%s%s"

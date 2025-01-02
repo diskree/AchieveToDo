@@ -808,7 +808,52 @@ public enum AbilityType {
         1, 1000,
         true, true,
         AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ENCHANTING_TABLE
-    );
+    ),
+    INTERACT_INSIDE_IGLOO(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.IGLOO
+    ),
+    INTERACT_INSIDE_RUINED_PORTAL(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.RUINED_PORTAL
+    ),
+    INTERACT_INSIDE_ANCIENT_CITY(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.ANCIENT_CITY
+    ),
+    INTERACT_INSIDE_MONUMENT(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONUMENT
+    ),
+    INTERACT_INSIDE_PILLAGER_OUTPOST(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.PILLAGER_OUTPOST
+    ),
+    INTERACT_INSIDE_DESERT_WELL(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.DESERT_WELL
+    ),
+    INTERACT_INSIDE_MONSTER_ROOM(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONSTER_ROOM
+    ),
+
+
+    ;
 
     private final int easyCount, normalCount, hardCount;
     private final int chaosMinLimit, chaosMaxLimit;
@@ -822,6 +867,7 @@ public enum AbilityType {
     private final ArmorMaterial equipmentMaterial;
     private final Class<? extends Portal> portal;
     private final VillagerProfession villager;
+    private final LandmarkType landmark;
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
@@ -833,7 +879,7 @@ public enum AbilityType {
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
             canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
-            unlockToastType, category, item, null, null, null, null, null, null
+            unlockToastType, category, item, null, null, null, null, null, null, null
         );
     }
 
@@ -847,7 +893,7 @@ public enum AbilityType {
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
             canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
-            unlockToastType, category, null, null, block, null, null, null, null
+            unlockToastType, category, null, null, block, null, null, null, null, null
         );
     }
 
@@ -861,7 +907,7 @@ public enum AbilityType {
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
             canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
-            unlockToastType, category, null, food, null, null, null, null, null
+            unlockToastType, category, null, food, null, null, null, null, null, null
         );
     }
 
@@ -875,7 +921,7 @@ public enum AbilityType {
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
             canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
-            unlockToastType, category, null, null, null, toolMaterial, null, null, null
+            unlockToastType, category, null, null, null, toolMaterial, null, null, null, null
         );
     }
 
@@ -889,7 +935,7 @@ public enum AbilityType {
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
             canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
-            unlockToastType, category, null, null, null, null, armorMaterial, null, null
+            unlockToastType, category, null, null, null, null, armorMaterial, null, null, null
         );
     }
 
@@ -903,7 +949,7 @@ public enum AbilityType {
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
             canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
-            unlockToastType, category, null, null, null, null, null, portal, null
+            unlockToastType, category, null, null, null, null, null, portal, null, null
         );
     }
 
@@ -917,7 +963,21 @@ public enum AbilityType {
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
             canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
-            unlockToastType, category, null, null, null, null, null, null, villager
+            unlockToastType, category, null, null, null, null, null, null, villager, null
+        );
+    }
+
+    AbilityType(
+        int easyCount, int normalCount, int hardCount,
+        int chaosMinLimit, int chaosMaxLimit,
+        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, LandmarkType landmark
+    ) {
+        this(
+            easyCount, normalCount, hardCount,
+            chaosMinLimit, chaosMaxLimit,
+            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            unlockToastType, category, null, null, null, null, null, null, null, landmark
         );
     }
 
@@ -933,7 +993,8 @@ public enum AbilityType {
         ToolMaterial toolMaterial,
         ArmorMaterial equipmentMaterial,
         Class<? extends Portal> portal,
-        VillagerProfession villager
+        VillagerProfession villager,
+        LandmarkType landmark
     ) {
         this.easyCount = easyCount;
         this.normalCount = normalCount;
@@ -951,6 +1012,7 @@ public enum AbilityType {
         this.equipmentMaterial = equipmentMaterial;
         this.portal = portal;
         this.villager = villager;
+        this.landmark = landmark;
     }
 
     public int getRequiredAdvancementsCount(@NotNull DifficultyType difficultyType) {
@@ -980,6 +1042,10 @@ public enum AbilityType {
 
     public AbilityUnlockedToastType getUnlockToastType() {
         return unlockToastType;
+    }
+
+    public LandmarkType getLandmark() {
+        return landmark;
     }
 
     public Text buildUnlockProgressMessage(int leftCount) {
@@ -1052,6 +1118,17 @@ public enum AbilityType {
                     return blockState.getBlock().asItem();
                 }
             }
+        }
+        if (landmark != null) {
+            return switch (landmark) {
+                case IGLOO -> Items.SNOW_BLOCK;
+                case RUINED_PORTAL -> Items.CRYING_OBSIDIAN;
+                case ANCIENT_CITY -> Items.REINFORCED_DEEPSLATE;
+                case MONUMENT -> Items.SPONGE;
+                case PILLAGER_OUTPOST -> Items.DARK_OAK_PLANKS;
+                case DESERT_WELL -> Items.SANDSTONE_SLAB;
+                case MONSTER_ROOM -> Items.SPAWNER;
+            };
         }
         throw new IllegalStateException("Ability " + this + " haven't icon!");
     }

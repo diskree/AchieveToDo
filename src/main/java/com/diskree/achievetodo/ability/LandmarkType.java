@@ -10,12 +10,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public enum DungeonType {
+public enum LandmarkType {
 
+    IGLOO(World.OVERWORLD, StructureKeys.IGLOO),
     RUINED_PORTAL(World.OVERWORLD, StructureKeys.RUINED_PORTAL),
     ANCIENT_CITY(World.OVERWORLD, StructureKeys.ANCIENT_CITY),
     MONUMENT(World.OVERWORLD, StructureKeys.MONUMENT),
+    PILLAGER_OUTPOST(World.OVERWORLD, StructureKeys.PILLAGER_OUTPOST),
     DESERT_WELL(World.OVERWORLD, Feature.DESERT_WELL),
+    MONSTER_ROOM(World.OVERWORLD, Feature.MONSTER_ROOM)
     ;
 
     public static final Set<Feature<?>> FEATURES = new HashSet<>();
@@ -25,37 +28,29 @@ public enum DungeonType {
     private final Feature<?> feature;
 
     static {
-        for (DungeonType dungeon : values()) {
-            if (dungeon.isFeature()) {
-                FEATURES.add(dungeon.getFeature());
+        for (LandmarkType landmark : values()) {
+            if (landmark.isFeature()) {
+                FEATURES.add(landmark.getFeature());
             }
         }
     }
 
-    DungeonType(RegistryKey<World> dimension, RegistryKey<Structure> structure) {
+    LandmarkType(RegistryKey<World> dimension, RegistryKey<Structure> structure) {
         this(dimension, structure, null);
     }
 
-    DungeonType(RegistryKey<World> dimension, Feature<?> feature) {
+    LandmarkType(RegistryKey<World> dimension, Feature<?> feature) {
         this(dimension, null, feature);
     }
 
-    DungeonType(RegistryKey<World> dimension, RegistryKey<Structure> structure, Feature<?> feature) {
+    LandmarkType(RegistryKey<World> dimension, RegistryKey<Structure> structure, Feature<?> feature) {
         this.dimension = dimension;
         this.structure = structure;
         this.feature = feature;
     }
 
-    public boolean isInOverworld() {
-        return dimension == World.OVERWORLD;
-    }
-
-    public boolean isInNether() {
-        return dimension == World.NETHER;
-    }
-
-    public boolean isInEnd() {
-        return dimension == World.END;
+    public RegistryKey<World> getDimension() {
+        return dimension;
     }
 
     public boolean isStructure() {
@@ -75,8 +70,8 @@ public enum DungeonType {
     }
 
     @Nullable
-    public static DungeonType findByStructure(RegistryKey<Structure> structure) {
-        for (DungeonType type : values()) {
+    public static LandmarkType findByStructure(RegistryKey<Structure> structure) {
+        for (LandmarkType type : values()) {
             if (type.isStructure() && type.getStructure() == structure) {
                 return type;
             }
@@ -85,8 +80,8 @@ public enum DungeonType {
     }
 
     @Nullable
-    public static DungeonType findByFeature(Feature<?> feature) {
-        for (DungeonType type : values()) {
+    public static LandmarkType findByFeature(Feature<?> feature) {
+        for (LandmarkType type : values()) {
             if (type.isFeature() && type.getFeature() == feature) {
                 return type;
             }

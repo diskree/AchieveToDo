@@ -3,7 +3,7 @@ package com.diskree.achievetodo.client;
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.AbilitiesTreeCategoryType;
 import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.ability.DungeonType;
+import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
@@ -36,11 +36,11 @@ public class AchieveToDoClient implements ClientModInitializer {
 
     private static Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
     private static int obtainedAdvancementsCount = -1;
+    private static final Map<LandmarkType, List<Box>> lockedLandmarkBoxes = new HashMap<>();
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
     private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
 
     private static final List<List<AbilityType>> abilityRows = new ArrayList<>();
-    private static final Map<DungeonType, List<Box>> lockedDungeons = new HashMap<>();
 
     public static int getRequiredAdvancementsCount(AbilityType ability) {
         return abilitiesConfiguration.get(ability);
@@ -62,8 +62,8 @@ public class AchieveToDoClient implements ClientModInitializer {
         return trackedStats.getOrDefault(statType, 0);
     }
 
-    public static Map<DungeonType, List<Box>> getLockedDungeons() {
-        return lockedDungeons;
+    public static Map<LandmarkType, List<Box>> getLockedLandmarkBoxes() {
+        return lockedLandmarkBoxes;
     }
 
     public static int getTrackedNearbyEntitiesCount(TrackedNearbyEntitiesType type) {
@@ -132,10 +132,22 @@ public class AchieveToDoClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SyncStatPayload.ID, (payload, context) ->
             context.client().execute(() -> trackedStats.put(payload.statType(), payload.progress()))
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncDungeonBoundingBoxPayload.ID, (payload, context) ->
-            context.client().execute(() ->
-                lockedDungeons.computeIfAbsent(payload.dungeon(), k -> new ArrayList<>()).add(Box.from(payload.boundingBox()))
-            )
+        ClientPlayNetworking.registerGlobalReceiver(SyncLockedLandmarkBoxPayload.ID, (payload, context) ->
+            context.client().execute(() -> {
+                LandmarkType landmark = payload.landmark();
+                if (payload.add()) {
+                    lockedLandmarkBoxes.computeIfAbsent(landmark, k -> new ArrayList<>())
+                        .add(Box.from(payload.blockBox()));
+                } else {
+                    List<Box> boxes = lockedLandmarkBoxes.get(landmark);
+                    if (boxes != null) {
+                        boxes.remove(Box.from(payload.blockBox()));
+                        if (boxes.isEmpty()) {
+                            lockedLandmarkBoxes.remove(landmark);
+                        }
+                    }
+                }
+            })
         );
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {

@@ -1,11 +1,13 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.client.gui.DesignCodePalette;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TriState;
 import net.minecraft.util.Util;
@@ -13,29 +15,30 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
 
     @Unique
-    private static final RenderLayer LOCKED_DUNGEON_BORDER_COLOR_MASK = createLockedDungeonBorder(false, false);
+    private static final RenderLayer LOCKED_DUNGEON_BORDER_COLOR_MASK = createLockedLandmarkBorder(false, false);
 
     @Unique
-    private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK = createLockedDungeonBorder(true, false);
+    private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK = createLockedLandmarkBorder(true, false);
 
     @Unique
-    private static final RenderLayer LOCKED_DUNGEON_BORDER_COLOR_MASK_CULLING = createLockedDungeonBorder(false, true);
+    private static final RenderLayer LOCKED_DUNGEON_BORDER_COLOR_MASK_CULLING = createLockedLandmarkBorder(false, true);
 
     @Unique
-    private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK_CULLING = createLockedDungeonBorder(true, true);
+    private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK_CULLING = createLockedLandmarkBorder(true, true);
 
     @Unique
     private static final long LOCKED_DUNGEON_BORDER_ANIMATION_DURATION = TimeUnit.SECONDS.toMillis(3);
@@ -62,9 +65,9 @@ public abstract class WorldRendererMixin {
     }
 
     @Unique
-    private static @NotNull RenderLayer createLockedDungeonBorder(boolean allMask, boolean isCullingEnabled) {
+    private static @NotNull RenderLayer createLockedLandmarkBorder(boolean allMask, boolean isCullingEnabled) {
         return RenderLayer.of(
-            BuildConfig.MOD_ID + "_locked_dungeon_border",
+            BuildConfig.MOD_ID + "_locked_landmark_border",
             VertexFormats.POSITION_TEXTURE,
             VertexFormat.DrawMode.QUADS,
             1536,
@@ -82,6 +85,9 @@ public abstract class WorldRendererMixin {
                 .build(false)
         );
     }
+
+    @Shadow
+    private @Nullable ClientWorld world;
 
     @Inject(
         method = "method_62216",
@@ -102,8 +108,11 @@ public abstract class WorldRendererMixin {
         RenderLayer renderLayer = null;
         float animationTime = 0.0f;
         boolean isInsideLockedDungeon = false;
-        for (List<Box> boxes : AchieveToDoClient.getLockedDungeons().values()) {
-            for (Box box : boxes) {
+        for (LandmarkType landmarkType : AchieveToDoClient.getLockedLandmarkBoxes().keySet()) {
+            if (world != null && world.getRegistryKey() != landmarkType.getDimension()) {
+                continue;
+            }
+            for (Box box : AchieveToDoClient.getLockedLandmarkBoxes().get(landmarkType)) {
                 boolean isCameraInside = box.contains(cameraPos);
                 double alpha;
                 if (isCameraInside) {
