@@ -26,8 +26,10 @@ public record SyncAbilitiesConfigurationPayload(
     }
 
     private void write(@NotNull PacketByteBuf buf) {
-        for (AbilityType ability : AbilityType.values()) {
-            buf.writeInt(abilitiesConfiguration.get(ability));
+        buf.writeInt(abilitiesConfiguration.size());
+        for (Map.Entry<AbilityType, Integer> abilityEntry : abilitiesConfiguration.entrySet()) {
+            buf.writeEnumConstant(abilityEntry.getKey());
+            buf.writeInt(abilityEntry.getValue());
         }
     }
 
@@ -38,8 +40,12 @@ public record SyncAbilitiesConfigurationPayload(
 
     private static @NotNull Map<AbilityType, Integer> readMap(@NotNull PacketByteBuf buf) {
         Map<AbilityType, Integer> map = new EnumMap<>(AbilityType.class);
-        for (AbilityType ability : AbilityType.values()) {
-            map.put(ability, buf.readInt());
+        int size = buf.readInt();
+        for (int i = 0; i < size; i++) {
+            map.put(
+                buf.readEnumConstant(AbilityType.class),
+                buf.readInt()
+            );
         }
         return map;
     }

@@ -391,7 +391,9 @@ public enum TrackedStatType {
 
     static {
         for (TrackedStatType type : values()) {
-            STATS.computeIfAbsent(type.stat, k -> new ArrayList<>()).add(type);
+            STATS
+                .computeIfAbsent(type.stat, k -> new ArrayList<>())
+                .add(type);
         }
     }
 

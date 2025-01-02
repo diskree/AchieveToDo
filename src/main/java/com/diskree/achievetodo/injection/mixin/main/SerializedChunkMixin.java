@@ -165,14 +165,16 @@ public class SerializedChunkMixin implements SerializedChunkExtension {
                             if (featureBlockBoxes == null) {
                                 featureBlockBoxes = new HashMap<>();
                             }
-                            featureBlockBoxes.computeIfAbsent(feature, k -> new ArrayList<>()).add(new BlockBox(
-                                startNbt.getInt(FEATURE_START_MIN_X_NBT_KEY),
-                                startNbt.getInt(FEATURE_START_MIN_Y_NBT_KEY),
-                                startNbt.getInt(FEATURE_START_MIN_Z_NBT_KEY),
-                                startNbt.getInt(FEATURE_START_MAX_X_NBT_KEY),
-                                startNbt.getInt(FEATURE_START_MAX_Y_NBT_KEY),
-                                startNbt.getInt(FEATURE_START_MAX_Z_NBT_KEY)
-                            ));
+                            featureBlockBoxes
+                                .computeIfAbsent(feature, k -> new ArrayList<>())
+                                .add(new BlockBox(
+                                    startNbt.getInt(FEATURE_START_MIN_X_NBT_KEY),
+                                    startNbt.getInt(FEATURE_START_MIN_Y_NBT_KEY),
+                                    startNbt.getInt(FEATURE_START_MIN_Z_NBT_KEY),
+                                    startNbt.getInt(FEATURE_START_MAX_X_NBT_KEY),
+                                    startNbt.getInt(FEATURE_START_MAX_Y_NBT_KEY),
+                                    startNbt.getInt(FEATURE_START_MAX_Z_NBT_KEY)
+                                ));
                         }
                     }
                 }

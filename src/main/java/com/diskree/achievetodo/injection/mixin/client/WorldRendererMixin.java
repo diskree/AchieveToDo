@@ -29,39 +29,42 @@ import java.util.concurrent.TimeUnit;
 public abstract class WorldRendererMixin {
 
     @Unique
-    private static final RenderLayer LOCKED_DUNGEON_BORDER_COLOR_MASK = createLockedLandmarkBorder(false, false);
+    private static final RenderLayer LOCKED_LANDMARK_BORDER_COLOR_MASK = createLockedLandmarkBorder(false, false);
 
     @Unique
-    private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK = createLockedLandmarkBorder(true, false);
+    private static final RenderLayer LOCKED_LANDMARK_BORDER_ALL_MASK = createLockedLandmarkBorder(true, false);
 
     @Unique
-    private static final RenderLayer LOCKED_DUNGEON_BORDER_COLOR_MASK_CULLING = createLockedLandmarkBorder(false, true);
+    private static final RenderLayer LOCKED_LANDMARK_BORDER_COLOR_MASK_CULLING = createLockedLandmarkBorder(false, true);
 
     @Unique
-    private static final RenderLayer LOCKED_DUNGEON_BORDER_ALL_MASK_CULLING = createLockedLandmarkBorder(true, true);
+    private static final RenderLayer LOCKED_LANDMARK_BORDER_ALL_MASK_CULLING = createLockedLandmarkBorder(true, true);
 
     @Unique
-    private static final long LOCKED_DUNGEON_BORDER_ANIMATION_DURATION = TimeUnit.SECONDS.toMillis(3);
+    private static final long LOCKED_LANDMARK_BORDER_ANIMATION_DURATION = TimeUnit.SECONDS.toMillis(3);
 
     @Unique
-    private static final float ENTER_LOCKED_DUNGEON_BORDER_FADE_ALPHA_SPEED = 0.003f;
+    private static final float ENTER_LOCKED_LANDMARK_BORDER_FADE_ALPHA_SPEED = 0.003f;
 
     @Unique
-    private static final Identifier LOCKED_DUNGEON_BORDER_TEXTURE =
+    private static final int LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD = 60;
+
+    @Unique
+    private static final Identifier LOCKED_LANDMARK_BORDER_TEXTURE =
         Identifier.ofVanilla("textures/misc/forcefield.png");
 
     @Unique
-    private boolean wasInsideLockedDungeon = false;
+    private boolean wasInsideLockedLandmark = false;
 
     @Unique
-    private float fadeInsideLockedDungeonAlpha = 1.0f;
+    private float fadeInsideLockedLandmarkAlpha = 1.0f;
 
     @Unique
-    private static RenderLayer getLockedDungeonBorder(boolean allMask, boolean isCullingEnabled) {
+    private static RenderLayer getLockedLandmarkBorderRenderLayer(boolean allMask, boolean isCullingEnabled) {
         if (allMask) {
-            return isCullingEnabled ? LOCKED_DUNGEON_BORDER_ALL_MASK_CULLING : LOCKED_DUNGEON_BORDER_ALL_MASK;
+            return isCullingEnabled ? LOCKED_LANDMARK_BORDER_ALL_MASK_CULLING : LOCKED_LANDMARK_BORDER_ALL_MASK;
         }
-        return isCullingEnabled ? LOCKED_DUNGEON_BORDER_COLOR_MASK_CULLING : LOCKED_DUNGEON_BORDER_COLOR_MASK;
+        return isCullingEnabled ? LOCKED_LANDMARK_BORDER_COLOR_MASK_CULLING : LOCKED_LANDMARK_BORDER_COLOR_MASK;
     }
 
     @Unique
@@ -97,17 +100,17 @@ public abstract class WorldRendererMixin {
             shift = At.Shift.AFTER
         )
     )
-    public void renderLockedDungeonBorders(
+    public void renderLockedLandmarkBorders(
         Fog fog,
         float tickDelta,
         Vec3d cameraPos,
-        int visibleDistanceThreshold,
+        int viewDistance,
         float farPlaneDistance,
         CallbackInfo ci
     ) {
         RenderLayer renderLayer = null;
         float animationTime = 0.0f;
-        boolean isInsideLockedDungeon = false;
+        boolean isInsideLockedLandmark = false;
         for (LandmarkType landmarkType : AchieveToDoClient.getLockedLandmarkBoxes().keySet()) {
             if (world != null && world.getRegistryKey() != landmarkType.getDimension()) {
                 continue;
@@ -116,34 +119,38 @@ public abstract class WorldRendererMixin {
                 boolean isCameraInside = box.contains(cameraPos);
                 double alpha;
                 if (isCameraInside) {
-                    if (!isInsideLockedDungeon) {
-                        isInsideLockedDungeon = true;
-                        if (!wasInsideLockedDungeon) {
-                            fadeInsideLockedDungeonAlpha = 0.0f;
+                    if (!isInsideLockedLandmark) {
+                        isInsideLockedLandmark = true;
+                        if (!wasInsideLockedLandmark) {
+                            fadeInsideLockedLandmarkAlpha = 0.0f;
                         }
                     }
-                    alpha = fadeInsideLockedDungeonAlpha;
+                    alpha = fadeInsideLockedLandmarkAlpha;
                 } else {
                     double closestX = Math.clamp(cameraPos.x, box.minX, box.maxX);
                     double closestY = Math.clamp(cameraPos.y, box.minY, box.maxY);
                     double closestZ = Math.clamp(cameraPos.z, box.minZ, box.maxZ);
 
                     double distance = Math.sqrt(cameraPos.squaredDistanceTo(closestX, closestY, closestZ));
-                    if (distance >= visibleDistanceThreshold) {
+                    if (distance >= LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
                         continue;
                     }
                     alpha = 1.0f;
-                    double fadeStart = visibleDistanceThreshold * 0.5f;
+                    double fadeStart = LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD * 0.5f;
                     if (distance > fadeStart) {
-                        alpha -= (distance - fadeStart) / (visibleDistanceThreshold - fadeStart);
+                        alpha -= (distance - fadeStart) /
+                            (LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD - fadeStart);
                     }
                 }
 
                 if (renderLayer == null) {
-                    RenderSystem.setShaderTexture(0, LOCKED_DUNGEON_BORDER_TEXTURE);
-                    renderLayer = getLockedDungeonBorder(MinecraftClient.isFabulousGraphicsOrBetter(), !isCameraInside);
+                    RenderSystem.setShaderTexture(0, LOCKED_LANDMARK_BORDER_TEXTURE);
+                    renderLayer = getLockedLandmarkBorderRenderLayer(
+                        MinecraftClient.isFabulousGraphicsOrBetter(),
+                        !isCameraInside
+                    );
                     renderLayer.startDrawing();
-                    long animationDurationMs = LOCKED_DUNGEON_BORDER_ANIMATION_DURATION;
+                    long animationDurationMs = LOCKED_LANDMARK_BORDER_ANIMATION_DURATION;
                     if (isCameraInside) {
                         animationDurationMs *= 2;
                     }
@@ -167,7 +174,7 @@ public abstract class WorldRendererMixin {
                 float minZ = (float) (box.minZ - cameraPos.z);
                 float maxZ = (float) (box.maxZ - cameraPos.z);
 
-                if (isCameraInside || cameraPos.x > box.maxX - visibleDistanceThreshold) {
+                if (isCameraInside || cameraPos.x > box.maxX - LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -199,7 +206,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInside || cameraPos.x < box.minX + visibleDistanceThreshold) {
+                if (isCameraInside || cameraPos.x < box.minX + LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -231,7 +238,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInside || cameraPos.z > box.maxZ - visibleDistanceThreshold) {
+                if (isCameraInside || cameraPos.z > box.maxZ - LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -263,7 +270,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInside || cameraPos.z < box.minZ + visibleDistanceThreshold) {
+                if (isCameraInside || cameraPos.z < box.minZ + LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
                     for (float y = minY; y < maxY; ) {
                         float segmentY = Math.min(1.0f, maxY - y);
                         float textureU = 0f;
@@ -295,7 +302,7 @@ public abstract class WorldRendererMixin {
                         y += segmentY;
                     }
                 }
-                if (isCameraInside || cameraPos.y < box.minY + visibleDistanceThreshold) {
+                if (isCameraInside || cameraPos.y < box.minY + LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
                     for (float z = minZ; z < maxZ; ) {
                         float segmentZ = Math.min(1.0f, maxZ - z);
                         float textureU = 0f;
@@ -327,7 +334,7 @@ public abstract class WorldRendererMixin {
                         z += segmentZ;
                     }
                 }
-                if (isCameraInside || cameraPos.y > box.maxY - visibleDistanceThreshold) {
+                if (isCameraInside || cameraPos.y > box.maxY - LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
                     for (float z = minZ; z < maxZ; ) {
                         float segmentZ = Math.min(1.0f, maxZ - z);
                         float textureU = 0f;
@@ -371,14 +378,14 @@ public abstract class WorldRendererMixin {
             RenderSystem.disableCull();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
-        if (isInsideLockedDungeon) {
-            fadeInsideLockedDungeonAlpha += ENTER_LOCKED_DUNGEON_BORDER_FADE_ALPHA_SPEED * tickDelta;
-            if (fadeInsideLockedDungeonAlpha > 1.0f) {
-                fadeInsideLockedDungeonAlpha = 1.0f;
+        if (isInsideLockedLandmark) {
+            fadeInsideLockedLandmarkAlpha += ENTER_LOCKED_LANDMARK_BORDER_FADE_ALPHA_SPEED * tickDelta;
+            if (fadeInsideLockedLandmarkAlpha > 1.0f) {
+                fadeInsideLockedLandmarkAlpha = 1.0f;
             }
         } else {
-            fadeInsideLockedDungeonAlpha = 1.0f;
+            fadeInsideLockedLandmarkAlpha = 1.0f;
         }
-        wasInsideLockedDungeon = isInsideLockedDungeon;
+        wasInsideLockedLandmark = isInsideLockedLandmark;
     }
 }

@@ -27,7 +27,7 @@ public class ScoreboardMixin {
                 target = "Lnet/minecraft/scoreboard/Scoreboard;updateScore(Lnet/minecraft/scoreboard/ScoreHolder;Lnet/minecraft/scoreboard/ScoreboardObjective;Lnet/minecraft/scoreboard/ScoreboardScore;)V"
             )
         )
-        private void trackScoreChanged(
+        private void trackScoreChanges(
             Scoreboard scoreboard,
             @NotNull ScoreHolder scoreHolder,
             @NotNull ScoreboardObjective objective,

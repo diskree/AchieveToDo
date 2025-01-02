@@ -22,7 +22,6 @@ import java.util.Map;
 @Mixin(Chunk.class)
 public abstract class ChunkMixin implements ChunkExtension {
 
-    @Shadow @Final protected ChunkPos pos;
     @Unique
     private Map<Feature<?>, List<BlockBox>> featureBlockBoxes;
 
@@ -37,7 +36,7 @@ public abstract class ChunkMixin implements ChunkExtension {
             LandmarkType landmark = LandmarkType.findByFeature(featureBlockBoxEntry.getKey());
             if (landmark != null) {
                 for (BlockBox blockBox : featureBlockBoxEntry.getValue()) {
-                    AchieveToDoMod.getServer().addDungeon(world, pos, landmark, blockBox, true);
+                    AchieveToDoMod.getServer().onLandmarkLoadedStatusChanged(world, pos, landmark, blockBox, true);
                 }
             }
         }
@@ -56,11 +55,17 @@ public abstract class ChunkMixin implements ChunkExtension {
             if (featureBlockBoxes == null) {
                 featureBlockBoxes = new HashMap<>();
             }
-            featureBlockBoxes.computeIfAbsent(feature, k -> new ArrayList<>()).add(box);
-            AchieveToDoMod.getServer().addDungeon(world, pos, landmark, box, true);
+            featureBlockBoxes
+                .computeIfAbsent(feature, k -> new ArrayList<>())
+                .add(box);
+            AchieveToDoMod.getServer().onLandmarkLoadedStatusChanged(world, pos, landmark, box, true);
         }
         markNeedsSaving();
     }
+
+    @Shadow
+    @Final
+    protected ChunkPos pos;
 
     @Shadow
     public abstract void markNeedsSaving();

@@ -209,7 +209,9 @@ public enum TrackedScoreType {
     static {
         for (TrackedScoreType type : values()) {
             for (String objectiveName : type.objectiveNames) {
-                SCORES.computeIfAbsent(objectiveName, k -> new ArrayList<>()).add(type);
+                SCORES
+                    .computeIfAbsent(objectiveName, k -> new ArrayList<>())
+                    .add(type);
             }
         }
     }

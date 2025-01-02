@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class InGameHudMixin {
 
     @Unique
-    private static final double LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD = 5;
+    private static final double LOCKED_LANDMARK_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD = 5;
 
     @WrapOperation(
         method = "renderVignetteOverlay",
@@ -29,7 +29,7 @@ public class InGameHudMixin {
             ordinal = 1
         )
     )
-    private int renderLockedDungeonVignette(
+    private int renderLockedLandmarkVignette(
         float alpha,
         float red,
         float green,
@@ -54,10 +54,10 @@ public class InGameHudMixin {
                     double closestY = Math.clamp(entityPos.y, box.minY, box.maxY);
                     double closestZ = Math.clamp(entityPos.z, box.minZ, box.maxZ);
                     double distance = Math.sqrt(entityPos.squaredDistanceTo(closestX, closestY, closestZ));
-                    if (distance > 0 && distance < LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD) {
+                    if (distance > 0 && distance < LOCKED_LANDMARK_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD) {
                         float vignetteAlpha = (float)
-                            ((LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD - distance) /
-                                LOCKED_DUNGEON_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD);
+                            ((LOCKED_LANDMARK_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD - distance) /
+                                LOCKED_LANDMARK_VIGNETTE_VISIBLE_DISTANCE_THRESHOLD);
                         maxVignetteAlpha = Math.max(maxVignetteAlpha, vignetteAlpha);
                         if (maxVignetteAlpha == 1.0f) {
                             break;
