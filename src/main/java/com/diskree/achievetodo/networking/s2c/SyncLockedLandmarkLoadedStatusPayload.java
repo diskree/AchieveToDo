@@ -9,22 +9,22 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import org.jetbrains.annotations.NotNull;
 
-public record SyncLandmarkBlockBoxLockedStatusPayload(
+public record SyncLockedLandmarkLoadedStatusPayload(
     LandmarkType landmark,
     BlockBox blockBox,
-    boolean isLocked
+    boolean isLoaded
 ) implements CustomPayload {
 
-    public static final Id<SyncLandmarkBlockBoxLockedStatusPayload> ID =
-        new Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_landmark_block_box_locked_status"));
+    public static final Id<SyncLockedLandmarkLoadedStatusPayload> ID =
+        new Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_locked_landmark_loaded_status"));
 
-    public static final PacketCodec<PacketByteBuf, SyncLandmarkBlockBoxLockedStatusPayload> CODEC =
+    public static final PacketCodec<PacketByteBuf, SyncLockedLandmarkLoadedStatusPayload> CODEC =
         CustomPayload.codecOf(
-            SyncLandmarkBlockBoxLockedStatusPayload::write,
-            SyncLandmarkBlockBoxLockedStatusPayload::new
+            SyncLockedLandmarkLoadedStatusPayload::write,
+            SyncLockedLandmarkLoadedStatusPayload::new
         );
 
-    public SyncLandmarkBlockBoxLockedStatusPayload(@NotNull PacketByteBuf buf) {
+    public SyncLockedLandmarkLoadedStatusPayload(@NotNull PacketByteBuf buf) {
         this(
             buf.readEnumConstant(LandmarkType.class),
             new BlockBox(
@@ -47,7 +47,7 @@ public record SyncLandmarkBlockBoxLockedStatusPayload(
         buf.writeInt(blockBox.getMaxX());
         buf.writeInt(blockBox.getMaxY());
         buf.writeInt(blockBox.getMaxZ());
-        buf.writeBoolean(isLocked);
+        buf.writeBoolean(isLoaded);
     }
 
     @Override

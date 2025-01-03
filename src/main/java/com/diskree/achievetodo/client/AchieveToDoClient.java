@@ -127,35 +127,6 @@ public class AchieveToDoClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SyncAdvancementsCountPayload.ID, (payload, context) ->
             context.client().execute(() -> obtainedAdvancementsCount = payload.count())
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncScorePayload.ID, (payload, context) ->
-            context.client().execute(() -> trackedScores.put(payload.progressType(), payload.progress()))
-        );
-        ClientPlayNetworking.registerGlobalReceiver(SyncStatPayload.ID, (payload, context) ->
-            context.client().execute(() -> trackedStats.put(payload.statType(), payload.progress()))
-        );
-
-        ClientPlayNetworking.registerGlobalReceiver(SyncLandmarkBlockBoxLockedStatusPayload.ID, (payload, context) ->
-            context.client().execute(() -> {
-                LandmarkType landmark = payload.landmark();
-                if (payload.isLocked()) {
-                    lockedLandmarkBoxes
-                        .computeIfAbsent(landmark, k -> new ArrayList<>())
-                        .add(Box.from(payload.blockBox()));
-                } else {
-                    List<Box> boxes = lockedLandmarkBoxes.get(landmark);
-                    if (boxes != null && boxes.remove(Box.from(payload.blockBox())) && boxes.isEmpty()) {
-                        lockedLandmarkBoxes.remove(landmark);
-                    }
-                }
-            })
-        );
-        ClientPlayNetworking.registerGlobalReceiver(SyncLandmarkTypesUnlockedPayload.ID, (payload, context) ->
-            context.client().execute(() -> {
-                for (LandmarkType landmark : payload.landmarks()) {
-                    lockedLandmarkBoxes.remove(landmark);
-                }
-            })
-        );
         ClientPlayNetworking.registerGlobalReceiver(SyncLockedLandmarkBlockBoxesPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 for (Map.Entry<LandmarkType, List<BlockBox>> entry : payload.blockBoxesByLockedLandmark().entrySet()) {
@@ -167,7 +138,34 @@ public class AchieveToDoClient implements ClientModInitializer {
                 }
             })
         );
-
+        ClientPlayNetworking.registerGlobalReceiver(SyncLandmarkTypesUnlockedPayload.ID, (payload, context) ->
+            context.client().execute(() -> {
+                for (LandmarkType landmark : payload.landmarks()) {
+                    lockedLandmarkBoxes.remove(landmark);
+                }
+            })
+        );
+        ClientPlayNetworking.registerGlobalReceiver(SyncLockedLandmarkLoadedStatusPayload.ID, (payload, context) ->
+            context.client().execute(() -> {
+                LandmarkType landmark = payload.landmark();
+                if (payload.isLoaded()) {
+                    lockedLandmarkBoxes
+                        .computeIfAbsent(landmark, k -> new ArrayList<>())
+                        .add(Box.from(payload.blockBox()));
+                } else {
+                    List<Box> boxes = lockedLandmarkBoxes.get(landmark);
+                    if (boxes != null && boxes.remove(Box.from(payload.blockBox())) && boxes.isEmpty()) {
+                        lockedLandmarkBoxes.remove(landmark);
+                    }
+                }
+            })
+        );
+        ClientPlayNetworking.registerGlobalReceiver(SyncScorePayload.ID, (payload, context) ->
+            context.client().execute(() -> trackedScores.put(payload.progressType(), payload.progress()))
+        );
+        ClientPlayNetworking.registerGlobalReceiver(SyncStatPayload.ID, (payload, context) ->
+            context.client().execute(() -> trackedStats.put(payload.statType(), payload.progress()))
+        );
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             abilitiesConfiguration.clear();

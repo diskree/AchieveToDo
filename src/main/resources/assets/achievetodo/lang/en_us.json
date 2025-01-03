@@ -591,6 +591,94 @@
   "achievetodo.ability.trade_with_wandering_trader.description": "Ability to trade with a wandering trader",
   "achievetodo.ability.trade_with_wandering_trader.locked_message": "You can't trade with a wandering trader",
 
+  "achievetodo.ability.interact_inside_desert_pyramid.name": "Desert Pyramid",
+  "achievetodo.ability.interact_inside_desert_pyramid.description": "Ability to interact with objects within a Desert Pyramid",
+  "achievetodo.ability.interact_inside_desert_pyramid.locked_message": "You can't interact with objects within a Desert Pyramid",
+
+  "achievetodo.ability.interact_inside_desert_well.name": "Desert Well",
+  "achievetodo.ability.interact_inside_desert_well.description": "Ability to interact with objects within a Desert Well",
+  "achievetodo.ability.interact_inside_desert_well.locked_message": "You can't interact with objects within a Desert Well",
+
+  "achievetodo.ability.interact_inside_jungle_pyramid.name": "Jungle Pyramid",
+  "achievetodo.ability.interact_inside_jungle_pyramid.description": "Ability to interact with objects within a Jungle Pyramid",
+  "achievetodo.ability.interact_inside_jungle_pyramid.locked_message": "You can't interact with objects within a Jungle Pyramid",
+
+  "achievetodo.ability.interact_inside_pillager_outpost.name": "Pillager Outpost",
+  "achievetodo.ability.interact_inside_pillager_outpost.description": "Ability to interact with objects within a Pillager Outpost",
+  "achievetodo.ability.interact_inside_pillager_outpost.locked_message": "You can't interact with objects within a Pillager Outpost",
+
+  "achievetodo.ability.interact_inside_igloo.name": "Igloo",
+  "achievetodo.ability.interact_inside_igloo.description": "Ability to interact with objects within an Igloo",
+  "achievetodo.ability.interact_inside_igloo.locked_message": "You can't interact with objects within an Igloo",
+
+  "achievetodo.ability.interact_inside_swamp_hut.name": "Swamp Hut",
+  "achievetodo.ability.interact_inside_swamp_hut.description": "Ability to interact with objects within a Swamp Hut",
+  "achievetodo.ability.interact_inside_swamp_hut.locked_message": "You can't interact with objects within a Swamp Hut",
+
+  "achievetodo.ability.interact_inside_mansion.name": "Woodland Mansion",
+  "achievetodo.ability.interact_inside_mansion.description": "Ability to interact with objects within a Woodland Mansion",
+  "achievetodo.ability.interact_inside_mansion.locked_message": "You can't interact with objects within a Woodland Mansion",
+
+  "achievetodo.ability.interact_inside_village.name": "Village",
+  "achievetodo.ability.interact_inside_village.description": "Ability to interact with objects within a Village",
+  "achievetodo.ability.interact_inside_village.locked_message": "You can't interact with objects within a Village",
+
+  "achievetodo.ability.interact_inside_ruined_portal.name": "Ruined Portal",
+  "achievetodo.ability.interact_inside_ruined_portal.description": "Ability to interact with objects within a Ruined Portal",
+  "achievetodo.ability.interact_inside_ruined_portal.locked_message": "You can't interact with objects within a Ruined Portal",
+
+  "achievetodo.ability.interact_inside_buried_treasure.name": "Buried Treasure",
+  "achievetodo.ability.interact_inside_buried_treasure.description": "Ability to interact with objects within a Buried Treasure",
+  "achievetodo.ability.interact_inside_buried_treasure.locked_message": "You can't interact with objects within a Buried Treasure",
+
+  "achievetodo.ability.interact_inside_shipwreck.name": "Shipwreck",
+  "achievetodo.ability.interact_inside_shipwreck.description": "Ability to interact with objects within a Shipwreck",
+  "achievetodo.ability.interact_inside_shipwreck.locked_message": "You can't interact with objects within a Shipwreck",
+
+  "achievetodo.ability.interact_inside_ocean_ruin.name": "Ocean Ruins",
+  "achievetodo.ability.interact_inside_ocean_ruin.description": "Ability to interact with objects within Ocean Ruins",
+  "achievetodo.ability.interact_inside_ocean_ruin.locked_message": "You can't interact with objects within Ocean Ruins",
+
+  "achievetodo.ability.interact_inside_monument.name": "Ocean Monument",
+  "achievetodo.ability.interact_inside_monument.description": "Ability to interact with objects within an Ocean Monument",
+  "achievetodo.ability.interact_inside_monument.locked_message": "You can't interact with objects within an Ocean Monument",
+
+  "achievetodo.ability.interact_inside_monster_room.name": "Monster Room",
+  "achievetodo.ability.interact_inside_monster_room.description": "Ability to interact with objects within a Monster Room",
+  "achievetodo.ability.interact_inside_monster_room.locked_message": "You can't interact with objects within a Monster Room",
+
+  "achievetodo.ability.interact_inside_mineshaft.name": "Mineshaft",
+  "achievetodo.ability.interact_inside_mineshaft.description": "Ability to interact with objects within a Mineshaft",
+  "achievetodo.ability.interact_inside_mineshaft.locked_message": "You can't interact with objects within a Mineshaft",
+
+  "achievetodo.ability.interact_inside_trail_ruins.name": "Trail Ruins",
+  "achievetodo.ability.interact_inside_trail_ruins.description": "Ability to interact with objects within Trail Ruins",
+  "achievetodo.ability.interact_inside_trail_ruins.locked_message": "You can't interact with objects within Trail Ruins",
+
+  "achievetodo.ability.interact_inside_ancient_city.name": "Ancient City",
+  "achievetodo.ability.interact_inside_ancient_city.description": "Ability to interact with objects within an Ancient City",
+  "achievetodo.ability.interact_inside_ancient_city.locked_message": "You can't interact with objects within an Ancient City",
+
+  "achievetodo.ability.interact_inside_trial_chambers.name": "Trial Chambers",
+  "achievetodo.ability.interact_inside_trial_chambers.description": "Ability to interact with objects within Trial Chambers",
+  "achievetodo.ability.interact_inside_trial_chambers.locked_message": "You can't interact with objects within Trial Chambers",
+
+  "achievetodo.ability.interact_inside_stronghold.name": "Stronghold",
+  "achievetodo.ability.interact_inside_stronghold.description": "Ability to interact with objects within a Stronghold",
+  "achievetodo.ability.interact_inside_stronghold.locked_message": "You can't interact with objects within a Stronghold",
+
+  "achievetodo.ability.interact_inside_fortress.name": "Nether Fortress",
+  "achievetodo.ability.interact_inside_fortress.description": "Ability to interact with objects within a Nether Fortress",
+  "achievetodo.ability.interact_inside_fortress.locked_message": "You can't interact with objects within a Nether Fortress",
+
+  "achievetodo.ability.interact_inside_bastion_remnant.name": "Bastion Remnant",
+  "achievetodo.ability.interact_inside_bastion_remnant.description": "Ability to interact with objects within a Bastion Remnant",
+  "achievetodo.ability.interact_inside_bastion_remnant.locked_message": "You can't interact with objects within a Bastion Remnant",
+
+  "achievetodo.ability.interact_inside_end_city.name": "End City",
+  "achievetodo.ability.interact_inside_end_city.description": "Ability to interact with objects within an End City",
+  "achievetodo.ability.interact_inside_end_city.locked_message": "You can't interact with objects within an End City",
+
   "achievetodo.ability.left_to_unlock": "Advancements left to unlock: %d",
   "achievetodo.ability.permanently_locked": "This ability is locked permanently",
   "achievetodo.ability.initially_unlocked": "This ability is unlocked by default",

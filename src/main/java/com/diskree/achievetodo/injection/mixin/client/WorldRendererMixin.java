@@ -112,7 +112,7 @@ public abstract class WorldRendererMixin {
         float animationTime = 0.0f;
         boolean isInsideLockedLandmark = false;
         for (LandmarkType landmarkType : AchieveToDoClient.getLockedLandmarkBoxes().keySet()) {
-            if (world != null && world.getRegistryKey() != landmarkType.getDimension()) {
+            if (world != null && world.getRegistryKey() != landmarkType.getWorld()) {
                 continue;
             }
             for (Box box : AchieveToDoClient.getLockedLandmarkBoxes().get(landmarkType)) {

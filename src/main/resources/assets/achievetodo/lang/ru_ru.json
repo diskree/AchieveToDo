@@ -591,6 +591,94 @@
   "achievetodo.ability.trade_with_wandering_trader.description": "Возможность торговли со странствующим торговцем",
   "achievetodo.ability.trade_with_wandering_trader.locked_message": "Вы не можете торговать со странствующим торговцем",
 
+  "achievetodo.ability.interact_inside_desert_pyramid.name": "Пустынная пирамида",
+  "achievetodo.ability.interact_inside_desert_pyramid.description": "Возможность взаимодействия с объектами в пределах пустынной пирамиды",
+  "achievetodo.ability.interact_inside_desert_pyramid.locked_message": "Вы не можете взаимодействовать с объектами в пределах пустынной пирамиды",
+
+  "achievetodo.ability.interact_inside_desert_well.name": "Колодец",
+  "achievetodo.ability.interact_inside_desert_well.description": "Возможность взаимодействия с объектами в пределах колодца",
+  "achievetodo.ability.interact_inside_desert_well.locked_message": "Вы не можете взаимодействовать с объектами в пределах колодца",
+
+  "achievetodo.ability.interact_inside_jungle_pyramid.name": "Джунглевая пирамида",
+  "achievetodo.ability.interact_inside_jungle_pyramid.description": "Возможность взаимодействия с объектами в пределах джунглевой пирамиды",
+  "achievetodo.ability.interact_inside_jungle_pyramid.locked_message": "Вы не можете взаимодействовать с объектами в пределах джунглевой пирамиды",
+
+  "achievetodo.ability.interact_inside_pillager_outpost.name": "Аванпост разбойников",
+  "achievetodo.ability.interact_inside_pillager_outpost.description": "Возможность взаимодействия с объектами в пределах аванпоста разбойников",
+  "achievetodo.ability.interact_inside_pillager_outpost.locked_message": "Вы не можете взаимодействовать с объектами в пределах аванпоста разбойников",
+
+  "achievetodo.ability.interact_inside_igloo.name": "Иглу",
+  "achievetodo.ability.interact_inside_igloo.description": "Возможность взаимодействия с объектами в пределах иглу",
+  "achievetodo.ability.interact_inside_igloo.locked_message": "Вы не можете взаимодействовать с объектами в пределах иглу",
+
+  "achievetodo.ability.interact_inside_swamp_hut.name": "Хижина ведьмы",
+  "achievetodo.ability.interact_inside_swamp_hut.description": "Возможность взаимодействия с объектами в пределах хижины ведьмы",
+  "achievetodo.ability.interact_inside_swamp_hut.locked_message": "Вы не можете взаимодействовать с объектами в пределах хижины ведьмы",
+
+  "achievetodo.ability.interact_inside_mansion.name": "Лесной особняк",
+  "achievetodo.ability.interact_inside_mansion.description": "Возможность взаимодействия с объектами в пределах лесного особняка",
+  "achievetodo.ability.interact_inside_mansion.locked_message": "Вы не можете взаимодействовать с объектами в пределах лесного особняка",
+
+  "achievetodo.ability.interact_inside_village.name": "Деревня",
+  "achievetodo.ability.interact_inside_village.description": "Возможность взаимодействия с объектами в пределах деревни",
+  "achievetodo.ability.interact_inside_village.locked_message": "Вы не можете взаимодействовать с объектами в пределах деревни",
+
+  "achievetodo.ability.interact_inside_ruined_portal.name": "Разрушенный портал",
+  "achievetodo.ability.interact_inside_ruined_portal.description": "Возможность взаимодействия с объектами в пределах разрушенного портала",
+  "achievetodo.ability.interact_inside_ruined_portal.locked_message": "Вы не можете взаимодействовать с объектами в пределах разрушенного портала",
+
+  "achievetodo.ability.interact_inside_buried_treasure.name": "Клад",
+  "achievetodo.ability.interact_inside_buried_treasure.description": "Возможность взаимодействия с объектами в пределах клада",
+  "achievetodo.ability.interact_inside_buried_treasure.locked_message": "Вы не можете взаимодействовать с объектами в пределах клада",
+
+  "achievetodo.ability.interact_inside_shipwreck.name": "Затонувший корабль",
+  "achievetodo.ability.interact_inside_shipwreck.description": "Возможность взаимодействия с объектами в пределах затонувшего корабля",
+  "achievetodo.ability.interact_inside_shipwreck.locked_message": "Вы не можете взаимодействовать с объектами в пределах затонувшего корабля",
+
+  "achievetodo.ability.interact_inside_ocean_ruin.name": "Подводные руины",
+  "achievetodo.ability.interact_inside_ocean_ruin.description": "Возможность взаимодействия с объектами в пределах подводных руин",
+  "achievetodo.ability.interact_inside_ocean_ruin.locked_message": "Вы не можете взаимодействовать с объектами в пределах подводных руин",
+
+  "achievetodo.ability.interact_inside_monument.name": "Подводная крепость",
+  "achievetodo.ability.interact_inside_monument.description": "Возможность взаимодействия с объектами в пределах подводной крепости",
+  "achievetodo.ability.interact_inside_monument.locked_message": "Вы не можете взаимодействовать с объектами в пределах подводной крепости",
+
+  "achievetodo.ability.interact_inside_monster_room.name": "Сокровищница",
+  "achievetodo.ability.interact_inside_monster_room.description": "Возможность взаимодействия с объектами в пределах сокровищницы",
+  "achievetodo.ability.interact_inside_monster_room.locked_message": "Вы не можете взаимодействовать с объектами в пределах сокровищницы",
+
+  "achievetodo.ability.interact_inside_mineshaft.name": "Заброшенная шахта",
+  "achievetodo.ability.interact_inside_mineshaft.description": "Возможность взаимодействия с объектами в пределах заброшенной шахты",
+  "achievetodo.ability.interact_inside_mineshaft.locked_message": "Вы не можете взаимодействовать с объектами в пределах заброшенной шахты",
+
+  "achievetodo.ability.interact_inside_trail_ruins.name": "Руины былых времён",
+  "achievetodo.ability.interact_inside_trail_ruins.description": "Возможность взаимодействия с объектами в пределах руин былых времён",
+  "achievetodo.ability.interact_inside_trail_ruins.locked_message": "Вы не можете взаимодействовать с объектами в пределах руин былых времён",
+
+  "achievetodo.ability.interact_inside_ancient_city.name": "Древний город",
+  "achievetodo.ability.interact_inside_ancient_city.description": "Возможность взаимодействия с объектами в пределах древнего города",
+  "achievetodo.ability.interact_inside_ancient_city.locked_message": "Вы не можете взаимодействовать с объектами в пределах древнего города",
+
+  "achievetodo.ability.interact_inside_trial_chambers.name": "Дворец испытаний",
+  "achievetodo.ability.interact_inside_trial_chambers.description": "Возможность взаимодействия с объектами в пределах дворца испытаний",
+  "achievetodo.ability.interact_inside_trial_chambers.locked_message": "Вы не можете взаимодействовать с объектами в пределах дворца испытаний",
+
+  "achievetodo.ability.interact_inside_stronghold.name": "Цитадель",
+  "achievetodo.ability.interact_inside_stronghold.description": "Возможность взаимодействия с объектами в пределах цитадели",
+  "achievetodo.ability.interact_inside_stronghold.locked_message": "Вы не можете взаимодействовать с объектами в пределах цитадели",
+
+  "achievetodo.ability.interact_inside_fortress.name": "Незерская крепость",
+  "achievetodo.ability.interact_inside_fortress.description": "Возможность взаимодействия с объектами в пределах незерской крепости",
+  "achievetodo.ability.interact_inside_fortress.locked_message": "Вы не можете взаимодействовать с объектами в пределах незерской крепости",
+
+  "achievetodo.ability.interact_inside_bastion_remnant.name": "Развалины бастиона",
+  "achievetodo.ability.interact_inside_bastion_remnant.description": "Возможность взаимодействия с объектами в пределах развалин бастиона",
+  "achievetodo.ability.interact_inside_bastion_remnant.locked_message": "Вы не можете взаимодействовать с объектами в пределах развалин бастиона",
+
+  "achievetodo.ability.interact_inside_end_city.name": "Город Энда",
+  "achievetodo.ability.interact_inside_end_city.description": "Возможность взаимодействия с объектами в пределах города Энда",
+  "achievetodo.ability.interact_inside_end_city.locked_message": "Вы не можете взаимодействовать с объектами в пределах города Энда",
+
   "achievetodo.ability.left_to_unlock": "Для разблокировки осталось выполнить достижений: %d",
   "achievetodo.ability.permanently_locked": "Эта способность навсегда заблокирована",
   "achievetodo.ability.initially_unlocked": "Эта способность изначально доступна",

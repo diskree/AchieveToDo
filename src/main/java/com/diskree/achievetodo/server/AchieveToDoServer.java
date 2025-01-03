@@ -38,7 +38,7 @@ import java.util.*;
 
 public class AchieveToDoServer implements ServerModInitializer {
 
-    private Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
+    private Map<AbilityType, Integer> abilitiesConfiguration = new Object2IntOpenHashMap<>();
     private final Map<UUID, Integer> advancementsCountByPlayers = new Object2IntOpenHashMap<>();
 
     private final Map<ChunkPos, Map<LandmarkType, List<BlockBox>>> landmarksByChunks = new HashMap<>();
@@ -264,7 +264,7 @@ public class AchieveToDoServer implements ServerModInitializer {
                     if (player != null) {
                         ServerPlayNetworking.send(
                             player,
-                            new SyncLandmarkBlockBoxLockedStatusPayload(landmark, blockBox, isLoaded)
+                            new SyncLockedLandmarkLoadedStatusPayload(landmark, blockBox, isLoaded)
                         );
                     }
                 }

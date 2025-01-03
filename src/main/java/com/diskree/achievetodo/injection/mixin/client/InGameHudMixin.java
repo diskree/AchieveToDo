@@ -42,7 +42,7 @@ public class InGameHudMixin {
             float maxVignetteAlpha = 0.0f;
 
             for (LandmarkType landmarkType : AchieveToDoClient.getLockedLandmarkBoxes().keySet()) {
-                if (entity.getWorld().getRegistryKey() != landmarkType.getDimension()) {
+                if (entity.getWorld().getRegistryKey() != landmarkType.getWorld()) {
                     continue;
                 }
                 for (Box box : AchieveToDoClient.getLockedLandmarkBoxes().get(landmarkType)) {

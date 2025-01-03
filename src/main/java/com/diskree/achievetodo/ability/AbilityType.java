@@ -809,35 +809,11 @@ public enum AbilityType {
         true, true,
         AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ENCHANTING_TABLE
     ),
-    INTERACT_INSIDE_IGLOO(
+    INTERACT_INSIDE_DESERT_PYRAMID(
         100, 100, 100,
         1, 1000,
         true, true,
-        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.IGLOO
-    ),
-    INTERACT_INSIDE_RUINED_PORTAL(
-        100, 100, 100,
-        1, 1000,
-        true, true,
-        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.RUINED_PORTAL
-    ),
-    INTERACT_INSIDE_ANCIENT_CITY(
-        100, 100, 100,
-        1, 1000,
-        true, true,
-        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.ANCIENT_CITY
-    ),
-    INTERACT_INSIDE_MONUMENT(
-        100, 100, 100,
-        1, 1000,
-        true, true,
-        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONUMENT
-    ),
-    INTERACT_INSIDE_PILLAGER_OUTPOST(
-        100, 100, 100,
-        1, 1000,
-        true, true,
-        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.PILLAGER_OUTPOST
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.DESERT_PYRAMID
     ),
     INTERACT_INSIDE_DESERT_WELL(
         100, 100, 100,
@@ -845,15 +821,126 @@ public enum AbilityType {
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.DESERT_WELL
     ),
+    INTERACT_INSIDE_JUNGLE_PYRAMID(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.JUNGLE_PYRAMID
+    ),
+    INTERACT_INSIDE_PILLAGER_OUTPOST(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.PILLAGER_OUTPOST
+    ),
+    INTERACT_INSIDE_IGLOO(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.IGLOO
+    ),
+    INTERACT_INSIDE_SWAMP_HUT(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.SWAMP_HUT
+    ),
+    INTERACT_INSIDE_MANSION(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MANSION
+    ),
+    INTERACT_INSIDE_VILLAGE(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.VILLAGE
+    ),
+    INTERACT_INSIDE_RUINED_PORTAL(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.RUINED_PORTAL
+    ),
+    INTERACT_INSIDE_BURIED_TREASURE(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.BURIED_TREASURE
+    ),
+    INTERACT_INSIDE_SHIPWRECK(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.SHIPWRECK
+    ),
+    INTERACT_INSIDE_OCEAN_RUIN(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.OCEAN_RUIN
+    ),
+    INTERACT_INSIDE_MONUMENT(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONUMENT
+    ),
     INTERACT_INSIDE_MONSTER_ROOM(
         100, 100, 100,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONSTER_ROOM
     ),
-
-
-    ;
+    INTERACT_INSIDE_MINESHAFT(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MINESHAFT
+    ),
+    INTERACT_INSIDE_TRAIL_RUINS(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.TRAIL_RUINS
+    ),
+    INTERACT_INSIDE_ANCIENT_CITY(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.ANCIENT_CITY
+    ),
+    INTERACT_INSIDE_TRIAL_CHAMBERS(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.TRIAL_CHAMBERS
+    ),
+    INTERACT_INSIDE_STRONGHOLD(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.STRONGHOLD
+    ),
+    INTERACT_INSIDE_FORTRESS(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.FORTRESS
+    ),
+    INTERACT_INSIDE_BASTION_REMNANT(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.BASTION_REMNANT
+    ),
+    INTERACT_INSIDE_END_CITY(
+        100, 100, 100,
+        1, 1000,
+        true, true,
+        AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.END_CITY
+    );
 
     private final int easyCount, normalCount, hardCount;
     private final int chaosMinLimit, chaosMaxLimit;
@@ -1121,13 +1208,28 @@ public enum AbilityType {
         }
         if (landmark != null) {
             return switch (landmark) {
-                case IGLOO -> Items.SNOW_BLOCK;
-                case RUINED_PORTAL -> Items.CRYING_OBSIDIAN;
-                case ANCIENT_CITY -> Items.REINFORCED_DEEPSLATE;
-                case MONUMENT -> Items.SPONGE;
+                case DESERT_PYRAMID -> Items.CHISELED_SANDSTONE;
+                case DESERT_WELL -> Items.SANDSTONE;
+                case JUNGLE_PYRAMID -> Items.MOSSY_COBBLESTONE;
                 case PILLAGER_OUTPOST -> Items.DARK_OAK_PLANKS;
-                case DESERT_WELL -> Items.SANDSTONE_SLAB;
+                case IGLOO -> Items.SNOW_BLOCK;
+                case SWAMP_HUT -> Items.CAULDRON;
+                case MANSION -> Items.DARK_OAK_LOG;
+                case VILLAGE -> Items.BELL;
+                case RUINED_PORTAL -> Items.CRYING_OBSIDIAN;
+                case BURIED_TREASURE -> Items.SAND;
+                case SHIPWRECK -> Items.OAK_PLANKS;
+                case OCEAN_RUIN -> Items.SEA_LANTERN;
+                case MONUMENT -> Items.PRISMARINE;
                 case MONSTER_ROOM -> Items.SPAWNER;
+                case MINESHAFT -> Items.RAIL;
+                case TRAIL_RUINS -> Items.SUSPICIOUS_GRAVEL;
+                case ANCIENT_CITY -> Items.REINFORCED_DEEPSLATE;
+                case TRIAL_CHAMBERS -> Items.TRIAL_SPAWNER;
+                case STRONGHOLD -> Items.INFESTED_CRACKED_STONE_BRICKS;
+                case FORTRESS -> Items.CHISELED_NETHER_BRICKS;
+                case BASTION_REMNANT -> Items.GILDED_BLACKSTONE;
+                case END_CITY -> Items.PURPUR_BLOCK;
             };
         }
         throw new IllegalStateException("Ability " + this + " haven't icon!");
