@@ -10,6 +10,7 @@ extendable class net/minecraft/structure/StructureStart
 
 accessible method net/minecraft/client/gui/screen/world/CreateWorldScreen createLevel ()V
 accessible method net/minecraft/server/dedicated/AbstractPropertiesHandler getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+accessible method net/minecraft/client/render/Frustum intersectAab (DDDDDD)I
 
 accessible field net/minecraft/scoreboard/ServerScoreboard server Lnet/minecraft/server/MinecraftServer;
 accessible field net/minecraft/client/gui/screen/Screen client Lnet/minecraft/client/MinecraftClient;

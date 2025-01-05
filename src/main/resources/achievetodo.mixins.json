@@ -110,7 +110,6 @@
     "client.DeathScreenMixin",
     "client.FindTreeTutorialStepHandlerMixin",
     "client.GameRendererMixin",
-    "client.InGameHudMixin",
     "client.MinecraftClientMixin",
     "client.MovementTutorialStepHandlerMixin",
     "client.OpenInventoryTutorialStepHandlerMixin",

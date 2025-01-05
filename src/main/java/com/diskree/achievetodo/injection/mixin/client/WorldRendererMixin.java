@@ -1,6 +1,5 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
-import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.DimensionType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.client.gui.DesignCodePalette;
@@ -10,7 +9,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TriState;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ColorHelper;
@@ -30,68 +28,116 @@ import java.util.concurrent.TimeUnit;
 public abstract class WorldRendererMixin {
 
     @Unique
-    private static final RenderLayer LOCKED_LANDMARK_BORDER_COLOR_MASK = createLockedLandmarkBorder(false, false);
-
-    @Unique
-    private static final RenderLayer LOCKED_LANDMARK_BORDER_ALL_MASK = createLockedLandmarkBorder(true, false);
-
-    @Unique
-    private static final RenderLayer LOCKED_LANDMARK_BORDER_COLOR_MASK_CULLING = createLockedLandmarkBorder(false, true);
-
-    @Unique
-    private static final RenderLayer LOCKED_LANDMARK_BORDER_ALL_MASK_CULLING = createLockedLandmarkBorder(true, true);
-
-    @Unique
-    private static final long LOCKED_LANDMARK_BORDER_ANIMATION_DURATION = TimeUnit.SECONDS.toMillis(3);
+    private static final long LOCKED_LANDMARK_BORDER_ANIMATION_DURATION = TimeUnit.SECONDS.toMillis(6);
 
     @Unique
     private static final float ENTER_LOCKED_LANDMARK_BORDER_FADE_ALPHA_SPEED = 0.003f;
-
-    @Unique
-    private static final int LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD = 60;
 
     @Unique
     private static final Identifier LOCKED_LANDMARK_BORDER_TEXTURE =
         Identifier.ofVanilla("textures/misc/forcefield.png");
 
     @Unique
-    private boolean wasInsideLockedLandmark = false;
+    private LockedLandmarkBox lastLockedLandmarkBox = null;
 
     @Unique
     private float fadeInsideLockedLandmarkAlpha = 1.0f;
 
     @Unique
-    private static RenderLayer getLockedLandmarkBorderRenderLayer(boolean allMask, boolean isCullingEnabled) {
-        if (allMask) {
-            return isCullingEnabled ? LOCKED_LANDMARK_BORDER_ALL_MASK_CULLING : LOCKED_LANDMARK_BORDER_ALL_MASK;
-        }
-        return isCullingEnabled ? LOCKED_LANDMARK_BORDER_COLOR_MASK_CULLING : LOCKED_LANDMARK_BORDER_COLOR_MASK;
+    private void renderLockedLandmarkBorderFloor(
+        @NotNull BufferBuilder b,
+        float minY,
+        float x, float segmentX, float halfSegmentX,
+        float z, float segmentZ, float halfSegmentZ,
+        float textureU,
+        float animationTime
+    ) {
+        b.vertex(x + segmentX, minY, z).texture(animationTime - textureU, animationTime + halfSegmentZ);
+        b.vertex(x + segmentX, minY, z + segmentZ).texture(animationTime - textureU, animationTime);
+        b.vertex(x, minY, z + segmentZ).texture(animationTime - textureU + halfSegmentX, animationTime);
+        b.vertex(x, minY, z).texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentZ);
     }
 
     @Unique
-    private static @NotNull RenderLayer createLockedLandmarkBorder(boolean allMask, boolean isCullingEnabled) {
-        return RenderLayer.of(
-            BuildConfig.MOD_ID + "_locked_landmark_border",
-            VertexFormats.POSITION_TEXTURE,
-            VertexFormat.DrawMode.QUADS,
-            1536,
-            false,
-            false,
-            RenderLayer.MultiPhaseParameters.builder()
-                .program(RenderPhase.POSITION_TEXTURE_PROGRAM)
-                .texture(new RenderPhase.Texture(WorldBorderRendering.FORCEFIELD, TriState.FALSE, false))
-                .transparency(RenderPhase.OVERLAY_TRANSPARENCY)
-                .lightmap(RenderPhase.ENABLE_LIGHTMAP)
-                .target(RenderPhase.WEATHER_TARGET)
-                .writeMaskState(allMask ? RenderPhase.ALL_MASK : RenderPhase.COLOR_MASK)
-                .layering(RenderPhase.WORLD_BORDER_LAYERING)
-                .cull(isCullingEnabled ? RenderPhase.ENABLE_CULLING : RenderPhase.DISABLE_CULLING)
-                .build(false)
-        );
+    private void renderLockedLandmarkBorderRoof(
+        @NotNull BufferBuilder b,
+        float maxY,
+        float x, float segmentX, float halfSegmentX,
+        float z, float segmentZ, float halfSegmentZ,
+        float textureU,
+        float animationTime
+    ) {
+        b.vertex(x, maxY, z).texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentZ);
+        b.vertex(x, maxY, z + segmentZ).texture(animationTime - textureU + halfSegmentX, animationTime);
+        b.vertex(x + segmentX, maxY, z + segmentZ).texture(animationTime - textureU, animationTime);
+        b.vertex(x + segmentX, maxY, z).texture(animationTime - textureU, animationTime + halfSegmentZ);
+    }
+
+    @Unique
+    private void renderLockedLandmarkBorderNorthWall(
+        @NotNull BufferBuilder b,
+        float minZ,
+        float x, float segmentX, float halfSegmentX,
+        float y, float segmentY, float halfSegmentY,
+        float textureU,
+        float animationTime
+    ) {
+        b.vertex(x, y, minZ).texture(animationTime - textureU + halfSegmentX, animationTime);
+        b.vertex(x, y + segmentY, minZ).texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentY);
+        b.vertex(x + segmentX, y + segmentY, minZ).texture(animationTime - textureU, animationTime + halfSegmentY);
+        b.vertex(x + segmentX, y, minZ).texture(animationTime - textureU, animationTime);
+    }
+
+    @Unique
+    private void renderLockedLandmarkBorderSouthWall(
+        @NotNull BufferBuilder b,
+        float maxZ,
+        float x, float segmentX, float halfSegmentX,
+        float y, float segmentY, float halfSegmentY,
+        float textureU,
+        float animationTime
+    ) {
+        b.vertex(x, y, maxZ).texture(animationTime - textureU + halfSegmentX, animationTime);
+        b.vertex(x + segmentX, y, maxZ).texture(animationTime - textureU, animationTime);
+        b.vertex(x + segmentX, y + segmentY, maxZ).texture(animationTime - textureU, animationTime + halfSegmentY);
+        b.vertex(x, y + segmentY, maxZ).texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentY);
+    }
+
+    @Unique
+    private void renderLockedLandmarkBorderWestWall(
+        @NotNull BufferBuilder b,
+        float minX,
+        float y, float segmentY, float halfSegmentY,
+        float z, float segmentZ, float halfSegmentZ,
+        float textureU,
+        float animationTime
+    ) {
+        b.vertex(minX, y, z).texture(animationTime - textureU + halfSegmentZ, animationTime);
+        b.vertex(minX, y, z + segmentZ).texture(animationTime - textureU, animationTime);
+        b.vertex(minX, y + segmentY, z + segmentZ).texture(animationTime - textureU, animationTime + halfSegmentY);
+        b.vertex(minX, y + segmentY, z).texture(animationTime - textureU + halfSegmentZ, animationTime + halfSegmentY);
+    }
+
+    @Unique
+    private void renderLockedLandmarkBorderEastWall(
+        @NotNull BufferBuilder b,
+        float maxX,
+        float y, float segmentY, float halfSegmentY,
+        float z, float segmentZ, float halfSegmentZ,
+        float textureU,
+        float animationTime
+    ) {
+        b.vertex(maxX, y + segmentY, z).texture(animationTime - textureU + halfSegmentZ, animationTime + halfSegmentY);
+        b.vertex(maxX, y + segmentY, z + segmentZ).texture(animationTime - textureU + halfSegmentZ, animationTime);
+        b.vertex(maxX, y, z + segmentZ).texture(animationTime - textureU, animationTime);
+        b.vertex(maxX, y, z).texture(animationTime - textureU, animationTime + halfSegmentY);
     }
 
     @Shadow
     private @Nullable ClientWorld world;
+
+    @Shadow
+    private Frustum frustum;
 
     @Inject(
         method = "method_62216",
@@ -101,7 +147,7 @@ public abstract class WorldRendererMixin {
             shift = At.Shift.AFTER
         )
     )
-    public void renderLockedLandmarkBorders(
+    public void renderLockedLandmarkBorder(
         Fog fog,
         float tickDelta,
         Vec3d cameraPos,
@@ -109,8 +155,6 @@ public abstract class WorldRendererMixin {
         float farPlaneDistance,
         CallbackInfo ci
     ) {
-        RenderLayer renderLayer = null;
-        boolean isInsideLockedLandmark = false;
         if (world == null) {
             return;
         }
@@ -118,196 +162,65 @@ public abstract class WorldRendererMixin {
         if (dimensionType == null) {
             return;
         }
+        LockedLandmarkBox foundBox = null;
         for (LockedLandmarkBox lockedLandmarkBox : AchieveToDoClient.getLockedLandmarkBoxes()) {
             if (lockedLandmarkBox.dimension() != dimensionType) {
                 continue;
             }
             Box box = lockedLandmarkBox.box();
-            boolean isCameraInside = box.contains(cameraPos);
-            double alpha;
-            if (isCameraInside) {
-                if (!isInsideLockedLandmark) {
-                    isInsideLockedLandmark = true;
-                    if (!wasInsideLockedLandmark) {
-                        fadeInsideLockedLandmarkAlpha = 0.0f;
-                    }
-                }
-                alpha = fadeInsideLockedLandmarkAlpha;
-            } else {
-                double closestX = Math.clamp(cameraPos.x, box.minX, box.maxX);
-                double closestY = Math.clamp(cameraPos.y, box.minY, box.maxY);
-                double closestZ = Math.clamp(cameraPos.z, box.minZ, box.maxZ);
-
-                double distance = Math.sqrt(cameraPos.squaredDistanceTo(closestX, closestY, closestZ));
-                if (distance >= LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
-                    continue;
-                }
-                alpha = 1.0f;
-                double fadeStart = LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD * 0.5f;
-                if (distance > fadeStart) {
-                    alpha -= (distance - fadeStart) /
-                        (LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD - fadeStart);
-                }
+            if (!box.contains(cameraPos)) {
+                continue;
             }
 
+            float minX = (float) box.minX;
+            float minY = (float) box.minY;
+            float minZ = (float) box.minZ;
+            float maxX = (float) box.maxX;
+            float maxY = (float) box.maxY;
+            float maxZ = (float) box.maxZ;
+
+            boolean isFloorVisible = frustum.intersectAab(minX, minY, minZ, maxX, minY, maxZ) < 0;
+            boolean isRoofVisible = frustum.intersectAab(minX, maxY, minZ, maxX, maxY, maxZ) < 0;
+            boolean isNorthWallVisible = frustum.intersectAab(minX, minY, minZ, maxX, maxY, minZ) < 0;
+            boolean isSouthWallVisible = frustum.intersectAab(minX, minY, maxZ, maxX, maxY, maxZ) < 0;
+            boolean isWestWallVisible = frustum.intersectAab(minX, minY, minZ, minX, maxY, maxZ) < 0;
+            boolean isEastWallVisible = frustum.intersectAab(maxX, minY, minZ, maxX, maxY, maxZ) < 0;
+
+            if (!isFloorVisible &&
+                !isRoofVisible &&
+                !isNorthWallVisible &&
+                !isSouthWallVisible &&
+                !isWestWallVisible &&
+                !isEastWallVisible
+            ) {
+                continue;
+            }
+
+            minX -= (float) cameraPos.x;
+            minY -= (float) cameraPos.y;
+            minZ -= (float) cameraPos.z;
+            maxX -= (float) cameraPos.x;
+            maxY -= (float) cameraPos.y;
+            maxZ -= (float) cameraPos.z;
+
+            foundBox = lockedLandmarkBox;
             RenderSystem.setShaderTexture(0, LOCKED_LANDMARK_BORDER_TEXTURE);
-            renderLayer = getLockedLandmarkBorderRenderLayer(
-                MinecraftClient.isFabulousGraphicsOrBetter(),
-                !isCameraInside
-            );
+            RenderLayer renderLayer = RenderLayer.getWorldBorder(MinecraftClient.isFabulousGraphicsOrBetter());
             renderLayer.startDrawing();
-            long animationDurationMs = LOCKED_LANDMARK_BORDER_ANIMATION_DURATION;
-            if (isCameraInside) {
-                animationDurationMs *= 2;
-            }
-            float animationTime = (float) (Util.getMeasuringTimeMs() % animationDurationMs) / animationDurationMs;
+            float animationTime = (float) (Util.getMeasuringTimeMs() % LOCKED_LANDMARK_BORDER_ANIMATION_DURATION) /
+                LOCKED_LANDMARK_BORDER_ANIMATION_DURATION;
 
             RenderSystem.setShaderColor(
                 ColorHelper.getRedFloat(DesignCodePalette.IN_WORLD_RGB),
                 ColorHelper.getGreenFloat(DesignCodePalette.IN_WORLD_RGB),
                 ColorHelper.getBlueFloat(DesignCodePalette.IN_WORLD_RGB),
-                (float) alpha
+                fadeInsideLockedLandmarkAlpha
             );
 
             BufferBuilder bufferBuilder = Tessellator.getInstance()
                 .begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 
-            float minX = (float) (box.minX - cameraPos.x + 0.00001);
-            float minY = (float) (box.minY - cameraPos.y + 0.00001);
-            float minZ = (float) (box.minZ - cameraPos.z + 0.00001);
-            float maxX = (float) (box.maxX - cameraPos.x - 0.00001);
-            float maxY = (float) (box.maxY - cameraPos.y - 0.00001);
-            float maxZ = (float) (box.maxZ - cameraPos.z - 0.00001);
-
-            if (isCameraInside || cameraPos.x > box.maxX - LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
-                for (float y = minY; y < maxY; ) {
-                    float segmentY = Math.min(1.0f, maxY - y);
-                    float textureU = 0f;
-                    for (float z = minZ; z < maxZ; ) {
-                        float segmentZ = Math.min(1.0f, maxZ - z);
-                        float halfSegmentZ = segmentZ * 0.5f;
-                        float halfSegmentY = segmentY * 0.5f;
-
-                        bufferBuilder
-                            .vertex(maxX, y + segmentY, z)
-                            .normal(1.0f, 0.0f, 0.0f)
-                            .texture(animationTime - textureU + halfSegmentZ, animationTime + halfSegmentY);
-                        bufferBuilder
-                            .vertex(maxX, y + segmentY, z + segmentZ)
-                            .normal(1.0f, 0.0f, 0.0f)
-                            .texture(animationTime - textureU + halfSegmentZ, animationTime);
-                        bufferBuilder
-                            .vertex(maxX, y, z + segmentZ)
-                            .normal(1.0f, 0.0f, 0.0f)
-                            .texture(animationTime - textureU, animationTime);
-                        bufferBuilder
-                            .vertex(maxX, y, z)
-                            .normal(1.0f, 0.0f, 0.0f)
-                            .texture(animationTime - textureU, animationTime + halfSegmentY);
-
-                        z += segmentZ;
-                        textureU += 0.5f;
-                    }
-                    y += segmentY;
-                }
-            }
-            if (isCameraInside || cameraPos.x < box.minX + LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
-                for (float y = minY; y < maxY; ) {
-                    float segmentY = Math.min(1.0f, maxY - y);
-                    float textureU = 0f;
-                    for (float z = minZ; z < maxZ; ) {
-                        float segmentZ = Math.min(1.0f, maxZ - z);
-                        float halfSegmentZ = segmentZ * 0.5f;
-                        float halfSegmentY = segmentY * 0.5f;
-
-                        bufferBuilder
-                            .vertex(minX, y, z)
-                            .normal(-1.0f, 0.0f, 0.0f)
-                            .texture(animationTime - textureU + halfSegmentZ, animationTime);
-                        bufferBuilder
-                            .vertex(minX, y, z + segmentZ)
-                            .normal(-1.0f, 0.0f, 0.0f)
-                            .texture(animationTime - textureU, animationTime);
-                        bufferBuilder
-                            .vertex(minX, y + segmentY, z + segmentZ)
-                            .normal(-1.0f, 0.0f, 0.0f)
-                            .texture(animationTime - textureU, animationTime + halfSegmentY);
-                        bufferBuilder
-                            .vertex(minX, y + segmentY, z)
-                            .normal(-1.0f, 0.0f, 0.0f)
-                            .texture(animationTime - textureU + halfSegmentZ, animationTime + halfSegmentY);
-
-                        z += segmentZ;
-                        textureU += 0.5f;
-                    }
-                    y += segmentY;
-                }
-            }
-            if (isCameraInside || cameraPos.z > box.maxZ - LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
-                for (float y = minY; y < maxY; ) {
-                    float segmentY = Math.min(1.0f, maxY - y);
-                    float textureU = 0f;
-                    for (float x = minX; x < maxX; ) {
-                        float segmentX = Math.min(1.0f, maxX - x);
-                        float halfSegmentX = segmentX * 0.5f;
-                        float halfSegmentY = segmentY * 0.5f;
-
-                        bufferBuilder
-                            .vertex(x, y, maxZ)
-                            .normal(0.0f, 0.0f, 1.0f)
-                            .texture(animationTime - textureU + halfSegmentX, animationTime);
-                        bufferBuilder
-                            .vertex(x + segmentX, y, maxZ)
-                            .normal(0.0f, 0.0f, 1.0f)
-                            .texture(animationTime - textureU, animationTime);
-                        bufferBuilder
-                            .vertex(x + segmentX, y + segmentY, maxZ)
-                            .normal(0.0f, 0.0f, 1.0f)
-                            .texture(animationTime - textureU, animationTime + halfSegmentY);
-                        bufferBuilder
-                            .vertex(x, y + segmentY, maxZ)
-                            .normal(0.0f, 0.0f, 1.0f)
-                            .texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentY);
-
-                        x += segmentX;
-                        textureU += 0.5f;
-                    }
-                    y += segmentY;
-                }
-            }
-            if (isCameraInside || cameraPos.z < box.minZ + LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
-                for (float y = minY; y < maxY; ) {
-                    float segmentY = Math.min(1.0f, maxY - y);
-                    float textureU = 0f;
-                    for (float x = minX; x < maxX; ) {
-                        float segmentX = Math.min(1.0f, maxX - x);
-                        float halfSegmentX = segmentX * 0.5f;
-                        float halfSegmentY = segmentY * 0.5f;
-
-                        bufferBuilder
-                            .vertex(x, y, minZ)
-                            .normal(0.0f, 0.0f, -1.0f)
-                            .texture(animationTime - textureU + halfSegmentX, animationTime);
-                        bufferBuilder
-                            .vertex(x, y + segmentY, minZ)
-                            .normal(0.0f, 0.0f, -1.0f)
-                            .texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentY);
-                        bufferBuilder
-                            .vertex(x + segmentX, y + segmentY, minZ)
-                            .normal(0.0f, 0.0f, -1.0f)
-                            .texture(animationTime - textureU, animationTime + halfSegmentY);
-                        bufferBuilder
-                            .vertex(x + segmentX, y, minZ)
-                            .normal(0.0f, 0.0f, -1.0f)
-                            .texture(animationTime - textureU, animationTime);
-
-                        x += segmentX;
-                        textureU += 0.5f;
-                    }
-                    y += segmentY;
-                }
-            }
-            if (isCameraInside || cameraPos.y < box.minY + LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
+            if (isFloorVisible || isRoofVisible) {
                 for (float z = minZ; z < maxZ; ) {
                     float segmentZ = Math.min(1.0f, maxZ - z);
                     float textureU = 0f;
@@ -315,60 +228,95 @@ public abstract class WorldRendererMixin {
                         float segmentX = Math.min(1.0f, maxX - x);
                         float halfSegmentX = segmentX * 0.5f;
                         float halfSegmentZ = segmentZ * 0.5f;
-
-                        bufferBuilder
-                            .vertex(x + segmentX, minY, z)
-                            .normal(0.0f, -1.0f, 0.0f)
-                            .texture(animationTime - textureU, animationTime + halfSegmentZ);
-                        bufferBuilder
-                            .vertex(x + segmentX, minY, z + segmentZ)
-                            .normal(0.0f, -1.0f, 0.0f)
-                            .texture(animationTime - textureU, animationTime);
-                        bufferBuilder
-                            .vertex(x, minY, z + segmentZ)
-                            .normal(0.0f, -1.0f, 0.0f)
-                            .texture(animationTime - textureU + halfSegmentX, animationTime);
-                        bufferBuilder
-                            .vertex(x, minY, z)
-                            .normal(0.0f, -1.0f, 0.0f)
-                            .texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentZ);
-
+                        if (isFloorVisible) {
+                            renderLockedLandmarkBorderFloor(
+                                bufferBuilder,
+                                minY,
+                                x, segmentX, halfSegmentX,
+                                z, segmentZ, halfSegmentZ,
+                                textureU,
+                                animationTime
+                            );
+                        }
+                        if (isRoofVisible) {
+                            renderLockedLandmarkBorderRoof(
+                                bufferBuilder,
+                                maxY,
+                                x, segmentX, halfSegmentX,
+                                z, segmentZ, halfSegmentZ,
+                                textureU,
+                                animationTime
+                            );
+                        }
                         x += segmentX;
                         textureU += 0.5f;
                     }
                     z += segmentZ;
                 }
             }
-            if (isCameraInside || cameraPos.y > box.maxY - LOCKED_LANDMARK_BORDER_VISIBLE_DISTANCE_THRESHOLD) {
-                for (float z = minZ; z < maxZ; ) {
-                    float segmentZ = Math.min(1.0f, maxZ - z);
+            if (isNorthWallVisible || isSouthWallVisible || isWestWallVisible || isEastWallVisible) {
+                for (float y = minY; y < maxY; ) {
+                    float segmentY = Math.min(1.0f, maxY - y);
                     float textureU = 0f;
-                    for (float x = minX; x < maxX; ) {
-                        float segmentX = Math.min(1.0f, maxX - x);
-                        float halfSegmentX = segmentX * 0.5f;
-                        float halfSegmentZ = segmentZ * 0.5f;
-
-                        bufferBuilder
-                            .vertex(x, maxY, z)
-                            .normal(0.0f, 1.0f, 0.0f)
-                            .texture(animationTime - textureU + halfSegmentX, animationTime + halfSegmentZ);
-                        bufferBuilder
-                            .vertex(x, maxY, z + segmentZ)
-                            .normal(0.0f, 1.0f, 0.0f)
-                            .texture(animationTime - textureU + halfSegmentX, animationTime);
-                        bufferBuilder
-                            .vertex(x + segmentX, maxY, z + segmentZ)
-                            .normal(0.0f, 1.0f, 0.0f)
-                            .texture(animationTime - textureU, animationTime);
-                        bufferBuilder
-                            .vertex(x + segmentX, maxY, z)
-                            .normal(0.0f, 1.0f, 0.0f)
-                            .texture(animationTime - textureU, animationTime + halfSegmentZ);
-
-                        x += segmentX;
-                        textureU += 0.5f;
+                    if (isNorthWallVisible || isSouthWallVisible) {
+                        for (float x = minX; x < maxX; ) {
+                            float segmentX = Math.min(1.0f, maxX - x);
+                            float halfSegmentX = segmentX * 0.5f;
+                            float halfSegmentY = segmentY * 0.5f;
+                            if (isNorthWallVisible) {
+                                renderLockedLandmarkBorderNorthWall(
+                                    bufferBuilder,
+                                    minZ,
+                                    x, segmentX, halfSegmentX,
+                                    y, segmentY, halfSegmentY,
+                                    textureU,
+                                    animationTime
+                                );
+                            }
+                            if (isSouthWallVisible) {
+                                renderLockedLandmarkBorderSouthWall(
+                                    bufferBuilder,
+                                    maxZ,
+                                    x, segmentX, halfSegmentX,
+                                    y, segmentY, halfSegmentY,
+                                    textureU,
+                                    animationTime
+                                );
+                            }
+                            x += segmentX;
+                            textureU += 0.5f;
+                        }
                     }
-                    z += segmentZ;
+                    if (isWestWallVisible || isEastWallVisible) {
+                        for (float z = minZ; z < maxZ; ) {
+                            float segmentZ = Math.min(1.0f, maxZ - z);
+                            float halfSegmentZ = segmentZ * 0.5f;
+                            float halfSegmentY = segmentY * 0.5f;
+                            if (isWestWallVisible) {
+                                renderLockedLandmarkBorderWestWall(
+                                    bufferBuilder,
+                                    minX,
+                                    y, segmentY, halfSegmentY,
+                                    z, segmentZ, halfSegmentZ,
+                                    textureU,
+                                    animationTime
+                                );
+                            }
+                            if (isEastWallVisible) {
+                                renderLockedLandmarkBorderEastWall(
+                                    bufferBuilder,
+                                    maxX,
+                                    y, segmentY, halfSegmentY,
+                                    z, segmentZ, halfSegmentZ,
+                                    textureU,
+                                    animationTime
+                                );
+                            }
+                            z += segmentZ;
+                            textureU += 0.5f;
+                        }
+                    }
+                    y += segmentY;
                 }
             }
 
@@ -376,20 +324,20 @@ public abstract class WorldRendererMixin {
             if (buffer != null) {
                 BufferRenderer.drawWithGlobalProgram(buffer);
             }
-        }
-        if (renderLayer != null) {
             renderLayer.endDrawing();
-            RenderSystem.disableCull();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            break;
         }
-        if (isInsideLockedLandmark) {
+        if (foundBox == null) {
+            fadeInsideLockedLandmarkAlpha = 1.0f;
+        } else if (foundBox.equals(lastLockedLandmarkBox)) {
             fadeInsideLockedLandmarkAlpha += ENTER_LOCKED_LANDMARK_BORDER_FADE_ALPHA_SPEED * tickDelta;
             if (fadeInsideLockedLandmarkAlpha > 1.0f) {
                 fadeInsideLockedLandmarkAlpha = 1.0f;
             }
         } else {
-            fadeInsideLockedLandmarkAlpha = 1.0f;
+            fadeInsideLockedLandmarkAlpha = 0.0f;
         }
-        wasInsideLockedLandmark = isInsideLockedLandmark;
+        lastLockedLandmarkBox = foundBox;
     }
 }

@@ -124,6 +124,7 @@ public class AchieveToDoClient implements ClientModInitializer {
             context.client().execute(() -> {
                 abilitiesConfiguration = payload.abilitiesConfiguration();
                 abilityRows.clear();
+                calculateLockedLandmarksBoxes();
             })
         );
         ClientPlayNetworking.registerGlobalReceiver(SyncAdvancementsCountPayload.ID, (payload, context) ->
@@ -177,7 +178,7 @@ public class AchieveToDoClient implements ClientModInitializer {
         );
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            abilitiesConfiguration.clear();
+            abilitiesConfiguration = null;
             obtainedAdvancementsCount = -1;
             lockedLandmarkBlockBoxes.clear();
             lockedLandmarksBoxes.clear();
@@ -187,6 +188,9 @@ public class AchieveToDoClient implements ClientModInitializer {
     }
 
     private void calculateLockedLandmarksBoxes() {
+        if (abilitiesConfiguration == null) {
+            return;
+        }
         List<LockedLandmarkBox> result = new ArrayList<>();
         for (var entry : lockedLandmarkBlockBoxes.entrySet()) {
             LandmarkType landmarkType = entry.getKey();
@@ -198,6 +202,33 @@ public class AchieveToDoClient implements ClientModInitializer {
                 ));
             }
         }
+        result.sort((lockedLandmarkBox, otherLockedLandmarkBox) -> {
+            Box box = lockedLandmarkBox.box();
+            Box otherBox = otherLockedLandmarkBox.box();
+            double volume = box.getLengthX() * box.getLengthY() * box.getLengthZ();
+            double otherVolume = otherBox.getLengthX() * otherBox.getLengthY() * otherBox.getLengthZ();
+            int compared = Double.compare(otherVolume, volume);
+            if (compared != 0) {
+                return compared;
+            }
+            LandmarkType landmarkType = lockedLandmarkBox.landmarkType();
+            LandmarkType otherLandmarkType = otherLockedLandmarkBox.landmarkType();
+            AbilityType abilityType = AbilityType.findByLandmarkType(landmarkType);
+            AbilityType otherAbilityType = AbilityType.findByLandmarkType(otherLandmarkType);
+            int requiredAdvancementsCount = abilitiesConfiguration.get(abilityType);
+            int otherRequiredAdvancementsCount = abilitiesConfiguration.get(otherAbilityType);
+            if (requiredAdvancementsCount == -1) {
+                requiredAdvancementsCount = Integer.MAX_VALUE;
+            }
+            if (otherRequiredAdvancementsCount == -1) {
+                otherRequiredAdvancementsCount = Integer.MAX_VALUE;
+            }
+            compared = Integer.compare(otherRequiredAdvancementsCount, requiredAdvancementsCount);
+            if (compared != 0) {
+                return compared;
+            }
+            return Integer.compare(landmarkType.ordinal(), otherLandmarkType.ordinal());
+        });
         lockedLandmarksBoxes = result;
     }
 

@@ -955,7 +955,7 @@ public enum AbilityType {
     private final ArmorMaterial equipmentMaterial;
     private final Class<? extends Portal> portal;
     private final VillagerProfession villager;
-    private final LandmarkType landmark;
+    private final LandmarkType landmarkType;
 
     AbilityType(
         int easyCount, int normalCount, int hardCount,
@@ -1059,13 +1059,13 @@ public enum AbilityType {
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
         boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
-        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, LandmarkType landmark
+        AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, LandmarkType landmarkType
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
             canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
-            unlockToastType, category, null, null, null, null, null, null, null, landmark
+            unlockToastType, category, null, null, null, null, null, null, null, landmarkType
         );
     }
 
@@ -1082,7 +1082,7 @@ public enum AbilityType {
         ArmorMaterial equipmentMaterial,
         Class<? extends Portal> portal,
         VillagerProfession villager,
-        LandmarkType landmark
+        LandmarkType landmarkType
     ) {
         this.easyCount = easyCount;
         this.normalCount = normalCount;
@@ -1100,7 +1100,7 @@ public enum AbilityType {
         this.equipmentMaterial = equipmentMaterial;
         this.portal = portal;
         this.villager = villager;
-        this.landmark = landmark;
+        this.landmarkType = landmarkType;
     }
 
     public int getRequiredAdvancementsCount(@NotNull DifficultyType difficultyType) {
@@ -1132,8 +1132,8 @@ public enum AbilityType {
         return unlockToastType;
     }
 
-    public LandmarkType getLandmark() {
-        return landmark;
+    public LandmarkType getLandmarkType() {
+        return landmarkType;
     }
 
     public Text buildUnlockProgressMessage(int leftCount) {
@@ -1206,8 +1206,8 @@ public enum AbilityType {
                 }
             }
         }
-        if (landmark != null) {
-            return switch (landmark) {
+        if (landmarkType != null) {
+            return switch (landmarkType) {
                 case DESERT_PYRAMID -> Items.CHISELED_SANDSTONE;
                 case DESERT_WELL -> Items.SANDSTONE;
                 case JUNGLE_PYRAMID -> Items.MOSSY_COBBLESTONE;
@@ -1340,6 +1340,18 @@ public enum AbilityType {
         }
         for (AbilityType ability : values()) {
             if (profession == ability.villager) {
+                return ability;
+            }
+        }
+        return null;
+    }
+
+    public static @Nullable AbilityType findByLandmarkType(LandmarkType landmarkType) {
+        if (landmarkType == null) {
+            return null;
+        }
+        for (AbilityType ability : values()) {
+            if (landmarkType == ability.landmarkType) {
                 return ability;
             }
         }

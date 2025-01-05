@@ -119,7 +119,7 @@ public class AchieveToDoServer implements ServerModInitializer {
                 continue;
             }
             setAbilityLocked(player, ability, isLock);
-            LandmarkType landmarkType = ability.getLandmark();
+            LandmarkType landmarkType = ability.getLandmarkType();
             if (landmarkType != null) {
                 if (isLock) {
                     playersByLockedLandmarkTypes

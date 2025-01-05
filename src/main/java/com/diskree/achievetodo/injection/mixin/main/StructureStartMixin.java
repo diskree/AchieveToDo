@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StructureStart.class)
@@ -45,6 +44,7 @@ public class StructureStartMixin implements StructureStartExtension {
     @Override
     public void achievetodo$setLandmarkType(LandmarkType landmarkType) {
         this.landmarkType = landmarkType;
+        System.out.println("achievetodo$setLandmarkType = " + landmarkType);
     }
 
     @Override
@@ -94,9 +94,19 @@ public class StructureStartMixin implements StructureStartExtension {
 
     @Inject(
         method = "toNbt",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtCompound;putInt(Ljava/lang/String;I)V", ordinal = 0, shift = At.Shift.AFTER)
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/nbt/NbtCompound;putInt(Ljava/lang/String;I)V",
+            ordinal = 0,
+            shift = At.Shift.AFTER
+        )
     )
-    private void writeLandmarkBlockBoxToNbt(StructureContext context, ChunkPos chunkPos, CallbackInfoReturnable<NbtCompound> cir, @Local NbtCompound nbtCompound) {
+    private void writeLandmarkBlockBoxToNbt(
+        StructureContext context,
+        ChunkPos chunkPos,
+        CallbackInfoReturnable<NbtCompound> cir,
+        @Local NbtCompound nbtCompound
+    ) {
         if (landmarkType != null && landmarkBlockBox != null) {
             NbtCompound landmarkNbt = new NbtCompound();
             landmarkNbt.putString(Constants.NbtKey.LANDMARK_TYPE, landmarkType.getName());
