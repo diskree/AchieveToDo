@@ -25,6 +25,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.poi.PointOfInterestType;
+import org.apache.http.util.TextUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -944,7 +945,7 @@ public enum AbilityType {
 
     private final int easyCount, normalCount, hardCount;
     private final int chaosMinLimit, chaosMaxLimit;
-    private final boolean canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos;
+    private final boolean canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos;
     private final AbilitiesTreeCategoryType category;
     private final AbilityUnlockedToastType unlockToastType;
     private final Item item;
@@ -959,13 +960,13 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Item item
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
-            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
             unlockToastType, category, item, null, null, null, null, null, null, null
         );
     }
@@ -973,13 +974,13 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Block block
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
-            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
             unlockToastType, category, null, null, block, null, null, null, null, null
         );
     }
@@ -987,13 +988,13 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, FoodComponent food
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
-            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
             unlockToastType, category, null, food, null, null, null, null, null, null
         );
     }
@@ -1001,13 +1002,13 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, ToolMaterial toolMaterial
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
-            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
             unlockToastType, category, null, null, null, toolMaterial, null, null, null, null
         );
     }
@@ -1015,13 +1016,13 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, ArmorMaterial armorMaterial
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
-            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
             unlockToastType, category, null, null, null, null, armorMaterial, null, null, null
         );
     }
@@ -1029,13 +1030,13 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Class<? extends Portal> portal
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
-            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
             unlockToastType, category, null, null, null, null, null, portal, null, null
         );
     }
@@ -1043,13 +1044,13 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, VillagerProfession villager
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
-            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
             unlockToastType, category, null, null, null, null, null, null, villager, null
         );
     }
@@ -1057,13 +1058,13 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, LandmarkType landmark
     ) {
         this(
             easyCount, normalCount, hardCount,
             chaosMinLimit, chaosMaxLimit,
-            canBeUnlockedByDefaultInChaos, canBePermanentlyLockedInChaos,
+            canBeInitiallyUnlockedInChaos, canBePermanentlyLockedInChaos,
             unlockToastType, category, null, null, null, null, null, null, null, landmark
         );
     }
@@ -1071,7 +1072,7 @@ public enum AbilityType {
     AbilityType(
         int easyCount, int normalCount, int hardCount,
         int chaosMinLimit, int chaosMaxLimit,
-        boolean canBeUnlockedByDefaultInChaos, boolean canBePermanentlyLockedInChaos,
+        boolean canBeInitiallyUnlockedInChaos, boolean canBePermanentlyLockedInChaos,
         AbilityUnlockedToastType unlockToastType,
         AbilitiesTreeCategoryType category,
         Item item,
@@ -1088,7 +1089,7 @@ public enum AbilityType {
         this.hardCount = hardCount;
         this.chaosMinLimit = chaosMinLimit;
         this.chaosMaxLimit = chaosMaxLimit;
-        this.canBeUnlockedByDefaultInChaos = canBeUnlockedByDefaultInChaos;
+        this.canBeInitiallyUnlockedInChaos = canBeInitiallyUnlockedInChaos;
         this.canBePermanentlyLockedInChaos = canBePermanentlyLockedInChaos;
         this.category = category;
         this.unlockToastType = unlockToastType;
@@ -1111,8 +1112,8 @@ public enum AbilityType {
         };
     }
 
-    public boolean canBeUnlockedByDefaultInChaos() {
-        return canBeUnlockedByDefaultInChaos;
+    public boolean canBeInitiallyUnlockedInChaos() {
+        return canBeInitiallyUnlockedInChaos;
     }
 
     public boolean canBePermanentlyLockedInChaos() {
@@ -1156,8 +1157,7 @@ public enum AbilityType {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    @Nullable
-    public Item getIcon() {
+    public @Nullable Item getIcon() {
         if (item != null) {
             return item;
         }
@@ -1243,8 +1243,8 @@ public enum AbilityType {
         return AchieveToDoClient.translateModKey("ability." + getName() + ".description");
     }
 
-    public static AbilityType findByName(String name) {
-        if (name == null) {
+    public static @Nullable AbilityType findByName(String name) {
+        if (TextUtils.isEmpty(name)) {
             return null;
         }
         for (AbilityType ability : values()) {
@@ -1274,8 +1274,7 @@ public enum AbilityType {
         return null;
     }
 
-    @Nullable
-    public static AbilityType findEatFoodAbility(ItemStack stack) {
+    public static @Nullable AbilityType findEatFoodAbility(ItemStack stack) {
         if (stack == null) {
             return null;
         }
@@ -1291,8 +1290,7 @@ public enum AbilityType {
         return null;
     }
 
-    @Nullable
-    public static AbilityType findToolMaterialUsageAbility(ToolMaterial toolMaterial) {
+    public static @Nullable AbilityType findToolMaterialUsageAbility(ToolMaterial toolMaterial) {
         if (toolMaterial == null) {
             return null;
         }
@@ -1304,8 +1302,7 @@ public enum AbilityType {
         return null;
     }
 
-    @Nullable
-    public static AbilityType findEquipmentEquipAbility(Item item) {
+    public static @Nullable AbilityType findEquipmentEquipAbility(Item item) {
         if (item == null) {
             return null;
         }
@@ -1325,8 +1322,7 @@ public enum AbilityType {
         return null;
     }
 
-    @Nullable
-    public static AbilityType findPortalTeleportAbility(Portal portal) {
+    public static @Nullable AbilityType findPortalTeleportAbility(Portal portal) {
         if (portal == null) {
             return null;
         }
@@ -1338,8 +1334,7 @@ public enum AbilityType {
         return null;
     }
 
-    @Nullable
-    public static AbilityType findVillagerTradeAbility(VillagerProfession profession) {
+    public static @Nullable AbilityType findVillagerTradeAbility(VillagerProfession profession) {
         if (profession == null) {
             return null;
         }

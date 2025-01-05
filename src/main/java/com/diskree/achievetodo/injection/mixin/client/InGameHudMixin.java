@@ -1,7 +1,8 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
-import com.diskree.achievetodo.ability.LandmarkType;
+import com.diskree.achievetodo.ability.DimensionType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
+import com.diskree.achievetodo.client.gui.LockedLandmarkBox;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -38,14 +39,15 @@ public class InGameHudMixin {
         @Local(argsOnly = true) @Nullable Entity entity
     ) {
         if (entity != null) {
-            Vec3d entityPos = entity.getPos();
-            float maxVignetteAlpha = 0.0f;
-
-            for (LandmarkType landmarkType : AchieveToDoClient.getLockedLandmarkBoxes().keySet()) {
-                if (entity.getWorld().getRegistryKey() != landmarkType.getWorld()) {
-                    continue;
-                }
-                for (Box box : AchieveToDoClient.getLockedLandmarkBoxes().get(landmarkType)) {
+            DimensionType dimensionType = DimensionType.findByWorld(entity.getWorld().getRegistryKey());
+            if (dimensionType != null) {
+                Vec3d entityPos = entity.getPos();
+                float maxVignetteAlpha = 0.0f;
+                for (LockedLandmarkBox lockedLandmarkBox : AchieveToDoClient.getLockedLandmarkBoxes()) {
+                    if (dimensionType != lockedLandmarkBox.dimension()) {
+                        continue;
+                    }
+                    Box box = lockedLandmarkBox.box();
                     if (box.contains(entityPos)) {
                         maxVignetteAlpha = 1.0f;
                         break;
@@ -64,10 +66,10 @@ public class InGameHudMixin {
                         }
                     }
                 }
-            }
-            if (maxVignetteAlpha > 0.0f) {
-                red = 0.0F;
-                green = blue = MathHelper.clamp(maxVignetteAlpha, 0.0F, 1.0F);
+                if (maxVignetteAlpha > 0.0f) {
+                    red = 0.0F;
+                    green = blue = MathHelper.clamp(maxVignetteAlpha, 0.0F, 1.0F);
+                }
             }
         }
         return original.call(alpha, red, green, blue);

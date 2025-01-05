@@ -269,8 +269,7 @@ public enum TrackedScoreType {
         return score;
     }
 
-    @Nullable
-    public static TrackedScoreType findByAdvancement(@NotNull Identifier advancementId) {
+    public static @Nullable TrackedScoreType findByAdvancement(@NotNull Identifier advancementId) {
         for (TrackedScoreType type : TrackedScoreType.values()) {
             if (advancementId.toString().equals(type.advancementId)) {
                 return type;

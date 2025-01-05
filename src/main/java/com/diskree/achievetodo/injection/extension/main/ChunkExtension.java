@@ -1,16 +1,17 @@
 package com.diskree.achievetodo.injection.extension.main;
 
+import com.diskree.achievetodo.ability.DimensionalBlockBox;
+import com.diskree.achievetodo.ability.LandmarkType;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.world.gen.feature.Feature;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ChunkExtension {
-    void achievetodo$setFeatureBlockBoxes(ServerWorld world, Map<Feature<?>, List<BlockBox>> featureBlockBoxes);
 
-    Map<Feature<?>, List<BlockBox>> achievetodo$getFeatureBlockBoxes();
+    void achievetodo$setFeatureLandmarks(ServerWorld world, Map<LandmarkType, List<DimensionalBlockBox>> landmarks);
 
-    void achievetodo$addFeatureBlockBox(ServerWorld world, Feature<?> feature, BlockBox box);
+    Map<LandmarkType, List<DimensionalBlockBox>> achievetodo$getFeatureLandmarks();
+
+    void achievetodo$addFeatureLandmark(ServerWorld world, LandmarkType landmarkType, DimensionalBlockBox dimensionalBlockBox);
 }

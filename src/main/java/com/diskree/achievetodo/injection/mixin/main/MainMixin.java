@@ -42,7 +42,7 @@ public class MainMixin {
         );
         if (levelInfo instanceof LevelInfoExtension levelInfoExtension) {
             levelInfoExtension.achievetodo$setConfigName(
-                serverPropertiesHandler.getString(Constants.CONFIG_NAME_LEVEL_NBT_KEY, "")
+                serverPropertiesHandler.getString(Constants.NbtKey.LEVEL_CONFIG_NAME, "")
             );
         }
         return levelInfo;

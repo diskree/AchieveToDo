@@ -1,25 +1,25 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.ability.DimensionType;
+import com.diskree.achievetodo.ability.DimensionalBlockBox;
+import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import com.diskree.achievetodo.injection.extension.main.SerializedChunkExtension;
+import com.diskree.achievetodo.server.Constants;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.chunk.SerializedChunk;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import net.minecraft.world.storage.StorageKey;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,43 +35,18 @@ import java.util.Map;
 public class SerializedChunkMixin implements SerializedChunkExtension {
 
     @Unique
-    private static final String FEATURES_NBT_KEY = BuildConfig.MOD_ID + "_features";
-
-    @Unique
-    private static final String FEATURE_BLOCK_BOXES_NBT_KEY = BuildConfig.MOD_ID + "_featureBlockBoxes";
-
-    @Unique
-    private static final String FEATURE_START_MIN_X_NBT_KEY = BuildConfig.MOD_ID + "_featureBlockBox_minX";
-
-    @Unique
-    private static final String FEATURE_START_MIN_Y_NBT_KEY = BuildConfig.MOD_ID + "_featureBlockBox_minY";
-
-    @Unique
-    private static final String FEATURE_START_MIN_Z_NBT_KEY = BuildConfig.MOD_ID + "_featureBlockBox_minZ";
-
-    @Unique
-    private static final String FEATURE_START_MAX_X_NBT_KEY = BuildConfig.MOD_ID + "_featureBlockBox_maxX";
-
-    @Unique
-    private static final String FEATURE_START_MAX_Y_NBT_KEY = BuildConfig.MOD_ID + "_featureBlockBox_maxY";
-
-    @Unique
-    private static final String FEATURE_START_MAX_Z_NBT_KEY = BuildConfig.MOD_ID + "_featureBlockBox_maxZ";
-
-    @Unique
-    private NbtCompound featuresNbt;
+    private NbtCompound featureLandmarksNbt;
 
     @Override
-    public void achievetodo$setFeaturesNbt(NbtCompound featuresNbt) {
-        this.featuresNbt = featuresNbt;
+    public void achievetodo$setFeatureLandmarksNbt(NbtCompound featureLandmarksNbt) {
+        this.featureLandmarksNbt = featureLandmarksNbt;
     }
 
-    @SuppressWarnings("ExtractMethodRecommender")
     @ModifyReturnValue(
         method = "fromChunk",
         at = @At(value = "TAIL")
     )
-    private static SerializedChunk writeFeatureBlockBoxesToChunkNbt(
+    private static SerializedChunk writeFeatureLandmarkNbt(
         SerializedChunk original,
         @Local(argsOnly = true) ServerWorld world,
         @Local(argsOnly = true) Chunk chunk
@@ -79,32 +54,27 @@ public class SerializedChunkMixin implements SerializedChunkExtension {
         if (original instanceof SerializedChunkExtension serializedChunkExtension &&
             chunk instanceof ChunkExtension chunkExtension
         ) {
-            Map<Feature<?>, List<BlockBox>> featureBlockBoxes = chunkExtension.achievetodo$getFeatureBlockBoxes();
-            if (featureBlockBoxes != null) {
-                NbtCompound featuresNbt = new NbtCompound();
-                NbtCompound featureBlockBoxesNbt = new NbtCompound();
-                Registry<Feature<?>> registry = world.getRegistryManager().getOrThrow(RegistryKeys.FEATURE);
-                for (Feature<?> feature : featureBlockBoxes.keySet()) {
-                    Identifier featureId = registry.getId(feature);
-                    if (featureId == null) {
-                        continue;
+            Map<LandmarkType, List<DimensionalBlockBox>> landmarks = chunkExtension.achievetodo$getFeatureLandmarks();
+            if (landmarks != null && !landmarks.isEmpty()) {
+                NbtCompound featureLandmarksNbt = new NbtCompound();
+                for (var entry : landmarks.entrySet()) {
+                    List<DimensionalBlockBox> dimensionalBlockBoxes = entry.getValue();
+                    NbtList blockBoxesNbt = new NbtList();
+                    for (DimensionalBlockBox dimensionalBlockBox : dimensionalBlockBoxes) {
+                        BlockBox blockBox = dimensionalBlockBox.blockBox();
+                        NbtCompound blockBoxNbt = new NbtCompound();
+                        blockBoxNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_X, blockBox.getMinX());
+                        blockBoxNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_Y, blockBox.getMinY());
+                        blockBoxNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_Z, blockBox.getMinZ());
+                        blockBoxNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_X, blockBox.getMaxX());
+                        blockBoxNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_Y, blockBox.getMaxY());
+                        blockBoxNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_Z, blockBox.getMaxZ());
+                        blockBoxesNbt.add(blockBoxNbt);
                     }
-                    List<BlockBox> starts = featureBlockBoxes.get(feature);
-                    NbtList startsNbt = new NbtList();
-                    for (BlockBox start : starts) {
-                        NbtCompound startNbt = new NbtCompound();
-                        startNbt.putInt(FEATURE_START_MIN_X_NBT_KEY, start.getMinX());
-                        startNbt.putInt(FEATURE_START_MIN_Y_NBT_KEY, start.getMinY());
-                        startNbt.putInt(FEATURE_START_MIN_Z_NBT_KEY, start.getMinZ());
-                        startNbt.putInt(FEATURE_START_MAX_X_NBT_KEY, start.getMaxX());
-                        startNbt.putInt(FEATURE_START_MAX_Y_NBT_KEY, start.getMaxY());
-                        startNbt.putInt(FEATURE_START_MAX_Z_NBT_KEY, start.getMaxZ());
-                        startsNbt.add(startNbt);
-                    }
-                    featureBlockBoxesNbt.put(featureId.toString(), startsNbt);
+                    LandmarkType landmarkType = entry.getKey();
+                    featureLandmarksNbt.put(landmarkType.getName(), blockBoxesNbt);
                 }
-                featuresNbt.put(FEATURE_BLOCK_BOXES_NBT_KEY, featureBlockBoxesNbt);
-                serializedChunkExtension.achievetodo$setFeaturesNbt(featuresNbt);
+                serializedChunkExtension.achievetodo$setFeatureLandmarksNbt(featureLandmarksNbt);
             }
         }
         return original;
@@ -114,20 +84,26 @@ public class SerializedChunkMixin implements SerializedChunkExtension {
         method = "fromNbt",
         at = @At(value = "TAIL")
     )
-    private static SerializedChunk readFeaturesNbt(SerializedChunk original, @Local(argsOnly = true) NbtCompound nbt) {
-        if (original instanceof SerializedChunkExtension serializedChunkExtension && nbt.contains(FEATURES_NBT_KEY)) {
-            serializedChunkExtension.achievetodo$setFeaturesNbt(nbt.getCompound(FEATURES_NBT_KEY));
+    private static SerializedChunk readFeatureLandmarksNbt(
+        SerializedChunk serializedChunk,
+        @Local(argsOnly = true) @NotNull NbtCompound nbt
+    ) {
+        NbtCompound featureLandmarksNbt = nbt.getCompound(Constants.NbtKey.FEATURE_LANDMARKS);
+        if (featureLandmarksNbt != null &&
+            serializedChunk instanceof SerializedChunkExtension serializedChunkExtension
+        ) {
+            serializedChunkExtension.achievetodo$setFeatureLandmarksNbt(featureLandmarksNbt);
         }
-        return original;
+        return serializedChunk;
     }
 
     @ModifyReturnValue(
         method = "serialize",
         at = @At(value = "TAIL")
     )
-    private NbtCompound writeFeaturesNbt(NbtCompound original) {
-        if (featuresNbt != null) {
-            original.put(FEATURES_NBT_KEY, featuresNbt);
+    private NbtCompound serializeLandmarksNbt(NbtCompound original) {
+        if (featureLandmarksNbt != null) {
+            original.put(Constants.NbtKey.FEATURE_LANDMARKS, featureLandmarksNbt);
         }
         return original;
     }
@@ -140,7 +116,7 @@ public class SerializedChunkMixin implements SerializedChunkExtension {
             shift = At.Shift.AFTER
         )
     )
-    private void setFeaturesToChunk(
+    private void convertFeatureLandmarksNbt(
         ServerWorld world,
         PointOfInterestStorage poiStorage,
         StorageKey key,
@@ -148,40 +124,42 @@ public class SerializedChunkMixin implements SerializedChunkExtension {
         CallbackInfoReturnable<ProtoChunk> cir,
         @Local Chunk chunk
     ) {
-        if (chunk instanceof ChunkExtension chunkExtension &&
-            featuresNbt != null &&
-            featuresNbt.contains(FEATURE_BLOCK_BOXES_NBT_KEY)
-        ) {
-            Registry<Feature<?>> registry = world.getRegistryManager().getOrThrow(RegistryKeys.FEATURE);
-            NbtCompound featureBlockBoxesNbt = featuresNbt.getCompound(FEATURE_BLOCK_BOXES_NBT_KEY);
-            Map<Feature<?>, List<BlockBox>> featureBlockBoxes = null;
-            for (String featureId : featureBlockBoxesNbt.getKeys()) {
-                Feature<?> feature = registry.get(Identifier.of(featureId));
-                if (feature != null) {
-                    NbtList startsNbt = featureBlockBoxesNbt.getList(featureId, NbtElement.COMPOUND_TYPE);
-                    for (int i = 0; i < startsNbt.size(); i++) {
-                        NbtCompound startNbt = startsNbt.getCompound(i);
-                        if (startNbt != null) {
-                            if (featureBlockBoxes == null) {
-                                featureBlockBoxes = new HashMap<>();
-                            }
-                            featureBlockBoxes
-                                .computeIfAbsent(feature, k -> new ArrayList<>())
-                                .add(new BlockBox(
-                                    startNbt.getInt(FEATURE_START_MIN_X_NBT_KEY),
-                                    startNbt.getInt(FEATURE_START_MIN_Y_NBT_KEY),
-                                    startNbt.getInt(FEATURE_START_MIN_Z_NBT_KEY),
-                                    startNbt.getInt(FEATURE_START_MAX_X_NBT_KEY),
-                                    startNbt.getInt(FEATURE_START_MAX_Y_NBT_KEY),
-                                    startNbt.getInt(FEATURE_START_MAX_Z_NBT_KEY)
-                                ));
+        if (featureLandmarksNbt != null && chunk instanceof ChunkExtension chunkExtension) {
+            DimensionType dimensionType = DimensionType.findByWorld(world.getRegistryKey());
+            if (dimensionType == null) {
+                return;
+            }
+            Map<LandmarkType, List<DimensionalBlockBox>> featureLandmarks = null;
+            for (String landmarkName : featureLandmarksNbt.getKeys()) {
+                LandmarkType landmarkType = LandmarkType.findByName(landmarkName);
+                if (landmarkType == null) {
+                    continue;
+                }
+                NbtList blockBoxesNbt = featureLandmarksNbt.getList(landmarkName, NbtElement.COMPOUND_TYPE);
+                if (blockBoxesNbt == null) {
+                    continue;
+                }
+                for (int i = 0; i < blockBoxesNbt.size(); i++) {
+                    NbtCompound blockBoxNbt = blockBoxesNbt.getCompound(i);
+                    if (!blockBoxesNbt.isEmpty()) {
+                        BlockBox blockBox = new BlockBox(
+                            blockBoxNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_X),
+                            blockBoxNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_Y),
+                            blockBoxNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_Z),
+                            blockBoxNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_X),
+                            blockBoxNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_Y),
+                            blockBoxNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_Z)
+                        );
+                        if (featureLandmarks == null) {
+                            featureLandmarks = new HashMap<>();
                         }
+                        featureLandmarks
+                            .computeIfAbsent(landmarkType, k -> new ArrayList<>())
+                            .add(new DimensionalBlockBox(dimensionType, blockBox));
                     }
                 }
             }
-            if (featureBlockBoxes != null) {
-                chunkExtension.achievetodo$setFeatureBlockBoxes(world, featureBlockBoxes);
-            }
+            chunkExtension.achievetodo$setFeatureLandmarks(world, featureLandmarks);
         }
     }
 }

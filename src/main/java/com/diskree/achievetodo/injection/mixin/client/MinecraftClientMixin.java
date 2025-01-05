@@ -25,8 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MinecraftClientMixin {
 
     @Shadow
-    @Nullable
-    public ClientPlayerEntity player;
+    public @Nullable ClientPlayerEntity player;
 
     @Inject(
         method = "setScreen",

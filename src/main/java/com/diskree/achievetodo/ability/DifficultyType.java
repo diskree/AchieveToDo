@@ -2,7 +2,9 @@ package com.diskree.achievetodo.ability;
 
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import net.minecraft.text.Text;
+import org.apache.http.util.TextUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -19,8 +21,8 @@ public enum DifficultyType {
         this.version = version;
     }
 
-    public static DifficultyType findByName(String name) {
-        if (name == null) {
+    public static @Nullable DifficultyType findByName(String name) {
+        if (TextUtils.isEmpty(name)) {
             return null;
         }
         for (DifficultyType difficultyType : values()) {

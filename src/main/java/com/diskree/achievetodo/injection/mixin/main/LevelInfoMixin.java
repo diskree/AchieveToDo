@@ -33,7 +33,7 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
     private static final String CONFIG_ABILITIES_KEY = "abilities";
 
     @Unique
-    private static final double CHAOS_UNLOCKED_BY_DEFAULT_CHANCE_PERCENT = 1.0;
+    private static final double CHAOS_INITIALLY_UNLOCKED_CHANCE_PERCENT = 1.0;
 
     @Unique
     private static final double CHAOS_PERMANENTLY_LOCKED_CHANCE_PERCENT = 0.1;
@@ -97,14 +97,14 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
                 for (AbilityType ability : AbilityType.values()) {
                     int requiredAdvancementsCount;
                     if (difficulty == DifficultyType.CHAOS) {
-                        double unlockedByDefaultChance = ability.canBeUnlockedByDefaultInChaos() ?
-                            CHAOS_UNLOCKED_BY_DEFAULT_CHANCE_PERCENT : 0;
+                        double initiallyUnlockedChance = ability.canBeInitiallyUnlockedInChaos() ?
+                            CHAOS_INITIALLY_UNLOCKED_CHANCE_PERCENT : 0;
                         double permanentlyLockedChance = ability.canBePermanentlyLockedInChaos() ?
                             CHAOS_PERMANENTLY_LOCKED_CHANCE_PERCENT : 0;
                         double roll = chaosRandom.nextDouble() * 100.0;
                         if (roll < permanentlyLockedChance) {
                             requiredAdvancementsCount = -1;
-                        } else if (roll < permanentlyLockedChance + unlockedByDefaultChance) {
+                        } else if (roll < permanentlyLockedChance + initiallyUnlockedChance) {
                             requiredAdvancementsCount = 0;
                         } else {
                             requiredAdvancementsCount = ability.getRequiredAdvancementsCountInChaos(chaosRandom);
@@ -154,7 +154,7 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
     )
     private static LevelInfo readConfigName(LevelInfo levelInfo, @Local(argsOnly = true) Dynamic<?> dynamic) {
         if (levelInfo instanceof LevelInfoExtension levelInfoExtension) {
-            levelInfoExtension.achievetodo$setConfigName(dynamic.get(Constants.CONFIG_NAME_LEVEL_NBT_KEY).asString(""));
+            levelInfoExtension.achievetodo$setConfigName(dynamic.get(Constants.NbtKey.LEVEL_CONFIG_NAME).asString(""));
         }
         return levelInfo;
     }

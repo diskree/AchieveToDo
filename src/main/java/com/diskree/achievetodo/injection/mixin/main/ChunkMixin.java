@@ -1,13 +1,12 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.DimensionalBlockBox;
 import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.feature.Feature;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,43 +22,43 @@ import java.util.Map;
 public abstract class ChunkMixin implements ChunkExtension {
 
     @Unique
-    private Map<Feature<?>, List<BlockBox>> featureBlockBoxes;
+    private Map<LandmarkType, List<DimensionalBlockBox>> featureLandmarks;
 
     @Override
-    public void achievetodo$setFeatureBlockBoxes(
-        ServerWorld world,
-        @NotNull Map<Feature<?>, List<BlockBox>> featureBlockBoxes
+    public void achievetodo$setFeatureLandmarks(
+        @NotNull ServerWorld world,
+        Map<LandmarkType, List<DimensionalBlockBox>> featureLandmarks
     ) {
-        this.featureBlockBoxes = featureBlockBoxes;
-
-        for (Map.Entry<Feature<?>, List<BlockBox>> featureBlockBoxEntry : featureBlockBoxes.entrySet()) {
-            LandmarkType landmark = LandmarkType.findByFeature(featureBlockBoxEntry.getKey());
-            if (landmark != null) {
-                for (BlockBox blockBox : featureBlockBoxEntry.getValue()) {
-                    AchieveToDoMod.getServer().onLandmarkLoadedStatusChanged(world, pos, landmark, blockBox, true);
-                }
-            }
+        this.featureLandmarks = featureLandmarks;
+        if (featureLandmarks != null) {
+            AchieveToDoMod.getServer().onLandmarksLoadedStatusChanged(world, pos, featureLandmarks, true);
         }
         markNeedsSaving();
     }
 
     @Override
-    public Map<Feature<?>, List<BlockBox>> achievetodo$getFeatureBlockBoxes() {
-        return featureBlockBoxes;
+    public Map<LandmarkType, List<DimensionalBlockBox>> achievetodo$getFeatureLandmarks() {
+        return featureLandmarks;
     }
 
     @Override
-    public void achievetodo$addFeatureBlockBox(ServerWorld world, Feature<?> feature, BlockBox box) {
-        LandmarkType landmark = LandmarkType.findByFeature(feature);
-        if (landmark != null) {
-            if (featureBlockBoxes == null) {
-                featureBlockBoxes = new HashMap<>();
-            }
-            featureBlockBoxes
-                .computeIfAbsent(feature, k -> new ArrayList<>())
-                .add(box);
-            AchieveToDoMod.getServer().onLandmarkLoadedStatusChanged(world, pos, landmark, box, true);
+    public void achievetodo$addFeatureLandmark(
+        @NotNull ServerWorld world,
+        LandmarkType featureLandmarkType,
+        DimensionalBlockBox dimensionalBlockBox
+    ) {
+        if (featureLandmarks == null) {
+            featureLandmarks = new HashMap<>();
         }
+        featureLandmarks
+            .computeIfAbsent(featureLandmarkType, k -> new ArrayList<>())
+            .add(dimensionalBlockBox);
+        AchieveToDoMod.getServer().onLandmarksLoadedStatusChanged(
+            world,
+            pos,
+            Map.of(featureLandmarkType, List.of(dimensionalBlockBox)),
+            true
+        );
         markNeedsSaving();
     }
 

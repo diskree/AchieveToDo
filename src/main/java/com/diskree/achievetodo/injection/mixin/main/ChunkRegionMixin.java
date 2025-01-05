@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.injection.extension.main.FeatureGenerationTracker;
+import com.diskree.achievetodo.injection.extension.main.LandmarkGenerationTracker;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
@@ -13,26 +13,27 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChunkRegion.class)
-public abstract class ChunkRegionMixin implements StructureWorldAccess, FeatureGenerationTracker {
+public abstract class ChunkRegionMixin implements StructureWorldAccess, LandmarkGenerationTracker {
 
     @Unique
-    private boolean shouldTrackFeatureGeneration;
+    private boolean isLandmarkGenerationTrackingEnabled;
 
     @Unique
-    private BlockBox featureBlockBox;
+    private BlockBox landmarkBlockBox;
 
     @Override
-    public void achievetodo$setTrackFeatureGeneration(boolean shouldTrackFeatureGeneration) {
-        if (this.shouldTrackFeatureGeneration == shouldTrackFeatureGeneration) {
-            return;
-        }
-        this.shouldTrackFeatureGeneration = shouldTrackFeatureGeneration;
-        featureBlockBox = null;
+    public void achievetodo$setLandmarkGenerationTrackingEnabled(boolean isLandmarkGenerationTrackingEnabled) {
+        this.isLandmarkGenerationTrackingEnabled = isLandmarkGenerationTrackingEnabled;
     }
 
     @Override
-    public BlockBox achievetodo$getFeatureBlockBox() {
-        return featureBlockBox;
+    public void achievetodo$setLandmarkBlockBox(BlockBox landmarkBlockBox) {
+        this.landmarkBlockBox = landmarkBlockBox;
+    }
+
+    @Override
+    public BlockBox achievetodo$getLandmarkBlockBox() {
+        return landmarkBlockBox;
     }
 
     @SuppressWarnings("deprecation")
@@ -40,18 +41,18 @@ public abstract class ChunkRegionMixin implements StructureWorldAccess, FeatureG
         method = "setBlockState",
         at = @At(value = "TAIL")
     )
-    private void trackFeatureGeneration(
+    private void trackLandmarkGeneration(
         BlockPos pos,
         BlockState state,
         int flags,
         int maxUpdateDepth,
         CallbackInfoReturnable<Boolean> cir
     ) {
-        if (shouldTrackFeatureGeneration) {
-            if (featureBlockBox == null) {
-                featureBlockBox = new BlockBox(pos);
+        if (isLandmarkGenerationTrackingEnabled) {
+            if (landmarkBlockBox == null) {
+                landmarkBlockBox = new BlockBox(pos);
             }
-            featureBlockBox.encompass(pos);
+            landmarkBlockBox.encompass(pos);
         }
     }
 }

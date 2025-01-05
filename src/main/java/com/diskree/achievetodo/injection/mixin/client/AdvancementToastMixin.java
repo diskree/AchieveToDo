@@ -30,8 +30,7 @@ public class AdvancementToastMixin {
     private static final int ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR = 0x725e3c;
 
     @Unique
-    @Nullable
-    private AbilityType ability;
+    private @Nullable AbilityType ability;
 
     @Inject(
         method = "<init>",

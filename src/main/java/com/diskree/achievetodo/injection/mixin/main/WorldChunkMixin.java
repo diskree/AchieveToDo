@@ -2,17 +2,12 @@ package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockBox;
 import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.chunk.WorldChunk;
-import net.minecraft.world.gen.feature.Feature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.List;
-import java.util.Map;
 
 @Mixin(WorldChunk.class)
 public class WorldChunkMixin {
@@ -30,10 +25,10 @@ public class WorldChunkMixin {
         if (worldChunk instanceof ChunkExtension worldChunkExtension &&
             protoChunk instanceof ChunkExtension protoChunkExtension
         ) {
-            Map<Feature<?>, List<BlockBox>> featureBlockBoxes = protoChunkExtension.achievetodo$getFeatureBlockBoxes();
-            if (featureBlockBoxes != null) {
-                worldChunkExtension.achievetodo$setFeatureBlockBoxes(world, featureBlockBoxes);
-            }
+            worldChunkExtension.achievetodo$setFeatureLandmarks(
+                world,
+                protoChunkExtension.achievetodo$getFeatureLandmarks()
+            );
         }
     }
 }

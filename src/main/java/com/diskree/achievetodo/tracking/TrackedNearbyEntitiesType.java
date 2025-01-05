@@ -111,8 +111,7 @@ public enum TrackedNearbyEntitiesType {
         return entitiesCount;
     }
 
-    @Nullable
-    public static TrackedNearbyEntitiesType findByAdvancement(@NotNull Identifier advancementId) {
+    public static @Nullable TrackedNearbyEntitiesType findByAdvancement(@NotNull Identifier advancementId) {
         for (TrackedNearbyEntitiesType type : TrackedNearbyEntitiesType.values()) {
             if (advancementId.toString().equals(type.advancementId)) {
                 return type;

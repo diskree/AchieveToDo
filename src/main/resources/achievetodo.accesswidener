@@ -6,6 +6,7 @@ accessible class net/minecraft/client/gui/screen/advancement/AdvancementTabType
 accessible class net/minecraft/advancement/AdvancementDisplays$Status
 extendable class net/minecraft/world/level/LevelInfo
 extendable class net/minecraft/world/chunk/SerializedChunk
+extendable class net/minecraft/structure/StructureStart
 
 accessible method net/minecraft/client/gui/screen/world/CreateWorldScreen createLevel ()V
 accessible method net/minecraft/server/dedicated/AbstractPropertiesHandler getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;

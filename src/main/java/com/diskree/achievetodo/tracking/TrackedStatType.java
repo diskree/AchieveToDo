@@ -404,13 +404,11 @@ public enum TrackedStatType {
         this.isPercentage = isPercentage;
     }
 
-    @Nullable
-    public static List<TrackedStatType> findByStat(Stat<?> stat) {
+    public static @Nullable List<TrackedStatType> findByStat(Stat<?> stat) {
         return STATS.get(stat);
     }
 
-    @Nullable
-    public static TrackedStatType findByAdvancement(@NotNull Identifier advancementId) {
+    public static @Nullable TrackedStatType findByAdvancement(@NotNull Identifier advancementId) {
         for (TrackedStatType type : TrackedStatType.values()) {
             if (advancementId.toString().equals(type.advancementId)) {
                 return type;

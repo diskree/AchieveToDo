@@ -2,10 +2,13 @@ package com.diskree.achievetodo.server;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
+import com.diskree.achievetodo.ability.DimensionType;
+import com.diskree.achievetodo.ability.DimensionalBlockBox;
 import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
+import com.diskree.achievetodo.injection.extension.main.StructureStartExtension;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
@@ -17,21 +20,16 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlayerAdvancementTracker;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.scoreboard.*;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.ServerStatHandler;
-import net.minecraft.stat.Stat;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -41,8 +39,8 @@ public class AchieveToDoServer implements ServerModInitializer {
     private Map<AbilityType, Integer> abilitiesConfiguration = new Object2IntOpenHashMap<>();
     private final Map<UUID, Integer> advancementsCountByPlayers = new Object2IntOpenHashMap<>();
 
-    private final Map<ChunkPos, Map<LandmarkType, List<BlockBox>>> landmarksByChunks = new HashMap<>();
-    private final Map<LandmarkType, List<UUID>> playersByLockedLandmarks = new HashMap<>();
+    private final Map<ChunkPos, Map<LandmarkType, List<DimensionalBlockBox>>> landmarksByChunks = new HashMap<>();
+    private final Map<LandmarkType, List<UUID>> playersByLockedLandmarkTypes = new HashMap<>();
 
     private final EnumMap<TrackedScoreType, Map<UUID, Integer>> trackedScores =
         new EnumMap<>(TrackedScoreType.class);
@@ -105,7 +103,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         int oldCount = advancementsCountByPlayers.getOrDefault(playerUuid, 0);
         advancementsCountByPlayers.put(playerUuid, count);
         List<LandmarkType> unlockedLandmarks = null;
-        Map<LandmarkType, List<BlockBox>> lockedLandmarks = null;
+        Map<LandmarkType, List<DimensionalBlockBox>> lockedLandmarks = null;
 
         for (AbilityType ability : AbilityType.values()) {
             int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
@@ -121,30 +119,30 @@ public class AchieveToDoServer implements ServerModInitializer {
                 continue;
             }
             setAbilityLocked(player, ability, isLock);
-            LandmarkType landmark = ability.getLandmark();
-            if (landmark != null) {
+            LandmarkType landmarkType = ability.getLandmark();
+            if (landmarkType != null) {
                 if (isLock) {
-                    playersByLockedLandmarks
-                        .computeIfAbsent(landmark, k -> new ArrayList<>())
+                    playersByLockedLandmarkTypes
+                        .computeIfAbsent(landmarkType, k -> new ArrayList<>())
                         .add(playerUuid);
-                    for (Map<LandmarkType, List<BlockBox>> landmarkBoxes : landmarksByChunks.values()) {
-                        List<BlockBox> blockBoxes = landmarkBoxes.get(landmark);
-                        if (blockBoxes != null) {
+                    for (Map<LandmarkType, List<DimensionalBlockBox>> landmarks : landmarksByChunks.values()) {
+                        List<DimensionalBlockBox> dimensionalBlockBoxes = landmarks.get(landmarkType);
+                        if (dimensionalBlockBoxes != null) {
                             if (lockedLandmarks == null) {
                                 lockedLandmarks = new HashMap<>();
                             }
-                            lockedLandmarks.put(landmark, blockBoxes);
+                            lockedLandmarks.put(landmarkType, dimensionalBlockBoxes);
                         }
                     }
                 } else {
-                    List<UUID> players = playersByLockedLandmarks.get(landmark);
+                    List<UUID> players = playersByLockedLandmarkTypes.get(landmarkType);
                     if (players != null && players.remove(playerUuid) && players.isEmpty()) {
-                        playersByLockedLandmarks.remove(landmark);
+                        playersByLockedLandmarkTypes.remove(landmarkType);
                     }
                     if (unlockedLandmarks == null) {
                         unlockedLandmarks = new ArrayList<>();
                     }
-                    unlockedLandmarks.add(landmark);
+                    unlockedLandmarks.add(landmarkType);
                 }
             }
         }
@@ -153,7 +151,7 @@ public class AchieveToDoServer implements ServerModInitializer {
             ServerPlayNetworking.send(player, new SyncLandmarkTypesUnlockedPayload(unlockedLandmarks));
         }
         if (lockedLandmarks != null) {
-            ServerPlayNetworking.send(player, new SyncLockedLandmarkBlockBoxesPayload(lockedLandmarks));
+            ServerPlayNetworking.send(player, new SyncLockedLandmarksPayload(lockedLandmarks, true));
         }
     }
 
@@ -161,8 +159,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         if (progressType.isPercentage()) {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / progressType.getFinalValue())));
         }
-        Map<UUID, Integer> progressByPlayers = trackedScores
-            .computeIfAbsent(progressType, k -> new HashMap<>());
+        var progressByPlayers = trackedScores.computeIfAbsent(progressType, k -> new HashMap<>());
         Integer currentProgress = progressByPlayers.get(player.getUuid());
         if (currentProgress == null || !currentProgress.equals(progress)) {
             progressByPlayers.put(player.getUuid(), progress);
@@ -174,8 +171,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         if (statType.isPercentage()) {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / statType.getFinalValue())));
         }
-        Map<UUID, Integer> progressByPlayers = trackedStats
-            .computeIfAbsent(statType, k -> new HashMap<>());
+        var progressByPlayers = trackedStats.computeIfAbsent(statType, k -> new HashMap<>());
         Integer currentProgress = progressByPlayers.get(player.getUuid());
         if (currentProgress == null || !currentProgress.equals(progress)) {
             progressByPlayers.put(player.getUuid(), progress);
@@ -223,53 +219,80 @@ public class AchieveToDoServer implements ServerModInitializer {
         return true;
     }
 
-    public void onLandmarkLoadedStatusChanged(
+    public void onLandmarksLoadedStatusChanged(
         @NotNull ServerWorld world,
         @NotNull ChunkPos chunkPos,
-        LandmarkType landmark,
-        BlockBox blockBox,
+        Map<LandmarkType, List<DimensionalBlockBox>> landmarks,
         boolean isLoaded
     ) {
-        boolean hasChanges = false;
+        boolean isChanged = false;
         if (isLoaded) {
-            landmarksByChunks
-                .computeIfAbsent(chunkPos, k -> new HashMap<>())
-                .computeIfAbsent(landmark, k -> new ArrayList<>())
-                .add(blockBox);
-            hasChanges = true;
+            var chunkMap = landmarksByChunks.computeIfAbsent(chunkPos, k -> new HashMap<>());
+            for (var entry : landmarks.entrySet()) {
+                if (chunkMap
+                    .computeIfAbsent(entry.getKey(), k -> new ArrayList<>())
+                    .addAll(entry.getValue())
+                ) {
+                    isChanged = true;
+                }
+            }
         } else {
-            Map<LandmarkType, List<BlockBox>> landmarksMap = landmarksByChunks.get(chunkPos);
-            if (landmarksMap != null) {
-                List<BlockBox> blockBoxes = landmarksMap.get(landmark);
-                if (blockBoxes != null && blockBoxes.remove(blockBox)) {
-                    if (blockBoxes.isEmpty()) {
-                        landmarksMap.remove(landmark);
-                        if (landmarksMap.isEmpty()) {
-                            landmarksByChunks.remove(chunkPos);
+            Map<LandmarkType, List<DimensionalBlockBox>> chunkMap = landmarksByChunks.get(chunkPos);
+            if (chunkMap != null) {
+                for (var entry : landmarks.entrySet()) {
+                    List<DimensionalBlockBox> dimensionalBlockBoxes = chunkMap.get(entry.getKey());
+                    if (dimensionalBlockBoxes != null && dimensionalBlockBoxes.removeAll(entry.getValue())) {
+                        isChanged = true;
+                        if (dimensionalBlockBoxes.isEmpty()) {
+                            chunkMap.remove(entry.getKey());
+                            if (chunkMap.isEmpty()) {
+                                landmarksByChunks.remove(chunkPos);
+                            }
                         }
                     }
-                    hasChanges = true;
                 }
             }
         }
-        if (hasChanges) {
-            List<UUID> lockedPlayers = playersByLockedLandmarks.get(landmark);
-            if (lockedPlayers != null) {
-                PlayerManager playerManager = null;
-                for (UUID playerUuid : lockedPlayers) {
-                    if (playerManager == null) {
-                        playerManager = world.getServer().getPlayerManager();
-                    }
-                    ServerPlayerEntity player = playerManager.getPlayer(playerUuid);
-                    if (player != null) {
-                        ServerPlayNetworking.send(
-                            player,
-                            new SyncLockedLandmarkLoadedStatusPayload(landmark, blockBox, isLoaded)
-                        );
-                    }
-                }
+        if (!isChanged) {
+            return;
+        }
+        HashMap<UUID, List<LandmarkType>> landmarkTypesByPlayers = new HashMap<>();
+        for (LandmarkType type : landmarks.keySet()) {
+            List<UUID> playerUuids = playersByLockedLandmarkTypes.get(type);
+            if (playerUuids == null) {
+                continue;
+            }
+            for (UUID playerUuid : playerUuids) {
+                landmarkTypesByPlayers
+                    .computeIfAbsent(playerUuid, k -> new ArrayList<>())
+                    .add(type);
             }
         }
+        PlayerManager playerManager = world.getServer().getPlayerManager();
+        for (UUID playerUuid : landmarkTypesByPlayers.keySet()) {
+            ServerPlayerEntity player = playerManager.getPlayer(playerUuid);
+            if (player == null) {
+                continue;
+            }
+            List<LandmarkType> landmarkTypes = landmarkTypesByPlayers.get(playerUuid);
+            HashMap<LandmarkType, List<DimensionalBlockBox>> landmarksToSync = new HashMap<>();
+            for (LandmarkType landmarkType : landmarkTypes) {
+                landmarksToSync
+                    .computeIfAbsent(landmarkType, k -> new ArrayList<>())
+                    .addAll(landmarks.get(landmarkType));
+            }
+            ServerPlayNetworking.send(player, new SyncLockedLandmarksPayload(landmarksToSync, isLoaded));
+        }
+    }
+
+    public void onLandmarkDimensionalBlockBoxChanged(
+        @NotNull ServerWorld world,
+        @NotNull ChunkPos chunkPos,
+        LandmarkType landmarkType,
+        DimensionalBlockBox oldDimensionalBlockBox,
+        DimensionalBlockBox newDimensionalBlockBox
+    ) {
+
     }
 
     @Override
@@ -294,21 +317,21 @@ public class AchieveToDoServer implements ServerModInitializer {
             updateObtainedAdvancementsCount(server.getScoreboard(), player);
             ScoreHolder scoreHolder = ScoreHolder.fromName(player.getNameForScoreboard());
             Scoreboard scoreboard = player.getScoreboard();
-            for (Map.Entry<String, List<TrackedScoreType>> scoreTypeEntry : TrackedScoreType.SCORES.entrySet()) {
+            for (var entry : TrackedScoreType.SCORES.entrySet()) {
                 ReadableScoreboardScore scoreboardScore = scoreboard.getScore(
-                    scoreHolder, scoreboard.getNullableObjective(scoreTypeEntry.getKey())
+                    scoreHolder, scoreboard.getNullableObjective(entry.getKey())
                 );
                 if (scoreboardScore != null) {
                     int score = scoreboardScore.getScore();
-                    for (TrackedScoreType type : scoreTypeEntry.getValue()) {
+                    for (TrackedScoreType type : entry.getValue()) {
                         setScore(player, type, type.fixScore(scoreboard, scoreHolder, score));
                     }
                 }
             }
             ServerStatHandler serverStatHandler = player.getStatHandler();
-            for (Map.Entry<Stat<?>, List<TrackedStatType>> statTypeEntry : TrackedStatType.STATS.entrySet()) {
-                int statValue = serverStatHandler.getStat(statTypeEntry.getKey());
-                for (TrackedStatType trackedStatType : statTypeEntry.getValue()) {
+            for (var entry : TrackedStatType.STATS.entrySet()) {
+                int statValue = serverStatHandler.getStat(entry.getKey());
+                for (TrackedStatType trackedStatType : entry.getValue()) {
                     setStat(player, trackedStatType, statValue);
                 }
             }
@@ -322,7 +345,7 @@ public class AchieveToDoServer implements ServerModInitializer {
             for (Map<UUID, Integer> players : trackedStats.values()) {
                 players.remove(playerUuid);
             }
-            for (List<UUID> players : playersByLockedLandmarks.values()) {
+            for (List<UUID> players : playersByLockedLandmarkTypes.values()) {
                 players.remove(playerUuid);
             }
         });
@@ -331,40 +354,37 @@ public class AchieveToDoServer implements ServerModInitializer {
     }
 
     private void onChunkLoadedStatusChanged(@NotNull ServerWorld world, @NotNull Chunk chunk, boolean isLoaded) {
-        Registry<Structure> structureRegistry = null;
-        ChunkPos chunkPos = null;
-        for (Map.Entry<Structure, StructureStart> structureEntry : chunk.getStructureStarts().entrySet()) {
-            StructureStart structureStart = structureEntry.getValue();
-            if (structureStart.hasChildren()) {
-                if (structureRegistry == null) {
-                    structureRegistry = world.getRegistryManager().getOrThrow(RegistryKeys.STRUCTURE);
-                }
-                LandmarkType landmark = LandmarkType.findByStructure(
-                    structureRegistry.getKey(structureEntry.getKey()).orElse(null)
-                );
-                if (landmark != null) {
-                    if (chunkPos == null) {
-                        chunkPos = chunk.getPos();
+        DimensionType dimensionType = DimensionType.findByWorld(world.getRegistryKey());
+        if (dimensionType == null) {
+            return;
+        }
+        Map<LandmarkType, List<DimensionalBlockBox>> landmarks = null;
+        for (StructureStart structureStart : chunk.getStructureStarts().values()) {
+            if (structureStart instanceof StructureStartExtension structureStartExtension) {
+                LandmarkType landmarkType = structureStartExtension.achievetodo$getLandmarkType();
+                BlockBox landmarkBlockBox = structureStartExtension.achievetodo$getLandmarkBlockBox();
+                if (landmarkType != null && landmarkBlockBox != null) {
+                    if (landmarks == null) {
+                        landmarks = new HashMap<>();
                     }
-                    onLandmarkLoadedStatusChanged(world, chunkPos, landmark, structureStart.getBoundingBox(), isLoaded);
+                    landmarks
+                        .computeIfAbsent(landmarkType, k -> new ArrayList<>())
+                        .add(new DimensionalBlockBox(dimensionType, landmarkBlockBox));
                 }
             }
         }
         if (chunk instanceof ChunkExtension chunkExtension) {
-            Map<Feature<?>, List<BlockBox>> featureBlockBoxes = chunkExtension.achievetodo$getFeatureBlockBoxes();
-            if (featureBlockBoxes != null) {
-                for (Map.Entry<Feature<?>, List<BlockBox>> featureEntry : featureBlockBoxes.entrySet()) {
-                    LandmarkType landmark = LandmarkType.findByFeature(featureEntry.getKey());
-                    if (landmark != null) {
-                        for (BlockBox blockBox : featureEntry.getValue()) {
-                            if (chunkPos == null) {
-                                chunkPos = chunk.getPos();
-                            }
-                            onLandmarkLoadedStatusChanged(world, chunkPos, landmark, blockBox, isLoaded);
-                        }
-                    }
+            Map<LandmarkType, List<DimensionalBlockBox>> featureLandmarks =
+                chunkExtension.achievetodo$getFeatureLandmarks();
+            if (featureLandmarks != null) {
+                if (landmarks == null) {
+                    landmarks = new HashMap<>();
                 }
+                landmarks.putAll(featureLandmarks);
             }
+        }
+        if (landmarks != null) {
+            onLandmarksLoadedStatusChanged(world, chunk.getPos(), landmarks, isLoaded);
         }
     }
 

@@ -83,6 +83,8 @@
     "main.SpyglassItemMixin",
     "main.StatHandlerMixin",
     "main.StonecutterBlockMixin",
+    "main.StructureMixin",
+    "main.StructureStartMixin",
     "main.SwordItemMixin",
     "main.TntBlockMixin",
     "main.TrapdoorBlockMixin",

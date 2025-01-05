@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.injection.extension.main.FeatureGenerationTracker;
+import com.diskree.achievetodo.injection.extension.main.LandmarkGenerationTracker;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
@@ -15,37 +15,40 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin extends World implements FeatureGenerationTracker {
+public abstract class ServerWorldMixin extends World implements LandmarkGenerationTracker {
 
     @Unique
-    private boolean shouldTrackFeatureGeneration;
+    private boolean isLandmarkGenerationTrackingEnabled;
 
     @Unique
-    private BlockBox featureBlockBox;
+    private BlockBox landmarkBlockBox;
 
     @Override
-    public void achievetodo$setTrackFeatureGeneration(boolean shouldTrackFeatureGeneration) {
-        if (this.shouldTrackFeatureGeneration == shouldTrackFeatureGeneration) {
-            return;
-        }
-        this.shouldTrackFeatureGeneration = shouldTrackFeatureGeneration;
-        featureBlockBox = null;
+    public void achievetodo$setLandmarkGenerationTrackingEnabled(boolean isLandmarkGenerationTrackingEnabled) {
+        this.isLandmarkGenerationTrackingEnabled = isLandmarkGenerationTrackingEnabled;
     }
 
     @Override
-    public BlockBox achievetodo$getFeatureBlockBox() {
-        return featureBlockBox;
+    public void achievetodo$setLandmarkBlockBox(BlockBox landmarkBlockBox) {
+        this.landmarkBlockBox = landmarkBlockBox;
+    }
+
+    @Override
+    public BlockBox achievetodo$getLandmarkBlockBox() {
+        BlockBox temp = landmarkBlockBox;
+        landmarkBlockBox = null;
+        return temp;
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public boolean setBlockState(BlockPos pos, BlockState state, int flags, int maxUpdateDepth) {
         boolean result = super.setBlockState(pos, state, flags, maxUpdateDepth);
-        if (result && shouldTrackFeatureGeneration) {
-            if (featureBlockBox == null) {
-                featureBlockBox = new BlockBox(pos);
+        if (result && isLandmarkGenerationTrackingEnabled) {
+            if (landmarkBlockBox == null) {
+                landmarkBlockBox = new BlockBox(pos);
             }
-            featureBlockBox.encompass(pos);
+            landmarkBlockBox.encompass(pos);
         }
         return result;
     }

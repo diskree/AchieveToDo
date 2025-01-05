@@ -27,9 +27,9 @@ public record SyncAbilitiesConfigurationPayload(
 
     private void write(@NotNull PacketByteBuf buf) {
         buf.writeInt(abilitiesConfiguration.size());
-        for (Map.Entry<AbilityType, Integer> abilityEntry : abilitiesConfiguration.entrySet()) {
-            buf.writeEnumConstant(abilityEntry.getKey());
-            buf.writeInt(abilityEntry.getValue());
+        for (var entry : abilitiesConfiguration.entrySet()) {
+            buf.writeEnumConstant(entry.getKey());
+            buf.writeInt(entry.getValue());
         }
     }
 

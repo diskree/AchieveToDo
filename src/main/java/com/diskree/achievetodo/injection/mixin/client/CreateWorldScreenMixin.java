@@ -93,12 +93,10 @@ public abstract class CreateWorldScreenMixin extends Screen implements CreateWor
     public abstract void createLevel();
 
     @Shadow
-    @Nullable
-    protected abstract Path getOrCreateDataPackTempDir();
+    protected abstract @Nullable Path getOrCreateDataPackTempDir();
 
     @Shadow
-    @Nullable
-    protected abstract Pair<Path, ResourcePackManager> getScannedPack(DataConfiguration settings);
+    protected abstract @Nullable Pair<Path, ResourcePackManager> getScannedPack(DataConfiguration settings);
 
     @Shadow
     protected abstract void applyDataPacks(
