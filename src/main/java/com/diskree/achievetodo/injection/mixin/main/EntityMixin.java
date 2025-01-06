@@ -7,6 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.EnderPearlEntity;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin {
@@ -40,6 +43,21 @@ public class EntityMixin {
             ) {
                 ci.cancel();
             }
+        }
+    }
+
+    @Inject(
+        method = "interact",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/entity/Leashable;canLeashAttachTo()Z"
+        ),
+        cancellable = true
+    )
+    public void lockLeashAttach(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+        Entity entity = (Entity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, entity)) {
+            cir.setReturnValue(ActionResult.FAIL);
         }
     }
 
