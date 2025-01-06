@@ -31,10 +31,13 @@ public class EntityMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    public void lockSneaking(boolean sneaking, CallbackInfo ci) {
-        if (sneaking) {
+    public void lockSneaking(boolean isSneaking, CallbackInfo ci) {
+        if (isSneaking) {
             Entity entity = (Entity) (Object) this;
-            if (entity instanceof PlayerEntity player && AchieveToDoMod.isAbilityLocked(player, AbilityType.SNEAK)) {
+            if (entity instanceof PlayerEntity player &&
+                player.isOnGround() &&
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.SNEAK)
+            ) {
                 ci.cancel();
             }
         }

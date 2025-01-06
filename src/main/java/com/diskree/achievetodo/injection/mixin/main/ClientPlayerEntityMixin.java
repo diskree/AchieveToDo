@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -22,6 +22,10 @@ public abstract class ClientPlayerEntityMixin {
         at = @At("RETURN")
     )
     public boolean lockSneaking(boolean original) {
-        return original && !AchieveToDoClient.isAbilityLocked(AbilityType.SNEAK);
+        if (!original) {
+            return false;
+        }
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        return !player.isOnGround() || !AchieveToDoMod.isAbilityLocked(player, AbilityType.SNEAK);
     }
 }
