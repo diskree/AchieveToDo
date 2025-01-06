@@ -24,7 +24,10 @@ public class SheepEntityMixin {
         cancellable = true
     )
     public void lockShears(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
+        SheepEntity sheepEntity = (SheepEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, sheepEntity) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

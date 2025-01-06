@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -24,7 +24,10 @@ public class WolfEntityMixin {
         cancellable = true
     )
     public void lockShears(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
+        WolfEntity wolfEntity = (WolfEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, wolfEntity) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

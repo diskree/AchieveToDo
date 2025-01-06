@@ -42,7 +42,9 @@ public class TrapdoorBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (!state.get(OPEN) && AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_TRAPDOOR)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            !state.get(OPEN) && AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_TRAPDOOR)
+        ) {
             cir.setReturnValue(ActionResult.SUCCESS);
         }
     }

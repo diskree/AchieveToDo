@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.entity.passive.WanderingTraderEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -23,7 +23,10 @@ public abstract class WanderingTraderEntityMixin {
         cancellable = true
     )
     public void lockWanderingTrader(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.TRADE_WITH_WANDERING_TRADER)) {
+        WanderingTraderEntity wanderingTraderEntity = (WanderingTraderEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, wanderingTraderEntity) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.TRADE_WITH_WANDERING_TRADER)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

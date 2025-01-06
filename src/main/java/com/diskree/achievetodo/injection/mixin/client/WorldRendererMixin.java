@@ -164,7 +164,7 @@ public abstract class WorldRendererMixin {
         }
         LockedLandmarkBox foundBox = null;
         for (LockedLandmarkBox lockedLandmarkBox : AchieveToDoClient.getLockedLandmarkBoxes()) {
-            if (lockedLandmarkBox.dimension() != dimensionType) {
+            if (lockedLandmarkBox.dimensionType() != dimensionType) {
                 continue;
             }
             Box box = lockedLandmarkBox.box();

@@ -34,7 +34,9 @@ public class BeaconBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_BEACON)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_BEACON)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

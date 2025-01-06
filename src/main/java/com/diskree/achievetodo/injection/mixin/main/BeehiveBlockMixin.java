@@ -39,7 +39,9 @@ public class BeehiveBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

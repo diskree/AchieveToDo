@@ -17,6 +17,7 @@
     "main.BarrelBlockMixin",
     "main.BeaconBlockMixin",
     "main.BeehiveBlockMixin",
+    "main.BlockItemMixin",
     "main.BoggedEntityMixin",
     "main.BowItemMixin",
     "main.BrewingStandBlockMixin",

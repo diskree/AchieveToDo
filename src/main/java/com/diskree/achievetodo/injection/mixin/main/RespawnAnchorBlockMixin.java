@@ -38,7 +38,9 @@ public class RespawnAnchorBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.CHARGE_RESPAWN_ANCHOR)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.CHARGE_RESPAWN_ANCHOR)
+        ) {
             cir.setReturnValue(ActionResult.CONSUME);
         }
     }

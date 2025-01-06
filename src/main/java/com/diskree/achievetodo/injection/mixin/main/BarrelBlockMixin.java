@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.block.BarrelBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,7 +34,9 @@ public class BarrelBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_BARREL)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_BARREL)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

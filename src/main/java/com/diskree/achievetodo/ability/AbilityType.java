@@ -241,7 +241,7 @@ public enum AbilityType {
         AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.MELON_SLICE
     ),
     OPEN_FURNACE(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.FURNACE
@@ -811,133 +811,133 @@ public enum AbilityType {
         AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ENCHANTING_TABLE
     ),
     INTERACT_INSIDE_DESERT_PYRAMID(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.DESERT_PYRAMID
     ),
     INTERACT_INSIDE_DESERT_WELL(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.DESERT_WELL
     ),
     INTERACT_INSIDE_JUNGLE_PYRAMID(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.JUNGLE_PYRAMID
     ),
     INTERACT_INSIDE_PILLAGER_OUTPOST(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.PILLAGER_OUTPOST
     ),
     INTERACT_INSIDE_IGLOO(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.IGLOO
     ),
     INTERACT_INSIDE_SWAMP_HUT(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.SWAMP_HUT
     ),
     INTERACT_INSIDE_MANSION(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MANSION
     ),
     INTERACT_INSIDE_VILLAGE(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.VILLAGE
     ),
     INTERACT_INSIDE_RUINED_PORTAL(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.RUINED_PORTAL
     ),
     INTERACT_INSIDE_BURIED_TREASURE(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.BURIED_TREASURE
     ),
     INTERACT_INSIDE_SHIPWRECK(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.SHIPWRECK
     ),
     INTERACT_INSIDE_OCEAN_RUIN(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.OCEAN_RUIN
     ),
     INTERACT_INSIDE_MONUMENT(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONUMENT
     ),
     INTERACT_INSIDE_MONSTER_ROOM(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONSTER_ROOM
     ),
     INTERACT_INSIDE_MINESHAFT(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MINESHAFT
     ),
     INTERACT_INSIDE_TRAIL_RUINS(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.TRAIL_RUINS
     ),
     INTERACT_INSIDE_ANCIENT_CITY(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.ANCIENT_CITY
     ),
     INTERACT_INSIDE_TRIAL_CHAMBERS(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.TRIAL_CHAMBERS
     ),
     INTERACT_INSIDE_STRONGHOLD(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.STRONGHOLD
     ),
     INTERACT_INSIDE_FORTRESS(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.FORTRESS
     ),
     INTERACT_INSIDE_BASTION_REMNANT(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.BASTION_REMNANT
     ),
     INTERACT_INSIDE_END_CITY(
-        100, 100, 100,
+        1000, 1000, 1000,
         1, 1000,
         true, true,
         AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.END_CITY

@@ -9,6 +9,8 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.ShovelItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,10 +51,16 @@ public class ShovelItemMixin {
     public void lockFlattenUsage(
         ItemUsageContext context,
         CallbackInfoReturnable<ActionResult> cir,
-        @Local PlayerEntity player
+        @Local PlayerEntity player,
+        @Local World world,
+        @Local BlockPos blockPos
     ) {
-        if (player != null && AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))) {
-            cir.setReturnValue(ActionResult.PASS);
+        if (player != null) {
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) ||
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
+            ) {
+                cir.setReturnValue(ActionResult.PASS);
+            }
         }
     }
 
@@ -65,13 +73,19 @@ public class ShovelItemMixin {
         ),
         cancellable = true
     )
-    public void lockFireExtinguishUsage(
+    public void lockCampfireExtinguishUsage(
         @NotNull ItemUsageContext context,
         CallbackInfoReturnable<ActionResult> cir,
-        @Local PlayerEntity player
+        @Local PlayerEntity player,
+        @Local World world,
+        @Local BlockPos blockPos
     ) {
-        if (player != null && AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))) {
-            cir.setReturnValue(ActionResult.PASS);
+        if (player != null) {
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) ||
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
+            ) {
+                cir.setReturnValue(ActionResult.PASS);
+            }
         }
     }
 }

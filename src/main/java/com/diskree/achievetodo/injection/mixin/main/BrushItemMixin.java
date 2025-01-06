@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BrushItem;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,11 +26,13 @@ public class BrushItemMixin {
         cancellable = true
     )
     public void lockBrush(
-        ItemUsageContext context,
+        @NotNull ItemUsageContext context,
         CallbackInfoReturnable<ActionResult> cir,
         @Local PlayerEntity player
     ) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_BRUSH)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, context.getWorld(), context.getBlockPos()) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_BRUSH)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

@@ -1,10 +1,7 @@
 package com.diskree.achievetodo.client;
 
 import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.ability.AbilitiesTreeCategoryType;
-import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.ability.DimensionalBlockBox;
-import com.diskree.achievetodo.ability.LandmarkType;
+import com.diskree.achievetodo.ability.*;
 import com.diskree.achievetodo.client.gui.LockedLandmarkBox;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
@@ -26,6 +23,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
+import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -283,6 +281,15 @@ public class AchieveToDoClient implements ClientModInitializer {
             ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
         }
         return true;
+    }
+
+    public static boolean isInLockedLandmark(DimensionType dimensionType, Box targetBox) {
+        for (LockedLandmarkBox lockedLandmarksBox : lockedLandmarksBoxes) {
+            if (lockedLandmarksBox.dimensionType() == dimensionType && lockedLandmarksBox.box().intersects(targetBox)) {
+                return isAbilityLocked(AbilityType.findByLandmarkType(lockedLandmarksBox.landmarkType()), false);
+            }
+        }
+        return false;
     }
 
     public static @Nullable List<List<AbilityType>> getAbilityRows() {

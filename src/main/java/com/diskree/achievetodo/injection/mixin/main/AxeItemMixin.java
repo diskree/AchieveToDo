@@ -48,15 +48,19 @@ public class AxeItemMixin {
         ),
         cancellable = true
     )
-    public void returnOnStrip(
+    public void lockStrip(
         World world,
         BlockPos pos,
         @Nullable PlayerEntity player,
         BlockState state,
         CallbackInfoReturnable<Optional<BlockState>> cir
     ) {
-        if (player != null && AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))) {
-            cir.setReturnValue(Optional.empty());
+        if (player != null) {
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
+            ) {
+                cir.setReturnValue(Optional.empty());
+            }
         }
     }
 }

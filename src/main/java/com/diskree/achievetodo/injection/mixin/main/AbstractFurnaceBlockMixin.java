@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -33,15 +33,17 @@ public class AbstractFurnaceBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        AbstractFurnaceBlock abstractFurnaceBlock = (AbstractFurnaceBlock) (Object) this;
-        AbilityType ability = null;
-        if (abstractFurnaceBlock instanceof FurnaceBlock) {
-            ability = AbilityType.OPEN_FURNACE;
-        } else if (abstractFurnaceBlock instanceof SmokerBlock) {
-            ability = AbilityType.OPEN_SMOKER;
-        } else if (abstractFurnaceBlock instanceof BlastFurnaceBlock) {
-            ability = AbilityType.OPEN_BLAST_FURNACE;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos)) {
+            cir.setReturnValue(ActionResult.PASS);
+            return;
         }
+        AbstractFurnaceBlock abstractFurnaceBlock = (AbstractFurnaceBlock) (Object) this;
+        AbilityType ability = switch (abstractFurnaceBlock) {
+            case FurnaceBlock ignored -> AbilityType.OPEN_FURNACE;
+            case SmokerBlock ignored -> AbilityType.OPEN_SMOKER;
+            case BlastFurnaceBlock ignored -> AbilityType.OPEN_BLAST_FURNACE;
+            default -> null;
+        };
         if (AchieveToDoMod.isAbilityLocked(player, ability)) {
             cir.setReturnValue(ActionResult.PASS);
         }

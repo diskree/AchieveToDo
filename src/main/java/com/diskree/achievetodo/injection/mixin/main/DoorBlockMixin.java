@@ -42,7 +42,9 @@ public class DoorBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (!state.get(OPEN) && AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_DOOR)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            !state.get(OPEN) && AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_DOOR)
+        ) {
             cir.setReturnValue(ActionResult.SUCCESS);
         }
     }

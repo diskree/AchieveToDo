@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -43,10 +43,12 @@ public class AbstractCauldronBlockMixin {
         ItemStack itemStack,
         Operation<ActionResult> original
     ) {
-        if (behavior != ((Object2ObjectOpenHashMap<?, ?>) behaviorMap.map()).defaultReturnValue() &&
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_CAULDRON)
-        ) {
-            return ActionResult.CONSUME;
+        if (behavior != ((Object2ObjectOpenHashMap<?, ?>) behaviorMap.map()).defaultReturnValue()) {
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) ||
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_CAULDRON)
+            ) {
+                return ActionResult.CONSUME;
+            }
         }
         return original.call(behavior, blockState, world, blockPos, player, hand, itemStack);
     }

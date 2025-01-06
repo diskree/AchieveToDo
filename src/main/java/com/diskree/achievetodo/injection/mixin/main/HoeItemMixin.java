@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.HoeItem;
@@ -9,6 +9,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -45,13 +47,19 @@ public class HoeItemMixin {
         ),
         cancellable = true
     )
-    public void lockTool(
+    public void lockHoe(
         ItemUsageContext context,
         CallbackInfoReturnable<ActionResult> cir,
-        @Local PlayerEntity player
+        @Local PlayerEntity player,
+        @Local World world,
+        @Local BlockPos pos
     ) {
-        if (player != null && AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))) {
-            cir.setReturnValue(ActionResult.PASS);
+        if (player != null) {
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
+            ) {
+                cir.setReturnValue(ActionResult.PASS);
+            }
         }
     }
 }

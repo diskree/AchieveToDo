@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.block.vault.VaultConfig;
@@ -39,7 +39,9 @@ public class VaultBlockEntityServerMixin {
         ItemStack stack,
         CallbackInfo ci
     ) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.UNLOCK_VAULT)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.UNLOCK_VAULT)
+        ) {
             ci.cancel();
         }
     }

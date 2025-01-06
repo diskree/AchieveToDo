@@ -31,7 +31,9 @@ public class TripwireBlockMixin {
         PlayerEntity player,
         CallbackInfoReturnable<BlockState> cir
     ) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
+        ) {
             cir.setReturnValue(blockState);
         }
     }

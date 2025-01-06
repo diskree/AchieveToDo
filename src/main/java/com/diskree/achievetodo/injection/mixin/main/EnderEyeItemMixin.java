@@ -4,9 +4,11 @@ import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EnderEyeItem;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,6 +16,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EnderEyeItem.class)
 public class EnderEyeItemMixin {
+
+    @Inject(
+        method = "useOnBlock",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/block/BlockState;with(Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Ljava/lang/Object;",
+            shift = At.Shift.BEFORE
+        ),
+        cancellable = true
+    )
+    public void lockEnderEye(@NotNull ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
+        PlayerEntity player = context.getPlayer();
+        if (player != null &&
+            AchieveToDoMod.isTargetInLockedLandmark(player, context.getWorld(), context.getBlockPos())
+        ) {
+            cir.setReturnValue(ActionResult.FAIL);
+        }
+    }
 
     @Inject(
         method = "use",

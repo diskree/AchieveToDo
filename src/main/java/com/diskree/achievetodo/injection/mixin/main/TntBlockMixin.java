@@ -46,11 +46,11 @@ public class TntBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (stack.isOf(Items.FLINT_AND_STEEL) && AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL)) {
-            cir.setReturnValue(ActionResult.CONSUME);
-            return;
-        }
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.IGNITE_TNT)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            stack.isOf(Items.FLINT_AND_STEEL) &&
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.IGNITE_TNT)
+        ) {
             cir.setReturnValue(ActionResult.CONSUME);
         }
     }
@@ -69,9 +69,13 @@ public class TntBlockMixin {
         @NotNull Operation<Boolean> original,
         @Local Entity owner
     ) {
-        return original.call(projectileEntity, world, blockPos) && (
-            !(owner instanceof PlayerEntity player) ||
-                !AchieveToDoMod.isAbilityLocked(player, AbilityType.IGNITE_TNT)
-        );
+        if (!original.call(projectileEntity, world, blockPos)) {
+            return false;
+        }
+        if (owner instanceof PlayerEntity player) {
+            return !AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) &&
+                !AchieveToDoMod.isAbilityLocked(player, AbilityType.IGNITE_TNT);
+        }
+        return true;
     }
 }

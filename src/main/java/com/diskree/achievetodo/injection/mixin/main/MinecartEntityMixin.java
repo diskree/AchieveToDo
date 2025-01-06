@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,9 +19,13 @@ public abstract class MinecartEntityMixin extends AbstractMinecartEntity {
 
     @Override
     protected boolean canAddPassenger(Entity passenger) {
-        return super.canAddPassenger(passenger) && (
-            !(passenger instanceof PlayerEntity player) ||
-                !AchieveToDoMod.isAbilityLocked(player, AbilityType.GET_INTO_MINECART)
-        );
+        if (super.canAddPassenger(passenger)) {
+            if (passenger instanceof PlayerEntity player) {
+                return !AchieveToDoMod.isTargetInLockedLandmark(player, this) &&
+                    !AchieveToDoMod.isAbilityLocked(player, AbilityType.GET_INTO_MINECART);
+            }
+            return true;
+        }
+        return false;
     }
 }

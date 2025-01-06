@@ -28,13 +28,15 @@ public class BundleItemMixin {
         PlayerEntity player,
         @NotNull Operation<Boolean> original
     ) {
-        if (original.call(instance, player)) {
-            if (!AchieveToDoMod.isAbilityLocked(player, AbilityType.PUT_IN_BUNDLE)) {
-                return true;
-            }
+        if (!original.call(instance, player)) {
+            return false;
+        }
+        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.PUT_IN_BUNDLE)) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
                 serverPlayer.closeHandledScreen();
             }
+        } else {
+            return true;
         }
         return false;
     }

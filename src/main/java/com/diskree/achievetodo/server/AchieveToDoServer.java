@@ -6,6 +6,7 @@ import com.diskree.achievetodo.ability.DimensionType;
 import com.diskree.achievetodo.ability.DimensionalBlockBox;
 import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
+import com.diskree.achievetodo.client.Utils;
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.injection.extension.main.StructureStartExtension;
@@ -28,6 +29,7 @@ import net.minecraft.stat.ServerStatHandler;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
@@ -217,6 +219,28 @@ public class AchieveToDoServer implements ServerModInitializer {
             demystifyAbility(player, ability);
         }
         return true;
+    }
+
+    public boolean isInLockedLandmark(@NotNull ServerPlayerEntity player, DimensionType dimensionType, Box box) {
+        BlockBox blockBox = Utils.toBlockBox(box);
+        for (var entry : playersByLockedLandmarkTypes.entrySet()) {
+            if (entry.getValue().contains(player.getUuid())) {
+                LandmarkType landmarkType = entry.getKey();
+                for (Map<LandmarkType, List<DimensionalBlockBox>> value : landmarksByChunks.values()) {
+                    List<DimensionalBlockBox> dimensionalBlockBoxes = value.get(landmarkType);
+                    if (dimensionalBlockBoxes != null) {
+                        for (DimensionalBlockBox dimensionalBlockBox : dimensionalBlockBoxes) {
+                            if (dimensionalBlockBox.dimensionType() == dimensionType &&
+                                dimensionalBlockBox.blockBox().intersects(blockBox)
+                            ) {
+                                return isAbilityLocked(player, AbilityType.findByLandmarkType(landmarkType));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void onLandmarksLoadedStatusChanged(

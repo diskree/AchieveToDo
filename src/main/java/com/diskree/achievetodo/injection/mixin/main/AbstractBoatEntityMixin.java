@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
@@ -18,9 +18,14 @@ public class AbstractBoatEntityMixin {
         at = @At("TAIL")
     )
     private boolean lockBoat(boolean original, @Local(argsOnly = true) Entity passenger) {
-        return original && (
-            !(passenger instanceof PlayerEntity player) ||
-                !AchieveToDoMod.isAbilityLocked(player, AbilityType.GET_INTO_BOAT)
-        );
+        AbstractBoatEntity boatEntity = (AbstractBoatEntity) (Object) this;
+        if (!original) {
+            return false;
+        }
+        if (passenger instanceof PlayerEntity player) {
+            return !AchieveToDoMod.isTargetInLockedLandmark(player, boatEntity) &&
+                !AchieveToDoMod.isAbilityLocked(player, AbilityType.GET_INTO_BOAT);
+        }
+        return true;
     }
 }

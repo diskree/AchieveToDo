@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.EnderChestBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,7 +34,9 @@ public class EnderChestBlockMixin {
         BlockHitResult hit,
         CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_ENDER_CHEST)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_ENDER_CHEST)
+        ) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

@@ -58,13 +58,13 @@ public class EntityMixin {
         if (teleportEntity == null) {
             return;
         }
-
+        World currentWorld = enderPearl != null ? enderPearl.getWorld() : teleportEntity.getWorld();
+        RegistryKey<World> currentWorldRegistryKey = currentWorld.getRegistryKey();
         AbilityType ability = AbilityType.findPortalTeleportAbility(portal);
-        RegistryKey<World> currentDimension = teleportEntity.getWorld().getRegistryKey();
-        if (currentDimension == World.NETHER && ability == AbilityType.ENTER_NETHER) {
+        if (currentWorldRegistryKey == World.NETHER && ability == AbilityType.ENTER_NETHER) {
             return;
         }
-        if (currentDimension == World.END) {
+        if (currentWorldRegistryKey == World.END) {
             if (ability == AbilityType.ENTER_END) {
                 return;
             }
@@ -73,14 +73,16 @@ public class EntityMixin {
             }
         }
 
-        if (teleportEntity instanceof PlayerEntity playerEntity &&
-            AchieveToDoMod.isAbilityLocked(playerEntity, ability)
-        ) {
-            if (enderPearl != null) {
-                enderPearl.remove(Entity.RemovalReason.DISCARDED);
+        if (teleportEntity instanceof PlayerEntity playerEntity) {
+            if (AchieveToDoMod.isTargetInLockedLandmark(playerEntity, currentWorld, pos) ||
+                AchieveToDoMod.isAbilityLocked(playerEntity, ability)
+            ) {
+                if (enderPearl != null) {
+                    enderPearl.remove(Entity.RemovalReason.DISCARDED);
+                }
+                ci.cancel();
+                return;
             }
-            ci.cancel();
-            return;
         }
         if (enderPearl != null || !teleportEntity.hasPassengers()) {
             return;

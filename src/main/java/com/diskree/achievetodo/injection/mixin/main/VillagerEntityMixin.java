@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -32,7 +32,14 @@ public abstract class VillagerEntityMixin {
         @NotNull Operation<Boolean> original,
         @Local(argsOnly = true) PlayerEntity player
     ) {
-        return original.call(tradeOffers) ||
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.findVillagerTradeAbility(getVillagerData().getProfession()));
+        if (original.call(tradeOffers)) {
+            return true;
+        }
+        VillagerEntity villagerEntity = (VillagerEntity) (Object) this;
+        return AchieveToDoMod.isTargetInLockedLandmark(player, villagerEntity) ||
+            AchieveToDoMod.isAbilityLocked(
+                player,
+                AbilityType.findVillagerTradeAbility(getVillagerData().getProfession())
+            );
     }
 }

@@ -61,7 +61,10 @@ public class BucketItemMixin {
         BlockHitResult hitResult,
         CallbackInfoReturnable<Boolean> cir
     ) {
-        if (fluid == Fluids.WATER && player != null && AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)) {
+        if (fluid == Fluids.WATER &&
+            player != null &&
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)
+        ) {
             cir.setReturnValue(false);
         }
     }

@@ -33,9 +33,13 @@ public class ShulkerBoxBlockMixin {
         @NotNull Operation<Boolean> original,
         @Local(argsOnly = true) PlayerEntity player
     ) {
-        return original.call(state, world, pos, entity) && (
-            entity.getAnimationStage() != ShulkerBoxBlockEntity.AnimationStage.CLOSED ||
-                AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_SHULKER_BOX)
-        );
+        if (!original.call(state, world, pos, entity)) {
+            return false;
+        }
+        if (entity.getAnimationStage() != ShulkerBoxBlockEntity.AnimationStage.CLOSED) {
+            return true;
+        }
+        return AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_SHULKER_BOX);
     }
 }
