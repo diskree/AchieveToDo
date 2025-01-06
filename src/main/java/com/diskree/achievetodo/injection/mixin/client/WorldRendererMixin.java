@@ -41,7 +41,7 @@ public abstract class WorldRendererMixin {
     private LockedLandmarkBox lastLockedLandmarkBox = null;
 
     @Unique
-    private float fadeInsideLockedLandmarkAlpha = 1.0f;
+    private float fadeInsideLockedLandmarkAlpha = 0.0f;
 
     @Unique
     private void renderLockedLandmarkBorderFloor(
@@ -328,12 +328,14 @@ public abstract class WorldRendererMixin {
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             break;
         }
-        if (foundBox == null) {
-            fadeInsideLockedLandmarkAlpha = 1.0f;
-        } else if (foundBox.equals(lastLockedLandmarkBox)) {
-            fadeInsideLockedLandmarkAlpha += ENTER_LOCKED_LANDMARK_BORDER_FADE_ALPHA_SPEED * tickDelta;
-            if (fadeInsideLockedLandmarkAlpha > 1.0f) {
-                fadeInsideLockedLandmarkAlpha = 1.0f;
+        if (foundBox != null) {
+            if (foundBox.equals(lastLockedLandmarkBox)) {
+                fadeInsideLockedLandmarkAlpha += ENTER_LOCKED_LANDMARK_BORDER_FADE_ALPHA_SPEED * tickDelta;
+                if (fadeInsideLockedLandmarkAlpha > 1.0f) {
+                    fadeInsideLockedLandmarkAlpha = 1.0f;
+                }
+            } else {
+                fadeInsideLockedLandmarkAlpha = 0.0f;
             }
         } else {
             fadeInsideLockedLandmarkAlpha = 0.0f;
