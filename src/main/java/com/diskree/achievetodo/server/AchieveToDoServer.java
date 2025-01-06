@@ -285,14 +285,41 @@ public class AchieveToDoServer implements ServerModInitializer {
         }
     }
 
-    public void onLandmarkDimensionalBlockBoxChanged(
+    public void onLandmarkResized(
         @NotNull ServerWorld world,
         @NotNull ChunkPos chunkPos,
         LandmarkType landmarkType,
         DimensionalBlockBox oldDimensionalBlockBox,
         DimensionalBlockBox newDimensionalBlockBox
     ) {
-
+        Map<LandmarkType, List<DimensionalBlockBox>> chunkMap = landmarksByChunks.get(chunkPos);
+        if (chunkMap == null) {
+            return;
+        }
+        List<DimensionalBlockBox> dimensionalBlockBoxes = chunkMap.get(landmarkType);
+        if (dimensionalBlockBoxes == null) {
+            return;
+        }
+        if (!dimensionalBlockBoxes.remove(oldDimensionalBlockBox)) {
+            return;
+        }
+        dimensionalBlockBoxes.add(newDimensionalBlockBox);
+        List<UUID> playerUuids = playersByLockedLandmarkTypes.get(landmarkType);
+        if (playerUuids == null) {
+            return;
+        }
+        PlayerManager playerManager = world.getServer().getPlayerManager();
+        for (UUID playerUuid : playerUuids) {
+            ServerPlayerEntity player = playerManager.getPlayer(playerUuid);
+            if (player == null) {
+                continue;
+            }
+            ServerPlayNetworking.send(player, new SyncResizedLandmarkPayload(
+                landmarkType,
+                oldDimensionalBlockBox,
+                newDimensionalBlockBox
+            ));
+        }
     }
 
     @Override

@@ -39,6 +39,10 @@ public class AchieveToDoMod implements ModInitializer {
             SyncLandmarkTypesUnlockedPayload.ID,
             SyncLandmarkTypesUnlockedPayload.CODEC
         );
+        PayloadTypeRegistry.playS2C().register(
+            SyncResizedLandmarkPayload.ID,
+            SyncResizedLandmarkPayload.CODEC
+        );
         PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
 

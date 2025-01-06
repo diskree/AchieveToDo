@@ -8,16 +8,12 @@ import com.diskree.achievetodo.injection.extension.main.LandmarkGenerationTracke
 import com.diskree.achievetodo.injection.extension.main.StructureStartExtension;
 import com.diskree.achievetodo.server.Constants;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureContext;
-import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.StructureWorldAccess;
@@ -30,7 +26,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
+import java.util.Map;
 
 @Mixin(StructureStart.class)
 public class StructureStartMixin implements StructureStartExtension {
@@ -44,7 +44,6 @@ public class StructureStartMixin implements StructureStartExtension {
     @Override
     public void achievetodo$setLandmarkType(LandmarkType landmarkType) {
         this.landmarkType = landmarkType;
-        System.out.println("achievetodo$setLandmarkType = " + landmarkType);
     }
 
     @Override
@@ -62,6 +61,10 @@ public class StructureStartMixin implements StructureStartExtension {
         return landmarkBlockBox;
     }
 
+    @Shadow
+    @Final
+    private ChunkPos pos;
+
     @ModifyReturnValue(
         method = "fromNbt",
         at = @At(
@@ -74,20 +77,25 @@ public class StructureStartMixin implements StructureStartExtension {
         @Local(argsOnly = true) @NotNull NbtCompound nbt
     ) {
         NbtCompound landmarkNbt = nbt.getCompound(Constants.NbtKey.STRUCTURE_LANDMARK);
-        if (!landmarkNbt.isEmpty() && original instanceof StructureStartExtension structureStartExtension) {
-            structureStartExtension.achievetodo$setLandmarkType(
-                LandmarkType.findByName(landmarkNbt.getString(Constants.NbtKey.LANDMARK_TYPE))
-            );
-            structureStartExtension.achievetodo$setLandmarkBlockBox(
-                new BlockBox(
-                    landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_X),
-                    landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_Y),
-                    landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_Z),
-                    landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_X),
-                    landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_Y),
-                    landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_Z)
-                )
-            );
+        if (landmarkNbt.contains(Constants.NbtKey.LANDMARK_TYPE) &&
+            original instanceof StructureStartExtension structureStartExtension
+        ) {
+            LandmarkType landmarkType = LandmarkType.findByName(landmarkNbt.getString(Constants.NbtKey.LANDMARK_TYPE));
+            if (landmarkType != null) {
+                structureStartExtension.achievetodo$setLandmarkType(landmarkType);
+                if (landmarkNbt.contains(Constants.NbtKey.BLOCK_BOX_MIN_X)) {
+                    structureStartExtension.achievetodo$setLandmarkBlockBox(
+                        new BlockBox(
+                            landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_X),
+                            landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_Y),
+                            landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MIN_Z),
+                            landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_X),
+                            landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_Y),
+                            landmarkNbt.getInt(Constants.NbtKey.BLOCK_BOX_MAX_Z)
+                        )
+                    );
+                }
+            }
         }
         return original;
     }
@@ -107,57 +115,80 @@ public class StructureStartMixin implements StructureStartExtension {
         CallbackInfoReturnable<NbtCompound> cir,
         @Local NbtCompound nbtCompound
     ) {
-        if (landmarkType != null && landmarkBlockBox != null) {
+        if (landmarkType != null) {
             NbtCompound landmarkNbt = new NbtCompound();
             landmarkNbt.putString(Constants.NbtKey.LANDMARK_TYPE, landmarkType.getName());
-            landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_X, landmarkBlockBox.getMinX());
-            landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_Y, landmarkBlockBox.getMinY());
-            landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_Z, landmarkBlockBox.getMinZ());
-            landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_X, landmarkBlockBox.getMaxX());
-            landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_Y, landmarkBlockBox.getMaxY());
-            landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_Z, landmarkBlockBox.getMaxZ());
+            if (landmarkBlockBox != null) {
+                landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_X, landmarkBlockBox.getMinX());
+                landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_Y, landmarkBlockBox.getMinY());
+                landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MIN_Z, landmarkBlockBox.getMinZ());
+                landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_X, landmarkBlockBox.getMaxX());
+                landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_Y, landmarkBlockBox.getMaxY());
+                landmarkNbt.putInt(Constants.NbtKey.BLOCK_BOX_MAX_Z, landmarkBlockBox.getMaxZ());
+            }
             nbtCompound.put(Constants.NbtKey.STRUCTURE_LANDMARK, landmarkNbt);
         }
     }
 
-    @WrapOperation(
+    @Inject(
         method = "place",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/structure/StructurePiece;generate(Lnet/minecraft/world/StructureWorldAccess;Lnet/minecraft/world/gen/StructureAccessor;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/util/math/random/Random;Lnet/minecraft/util/math/BlockBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)V"
+            target = "Lnet/minecraft/util/math/BlockBox;getCenter()Lnet/minecraft/util/math/BlockPos;",
+            shift = At.Shift.AFTER
         )
     )
-    private void trackStructureGeneration(
-        StructurePiece structurePiece,
-        @NotNull StructureWorldAccess world,
+    private void startStructureGenerationTracker(
+        StructureWorldAccess world,
         StructureAccessor structureAccessor,
         ChunkGenerator chunkGenerator,
         Random random,
-        BlockBox blockBox,
+        BlockBox chunkBox,
         ChunkPos chunkPos,
-        BlockPos blockPos,
-        Operation<Void> original
+        CallbackInfo ci
     ) {
-        DimensionType dimensionType = null;
-        ServerWorld serverWorld = null;
-        LandmarkGenerationTracker tracker = null;
         if (landmarkType != null) {
-            serverWorld = world.toServerWorld();
-            dimensionType = DimensionType.findByWorld(serverWorld.getRegistryKey());
-            if (dimensionType == null) {
-                serverWorld = null;
-            } else if (world instanceof LandmarkGenerationTracker landmarkGenerationTracker) {
-                tracker = landmarkGenerationTracker;
-                tracker.achievetodo$setLandmarkGenerationTrackingEnabled(true);
-                tracker.achievetodo$setLandmarkBlockBox(landmarkBlockBox);
+            ServerWorld serverWorld = world.toServerWorld();
+            DimensionType dimensionType = DimensionType.findByWorld(serverWorld.getRegistryKey());
+            if (dimensionType != null && world instanceof LandmarkGenerationTracker landmarkGenerationTracker) {
+                landmarkGenerationTracker.achievetodo$setLandmarkGenerationTrackingEnabled(true);
+                landmarkGenerationTracker.achievetodo$setLandmarkBlockBox(landmarkBlockBox);
             }
         }
-        original.call(structurePiece, world, structureAccessor, chunkGenerator, random, blockBox, chunkPos, blockPos);
-        if (tracker != null) {
-            BlockBox newLandmarkBlockBox = tracker.achievetodo$getLandmarkBlockBox();
+    }
+
+    @Inject(
+        method = "place",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/gen/structure/Structure;postPlace(Lnet/minecraft/world/StructureWorldAccess;Lnet/minecraft/world/gen/StructureAccessor;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/util/math/random/Random;Lnet/minecraft/util/math/BlockBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/structure/StructurePiecesList;)V",
+            shift = At.Shift.AFTER
+        )
+    )
+    private void stopStructureGenerationTracker(
+        StructureWorldAccess world,
+        StructureAccessor structureAccessor,
+        ChunkGenerator chunkGenerator,
+        Random random,
+        BlockBox chunkBox,
+        ChunkPos chunkPos,
+        CallbackInfo ci
+    ) {
+        if (world instanceof LandmarkGenerationTracker landmarkGenerationTracker) {
+            BlockBox newLandmarkBlockBox = landmarkGenerationTracker.achievetodo$getLandmarkBlockBox();
             if (newLandmarkBlockBox != null) {
-                if (landmarkBlockBox != null && !newLandmarkBlockBox.equals(landmarkBlockBox)) {
-                    AchieveToDoMod.getServer().onLandmarkDimensionalBlockBoxChanged(
+                ServerWorld serverWorld = world.toServerWorld();
+                DimensionType dimensionType = DimensionType.findByWorld(serverWorld.getRegistryKey());
+                DimensionalBlockBox newDimensionalBlockBox = new DimensionalBlockBox(dimensionType, newLandmarkBlockBox);
+                if (landmarkBlockBox == null) {
+                    AchieveToDoMod.getServer().onLandmarksLoadedStatusChanged(
+                        serverWorld,
+                        pos,
+                        Map.of(landmarkType, List.of(newDimensionalBlockBox)),
+                        true
+                    );
+                } else {
+                    AchieveToDoMod.getServer().onLandmarkResized(
                         serverWorld,
                         pos,
                         landmarkType,
@@ -167,12 +198,8 @@ public class StructureStartMixin implements StructureStartExtension {
                 }
                 landmarkBlockBox = newLandmarkBlockBox;
             }
-            tracker.achievetodo$setLandmarkGenerationTrackingEnabled(false);
-            tracker.achievetodo$setLandmarkBlockBox(null);
+            landmarkGenerationTracker.achievetodo$setLandmarkGenerationTrackingEnabled(false);
+            landmarkGenerationTracker.achievetodo$setLandmarkBlockBox(null);
         }
     }
-
-    @Shadow
-    @Final
-    private ChunkPos pos;
 }

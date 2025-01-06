@@ -170,6 +170,15 @@ public class AchieveToDoClient implements ClientModInitializer {
                 }
             })
         );
+        ClientPlayNetworking.registerGlobalReceiver(SyncResizedLandmarkPayload.ID, (payload, context) ->
+            context.client().execute(() -> {
+                List<DimensionalBlockBox> dimensionalBlockBoxes = lockedLandmarkBlockBoxes.get(payload.landmarkType());
+                if (dimensionalBlockBoxes.remove(payload.oldDimensionalBlockBox())) {
+                    dimensionalBlockBoxes.add(payload.newDimensionalBlockBox());
+                    calculateLockedLandmarksBoxes();
+                }
+            })
+        );
         ClientPlayNetworking.registerGlobalReceiver(SyncScorePayload.ID, (payload, context) ->
             context.client().execute(() -> trackedScores.put(payload.progressType(), payload.progress()))
         );
