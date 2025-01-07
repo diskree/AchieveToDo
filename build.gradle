@@ -22,18 +22,19 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${minLoaderVersion}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${apiVersion}+${minMinecraftVersion}"
     implementation "com.moandjiezana.toml:toml4j:${tomlVersion}"
+    modImplementation(include("com.moandjiezana.toml:toml4j:${tomlVersion}"))
 }
 
 processResources {
     def propertyMap = [
-            'modId'              : modId,
-            'modVersion'         : modVersion,
-            'modName'            : modName,
-            'author'             : author,
-            'repoUrl'            : repoUrl,
-            'minJavaVersion'     : minJavaVersion,
-            'minMinecraftVersion': minMinecraftVersion,
-            'minLoaderVersion'   : minLoaderVersion
+        'modId'              : modId,
+        'modVersion'         : modVersion,
+        'modName'            : modName,
+        'author'             : author,
+        'repoUrl'            : repoUrl,
+        'minJavaVersion'     : minJavaVersion,
+        'minMinecraftVersion': minMinecraftVersion,
+        'minLoaderVersion'   : minLoaderVersion
     ]
     inputs.properties(propertyMap)
     filesMatching("fabric.mod.json") {
@@ -60,9 +61,9 @@ tasks.register('generateBuildConfig', DefaultTask) {
         configFile.getParentFile().mkdirs()
 
         configFile.text = templateFile.text
-                .replace('${author}', author)
-                .replace('${modId}', modId)
-                .replace('${modName}', modName)
+            .replace('${author}', author)
+            .replace('${modId}', modId)
+            .replace('${modName}', modName)
     }
 }
 
@@ -74,6 +75,17 @@ jar {
     from('LICENSE') {
         rename { "${it}_${modId}" }
     }
+    file('licenses')
+        .listFiles()
+        .findAll { it.isDirectory() }
+        .each { dir ->
+            from(dir) {
+                include 'LICENSE'
+                rename {
+                    "LICENSE_${dir.name}"
+                }
+            }
+        }
     compileJava.dependsOn(generateBuildConfig)
 }
 
