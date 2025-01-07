@@ -3,14 +3,14 @@
 	"id": "${modId}",
 	"version": "${modVersion}",
 	"name": "${modName}",
-	"description": "A mod that makes advancements a part of the gameplay.",
+	"description": "Challenging mod with BlazeandCave's that makes advancements a part of the gameplay.",
 	"authors": [
 		"${author}"
 	],
 	"contact": {
 		"sources": "${repoUrl}"
 	},
-	"license": "CC-BY-4.0",
+	"license": "MIT",
 	"icon": "assets/achievetodo/icon.png",
 	"environment": "*",
 	"entrypoints": {
