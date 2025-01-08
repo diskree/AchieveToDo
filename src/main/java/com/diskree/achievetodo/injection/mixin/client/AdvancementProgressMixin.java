@@ -3,6 +3,7 @@ package com.diskree.achievetodo.injection.mixin.client;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.injection.extension.main.AdvancementProgressExtension;
+import com.diskree.achievetodo.server.Constants;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import com.diskree.achievetodo.tracking.TrackedStatType;
@@ -122,9 +123,9 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressExt
     public void overrideProgressPercentage(CallbackInfoReturnable<Float> cir) {
         if (ability != null) {
             int requiredAdvancementsCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
-            if (requiredAdvancementsCount == -1) {
+            if (requiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 cir.setReturnValue(0.0f);
-            } else if (requiredAdvancementsCount == 0) {
+            } else if (requiredAdvancementsCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
                 cir.setReturnValue(1.0f);
             }
         } else if (!isDone()) {

@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.ability;
 
-public enum AbilitiesTreeCategoryType {
+public enum AbilitiesHierarchyLayerType {
 
     MAIN(1),
     ACTIONS(2),
@@ -12,7 +12,7 @@ public enum AbilitiesTreeCategoryType {
 
     private final int rowsCount;
 
-    AbilitiesTreeCategoryType(int rowsCount) {
+    AbilitiesHierarchyLayerType(int rowsCount) {
         this.rowsCount = rowsCount;
     }
 

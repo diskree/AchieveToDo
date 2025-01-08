@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
-import com.diskree.achievetodo.ability.AbilitiesTreeCategoryType;
+import com.diskree.achievetodo.ability.AbilitiesHierarchyLayerType;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.client.gui.AdvancementsTab;
@@ -68,8 +68,8 @@ public abstract class AdvancementTabMixin {
         }
         if (tab == AdvancementsTab.ABILITIES) {
             int childrenCount = 0;
-            for (AbilitiesTreeCategoryType treeRow : AbilitiesTreeCategoryType.values()) {
-                childrenCount += treeRow.getRowsCount();
+            for (AbilitiesHierarchyLayerType layerType : AbilitiesHierarchyLayerType.values()) {
+                childrenCount += layerType.getRowsCount();
             }
             advancementDisplay.setPos(advancementDisplay.getX(), (float) (childrenCount / 2));
         }
@@ -90,19 +90,22 @@ public abstract class AdvancementTabMixin {
             target = "(Lnet/minecraft/client/gui/screen/advancement/AdvancementTab;Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/advancement/PlacedAdvancement;Lnet/minecraft/advancement/AdvancementDisplay;)Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;"
         )
     )
-    public AdvancementWidget restructureAbilitiesTree(
+    public AdvancementWidget restructureAbilitiesAdvancements(
         AdvancementTab tab,
         MinecraftClient client,
         @NotNull PlacedAdvancement advancement,
         AdvancementDisplay display,
-        Operation<AdvancementWidget> original
+        @NotNull Operation<AdvancementWidget> original
     ) {
+        AdvancementWidget advancementWidget = original.call(tab, client, advancement, display);
+        AbilityType ability = null;
+        boolean isFirstInRow = false;
+        boolean shouldSkipVanillaBehavior = false;
         if (AdvancementsTab.findByAdvancement(root) == AdvancementsTab.ABILITIES) {
-            AbilityType ability = AbilityType.findByAdvancement(advancement);
+            ability = AbilityType.findByAdvancement(advancement);
             if (ability != null) {
                 List<List<AbilityType>> rows = AchieveToDoClient.getAbilityRows();
                 if (rows != null) {
-                    boolean isFirstInRow = false;
                     for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
                         List<AbilityType> row = rows.get(rowIndex);
                         if (ability == row.getFirst()) {
@@ -120,50 +123,52 @@ public abstract class AdvancementTabMixin {
                                 break;
                             }
                         }
-                        pendingAbilityWidgets.put(ability, original.call(tab, client, advancement, display));
-                        int rowsCount = 0;
-                        for (AbilitiesTreeCategoryType category : AbilitiesTreeCategoryType.values()) {
-                            rowsCount += category.getRowsCount();
-                        }
-                        if (pendingAbilityWidgets.size() == AbilityType.values().length - rowsCount) {
-                            for (List<AbilityType> row : rows) {
-                                for (int columnIndex = 1; columnIndex < row.size(); columnIndex++) {
-                                    AbilityType currentAbility = row.get(columnIndex);
-                                    AbilityType previousAbility = row.get(columnIndex - 1);
-                                    AdvancementWidget currentWidget = pendingAbilityWidgets.get(currentAbility);
-                                    if (currentWidget == null) {
-                                        for (AdvancementEntry widgetAdvancement : widgets.keySet()) {
-                                            if (AbilityType.findByAdvancement(widgetAdvancement) == currentAbility) {
-                                                currentWidget = widgets.get(widgetAdvancement);
-                                            }
-                                        }
-                                    }
-                                    if (currentWidget == null) {
-                                        continue;
-                                    }
-                                    AdvancementWidget parentWidget = pendingAbilityWidgets.get(previousAbility);
-                                    if (parentWidget == null) {
-                                        for (AdvancementEntry widgetAdvancement : widgets.keySet()) {
-                                            if (AbilityType.findByAdvancement(widgetAdvancement) == previousAbility) {
-                                                parentWidget = widgets.get(widgetAdvancement);
-                                            }
-                                        }
-                                    }
-                                    if (parentWidget == null) {
-                                        continue;
-                                    }
-                                    currentWidget.parent = parentWidget;
-                                    parentWidget.addChild(currentWidget);
-                                    addWidget(currentWidget, currentWidget.advancement.getAdvancementEntry());
-                                }
-                            }
-                        }
-                        return null;
+                        shouldSkipVanillaBehavior = true;
                     }
                 }
             }
         }
-        return original.call(tab, client, advancement, display);
+        if (ability != null) {
+            if (isFirstInRow || shouldSkipVanillaBehavior) {
+                pendingAbilityWidgets.put(ability, advancementWidget);
+            }
+            if (pendingAbilityWidgets.size() == AbilityType.values().length) {
+                List<List<AbilityType>> rows = AchieveToDoClient.getAbilityRows();
+
+                for (List<AbilityType> row : rows) {
+                    for (int columnIndex = 1; columnIndex < row.size(); columnIndex++) {
+                        AbilityType currentAbility = row.get(columnIndex);
+                        AbilityType previousAbility = row.get(columnIndex - 1);
+                        AdvancementWidget currentWidget = pendingAbilityWidgets.get(currentAbility);
+                        if (currentWidget == null) {
+                            for (AdvancementEntry widgetAdvancement : widgets.keySet()) {
+                                if (AbilityType.findByAdvancement(widgetAdvancement) == currentAbility) {
+                                    currentWidget = widgets.get(widgetAdvancement);
+                                }
+                            }
+                        }
+                        if (currentWidget == null) {
+                            continue;
+                        }
+                        AdvancementWidget parentWidget = pendingAbilityWidgets.get(previousAbility);
+                        if (parentWidget == null) {
+                            for (AdvancementEntry widgetAdvancement : widgets.keySet()) {
+                                if (AbilityType.findByAdvancement(widgetAdvancement) == previousAbility) {
+                                    parentWidget = widgets.get(widgetAdvancement);
+                                }
+                            }
+                        }
+                        if (parentWidget == null) {
+                            continue;
+                        }
+                        currentWidget.parent = parentWidget;
+                        parentWidget.addChild(currentWidget);
+                        addWidget(currentWidget, currentWidget.advancement.getAdvancementEntry());
+                    }
+                }
+            }
+        }
+        return shouldSkipVanillaBehavior ? null : advancementWidget;
     }
 
     @Inject(
@@ -173,6 +178,7 @@ public abstract class AdvancementTabMixin {
     )
     public void skipNullWidget(AdvancementWidget widget, @NotNull AdvancementEntry advancement, CallbackInfo ci) {
         if (widget == null) {
+            System.out.println("added null widget. return.");
             ci.cancel();
         }
     }

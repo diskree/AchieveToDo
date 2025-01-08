@@ -209,7 +209,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         }
         if (!checkOnly) {
             Text lockedMessageText;
-            if (requiredAdvancementsCount == -1) {
+            if (requiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 lockedMessageText = ability.buildPermanentlyLockedMessage();
             } else {
                 int leftAdvancementsCount = requiredAdvancementsCount - obtainedAdvancementsCount;

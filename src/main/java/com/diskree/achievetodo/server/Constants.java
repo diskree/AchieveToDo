@@ -4,6 +4,15 @@ import com.diskree.achievetodo.BuildConfig;
 
 public class Constants {
 
+    public static final int TOTAL_ADVANCEMENTS_COUNT = 1152;
+
+    public static class Progression {
+        public static final int MIN_ADVANCEMENTS_COUNT = 2;
+
+        public static final int INITIALLY_UNLOCKED_FLAG = 0;
+        public static final int PERMANENTLY_LOCKED_FLAG = -1;
+    }
+
     public static class NbtKey {
         public static final String LEVEL_CONFIG_NAME = BuildConfig.MOD_ID + "_" + "configName";
         public static final String FEATURE_LANDMARKS = BuildConfig.MOD_ID + "_" + "featureLandmarks";

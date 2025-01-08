@@ -2,8 +2,9 @@ package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.ability.DifficultyType;
-import com.diskree.achievetodo.ability.generation.Difficulties;
+import com.diskree.achievetodo.ability.ChaosProgressionGenerator;
+import com.diskree.achievetodo.ability.Progressions;
+import com.diskree.achievetodo.ability.ProgressionModeType;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.server.Constants;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
@@ -59,21 +60,21 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
                 throw new RuntimeException("Creating config directory", e);
             }
         }
-        DifficultyType difficulty = DifficultyType.findByName(configName);
+        ProgressionModeType progressionModeType = ProgressionModeType.findByName(configName);
         String fileName = configName;
         Random chaosRandom = null;
-        if (difficulty == DifficultyType.CHAOS) {
+        if (progressionModeType == ProgressionModeType.CHAOS) {
             fileName += "_" + seed;
             chaosRandom = new Random(seed);
         }
         Path configFile = configDir.resolve(fileName + Constants.FileExtension.TOML);
         Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
         Map<String, Object> abilitiesMap = null;
-        if (difficulty != null) {
+        if (progressionModeType != null) {
             if (Files.exists(configFile)) {
                 try {
                     Toml configToml = new Toml().read(configFile.toFile());
-                    if (configToml.getLong(CONFIG_VERSION_KEY) >= difficulty.getVersion()) {
+                    if (configToml.getLong(CONFIG_VERSION_KEY) >= progressionModeType.getVersion()) {
                         Toml abilitiesTable = configToml.getTable(CONFIG_ABILITIES_KEY);
                         if (abilitiesTable != null) {
                             abilitiesMap = abilitiesTable.toMap();
@@ -85,20 +86,24 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
             if (abilitiesMap == null) {
                 StringBuilder configTomlContents = new StringBuilder()
                     .append(CONFIG_VERSION_KEY + " = ")
-                    .append(difficulty.getVersion())
+                    .append(progressionModeType.getVersion())
                     .append("\n\n")
                     .append("[" + CONFIG_ABILITIES_KEY + "]")
                     .append("\n");
-                Map<AbilityType, Integer> progression = switch (difficulty) {
-                    case EASY -> Difficulties.createEasyProgression();
-                    case NORMAL -> Difficulties.createNormalProgression();
-                    case HARD -> Difficulties.createHardProgression();
-                    case CHAOS -> Difficulties.createChaosProgression(chaosRandom);
+                Map<AbilityType, Integer> progression = switch (progressionModeType) {
+                    case EASY -> Progressions.getEasyProgression();
+                    case NORMAL -> Progressions.getNormalProgression();
+                    case HARD -> Progressions.getHardProgression();
+                    case CHAOS -> ChaosProgressionGenerator.generateChaosProgression(
+                        Progressions.getHardProgression(),
+                        chaosRandom
+                    );
                 };
                 for (AbilityType ability : AbilityType.values()) {
                     Integer requiredAdvancementsCount = progression.get(ability);
                     if (requiredAdvancementsCount == null) {
-                        throw new RuntimeException("Ability " + ability + " is not set in difficulty " + difficulty);
+                        throw new RuntimeException("Ability " + ability + " is not exist in selected progression "
+                            + progressionModeType);
                     }
                     abilitiesConfiguration.put(ability, requiredAdvancementsCount);
                     configTomlContents
@@ -128,8 +133,8 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
             AbilityType ability = AbilityType.findByName(abilityName);
             if (ability != null) {
                 int requiredAdvancementsCount = Math.toIntExact(((Long) abilitiesMap.get(abilityName)));
-                if (requiredAdvancementsCount > Difficulties.MAX_REQUIRED_ADVANCEMENTS_COUNT) {
-                    requiredAdvancementsCount = Difficulties.MAX_REQUIRED_ADVANCEMENTS_COUNT;
+                if (requiredAdvancementsCount > Constants.TOTAL_ADVANCEMENTS_COUNT) {
+                    requiredAdvancementsCount = Constants.TOTAL_ADVANCEMENTS_COUNT;
                 }
                 abilitiesConfiguration.put(ability, requiredAdvancementsCount);
             }

@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
-import com.diskree.achievetodo.ability.DifficultyType;
+import com.diskree.achievetodo.ability.ProgressionModeType;
 import com.diskree.achievetodo.injection.extension.client.WorldCreatorExtension;
 import net.minecraft.client.gui.screen.world.WorldCreator;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class WorldCreatorMixin implements WorldCreatorExtension {
 
     @Unique
-    private String configName = DifficultyType.NORMAL.getName();
+    private String configName = ProgressionModeType.getDefaultMode().getName();
 
     @Unique
     private boolean isItemRewardsEnabled;

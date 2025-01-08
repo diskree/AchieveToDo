@@ -35,159 +35,159 @@ import java.util.Locale;
 
 public enum AbilityType {
 
-    VISION(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.ENDER_EYE),
-    EAT_SALMON(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.SALMON),
-    EAT_COD(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COD),
-    EAT_TROPICAL_FISH(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.TROPICAL_FISH),
-    JUMP(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.SLIME_BLOCK),
-    SWIM(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.HEART_OF_THE_SEA),
-    EAT_ROTTEN_FLESH(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.ROTTEN_FLESH),
-    EAT_SPIDER_EYE(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.SPIDER_EYE),
-    EAT_SWEET_BERRIES(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.SWEET_BERRIES),
-    OPEN_DOOR(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.PALE_OAK_DOOR),
-    EAT_GLOW_BERRIES(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.GLOW_BERRIES),
-    INTERACT_INSIDE_VILLAGE(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.VILLAGE),
-    SLEEP(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.LIGHT_GRAY_BED),
-    EAT_POISONOUS_POTATO(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.POISONOUS_POTATO),
-    SNEAK(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.CHAINMAIL_LEGGINGS),
-    SPRINT(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.CHAINMAIL_BOOTS),
-    OPEN_INVENTORY(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.MAIN, Items.LIGHT_GRAY_BUNDLE),
-    BREAK_BLOCKS(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.COBBLESTONE),
-    EAT_SUSPICIOUS_STEW(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.SUSPICIOUS_STEW),
-    USE_GOLDEN_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.GOLD),
-    OPEN_CHEST(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CHEST),
-    EAT_CHICKEN(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.CHICKEN),
-    EAT_CARROT(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.CARROT),
-    OPEN_CRAFTING_TABLE(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CRAFTING_TABLE),
-    EQUIP_GOLDEN_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.GOLD),
-    OPEN_BARREL(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.BARREL),
-    EAT_BEETROOT(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BEETROOT),
-    EAT_DRIED_KELP(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.DRIED_KELP),
-    EAT_POTATO(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.POTATO),
-    OPEN_STONECUTTER(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.STONECUTTER),
-    GET_INTO_BOAT(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.PALE_OAK_BOAT),
-    EAT_APPLE(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.APPLE),
-    INTERACT_INSIDE_SHIPWRECK(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.SHIPWRECK),
-    USE_SHIELD(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, Items.SHIELD),
-    EAT_MELON_SLICE(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.MELON_SLICE),
-    INTERACT_INSIDE_RUINED_PORTAL(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.RUINED_PORTAL),
-    OPEN_FURNACE(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.FURNACE),
-    EAT_COOKIE(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKIE),
-    INTERACT_INSIDE_BURIED_TREASURE(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.BURIED_TREASURE),
-    EAT_MUSHROOM_STEW(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.MUSHROOM_STEW),
-    EAT_BEETROOT_SOUP(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BEETROOT_SOUP),
-    PUT_IN_BUNDLE(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.BUNDLE),
-    EAT_RABBIT_STEW(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.RABBIT_STEW),
-    OPEN_TRAPDOOR(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.PALE_OAK_TRAPDOOR),
-    USE_WOODEN_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.WOOD),
-    EAT_HONEY(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.HONEY_BOTTLE),
-    INTERACT_INSIDE_IGLOO(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.IGLOO),
-    USE_WATER_BUCKET(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.WATER_BUCKET),
-    EAT_MUTTON(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.MUTTON),
-    THROW_SNOWBALL(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.SNOWBALL),
-    INTERACT_INSIDE_OCEAN_RUIN(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.OCEAN_RUIN),
-    EQUIP_LEATHER_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.LEATHER),
-    EAT_PUFFERFISH(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.PUFFERFISH),
-    OPEN_FENCE_GATE(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.PALE_OAK_FENCE_GATE),
-    EAT_PUMPKIN_PIE(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.PUMPKIN_PIE),
-    EAT_GOLDEN_APPLE(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.GOLDEN_APPLE),
-    USE_SHEARS(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.SHEARS),
-    INTERACT_INSIDE_DESERT_PYRAMID(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.DESERT_PYRAMID),
-    BREAK_BLOCKS_IN_NEGATIVE_Y(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.COBBLED_DEEPSLATE),
-    EAT_ENCHANTED_GOLDEN_APPLE(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.ENCHANTED_GOLDEN_APPLE),
-    INTERACT_INSIDE_MINESHAFT(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MINESHAFT),
-    THROW_EGG(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.EGG),
-    USE_STONE_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.STONE),
-    OPEN_GRINDSTONE(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.GRINDSTONE),
-    SHOOT_CROSSBOW(AbilityUnlockedToastType.WEAPON, AbilitiesTreeCategoryType.UPGRADE, Items.CROSSBOW),
-    EAT_RABBIT(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.RABBIT),
-    INTERACT_INSIDE_SWAMP_HUT(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.SWAMP_HUT),
-    EQUIP_CHAINMAIL_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.CHAIN),
-    OPEN_ANVIL(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ANVIL),
-    USE_FLINT_AND_STEEL(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.FLINT_AND_STEEL),
-    IGNITE_TNT(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.TNT),
-    INTERACT_INSIDE_ANCIENT_CITY(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.ANCIENT_CITY),
-    ENTER_NETHER(AbilityUnlockedToastType.PORTAL, AbilitiesTreeCategoryType.UPGRADE, NetherPortalBlock.class),
-    TRADE_WITH_WANDERING_TRADER(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, Items.WANDERING_TRADER_SPAWN_EGG),
-    GET_INTO_MINECART(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.MINECART),
-    INTERACT_INSIDE_FORTRESS(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.FORTRESS),
-    USE_OMINOUS_BOTTLE(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.OMINOUS_BOTTLE),
-    USE_IRON_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.IRON),
-    INTERACT_INSIDE_JUNGLE_PYRAMID(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.JUNGLE_PYRAMID),
-    ATTACK_WITH_TRIDENT(AbilityUnlockedToastType.WEAPON, AbilitiesTreeCategoryType.UPGRADE, Items.TRIDENT),
-    EQUIP_IRON_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.IRON),
-    SHOOT_BOW(AbilityUnlockedToastType.WEAPON, AbilitiesTreeCategoryType.UPGRADE, Items.BOW),
-    INTERACT_INSIDE_BASTION_REMNANT(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.BASTION_REMNANT),
-    USE_JUKEBOX(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.JUKEBOX),
-    THROW_ENDER_PEARL(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.ENDER_PEARL),
-    USE_COMPOSTER(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.COMPOSTER),
-    CHARGE_RESPAWN_ANCHOR(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.RESPAWN_ANCHOR),
-    EAT_BEEF(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BEEF),
-    INTERACT_INSIDE_PILLAGER_OUTPOST(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.PILLAGER_OUTPOST),
-    TRADE_WITH_MASON(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.MASON),
-    USE_FISHING_ROD(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.FISHING_ROD),
-    EAT_PORKCHOP(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.PORKCHOP),
-    TRADE_WITH_CARTOGRAPHER(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.CARTOGRAPHER),
-    INTERACT_INSIDE_MONUMENT(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONUMENT),
-    USE_DIAMOND_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.DIAMOND),
-    USE_CAULDRON(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CAULDRON),
-    INTERACT_INSIDE_MONSTER_ROOM(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MONSTER_ROOM),
-    EAT_BAKED_POTATO(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BAKED_POTATO),
-    OPEN_SMOKER(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.SMOKER),
-    EQUIP_TURTLE_HELMET(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, Items.TURTLE_HELMET),
-    INTERACT_INSIDE_TRAIL_RUINS(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.TRAIL_RUINS),
-    USE_BRUSH(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.BRUSH),
-    EQUIP_DIAMOND_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.DIAMOND),
-    UNLOCK_VAULT(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.VAULT),
-    OPEN_BLAST_FURNACE(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.BLAST_FURNACE),
-    INTERACT_INSIDE_STRONGHOLD(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.STRONGHOLD),
-    TRADE_WITH_LEATHERWORKER(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.LEATHERWORKER),
-    USE_SPYGLASS(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.SPYGLASS),
-    INTERACT_INSIDE_MANSION(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.MANSION),
-    OPEN_BEACON(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.BEACON),
-    THROW_WIND_CHARGE(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.WIND_CHARGE),
-    ENTER_END(AbilityUnlockedToastType.PORTAL, AbilitiesTreeCategoryType.UPGRADE, EndPortalBlock.class),
-    OPEN_CARTOGRAPHY_TABLE(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CARTOGRAPHY_TABLE),
-    INTERACT_INSIDE_DESERT_WELL(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.DESERT_WELL),
-    EAT_COOKED_SALMON(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_SALMON),
-    EQUIP_ELYTRA(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, Items.ELYTRA),
-    TRADE_WITH_SHEPHERD(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.SHEPHERD),
-    TRADE_WITH_BUTCHER(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.BUTCHER),
-    INTERACT_INSIDE_TRIAL_CHAMBERS(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.TRIAL_CHAMBERS),
-    OPEN_ENDER_CHEST(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ENDER_CHEST),
-    ATTACK_WITH_MACE(AbilityUnlockedToastType.WEAPON, AbilitiesTreeCategoryType.UPGRADE, Items.MACE),
-    INTERACT_INSIDE_END_CITY(AbilityUnlockedToastType.LANDMARK, AbilitiesTreeCategoryType.LANDMARK, LandmarkType.END_CITY),
-    USE_ENDER_EYE(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.ENDER_EYE),
-    TELEPORT_OUTER_ISLANDS(AbilityUnlockedToastType.PORTAL, AbilitiesTreeCategoryType.UPGRADE, EndGatewayBlock.class),
-    USE_NETHERITE_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesTreeCategoryType.UPGRADE, ToolMaterial.NETHERITE),
-    EAT_COOKED_COD(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_COD),
-    TRADE_WITH_FARMER(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.FARMER),
-    GLIDE_WITH_FIREWORKS(AbilityUnlockedToastType.ACTION, AbilitiesTreeCategoryType.ACTIONS, Items.FIREWORK_ROCKET),
-    TRADE_WITH_CLERIC(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.CLERIC),
-    EQUIP_NETHERITE_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesTreeCategoryType.UPGRADE, ArmorMaterials.NETHERITE),
-    OPEN_BREWING_STAND(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.BREWING_STAND),
-    EAT_COOKED_RABBIT(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_RABBIT),
-    PLACE_END_CRYSTAL(AbilityUnlockedToastType.ITEM, AbilitiesTreeCategoryType.ACTIONS, Items.END_CRYSTAL),
-    TRADE_WITH_FISHERMAN(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.FISHERMAN),
-    OPEN_SMITHING_TABLE(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.SMITHING_TABLE),
-    EAT_COOKED_CHICKEN(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_CHICKEN),
-    EAT_CHORUS_FRUIT(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.CHORUS_FRUIT),
-    TRADE_WITH_FLETCHER(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.FLETCHER),
-    EAT_COOKED_MUTTON(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_MUTTON),
-    TRADE_WITH_ARMORER(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.ARMORER),
-    EAT_COOKED_PORKCHOP(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_PORKCHOP),
-    EAT_BREAD(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.BREAD),
-    TRADE_WITH_WEAPONSMITH(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.WEAPONSMITH),
-    EAT_COOKED_BEEF(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.COOKED_BEEF),
-    OPEN_LOOM(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.LOOM),
-    USE_CAMPFIRE(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.CAMPFIRE),
-    OPEN_SHULKER_BOX(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.LIGHT_GRAY_SHULKER_BOX),
-    EAT_GOLDEN_CARROT(AbilityUnlockedToastType.FOOD, AbilitiesTreeCategoryType.FOOD, FoodComponents.GOLDEN_CARROT),
-    TRADE_WITH_TOOLSMITH(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.TOOLSMITH),
-    TRADE_WITH_LIBRARIAN(AbilityUnlockedToastType.TRADING, AbilitiesTreeCategoryType.TRADING, VillagerProfession.LIBRARIAN),
-    OPEN_ENCHANTING_TABLE(AbilityUnlockedToastType.BLOCK, AbilitiesTreeCategoryType.BLOCKS, Blocks.ENCHANTING_TABLE);
+    VISION(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.ENDER_EYE),
+    EAT_SALMON(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.SALMON),
+    EAT_COD(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COD),
+    EAT_TROPICAL_FISH(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.TROPICAL_FISH),
+    JUMP(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.SLIME_BLOCK),
+    SWIM(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.HEART_OF_THE_SEA),
+    EAT_ROTTEN_FLESH(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.ROTTEN_FLESH),
+    EAT_SPIDER_EYE(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.SPIDER_EYE),
+    EAT_SWEET_BERRIES(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.SWEET_BERRIES),
+    OPEN_DOOR(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.ACTIONS, Items.PALE_OAK_DOOR),
+    EAT_GLOW_BERRIES(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.GLOW_BERRIES),
+    INTERACT_INSIDE_VILLAGE(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.VILLAGE),
+    SLEEP(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.LIGHT_GRAY_BED),
+    EAT_POISONOUS_POTATO(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.POISONOUS_POTATO),
+    SNEAK(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.CHAINMAIL_LEGGINGS),
+    SPRINT(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.CHAINMAIL_BOOTS),
+    OPEN_INVENTORY(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.LIGHT_GRAY_BUNDLE),
+    BREAK_BLOCKS(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.COBBLESTONE),
+    EAT_SUSPICIOUS_STEW(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.SUSPICIOUS_STEW),
+    USE_GOLDEN_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesHierarchyLayerType.UPGRADE, ToolMaterial.GOLD),
+    OPEN_CHEST(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.CHEST),
+    EAT_CHICKEN(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.CHICKEN),
+    EAT_CARROT(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.CARROT),
+    OPEN_CRAFTING_TABLE(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.CRAFTING_TABLE),
+    EQUIP_GOLDEN_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, ArmorMaterials.GOLD),
+    OPEN_BARREL(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.BARREL),
+    EAT_BEETROOT(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.BEETROOT),
+    EAT_DRIED_KELP(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.DRIED_KELP),
+    EAT_POTATO(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.POTATO),
+    OPEN_STONECUTTER(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.STONECUTTER),
+    GET_INTO_BOAT(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.MAIN, Items.PALE_OAK_BOAT),
+    EAT_APPLE(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.APPLE),
+    INTERACT_INSIDE_SHIPWRECK(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.SHIPWRECK),
+    USE_SHIELD(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, Items.SHIELD),
+    EAT_MELON_SLICE(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.MELON_SLICE),
+    INTERACT_INSIDE_RUINED_PORTAL(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.RUINED_PORTAL),
+    OPEN_FURNACE(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.FURNACE),
+    EAT_COOKIE(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COOKIE),
+    INTERACT_INSIDE_BURIED_TREASURE(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.BURIED_TREASURE),
+    EAT_MUSHROOM_STEW(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.MUSHROOM_STEW),
+    EAT_BEETROOT_SOUP(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.BEETROOT_SOUP),
+    PUT_IN_BUNDLE(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.MAIN, Items.BUNDLE),
+    EAT_RABBIT_STEW(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.RABBIT_STEW),
+    OPEN_TRAPDOOR(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.ACTIONS, Items.PALE_OAK_TRAPDOOR),
+    USE_WOODEN_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesHierarchyLayerType.UPGRADE, ToolMaterial.WOOD),
+    EAT_HONEY(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.HONEY_BOTTLE),
+    INTERACT_INSIDE_IGLOO(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.IGLOO),
+    USE_WATER_BUCKET(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.ACTIONS, Items.WATER_BUCKET),
+    EAT_MUTTON(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.MUTTON),
+    THROW_SNOWBALL(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.SNOWBALL),
+    INTERACT_INSIDE_OCEAN_RUIN(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.OCEAN_RUIN),
+    EQUIP_LEATHER_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, ArmorMaterials.LEATHER),
+    EAT_PUFFERFISH(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.PUFFERFISH),
+    OPEN_FENCE_GATE(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.ACTIONS, Items.PALE_OAK_FENCE_GATE),
+    EAT_PUMPKIN_PIE(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.PUMPKIN_PIE),
+    EAT_GOLDEN_APPLE(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.GOLDEN_APPLE),
+    USE_SHEARS(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.SHEARS),
+    INTERACT_INSIDE_DESERT_PYRAMID(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.DESERT_PYRAMID),
+    BREAK_BLOCKS_IN_NEGATIVE_Y(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.MAIN, Items.COBBLED_DEEPSLATE),
+    EAT_ENCHANTED_GOLDEN_APPLE(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.ENCHANTED_GOLDEN_APPLE),
+    INTERACT_INSIDE_MINESHAFT(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.MINESHAFT),
+    THROW_EGG(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.EGG),
+    USE_STONE_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesHierarchyLayerType.UPGRADE, ToolMaterial.STONE),
+    OPEN_GRINDSTONE(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.GRINDSTONE),
+    SHOOT_CROSSBOW(AbilityUnlockedToastType.WEAPON, AbilitiesHierarchyLayerType.UPGRADE, Items.CROSSBOW),
+    EAT_RABBIT(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.RABBIT),
+    INTERACT_INSIDE_SWAMP_HUT(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.SWAMP_HUT),
+    EQUIP_CHAINMAIL_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, ArmorMaterials.CHAIN),
+    OPEN_ANVIL(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.ANVIL),
+    USE_FLINT_AND_STEEL(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.FLINT_AND_STEEL),
+    IGNITE_TNT(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.TNT),
+    INTERACT_INSIDE_ANCIENT_CITY(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.ANCIENT_CITY),
+    ENTER_NETHER(AbilityUnlockedToastType.PORTAL, AbilitiesHierarchyLayerType.UPGRADE, NetherPortalBlock.class),
+    TRADE_WITH_WANDERING_TRADER(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, Items.WANDERING_TRADER_SPAWN_EGG),
+    GET_INTO_MINECART(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.MINECART),
+    INTERACT_INSIDE_FORTRESS(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.FORTRESS),
+    USE_OMINOUS_BOTTLE(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.OMINOUS_BOTTLE),
+    USE_IRON_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesHierarchyLayerType.UPGRADE, ToolMaterial.IRON),
+    INTERACT_INSIDE_JUNGLE_PYRAMID(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.JUNGLE_PYRAMID),
+    ATTACK_WITH_TRIDENT(AbilityUnlockedToastType.WEAPON, AbilitiesHierarchyLayerType.UPGRADE, Items.TRIDENT),
+    EQUIP_IRON_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, ArmorMaterials.IRON),
+    SHOOT_BOW(AbilityUnlockedToastType.WEAPON, AbilitiesHierarchyLayerType.UPGRADE, Items.BOW),
+    INTERACT_INSIDE_BASTION_REMNANT(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.BASTION_REMNANT),
+    USE_JUKEBOX(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.JUKEBOX),
+    THROW_ENDER_PEARL(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.ENDER_PEARL),
+    USE_COMPOSTER(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.COMPOSTER),
+    CHARGE_RESPAWN_ANCHOR(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.RESPAWN_ANCHOR),
+    EAT_BEEF(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.BEEF),
+    INTERACT_INSIDE_PILLAGER_OUTPOST(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.PILLAGER_OUTPOST),
+    TRADE_WITH_MASON(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.MASON),
+    USE_FISHING_ROD(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.FISHING_ROD),
+    EAT_PORKCHOP(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.PORKCHOP),
+    TRADE_WITH_CARTOGRAPHER(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.CARTOGRAPHER),
+    INTERACT_INSIDE_MONUMENT(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.MONUMENT),
+    USE_DIAMOND_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesHierarchyLayerType.UPGRADE, ToolMaterial.DIAMOND),
+    USE_CAULDRON(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.CAULDRON),
+    INTERACT_INSIDE_MONSTER_ROOM(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.MONSTER_ROOM),
+    EAT_BAKED_POTATO(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.BAKED_POTATO),
+    OPEN_SMOKER(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.SMOKER),
+    EQUIP_TURTLE_HELMET(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, Items.TURTLE_HELMET),
+    INTERACT_INSIDE_TRAIL_RUINS(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.TRAIL_RUINS),
+    USE_BRUSH(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.BRUSH),
+    EQUIP_DIAMOND_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, ArmorMaterials.DIAMOND),
+    UNLOCK_VAULT(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.VAULT),
+    OPEN_BLAST_FURNACE(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.BLAST_FURNACE),
+    INTERACT_INSIDE_STRONGHOLD(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.STRONGHOLD),
+    TRADE_WITH_LEATHERWORKER(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.LEATHERWORKER),
+    USE_SPYGLASS(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.SPYGLASS),
+    INTERACT_INSIDE_MANSION(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.MANSION),
+    OPEN_BEACON(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.BEACON),
+    THROW_WIND_CHARGE(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.WIND_CHARGE),
+    ENTER_END(AbilityUnlockedToastType.PORTAL, AbilitiesHierarchyLayerType.UPGRADE, EndPortalBlock.class),
+    OPEN_CARTOGRAPHY_TABLE(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.CARTOGRAPHY_TABLE),
+    INTERACT_INSIDE_DESERT_WELL(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.DESERT_WELL),
+    EAT_COOKED_SALMON(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COOKED_SALMON),
+    EQUIP_ELYTRA(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, Items.ELYTRA),
+    TRADE_WITH_SHEPHERD(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.SHEPHERD),
+    TRADE_WITH_BUTCHER(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.BUTCHER),
+    INTERACT_INSIDE_TRIAL_CHAMBERS(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.TRIAL_CHAMBERS),
+    OPEN_ENDER_CHEST(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.ENDER_CHEST),
+    ATTACK_WITH_MACE(AbilityUnlockedToastType.WEAPON, AbilitiesHierarchyLayerType.UPGRADE, Items.MACE),
+    INTERACT_INSIDE_END_CITY(AbilityUnlockedToastType.LANDMARK, AbilitiesHierarchyLayerType.LANDMARK, LandmarkType.END_CITY),
+    USE_ENDER_EYE(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.ENDER_EYE),
+    TELEPORT_OUTER_ISLANDS(AbilityUnlockedToastType.PORTAL, AbilitiesHierarchyLayerType.UPGRADE, EndGatewayBlock.class),
+    USE_NETHERITE_TOOLS(AbilityUnlockedToastType.TOOL, AbilitiesHierarchyLayerType.UPGRADE, ToolMaterial.NETHERITE),
+    EAT_COOKED_COD(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COOKED_COD),
+    TRADE_WITH_FARMER(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.FARMER),
+    GLIDE_WITH_FIREWORKS(AbilityUnlockedToastType.ACTION, AbilitiesHierarchyLayerType.ACTIONS, Items.FIREWORK_ROCKET),
+    TRADE_WITH_CLERIC(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.CLERIC),
+    EQUIP_NETHERITE_ARMOR(AbilityUnlockedToastType.EQUIPMENT, AbilitiesHierarchyLayerType.UPGRADE, ArmorMaterials.NETHERITE),
+    OPEN_BREWING_STAND(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.BREWING_STAND),
+    EAT_COOKED_RABBIT(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COOKED_RABBIT),
+    PLACE_END_CRYSTAL(AbilityUnlockedToastType.ITEM, AbilitiesHierarchyLayerType.ACTIONS, Items.END_CRYSTAL),
+    TRADE_WITH_FISHERMAN(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.FISHERMAN),
+    OPEN_SMITHING_TABLE(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.SMITHING_TABLE),
+    EAT_COOKED_CHICKEN(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COOKED_CHICKEN),
+    EAT_CHORUS_FRUIT(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.CHORUS_FRUIT),
+    TRADE_WITH_FLETCHER(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.FLETCHER),
+    EAT_COOKED_MUTTON(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COOKED_MUTTON),
+    TRADE_WITH_ARMORER(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.ARMORER),
+    EAT_COOKED_PORKCHOP(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COOKED_PORKCHOP),
+    EAT_BREAD(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.BREAD),
+    TRADE_WITH_WEAPONSMITH(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.WEAPONSMITH),
+    EAT_COOKED_BEEF(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.COOKED_BEEF),
+    OPEN_LOOM(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.LOOM),
+    USE_CAMPFIRE(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.CAMPFIRE),
+    OPEN_SHULKER_BOX(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.LIGHT_GRAY_SHULKER_BOX),
+    EAT_GOLDEN_CARROT(AbilityUnlockedToastType.FOOD, AbilitiesHierarchyLayerType.FOOD, FoodComponents.GOLDEN_CARROT),
+    TRADE_WITH_TOOLSMITH(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.TOOLSMITH),
+    TRADE_WITH_LIBRARIAN(AbilityUnlockedToastType.TRADING, AbilitiesHierarchyLayerType.TRADING, VillagerProfession.LIBRARIAN),
+    OPEN_ENCHANTING_TABLE(AbilityUnlockedToastType.BLOCK, AbilitiesHierarchyLayerType.BLOCKS, Blocks.ENCHANTING_TABLE);
 
-    private final AbilitiesTreeCategoryType category;
+    private final AbilitiesHierarchyLayerType hierarchyLayerType;
     private final AbilityUnlockedToastType unlockToastType;
     private final Item item;
     private final Block block;
@@ -198,41 +198,41 @@ public enum AbilityType {
     private final VillagerProfession villager;
     private final LandmarkType landmarkType;
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Item item) {
-        this(unlockToastType, category, item, null, null, null, null, null, null, null);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, Item item) {
+        this(unlockToastType, hierarchyLayerType, item, null, null, null, null, null, null, null);
     }
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Block block) {
-        this(unlockToastType, category, null, null, block, null, null, null, null, null);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, Block block) {
+        this(unlockToastType, hierarchyLayerType, null, null, block, null, null, null, null, null);
     }
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, FoodComponent food) {
-        this(unlockToastType, category, null, food, null, null, null, null, null, null);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, FoodComponent food) {
+        this(unlockToastType, hierarchyLayerType, null, food, null, null, null, null, null, null);
     }
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, ToolMaterial toolMaterial) {
-        this(unlockToastType, category, null, null, null, toolMaterial, null, null, null, null);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, ToolMaterial toolMaterial) {
+        this(unlockToastType, hierarchyLayerType, null, null, null, toolMaterial, null, null, null, null);
     }
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, ArmorMaterial armorMaterial) {
-        this(unlockToastType, category, null, null, null, null, armorMaterial, null, null, null);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, ArmorMaterial armorMaterial) {
+        this(unlockToastType, hierarchyLayerType, null, null, null, null, armorMaterial, null, null, null);
     }
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, Class<? extends Portal> portal) {
-        this(unlockToastType, category, null, null, null, null, null, portal, null, null);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, Class<? extends Portal> portal) {
+        this(unlockToastType, hierarchyLayerType, null, null, null, null, null, portal, null, null);
     }
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, VillagerProfession villager) {
-        this(unlockToastType, category, null, null, null, null, null, null, villager, null);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, VillagerProfession villager) {
+        this(unlockToastType, hierarchyLayerType, null, null, null, null, null, null, villager, null);
     }
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesTreeCategoryType category, LandmarkType landmarkType) {
-        this(unlockToastType, category, null, null, null, null, null, null, null, landmarkType);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, LandmarkType landmarkType) {
+        this(unlockToastType, hierarchyLayerType, null, null, null, null, null, null, null, landmarkType);
     }
 
     AbilityType(
         AbilityUnlockedToastType unlockToastType,
-        AbilitiesTreeCategoryType category,
+        AbilitiesHierarchyLayerType hierarchyLayerType,
         Item item,
         FoodComponent food,
         Block block,
@@ -242,7 +242,7 @@ public enum AbilityType {
         VillagerProfession villager,
         LandmarkType landmarkType
     ) {
-        this.category = category;
+        this.hierarchyLayerType = hierarchyLayerType;
         this.unlockToastType = unlockToastType;
         this.item = item;
         this.food = food;
@@ -254,8 +254,8 @@ public enum AbilityType {
         this.landmarkType = landmarkType;
     }
 
-    public AbilitiesTreeCategoryType getCategory() {
-        return category;
+    public AbilitiesHierarchyLayerType getHierarchyLayerType() {
+        return hierarchyLayerType;
     }
 
     public AbilityUnlockedToastType getUnlockToastType() {
@@ -371,6 +371,70 @@ public enum AbilityType {
 
     public @NotNull Text getDescription() {
         return AchieveToDoClient.translateModKey("ability." + getName() + ".description");
+    }
+
+    public int getChaosPriority() {
+        if (this == AbilityType.INTERACT_INSIDE_FORTRESS ||
+            this == AbilityType.INTERACT_INSIDE_STRONGHOLD ||
+            this == AbilityType.USE_ENDER_EYE ||
+            this == AbilityType.ENTER_NETHER ||
+            this == AbilityType.ENTER_END
+        ) {
+            return 90;
+        }
+        if (this == AbilityType.OPEN_BEACON ||
+            this == AbilityType.OPEN_ENDER_CHEST ||
+            this == AbilityType.OPEN_CHEST ||
+            this == AbilityType.OPEN_FURNACE ||
+            this == AbilityType.OPEN_SHULKER_BOX ||
+            this == AbilityType.OPEN_SMITHING_TABLE
+        ) {
+            return 80;
+        }
+        if (this == AbilityType.USE_GOLDEN_TOOLS ||
+            this == AbilityType.USE_WOODEN_TOOLS ||
+            this == AbilityType.USE_STONE_TOOLS ||
+            this == AbilityType.USE_IRON_TOOLS
+        ) {
+            return 70;
+        }
+        if (this == AbilityType.EQUIP_LEATHER_ARMOR ||
+            this == AbilityType.EQUIP_CHAINMAIL_ARMOR ||
+            this == AbilityType.EQUIP_IRON_ARMOR ||
+            this == AbilityType.EQUIP_ELYTRA
+        ) {
+            return 60;
+        }
+        if (this == AbilityType.USE_SHIELD ||
+            this == AbilityType.USE_WATER_BUCKET ||
+            this == AbilityType.USE_FLINT_AND_STEEL ||
+            this == AbilityType.THROW_ENDER_PEARL ||
+            this == AbilityType.USE_OMINOUS_BOTTLE ||
+            this == AbilityType.PLACE_END_CRYSTAL
+        ) {
+            return 50;
+        }
+        if (hierarchyLayerType == AbilitiesHierarchyLayerType.UPGRADE ||
+            hierarchyLayerType == AbilitiesHierarchyLayerType.BLOCKS ||
+            hierarchyLayerType == AbilitiesHierarchyLayerType.ACTIONS
+        ) {
+            return 40;
+        }
+        if (this == AbilityType.EAT_PUFFERFISH ||
+            this == AbilityType.EAT_ROTTEN_FLESH ||
+            this == AbilityType.EAT_SPIDER_EYE ||
+            this == AbilityType.EAT_SUSPICIOUS_STEW ||
+            this == AbilityType.EAT_POISONOUS_POTATO
+        ) {
+            return 10;
+        }
+        if (hierarchyLayerType == AbilitiesHierarchyLayerType.TRADING ||
+            hierarchyLayerType == AbilitiesHierarchyLayerType.LANDMARK ||
+            hierarchyLayerType == AbilitiesHierarchyLayerType.FOOD
+        ) {
+            return 0;
+        }
+        return 100;
     }
 
     public static @Nullable AbilityType findByName(String name) {

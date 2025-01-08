@@ -1,11 +1,11 @@
 {
-  "achievetodo.world_creation_tab.difficulty.chaos": "Chaos",
+  "achievetodo.world_creation_tab.progression.chaos": "Chaos",
 
-  "achievetodo.world_creation_tab.difficulty.easy.tooltip": "This mode is ideal for those experiencing BlazeandCaves for the first time. Basic abilities are unlocked right from the start, and the rest become available faster than they do in Normal. While BlazeandCaves does contain plenty of challenging achievements, they aren’t required to progress through abilities—feel free to skip anything too tough!",
-  "achievetodo.world_creation_tab.difficulty.normal.tooltip": "In this mode, abilities unlock gradually, keeping you consistently engaged—you’ll often be just a bit short of the next unlock. There’s no need to collect every achievement to sense real progress, as essential skills become available long before complete completion.",
-  "achievetodo.world_creation_tab.difficulty.hard.tooltip": "In this mode, abilities are paced to cover all BlazeandCaves achievements. You’ll have to tackle even the hardest challenges if you want to unlock the full array of skills!",
-  "achievetodo.world_creation_tab.difficulty.chaos.tooltip": "In this mode, abilities are randomly shuffled based on the world seed. Some advanced skills might be yours from the very beginning, while others remain locked forever. The random generator shows no mercy, so get ready for the most absurd yet thrilling scenarios!",
-  "achievetodo.world_creation_tab.difficulty.custom.tooltip": "User-created configuration",
+  "achievetodo.world_creation_tab.progression.chaos.tooltip": "The recommended mode where abilities are randomly shuffled based on the world's seed. This mode transforms every playthrough into a unique experience and challenge, embodying the depth of AchieveToDo's concept.",
+  "achievetodo.world_creation_tab.progression.hard.tooltip": "Similar to 'Chaos,' but leaning more towards the RPG aspect, with a stronger focus on BlazeandCaves than AchieveToDo. Abilities unlock in a way that covers all BlazeandCaves advancements, with progression designed to align with the creator's vision.",
+  "achievetodo.world_creation_tab.progression.normal.tooltip": "'Hard,' but abilities unlock faster to maintain a steady sense of progress—you're often just one step away from the next unlock.",
+  "achievetodo.world_creation_tab.progression.easy.tooltip": "'Normal,' but abilities unlock even faster, and all basic abilities are available from the start.",
+  "achievetodo.world_creation_tab.progression.custom.tooltip": "User-created configuration",
 
   "achievetodo.world_creation_tab.cooperative_mode": "Cooperative mode",
   "achievetodo.world_creation_tab.cooperative_mode.tooltip": "When playing over LAN, you can enable a cooperative advancements mode. In this mode, any advancement earned by one player is automatically shared with everyone else. If you prefer a competitive approach, simply turn this mode off, and each player keeps their own separate advancement.",

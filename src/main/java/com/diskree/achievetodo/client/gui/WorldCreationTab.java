@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.client.gui;
 
 import com.diskree.achievetodo.BuildConfig;
-import com.diskree.achievetodo.ability.DifficultyType;
+import com.diskree.achievetodo.ability.ProgressionModeType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.injection.extension.client.WorldCreatorExtension;
 import com.diskree.achievetodo.server.Constants;
@@ -34,7 +34,7 @@ public class WorldCreationTab extends GridScreenTab {
     private static final Identifier CONTAINER_BACKGROUND_TEXTURE =
         Identifier.ofVanilla("textures/gui/menu_list_background.png");
 
-    private CyclingButtonWidget<Config> configSelector;
+    private CyclingButtonWidget<ProgressionConfig> configSelector;
 
     private WorldScreenOptionGrid rewardsSection;
     private WorldScreenOptionGrid customGenerationSection;
@@ -54,13 +54,13 @@ public class WorldCreationTab extends GridScreenTab {
 
         GridWidget.Adder rootContainer = grid.setColumnSpacing(10).setRowSpacing(8).createAdder(2);
 
-        List<Config> configs = new ArrayList<>();
-        Config normalDifficultyConfig = null;
-        for (DifficultyType difficulty : DifficultyType.values()) {
-            Config config = Config.fromDifficulty(difficulty);
-            configs.add(config);
-            if (difficulty == DifficultyType.NORMAL) {
-                normalDifficultyConfig = config;
+        List<ProgressionConfig> progressionConfigs = new ArrayList<>();
+        ProgressionConfig defaultProgressionProgressionConfig = null;
+        for (ProgressionModeType progressionModeType : ProgressionModeType.values()) {
+            ProgressionConfig progressionConfig = ProgressionConfig.fromProgressionMode(progressionModeType);
+            progressionConfigs.add(progressionConfig);
+            if (progressionModeType == ProgressionModeType.getDefaultMode()) {
+                defaultProgressionProgressionConfig = progressionConfig;
             }
         }
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve(BuildConfig.MOD_ID);
@@ -70,26 +70,26 @@ public class WorldCreationTab extends GridScreenTab {
                     .filter(Files::isRegularFile)
                     .filter(path -> path.toString().endsWith(Constants.FileExtension.TOML))
                     .map(path -> StringUtils.removeEnd(path.getFileName().toString(), Constants.FileExtension.TOML))
-                    .filter(fileName -> !fileName.startsWith(DifficultyType.CHAOS.getName() + "_") &&
-                        DifficultyType.findByName(fileName) == null
+                    .filter(fileName -> !fileName.startsWith(ProgressionModeType.CHAOS.getName() + "_") &&
+                        ProgressionModeType.findByName(fileName) == null
                     )
-                    .forEach(fileName -> configs.add(Config.fromCustomName(fileName)));
+                    .forEach(fileName -> progressionConfigs.add(ProgressionConfig.fromCustomName(fileName)));
             } catch (IOException ignored) {
             }
         }
 
         configSelector = CyclingButtonWidget
-            .builder(Config::getDisplayedText)
-            .values(configs)
+            .builder(ProgressionConfig::getDisplayedText)
+            .values(progressionConfigs)
             .build(
                 0, 0, 150, 20,
                 Text.translatable("options.difficulty"),
-                (button, config) -> worldCreatorExtension.achievetodo$setConfigName(config.getConfigName())
+                (button, progressionConfig) -> worldCreatorExtension.achievetodo$setConfigName(progressionConfig.getConfigName())
             );
-        configSelector.setValue(normalDifficultyConfig);
-        for (Config config : configs) {
-            if (config.getConfigName().equals(worldCreatorExtension.achievetodo$getConfigName())) {
-                configSelector.setValue(config);
+        configSelector.setValue(defaultProgressionProgressionConfig);
+        for (ProgressionConfig progressionConfig : progressionConfigs) {
+            if (progressionConfig.getConfigName().equals(worldCreatorExtension.achievetodo$getConfigName())) {
+                configSelector.setValue(progressionConfig);
                 break;
             }
         }
@@ -231,27 +231,27 @@ public class WorldCreationTab extends GridScreenTab {
         );
     }
 
-    private record Config(DifficultyType difficulty, String customName) {
+    private record ProgressionConfig(ProgressionModeType builtInMode, String customName) {
 
-        public static @NotNull WorldCreationTab.Config fromDifficulty(DifficultyType difficulty) {
-            return new Config(difficulty, null);
+        public static @NotNull WorldCreationTab.ProgressionConfig fromProgressionMode(ProgressionModeType type) {
+            return new ProgressionConfig(type, null);
         }
 
-        public static @NotNull WorldCreationTab.Config fromCustomName(String customName) {
-            return new Config(null, customName);
+        public static @NotNull WorldCreationTab.ProgressionConfig fromCustomName(String customName) {
+            return new ProgressionConfig(null, customName);
         }
 
         public Text getDisplayedText() {
-            return difficulty != null ? difficulty.getDisplayedText() : Text.literal(customName);
+            return builtInMode != null ? builtInMode.getDisplayedText() : Text.literal(customName);
         }
 
         public Text getTooltipText() {
-            return difficulty != null ? difficulty.getTooltipText()
-                : AchieveToDoClient.translateModKey("world_creation_tab.difficulty.custom.tooltip");
+            return builtInMode != null ? builtInMode.getTooltipText()
+                : AchieveToDoClient.translateModKey("world_creation_tab.progression.custom.tooltip");
         }
 
         public String getConfigName() {
-            return difficulty != null ? difficulty.getName() : customName;
+            return builtInMode != null ? builtInMode.getName() : customName;
         }
     }
 }

@@ -5,6 +5,7 @@ import com.diskree.achievetodo.ability.*;
 import com.diskree.achievetodo.client.gui.LockedLandmarkBox;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
+import com.diskree.achievetodo.server.Constants;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import com.diskree.achievetodo.tracking.TrackedStatType;
@@ -23,7 +24,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
-import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class AchieveToDoClient implements ClientModInitializer {
 
     private static Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
-    private static int obtainedAdvancementsCount = -1;
+    private static int obtainedAdvancementsCount = Integer.MIN_VALUE;
     private static final Map<LandmarkType, List<DimensionalBlockBox>> lockedLandmarkBlockBoxes = new HashMap<>();
     private static List<LockedLandmarkBox> lockedLandmarksBoxes = new ArrayList<>();
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
@@ -48,7 +48,7 @@ public class AchieveToDoClient implements ClientModInitializer {
     }
 
     public static boolean isNotReady() {
-        return abilitiesConfiguration.isEmpty() || obtainedAdvancementsCount == -1;
+        return abilitiesConfiguration.isEmpty() || obtainedAdvancementsCount == Integer.MIN_VALUE;
     }
 
     public static int getObtainedAdvancementsCount() {
@@ -186,7 +186,7 @@ public class AchieveToDoClient implements ClientModInitializer {
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             abilitiesConfiguration = null;
-            obtainedAdvancementsCount = -1;
+            obtainedAdvancementsCount = Integer.MIN_VALUE;
             lockedLandmarkBlockBoxes.clear();
             lockedLandmarksBoxes.clear();
             trackedScores.clear();
@@ -222,12 +222,19 @@ public class AchieveToDoClient implements ClientModInitializer {
             LandmarkType otherLandmarkType = otherLockedLandmarkBox.landmarkType();
             AbilityType abilityType = AbilityType.findByLandmarkType(landmarkType);
             AbilityType otherAbilityType = AbilityType.findByLandmarkType(otherLandmarkType);
+
             int requiredAdvancementsCount = abilitiesConfiguration.get(abilityType);
             int otherRequiredAdvancementsCount = abilitiesConfiguration.get(otherAbilityType);
-            if (requiredAdvancementsCount == -1) {
+            if (requiredAdvancementsCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
+                requiredAdvancementsCount = Integer.MIN_VALUE;
+            }
+            if (otherRequiredAdvancementsCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
+                otherRequiredAdvancementsCount = Integer.MIN_VALUE;
+            }
+            if (requiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 requiredAdvancementsCount = Integer.MAX_VALUE;
             }
-            if (otherRequiredAdvancementsCount == -1) {
+            if (otherRequiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 otherRequiredAdvancementsCount = Integer.MAX_VALUE;
             }
             compared = Integer.compare(otherRequiredAdvancementsCount, requiredAdvancementsCount);
@@ -271,7 +278,7 @@ public class AchieveToDoClient implements ClientModInitializer {
         }
         if (!checkOnly) {
             Text lockedMessageText;
-            if (requiredAdvancementsCount == -1) {
+            if (requiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 lockedMessageText = ability.buildPermanentlyLockedMessage();
             } else {
                 int leftAdvancementsCount = requiredAdvancementsCount - obtainedAdvancementsCount;
@@ -297,7 +304,7 @@ public class AchieveToDoClient implements ClientModInitializer {
             return null;
         }
         if (abilityRows.isEmpty()) {
-            Map<AbilitiesTreeCategoryType, List<AbilityType>> abilitiesByCategory = Arrays
+            Map<AbilitiesHierarchyLayerType, List<AbilityType>> abilitiesByCategory = Arrays
                 .stream(AbilityType.values())
                 .sorted(Comparator.comparingInt((AbilityType ability) -> {
                         int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
@@ -311,13 +318,13 @@ public class AchieveToDoClient implements ClientModInitializer {
                     })
                     .thenComparingInt(abilitiesConfiguration::get)
                     .thenComparing(Enum::ordinal))
-                .collect(Collectors.groupingBy(AbilityType::getCategory));
-            for (AbilitiesTreeCategoryType category : AbilitiesTreeCategoryType.values()) {
+                .collect(Collectors.groupingBy(AbilityType::getHierarchyLayerType));
+            for (AbilitiesHierarchyLayerType category : AbilitiesHierarchyLayerType.values()) {
                 List<AbilityType> categoryAbilities = abilitiesByCategory.get(category);
-                if (category == AbilitiesTreeCategoryType.MAIN) {
+                int categoryRowsCount = category.getRowsCount();
+                if (categoryRowsCount == 1) {
                     abilityRows.add(categoryAbilities);
                 } else {
-                    int categoryRowsCount = category.getRowsCount();
                     if (categoryAbilities.size() % categoryRowsCount != 0) {
                         throw new IllegalStateException(
                             "Abilities in category " + category +
