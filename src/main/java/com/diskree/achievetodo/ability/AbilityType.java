@@ -374,59 +374,59 @@ public enum AbilityType {
     }
 
     public int getChaosPriority() {
-        if (this == AbilityType.INTERACT_INSIDE_FORTRESS ||
-            this == AbilityType.INTERACT_INSIDE_STRONGHOLD ||
-            this == AbilityType.USE_ENDER_EYE ||
-            this == AbilityType.ENTER_NETHER ||
-            this == AbilityType.ENTER_END
+        if (this == INTERACT_INSIDE_FORTRESS ||
+            this == INTERACT_INSIDE_STRONGHOLD ||
+            this == USE_ENDER_EYE ||
+            this == ENTER_NETHER ||
+            this == ENTER_END
         ) {
             return 90;
         }
-        if (this == AbilityType.OPEN_BEACON ||
-            this == AbilityType.OPEN_ENDER_CHEST ||
-            this == AbilityType.OPEN_CHEST ||
-            this == AbilityType.OPEN_FURNACE ||
-            this == AbilityType.OPEN_SHULKER_BOX ||
-            this == AbilityType.OPEN_SMITHING_TABLE
+        if (this == OPEN_BEACON ||
+            this == OPEN_ENDER_CHEST ||
+            this == OPEN_SMITHING_TABLE ||
+            this == OPEN_CRAFTING_TABLE ||
+            this == OPEN_ANVIL ||
+            this == OPEN_STONECUTTER
         ) {
             return 80;
         }
-        if (this == AbilityType.USE_GOLDEN_TOOLS ||
-            this == AbilityType.USE_WOODEN_TOOLS ||
-            this == AbilityType.USE_STONE_TOOLS ||
-            this == AbilityType.USE_IRON_TOOLS
+        if (this == USE_GOLDEN_TOOLS ||
+            this == USE_WOODEN_TOOLS ||
+            this == USE_STONE_TOOLS ||
+            this == USE_IRON_TOOLS ||
+            this == USE_SHIELD ||
+            this == USE_WATER_BUCKET ||
+            this == USE_FLINT_AND_STEEL
         ) {
             return 70;
         }
-        if (this == AbilityType.EQUIP_LEATHER_ARMOR ||
-            this == AbilityType.EQUIP_CHAINMAIL_ARMOR ||
-            this == AbilityType.EQUIP_IRON_ARMOR ||
-            this == AbilityType.EQUIP_ELYTRA
+        if (this == EQUIP_LEATHER_ARMOR ||
+            this == EQUIP_CHAINMAIL_ARMOR ||
+            this == EQUIP_IRON_ARMOR ||
+            this == EQUIP_ELYTRA
         ) {
             return 60;
         }
-        if (this == AbilityType.USE_SHIELD ||
-            this == AbilityType.USE_WATER_BUCKET ||
-            this == AbilityType.USE_FLINT_AND_STEEL ||
-            this == AbilityType.THROW_ENDER_PEARL ||
-            this == AbilityType.USE_OMINOUS_BOTTLE ||
-            this == AbilityType.PLACE_END_CRYSTAL
+        if (this == THROW_ENDER_PEARL ||
+            this == USE_OMINOUS_BOTTLE ||
+            this == PLACE_END_CRYSTAL
         ) {
             return 50;
+        }
+        if (this == EAT_PUFFERFISH ||
+            this == EAT_ROTTEN_FLESH ||
+            this == EAT_SPIDER_EYE ||
+            this == EAT_SUSPICIOUS_STEW ||
+            this == EAT_POISONOUS_POTATO
+        ) {
+            return 40;
         }
         if (hierarchyLayerType == AbilitiesHierarchyLayerType.UPGRADE ||
             hierarchyLayerType == AbilitiesHierarchyLayerType.BLOCKS ||
             hierarchyLayerType == AbilitiesHierarchyLayerType.ACTIONS
         ) {
-            return 40;
-        }
-        if (this == AbilityType.EAT_PUFFERFISH ||
-            this == AbilityType.EAT_ROTTEN_FLESH ||
-            this == AbilityType.EAT_SPIDER_EYE ||
-            this == AbilityType.EAT_SUSPICIOUS_STEW ||
-            this == AbilityType.EAT_POISONOUS_POTATO
-        ) {
-            return 10;
+            return 30;
         }
         if (hierarchyLayerType == AbilitiesHierarchyLayerType.TRADING ||
             hierarchyLayerType == AbilitiesHierarchyLayerType.LANDMARK ||

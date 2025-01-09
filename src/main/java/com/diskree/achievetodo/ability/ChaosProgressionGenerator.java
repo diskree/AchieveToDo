@@ -7,6 +7,8 @@ import java.util.*;
 
 public class ChaosProgressionGenerator {
 
+    private static final int MAX_ADVANCEMENTS_COUNT = 1000;
+
     private static final double CHAOS_INITIALLY_UNLOCKED_CHANCE_PERCENT = 1.0;
     private static final double CHAOS_PERMANENTLY_LOCKED_CHANCE_PERCENT = 0.2;
 
@@ -20,11 +22,11 @@ public class ChaosProgressionGenerator {
         this.random = random;
     }
 
-    public static @NotNull Map<AbilityType, Integer> generateChaosProgression(
-        @NotNull Map<AbilityType, Integer> baseProgression,
-        @NotNull Random random
-    ) {
-        ChaosProgressionGenerator generator = new ChaosProgressionGenerator(baseProgression, random);
+    public static @NotNull Map<AbilityType, Integer> generateChaosProgression(long seed) {
+        ChaosProgressionGenerator generator = new ChaosProgressionGenerator(
+            Progressions.getHardProgression(),
+            new Random(seed)
+        );
         generator
             .shuffle()
             .shift()
@@ -41,6 +43,36 @@ public class ChaosProgressionGenerator {
         Map<AbilityType, Integer> result = new LinkedHashMap<>();
         for (int i = 0; i < abilityTypes.size(); i++) {
             result.put(abilityTypes.get(i), counts.get(i));
+        }
+        progression = result;
+        return this;
+    }
+
+    private ChaosProgressionGenerator shift() {
+        Map<AbilityType, Integer> result = new LinkedHashMap<>();
+        for (var entry : progression.entrySet()) {
+            AbilityType abilityType = entry.getKey();
+            int oldCount = entry.getValue();
+            int priority = abilityType.getChaosPriority();
+            int newCount;
+            if (priority == 100) {
+                newCount = oldCount;
+            } else {
+                int shiftRange = Math.round((100 - priority) * 0.5f);
+                if (shiftRange < 0) {
+                    shiftRange = 0;
+                }
+                int shiftMagnitude = random.nextInt(shiftRange);
+                int shift = random.nextBoolean() ? shiftMagnitude : -shiftMagnitude;
+
+                newCount = oldCount + shift;
+            }
+            if (newCount < Constants.Progression.MIN_ADVANCEMENTS_COUNT) {
+                newCount = Constants.Progression.MIN_ADVANCEMENTS_COUNT;
+            } else if (newCount > MAX_ADVANCEMENTS_COUNT) {
+                newCount = MAX_ADVANCEMENTS_COUNT;
+            }
+            result.put(abilityType, newCount);
         }
         progression = result;
         return this;
@@ -68,51 +100,22 @@ public class ChaosProgressionGenerator {
         return this;
     }
 
-    private ChaosProgressionGenerator shift() {
-        Map<AbilityType, Integer> result = new LinkedHashMap<>();
-        for (var entry : progression.entrySet()) {
-            AbilityType abilityType = entry.getKey();
-            int oldCount = entry.getValue();
-            int priority = abilityType.getChaosPriority();
-            int newCount;
-            if (priority == 100) {
-                newCount = oldCount;
-            } else {
-                int shiftRange = Math.round((100 - priority) * 0.5f);
-                if (shiftRange < 0) {
-                    shiftRange = 0;
-                }
-                int shiftMagnitude = random.nextInt(shiftRange);
-                int shift = random.nextBoolean() ? shiftMagnitude : -shiftMagnitude;
-
-                newCount = oldCount + shift;
-            }
-            if (newCount < Constants.Progression.MIN_ADVANCEMENTS_COUNT) {
-                newCount = Constants.Progression.MIN_ADVANCEMENTS_COUNT;
-            } else if (newCount > Constants.TOTAL_ADVANCEMENTS_COUNT) {
-                newCount = Constants.TOTAL_ADVANCEMENTS_COUNT;
-            }
-            result.put(abilityType, newCount);
-        }
-        progression = result;
-        return this;
-    }
-
     private void applySpecialFlags() {
         Map<AbilityType, Integer> result = new LinkedHashMap<>();
         for (var entry : progression.entrySet()) {
             AbilityType abilityType = entry.getKey();
             int oldCount = entry.getValue();
             int newCount;
-            if (random.nextDouble() * 100.0 < CHAOS_INITIALLY_UNLOCKED_CHANCE_PERCENT) {
+            if (abilityType == AbilityType.VISION ||
+                random.nextDouble() * 100.0 < CHAOS_INITIALLY_UNLOCKED_CHANCE_PERCENT
+            ) {
                 newCount = Constants.Progression.INITIALLY_UNLOCKED_FLAG;
+            } else if (abilityType.getChaosPriority() != 100 &&
+                random.nextDouble() * 100.0 < CHAOS_PERMANENTLY_LOCKED_CHANCE_PERCENT
+            ) {
+                newCount = Constants.Progression.PERMANENTLY_LOCKED_FLAG;
             } else {
-                int priority = abilityType.getChaosPriority();
-                if (priority != 100 && random.nextDouble() * 100.0 < CHAOS_PERMANENTLY_LOCKED_CHANCE_PERCENT) {
-                    newCount = Constants.Progression.PERMANENTLY_LOCKED_FLAG;
-                } else {
-                    newCount = oldCount;
-                }
+                newCount = oldCount;
             }
             result.put(entry.getKey(), newCount);
         }

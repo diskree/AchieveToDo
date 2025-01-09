@@ -1,10 +1,10 @@
 {
   "achievetodo.world_creation_tab.progression.chaos": "Хаос",
 
-  "achievetodo.world_creation_tab.progression.chaos.tooltip": "Рекомендуемый режим, где способности перемешиваются случайным образом в зависимости от сида мира. Этот режим превращает каждое прохождение в уникальный опыт и испытание, воплощая глубину замысла AchieveToDo.",
-  "achievetodo.world_creation_tab.progression.hard.tooltip": "То же, что и «Хаос», но ближе к RPG составляющей, где на передний план встаёт больше BlazeandCaves, чем AchieveToDo. Способности открываются так, чтобы охватить все достижения BlazeandCaves, а вся прогрессия выстроена так, чтобы максимально соответствовать видению автора.",
-  "achievetodo.world_creation_tab.progression.normal.tooltip": "Та же «Сложная», но способности открываются быстрее и поддерживают постоянный интерес — нередко будет не хватать самой малости до следующей разблокировки.",
-  "achievetodo.world_creation_tab.progression.easy.tooltip": "Та же «Нормальная», но способности открываются ещё динамичнее, а все базовые способности доступны со старта.",
+  "achievetodo.world_creation_tab.progression.chaos.tooltip": "Рекомендуемый режим, где способности перемешиваются случайным образом в зависимости от сида мира. Каждое прохождение превращается в уникальный опыт и испытание, воплощая всю глубину замысла AchieveToDo.",
+  "achievetodo.world_creation_tab.progression.hard.tooltip": "То же, что и «Хаос», но ближе к RPG составляющей, где на передний план встают больше достижения, чем идея AchieveToDo. Способности открываются так, чтобы охватить весь BlazeandCaves, а первое достижение придётся выполнить вслепую.",
+  "achievetodo.world_creation_tab.progression.normal.tooltip": "Та же «Сложная», но способности открываются быстрее и поддерживают постоянный интерес — нередко будет не хватать самой малости до следующей разблокировки. Из базовых способностей доступно со старта только зрение.",
+  "achievetodo.world_creation_tab.progression.easy.tooltip": "Та же «Нормальная», но способности открываются ещё динамичнее. Все базовые способности доступны со старта.",
   "achievetodo.world_creation_tab.progression.custom.tooltip": "Пользовательская конфигурация",
 
   "achievetodo.world_creation_tab.cooperative_mode": "Кооперативный режим",

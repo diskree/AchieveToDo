@@ -3,8 +3,8 @@ package com.diskree.achievetodo.injection.mixin.main;
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.ability.ChaosProgressionGenerator;
-import com.diskree.achievetodo.ability.Progressions;
 import com.diskree.achievetodo.ability.ProgressionModeType;
+import com.diskree.achievetodo.ability.Progressions;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.server.Constants;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 @Mixin(LevelInfo.class)
 public abstract class LevelInfoMixin implements LevelInfoExtension {
@@ -62,10 +61,8 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
         }
         ProgressionModeType progressionModeType = ProgressionModeType.findByName(configName);
         String fileName = configName;
-        Random chaosRandom = null;
         if (progressionModeType == ProgressionModeType.CHAOS) {
             fileName += "_" + seed;
-            chaosRandom = new Random(seed);
         }
         Path configFile = configDir.resolve(fileName + Constants.FileExtension.TOML);
         Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
@@ -94,15 +91,12 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
                     case EASY -> Progressions.getEasyProgression();
                     case NORMAL -> Progressions.getNormalProgression();
                     case HARD -> Progressions.getHardProgression();
-                    case CHAOS -> ChaosProgressionGenerator.generateChaosProgression(
-                        Progressions.getHardProgression(),
-                        chaosRandom
-                    );
+                    case CHAOS -> ChaosProgressionGenerator.generateChaosProgression(seed);
                 };
                 for (AbilityType ability : AbilityType.values()) {
                     Integer requiredAdvancementsCount = progression.get(ability);
                     if (requiredAdvancementsCount == null) {
-                        throw new RuntimeException("Ability " + ability + " is not exist in selected progression "
+                        throw new RuntimeException("Ability " + ability + " is not exist in selected progression: "
                             + progressionModeType);
                     }
                     abilitiesConfiguration.put(ability, requiredAdvancementsCount);
