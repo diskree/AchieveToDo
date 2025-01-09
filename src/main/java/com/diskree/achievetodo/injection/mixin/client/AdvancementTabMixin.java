@@ -97,7 +97,6 @@ public abstract class AdvancementTabMixin {
         AdvancementDisplay display,
         @NotNull Operation<AdvancementWidget> original
     ) {
-        AdvancementWidget advancementWidget = original.call(tab, client, advancement, display);
         AbilityType ability = null;
         boolean isFirstInRow = false;
         boolean shouldSkipVanillaBehavior = false;
@@ -128,6 +127,7 @@ public abstract class AdvancementTabMixin {
                 }
             }
         }
+        AdvancementWidget advancementWidget = original.call(tab, client, advancement, display);
         if (ability != null) {
             if (isFirstInRow || shouldSkipVanillaBehavior) {
                 pendingAbilityWidgets.put(ability, advancementWidget);
