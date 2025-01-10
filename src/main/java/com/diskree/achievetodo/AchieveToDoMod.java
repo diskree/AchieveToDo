@@ -27,30 +27,7 @@ public class AchieveToDoMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PayloadTypeRegistry.playC2S().register(DemystifyAbilityPayload.ID, DemystifyAbilityPayload.CODEC);
-
-        PayloadTypeRegistry.playS2C().register(
-            SyncAbilitiesConfigurationPayload.ID,
-            SyncAbilitiesConfigurationPayload.CODEC
-        );
-        PayloadTypeRegistry.playS2C().register(
-            SyncAdvancementsCountPayload.ID,
-            SyncAdvancementsCountPayload.CODEC
-        );
-        PayloadTypeRegistry.playS2C().register(
-            SyncLockedLandmarksPayload.ID,
-            SyncLockedLandmarksPayload.CODEC
-        );
-        PayloadTypeRegistry.playS2C().register(
-            SyncLandmarkTypesUnlockedPayload.ID,
-            SyncLandmarkTypesUnlockedPayload.CODEC
-        );
-        PayloadTypeRegistry.playS2C().register(
-            SyncResizedLandmarkPayload.ID,
-            SyncResizedLandmarkPayload.CODEC
-        );
-        PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
+        registerPayloads();
 
         server = new AchieveToDoServer();
         server.onInitializeServer();
@@ -111,4 +88,32 @@ public class AchieveToDoMod implements ModInitializer {
         }
         return true;
     }
+
+    private static void registerPayloads() {
+        PayloadTypeRegistry.playC2S().register(DemystifyAbilityPayload.ID, DemystifyAbilityPayload.CODEC);
+
+        PayloadTypeRegistry.playS2C().register(
+            SyncAbilitiesConfigurationPayload.ID,
+            SyncAbilitiesConfigurationPayload.CODEC
+        );
+        PayloadTypeRegistry.playS2C().register(
+            SyncAdvancementsCountPayload.ID,
+            SyncAdvancementsCountPayload.CODEC
+        );
+        PayloadTypeRegistry.playS2C().register(
+            SyncLockedLandmarksPayload.ID,
+            SyncLockedLandmarksPayload.CODEC
+        );
+        PayloadTypeRegistry.playS2C().register(
+            SyncLandmarkTypesUnlockedPayload.ID,
+            SyncLandmarkTypesUnlockedPayload.CODEC
+        );
+        PayloadTypeRegistry.playS2C().register(
+            SyncResizedLandmarkPayload.ID,
+            SyncResizedLandmarkPayload.CODEC
+        );
+        PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
+    }
+
 }

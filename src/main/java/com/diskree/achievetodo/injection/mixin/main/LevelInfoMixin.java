@@ -45,7 +45,7 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
     @Override
     public Map<AbilityType, Integer> achievetodo$getAbilitiesConfiguration(long seed) {
         if (TextUtils.isEmpty(configName)) {
-            throw new IllegalStateException("Cannot get the config name of the level nbt!");
+            throw new IllegalStateException("Cannot read configuration name from the level.dat!");
         }
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve(BuildConfig.MOD_ID);
         if (!Files.exists(configDir)) {

@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-@Environment(EnvType.CLIENT)
 public enum InternalPack {
 
     BACAP_OVERRIDE,

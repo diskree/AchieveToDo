@@ -12,9 +12,6 @@ import com.diskree.achievetodo.tracking.TrackedStatType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -22,7 +19,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -116,8 +112,19 @@ public class AchieveToDoClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        registerInternalDataPacks();
+        registerPayloads();
 
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            abilitiesConfiguration = null;
+            obtainedAdvancementsCount = Integer.MIN_VALUE;
+            lockedLandmarkBlockBoxes.clear();
+            lockedLandmarksBoxes.clear();
+            trackedScores.clear();
+            trackedStats.clear();
+        });
+    }
+
+    private void registerPayloads() {
         ClientPlayNetworking.registerGlobalReceiver(SyncAbilitiesConfigurationPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 abilitiesConfiguration = payload.abilitiesConfiguration();
@@ -183,15 +190,6 @@ public class AchieveToDoClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SyncStatPayload.ID, (payload, context) ->
             context.client().execute(() -> trackedStats.put(payload.statType(), payload.progress()))
         );
-
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            abilitiesConfiguration = null;
-            obtainedAdvancementsCount = Integer.MIN_VALUE;
-            lockedLandmarkBlockBoxes.clear();
-            lockedLandmarksBoxes.clear();
-            trackedScores.clear();
-            trackedStats.clear();
-        });
     }
 
     private void calculateLockedLandmarksBoxes() {
@@ -244,18 +242,6 @@ public class AchieveToDoClient implements ClientModInitializer {
             return Integer.compare(landmarkType.ordinal(), otherLandmarkType.ordinal());
         });
         lockedLandmarksBoxes = result;
-    }
-
-    private void registerInternalDataPacks() {
-        FabricLoader.getInstance().getModContainer(BuildConfig.MOD_ID).ifPresent(modContainer -> {
-            for (InternalPack internalPack : InternalPack.values()) {
-                ResourceManagerHelper.registerBuiltinResourcePack(
-                    Identifier.of(internalPack.getDatapackName()),
-                    modContainer,
-                    ResourcePackActivationType.NORMAL
-                );
-            }
-        });
     }
 
     public static boolean isAbilityLocked(AbilityType ability) {

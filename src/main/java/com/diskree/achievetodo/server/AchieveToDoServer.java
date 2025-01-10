@@ -1,11 +1,13 @@
 package com.diskree.achievetodo.server;
 
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.ability.DimensionType;
 import com.diskree.achievetodo.ability.DimensionalBlockBox;
 import com.diskree.achievetodo.ability.LandmarkType;
 import com.diskree.achievetodo.ability.generation.AbilityAdvancementsGenerator;
+import com.diskree.achievetodo.client.InternalPack;
 import com.diskree.achievetodo.client.Utils;
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
@@ -19,6 +21,9 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlayerAdvancementTracker;
 import net.minecraft.scoreboard.*;
@@ -28,6 +33,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.ServerStatHandler;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
@@ -38,7 +44,7 @@ import java.util.*;
 
 public class AchieveToDoServer implements ServerModInitializer {
 
-    private Map<AbilityType, Integer> abilitiesConfiguration = new Object2IntOpenHashMap<>();
+    private Map<AbilityType, Integer> abilitiesConfiguration;
     private final Map<UUID, Integer> advancementsCountByPlayers = new Object2IntOpenHashMap<>();
 
     private final Map<ChunkPos, Map<LandmarkType, List<DimensionalBlockBox>>> landmarksByChunks = new HashMap<>();
@@ -348,20 +354,34 @@ public class AchieveToDoServer implements ServerModInitializer {
 
     @Override
     public void onInitializeServer() {
-        ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
-            context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
-        );
-        ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+        registerInternalDataPacks();
+        registerPayloads();
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             if (server.getSaveProperties().getLevelInfo() instanceof LevelInfoExtension levelInfoExtension) {
                 abilitiesConfiguration = levelInfoExtension.achievetodo$getAbilitiesConfiguration(
                     server.getSaveProperties().getGeneratorOptions().getSeed()
                 );
             }
+        });
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, serverResourceManager, success) ->
+            prepareScoreboard(server.getScoreboard())
+        );
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            abilitiesConfiguration = null;
             advancementsCountByPlayers.clear();
+            landmarksByChunks.clear();
+            playersByLockedLandmarkTypes.clear();
             trackedScores.clear();
             trackedStats.clear();
-            prepareScoreboard(server.getScoreboard());
+            currentAdvancementsMode = null;
+            currentScoreboardObjective = null;
+            currentScoreboardDisplaySlot = null;
         });
+
+        ServerChunkEvents.CHUNK_LOAD.register((world, chunk) -> onChunkLoadedStatusChanged(world, chunk, true));
+        ServerChunkEvents.CHUNK_UNLOAD.register((world, chunk) -> onChunkLoadedStatusChanged(world, chunk, false));
+
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.player;
             ServerPlayNetworking.send(player, new SyncAbilitiesConfigurationPayload(abilitiesConfiguration));
@@ -400,8 +420,24 @@ public class AchieveToDoServer implements ServerModInitializer {
                 players.remove(playerUuid);
             }
         });
-        ServerChunkEvents.CHUNK_LOAD.register((world, chunk) -> onChunkLoadedStatusChanged(world, chunk, true));
-        ServerChunkEvents.CHUNK_UNLOAD.register((world, chunk) -> onChunkLoadedStatusChanged(world, chunk, false));
+    }
+
+    private static void registerInternalDataPacks() {
+        FabricLoader.getInstance().getModContainer(BuildConfig.MOD_ID).ifPresent(modContainer -> {
+            for (InternalPack internalPack : InternalPack.values()) {
+                ResourceManagerHelper.registerBuiltinResourcePack(
+                    Identifier.of(internalPack.getDatapackName()),
+                    modContainer,
+                    ResourcePackActivationType.NORMAL
+                );
+            }
+        });
+    }
+
+    private void registerPayloads() {
+        ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
+            context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
+        );
     }
 
     private void onChunkLoadedStatusChanged(@NotNull ServerWorld world, @NotNull Chunk chunk, boolean isLoaded) {

@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Locale;
 
-@Environment(EnvType.CLIENT)
 public enum ExternalPack {
 
     BACAP(

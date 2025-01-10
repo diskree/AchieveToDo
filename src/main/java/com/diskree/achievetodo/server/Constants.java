@@ -28,6 +28,8 @@ public class Constants {
     }
 
     public static class ConfigKey {
+        public static final String SERVER_CONFIG_PROPERTY_NAME = BuildConfig.MOD_ID + "-" + "configName";
+
         public static final String VERSION = "version";
         public static final String ABILITIES_TABLE = "abilities";
     }
