@@ -178,7 +178,6 @@ public abstract class AdvancementTabMixin {
     )
     public void skipNullWidget(AdvancementWidget widget, @NotNull AdvancementEntry advancement, CallbackInfo ci) {
         if (widget == null) {
-            System.out.println("added null widget. return.");
             ci.cancel();
         }
     }

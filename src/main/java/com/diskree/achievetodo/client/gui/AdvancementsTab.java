@@ -2,6 +2,8 @@ package com.diskree.achievetodo.client.gui;
 
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.client.AchieveToDoClient;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.gui.screen.advancement.AdvancementTabType;
 import net.minecraft.text.Text;
@@ -14,48 +16,25 @@ import java.util.Locale;
 
 public enum AdvancementsTab {
 
-    ABILITIES(AdvancementTabType.LEFT),
-    BACAP(AdvancementTabType.LEFT),
-    STATISTICS(AdvancementTabType.LEFT),
+    ABILITIES,
+    BACAP,
+    STATISTICS,
 
-    BUILDING(AdvancementTabType.ABOVE),
-    FARMING(AdvancementTabType.ABOVE),
-    HUSBANDRY(AdvancementTabType.ABOVE),
-    BIOMES(AdvancementTabType.ABOVE),
-    ADVENTURE(AdvancementTabType.ABOVE),
-    MONSTERS(AdvancementTabType.ABOVE),
-    WEAPONRY(AdvancementTabType.ABOVE),
+    BUILDING,
+    FARMING,
+    HUSBANDRY,
+    BIOMES,
+    ADVENTURE,
+    MONSTERS,
+    WEAPONRY,
 
-    MINING(AdvancementTabType.BELOW),
-    REDSTONE(AdvancementTabType.BELOW),
-    ENCHANTING(AdvancementTabType.BELOW),
-    NETHER(AdvancementTabType.BELOW),
-    POTION(AdvancementTabType.BELOW),
-    END(AdvancementTabType.BELOW),
-    CHALLENGES(AdvancementTabType.BELOW);
-
-    private final AdvancementTabType position;
-
-    AdvancementsTab(AdvancementTabType position) {
-        this.position = position;
-    }
-
-    public AdvancementTabType getPosition() {
-        return position;
-    }
-
-    public int getOrder() {
-        int order = 0;
-        for (AdvancementsTab tab : AdvancementsTab.values()) {
-            if (tab.position == position) {
-                if (tab == this) {
-                    break;
-                }
-                order++;
-            }
-        }
-        return order;
-    }
+    MINING,
+    REDSTONE,
+    ENCHANTING,
+    NETHER,
+    POTION,
+    END,
+    CHALLENGES;
 
     public @NotNull Identifier getLockedTabId() {
         return Identifier.of(BuildConfig.MOD_ID + "_locked_tab", getName() + "/root");
@@ -85,5 +64,38 @@ public enum AdvancementsTab {
             }
         }
         return null;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public AdvancementTabType getPosition() {
+        if (this == ABILITIES || this == BACAP || this == STATISTICS) {
+            return AdvancementTabType.LEFT;
+        }
+        if (this == BUILDING ||
+            this == FARMING ||
+            this == HUSBANDRY ||
+            this == BIOMES ||
+            this == ADVENTURE ||
+            this == MONSTERS ||
+            this == WEAPONRY
+        ) {
+            return AdvancementTabType.ABOVE;
+        }
+        return AdvancementTabType.BELOW;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int getOrder() {
+        int order = 0;
+        AdvancementTabType position = getPosition();
+        for (AdvancementsTab tab : AdvancementsTab.values()) {
+            if (tab.getPosition() == position) {
+                if (tab == this) {
+                    break;
+                }
+                order++;
+            }
+        }
+        return order;
     }
 }

@@ -27,6 +27,11 @@ public class Constants {
         public static final String BLOCK_BOX_MAX_Z = "maxZ";
     }
 
+    public static class ConfigKey {
+        public static final String VERSION = "version";
+        public static final String ABILITIES_TABLE = "abilities";
+    }
+
     public static class FileExtension {
         public static final String TOML = ".toml";
         public static final String ZIP = ".zip";

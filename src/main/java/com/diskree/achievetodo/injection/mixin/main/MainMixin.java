@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MainMixin {
 
     @WrapOperation(
-        method = "method_43613",
+        method = "method_43613(Lcom/mojang/serialization/Dynamic;Ljoptsimple/OptionSet;Ljoptsimple/OptionSpec;Lnet/minecraft/server/dedicated/ServerPropertiesLoader;Ljoptsimple/OptionSpec;Lnet/minecraft/server/SaveLoading$LoadContextSupplierContext;)Lnet/minecraft/server/SaveLoading$LoadContext;",
         at = @At(
             value = "NEW",
             target = "(Ljava/lang/String;Lnet/minecraft/world/GameMode;ZLnet/minecraft/world/Difficulty;ZLnet/minecraft/world/GameRules;Lnet/minecraft/resource/DataConfiguration;)Lnet/minecraft/world/level/LevelInfo;"

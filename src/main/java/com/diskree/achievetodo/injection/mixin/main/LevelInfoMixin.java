@@ -21,17 +21,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Mixin(LevelInfo.class)
 public abstract class LevelInfoMixin implements LevelInfoExtension {
-
-    @Unique
-    private static final String CONFIG_VERSION_KEY = "version";
-
-    @Unique
-    private static final String CONFIG_ABILITIES_KEY = "abilities";
 
     @Unique
     private String configName;
@@ -71,8 +67,8 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
             if (Files.exists(configFile)) {
                 try {
                     Toml configToml = new Toml().read(configFile.toFile());
-                    if (configToml.getLong(CONFIG_VERSION_KEY) >= progressionModeType.getVersion()) {
-                        Toml abilitiesTable = configToml.getTable(CONFIG_ABILITIES_KEY);
+                    if (configToml.getLong(Constants.ConfigKey.VERSION) >= progressionModeType.getVersion()) {
+                        Toml abilitiesTable = configToml.getTable(Constants.ConfigKey.ABILITIES_TABLE);
                         if (abilitiesTable != null) {
                             abilitiesMap = abilitiesTable.toMap();
                         }
@@ -82,10 +78,10 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
             }
             if (abilitiesMap == null) {
                 StringBuilder configTomlContents = new StringBuilder()
-                    .append(CONFIG_VERSION_KEY + " = ")
+                    .append(Constants.ConfigKey.VERSION + " = ")
                     .append(progressionModeType.getVersion())
                     .append("\n\n")
-                    .append("[" + CONFIG_ABILITIES_KEY + "]")
+                    .append("[" + Constants.ConfigKey.ABILITIES_TABLE + "]")
                     .append("\n");
                 Map<AbilityType, Integer> progression = switch (progressionModeType) {
                     case EASY -> Progressions.getEasyProgression();
@@ -118,7 +114,10 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
                 throw new IllegalArgumentException("Config " + configFile + " not found!");
             }
             try {
-                abilitiesMap = new Toml().read(configFile.toFile()).getTable(CONFIG_ABILITIES_KEY).toMap();
+                abilitiesMap = new Toml()
+                    .read(configFile.toFile())
+                    .getTable(Constants.ConfigKey.ABILITIES_TABLE)
+                    .toMap();
             } catch (Exception e) {
                 throw new RuntimeException("Reading config", e);
             }
@@ -152,7 +151,7 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
 
     @ModifyReturnValue(
         method = {
-            "withCopiedGameRules",
+            "withGameMode",
             "withDifficulty",
             "withDataConfiguration",
             "withCopiedGameRules"
