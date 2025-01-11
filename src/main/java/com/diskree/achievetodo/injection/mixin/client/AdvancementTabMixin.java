@@ -1,18 +1,23 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilitiesHierarchyLayerType;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.client.gui.AdvancementsTabType;
+import com.diskree.achievetodo.injection.extension.client.AdvancementsScreenExtension;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.advancement.AdvancementTab;
 import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,6 +48,61 @@ public abstract class AdvancementTabMixin {
     @Shadow
     @Final
     private Map<AdvancementEntry, AdvancementWidget> widgets;
+
+    @Shadow
+    @Final
+    private AdvancementsScreen screen;
+
+    @Inject(
+        method = "drawWidgetTooltip",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;drawTooltip(Lnet/minecraft/client/gui/DrawContext;IIFII)V",
+            shift = At.Shift.AFTER
+        )
+    )
+    public void saveFocusedAdvancementWidget(
+        DrawContext context,
+        int mouseX,
+        int mouseY,
+        int x,
+        int y,
+        CallbackInfo ci,
+        @Local(ordinal = 0) AdvancementWidget advancementWidget
+    ) {
+        if (screen instanceof AdvancementsScreenExtension screenImpl &&
+            AdvancementsTabType.findByAdvancement(root) != null &&
+            advancementWidget.progress != null && !advancementWidget.progress.isDone() &&
+            AchieveToDoMod.isTrackableAdvancement(advancementWidget.advancement.getAdvancementEntry())
+        ) {
+            screenImpl.achievetodo$setFocusedAdvancementWidget(advancementWidget);
+        }
+    }
+
+    @Inject(
+        method = "drawWidgetTooltip",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V",
+            shift = At.Shift.AFTER
+        )
+    )
+    public void resetFocusedAdvancementWidget(
+        DrawContext context,
+        int mouseX,
+        int mouseY,
+        int x,
+        int y,
+        CallbackInfo ci,
+        @Local(ordinal = 0) boolean shouldShowTooltip
+    ) {
+        if (screen instanceof AdvancementsScreenExtension screenImpl &&
+            !shouldShowTooltip &&
+            AdvancementsTabType.findByAdvancement(root) != null
+        ) {
+            screenImpl.achievetodo$setFocusedAdvancementWidget(null);
+        }
+    }
 
     @Inject(
         method = "create",
@@ -178,6 +238,79 @@ public abstract class AdvancementTabMixin {
     )
     public void skipNullWidget(AdvancementWidget widget, @NotNull AdvancementEntry advancement, CallbackInfo ci) {
         if (widget == null) {
+            ci.cancel();
+        }
+    }
+
+    @WrapOperation(
+        method = "render",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;renderLines(Lnet/minecraft/client/gui/DrawContext;IIZ)V"
+        )
+    )
+    private void disableLinesRenderInAdvancementInfo(
+        AdvancementWidget advancementWidget,
+        DrawContext context,
+        int x,
+        int y,
+        boolean border,
+        Operation<Void> original
+    ) {
+        if (screen instanceof AdvancementsScreenExtension advancementsScreenExtension &&
+            AdvancementsTabType.findByAdvancement(root) != null &&
+            advancementsScreenExtension.achievetodo$getActiveAdvancementId() != null
+        ) {
+            return;
+        }
+        original.call(advancementWidget, context, x, y, border);
+    }
+
+    @WrapOperation(
+        method = "render",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;renderWidgets(Lnet/minecraft/client/gui/DrawContext;II)V"
+        )
+    )
+    private void renderAdvancementInfo(
+        AdvancementWidget advancementWidget,
+        DrawContext context,
+        int x,
+        int y,
+        Operation<Void> original
+    ) {
+        if (screen instanceof AdvancementsScreenExtension advancementsScreenExtension) {
+            if (AdvancementsTabType.findByAdvancement(root) != null) {
+                Identifier activeAdvancementId = advancementsScreenExtension.achievetodo$getActiveAdvancementId();
+                if (activeAdvancementId != null) {
+
+                    return;
+                }
+            } else {
+                advancementsScreenExtension.achievetodo$setActiveAdvancementId(null);
+            }
+        }
+        original.call(advancementWidget, context, x, y);
+    }
+
+    @Inject(
+        method = "drawWidgetTooltip",
+        at = @At(value = "HEAD"),
+        cancellable = true
+    )
+    private void disableWidgetTooltipRenderInAdvancementInfo(
+        DrawContext context,
+        int mouseX,
+        int mouseY,
+        int x,
+        int y,
+        CallbackInfo ci
+    ) {
+        if (screen instanceof AdvancementsScreenExtension advancementsScreenExtension &&
+            AdvancementsTabType.findByAdvancement(root) != null &&
+            advancementsScreenExtension.achievetodo$getActiveAdvancementId() != null
+        ) {
             ci.cancel();
         }
     }

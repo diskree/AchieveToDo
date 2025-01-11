@@ -115,6 +115,7 @@
     "client.MovementTutorialStepHandlerMixin",
     "client.OpenInventoryTutorialStepHandlerMixin",
     "client.PackScreenMixin",
+    "client.ParentElementMixin",
     "client.PunchTreeTutorialStepHandlerMixin",
     "client.WorldCreatorMixin",
     "client.WorldListWidgetMixin",

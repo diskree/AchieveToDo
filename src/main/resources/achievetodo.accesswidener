@@ -20,3 +20,4 @@ accessible field net/minecraft/client/tutorial/TutorialManager currentHandler Ln
 accessible field net/minecraft/advancement/PlacedAdvancement children Ljava/util/Set;
 accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget parent Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;
 accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget advancement Lnet/minecraft/advancement/PlacedAdvancement;
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget progress Lnet/minecraft/advancement/AdvancementProgress;
