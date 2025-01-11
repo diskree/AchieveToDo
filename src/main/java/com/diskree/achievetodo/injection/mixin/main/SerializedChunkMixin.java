@@ -26,10 +26,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Mixin(SerializedChunk.class)
 public class SerializedChunkMixin implements SerializedChunkExtension {
@@ -54,11 +54,11 @@ public class SerializedChunkMixin implements SerializedChunkExtension {
         if (original instanceof SerializedChunkExtension serializedChunkExtension &&
             chunk instanceof ChunkExtension chunkExtension
         ) {
-            Map<LandmarkType, List<DimensionalBlockBox>> landmarks = chunkExtension.achievetodo$getFeatureLandmarks();
+            Map<LandmarkType, Set<DimensionalBlockBox>> landmarks = chunkExtension.achievetodo$getFeatureLandmarks();
             if (landmarks != null && !landmarks.isEmpty()) {
                 NbtCompound featureLandmarksNbt = new NbtCompound();
                 for (var entry : landmarks.entrySet()) {
-                    List<DimensionalBlockBox> dimensionalBlockBoxes = entry.getValue();
+                    Set<DimensionalBlockBox> dimensionalBlockBoxes = entry.getValue();
                     NbtList blockBoxesNbt = new NbtList();
                     for (DimensionalBlockBox dimensionalBlockBox : dimensionalBlockBoxes) {
                         BlockBox blockBox = dimensionalBlockBox.blockBox();
@@ -129,7 +129,7 @@ public class SerializedChunkMixin implements SerializedChunkExtension {
             if (dimensionType == null) {
                 return;
             }
-            Map<LandmarkType, List<DimensionalBlockBox>> featureLandmarks = null;
+            Map<LandmarkType, Set<DimensionalBlockBox>> featureLandmarks = null;
             for (String landmarkName : featureLandmarksNbt.getKeys()) {
                 LandmarkType landmarkType = LandmarkType.findByName(landmarkName);
                 if (landmarkType == null) {
@@ -154,7 +154,7 @@ public class SerializedChunkMixin implements SerializedChunkExtension {
                             featureLandmarks = new HashMap<>();
                         }
                         featureLandmarks
-                            .computeIfAbsent(landmarkType, k -> new ArrayList<>())
+                            .computeIfAbsent(landmarkType, k -> new HashSet<>())
                             .add(new DimensionalBlockBox(dimensionType, blockBox));
                     }
                 }

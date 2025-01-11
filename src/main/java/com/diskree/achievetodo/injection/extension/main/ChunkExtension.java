@@ -4,14 +4,18 @@ import com.diskree.achievetodo.ability.DimensionalBlockBox;
 import com.diskree.achievetodo.ability.LandmarkType;
 import net.minecraft.server.world.ServerWorld;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface ChunkExtension {
 
-    void achievetodo$setFeatureLandmarks(ServerWorld world, Map<LandmarkType, List<DimensionalBlockBox>> landmarks);
+    void achievetodo$setFeatureLandmarks(ServerWorld world, Map<LandmarkType, Set<DimensionalBlockBox>> landmarks);
 
-    Map<LandmarkType, List<DimensionalBlockBox>> achievetodo$getFeatureLandmarks();
+    Map<LandmarkType, Set<DimensionalBlockBox>> achievetodo$getFeatureLandmarks();
 
-    void achievetodo$addFeatureLandmark(ServerWorld world, LandmarkType landmarkType, DimensionalBlockBox dimensionalBlockBox);
+    void achievetodo$addFeatureLandmark(
+        ServerWorld world,
+        LandmarkType landmarkType,
+        DimensionalBlockBox dimensionalBlockBox
+    );
 }

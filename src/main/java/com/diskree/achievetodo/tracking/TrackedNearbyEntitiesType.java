@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum TrackedNearbyEntitiesType {
 
@@ -77,7 +78,7 @@ public enum TrackedNearbyEntitiesType {
     private final String advancementId;
     private final int radius;
     private final boolean isBabySeparated;
-    private final List<EntityType<?>> entities;
+    private final Set<EntityType<?>> entities;
 
     TrackedNearbyEntitiesType(
         String advancementId,
@@ -88,7 +89,7 @@ public enum TrackedNearbyEntitiesType {
         this.advancementId = advancementId;
         this.radius = radius;
         this.isBabySeparated = isBabySeparated;
-        this.entities = Arrays.stream(entities).toList();
+        this.entities = Arrays.stream(entities).collect(Collectors.toUnmodifiableSet());
     }
 
     public int getRadius() {
@@ -99,7 +100,7 @@ public enum TrackedNearbyEntitiesType {
         return isBabySeparated;
     }
 
-    public List<EntityType<?>> getEntities() {
+    public Set<EntityType<?>> getEntities() {
         return entities;
     }
 

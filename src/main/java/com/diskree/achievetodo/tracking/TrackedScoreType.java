@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public enum TrackedScoreType {
 
@@ -199,18 +200,18 @@ public enum TrackedScoreType {
         "bac_loser"
     );
 
-    public static final Map<String, List<TrackedScoreType>> SCORES = new HashMap<>();
+    public static final Map<String, Set<TrackedScoreType>> SCORES = new HashMap<>();
 
     private final String advancementId;
     private final int finalValue;
     private final boolean isPercentage;
-    private final List<String> objectiveNames;
+    private final Set<String> objectiveNames;
 
     static {
         for (TrackedScoreType type : values()) {
             for (String objectiveName : type.objectiveNames) {
                 SCORES
-                    .computeIfAbsent(objectiveName, k -> new ArrayList<>())
+                    .computeIfAbsent(objectiveName, k -> new HashSet<>())
                     .add(type);
             }
         }
@@ -220,7 +221,7 @@ public enum TrackedScoreType {
         this.advancementId = advancementId;
         this.finalValue = finalValue;
         this.isPercentage = isPercentage;
-        this.objectiveNames = Arrays.stream(objectiveNames).toList();
+        this.objectiveNames = Arrays.stream(objectiveNames).collect(Collectors.toUnmodifiableSet());
     }
 
     public int getFinalValue() {
@@ -278,12 +279,12 @@ public enum TrackedScoreType {
         return null;
     }
 
-    public static @Nullable List<TrackedScoreType> findByObjectiveName(String objectiveName) {
-        List<TrackedScoreType> progressTypes = null;
+    public static @Nullable Set<TrackedScoreType> findByObjectiveName(String objectiveName) {
+        Set<TrackedScoreType> progressTypes = null;
         for (TrackedScoreType type : values()) {
             if (type.objectiveNames.contains(objectiveName)) {
                 if (progressTypes == null) {
-                    progressTypes = new ArrayList<>();
+                    progressTypes = new HashSet<>();
                 }
                 progressTypes.add(type);
             }

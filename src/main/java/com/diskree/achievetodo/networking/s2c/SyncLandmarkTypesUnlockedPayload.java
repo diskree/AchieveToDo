@@ -7,10 +7,10 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-public record SyncLandmarkTypesUnlockedPayload(List<LandmarkType> landmarks) implements CustomPayload {
+public record SyncLandmarkTypesUnlockedPayload(Set<LandmarkType> landmarks) implements CustomPayload {
 
     public static final Id<SyncLandmarkTypesUnlockedPayload> ID =
         new Id<>(AchieveToDoMod.getIdentifier("sync_landmark_types_unlocked"));
@@ -34,9 +34,9 @@ public record SyncLandmarkTypesUnlockedPayload(List<LandmarkType> landmarks) imp
         return ID;
     }
 
-    private static @NotNull List<LandmarkType> readList(@NotNull PacketByteBuf buf) {
+    private static @NotNull Set<LandmarkType> readList(@NotNull PacketByteBuf buf) {
         int size = buf.readInt();
-        List<LandmarkType> list = new ArrayList<>(size);
+        Set<LandmarkType> list = new HashSet<>(size);
         for (int i = 0; i < size; i++) {
             list.add(buf.readEnumConstant(LandmarkType.class));
         }

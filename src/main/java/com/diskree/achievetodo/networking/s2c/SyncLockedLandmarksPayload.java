@@ -10,13 +10,13 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.BlockBox;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public record SyncLockedLandmarksPayload(
-    @NotNull Map<LandmarkType, List<DimensionalBlockBox>> landmarks,
+    @NotNull Map<LandmarkType, Set<DimensionalBlockBox>> landmarks,
     boolean isLocked
 ) implements CustomPayload {
 
@@ -37,7 +37,7 @@ public record SyncLockedLandmarksPayload(
         buf.writeInt(landmarks.size());
         for (var entry : landmarks.entrySet()) {
             buf.writeEnumConstant(entry.getKey());
-            List<DimensionalBlockBox> dimensionalBlockBoxes = entry.getValue();
+            Set<DimensionalBlockBox> dimensionalBlockBoxes = entry.getValue();
             buf.writeInt(dimensionalBlockBoxes.size());
             for (DimensionalBlockBox dimensionalBlockBox : dimensionalBlockBoxes) {
                 buf.writeEnumConstant(dimensionalBlockBox.dimensionType());
@@ -58,13 +58,13 @@ public record SyncLockedLandmarksPayload(
         return ID;
     }
 
-    private static @NotNull Map<LandmarkType, List<DimensionalBlockBox>> readMap(@NotNull PacketByteBuf buf) {
+    private static @NotNull Map<LandmarkType, Set<DimensionalBlockBox>> readMap(@NotNull PacketByteBuf buf) {
         int mapSize = buf.readInt();
-        Map<LandmarkType, List<DimensionalBlockBox>> map = new HashMap<>(mapSize);
+        Map<LandmarkType, Set<DimensionalBlockBox>> map = new HashMap<>(mapSize);
         for (int mapIndex = 0; mapIndex < mapSize; mapIndex++) {
             LandmarkType landmarkType = buf.readEnumConstant(LandmarkType.class);
             int listSize = buf.readInt();
-            List<DimensionalBlockBox> dimensionalBlockBoxes = new ArrayList<>(listSize);
+            Set<DimensionalBlockBox> dimensionalBlockBoxes = new HashSet<>(listSize);
             for (int listIndex = 0; listIndex < listSize; listIndex++) {
                 DimensionType dimension = buf.readEnumConstant(DimensionType.class);
                 BlockBox blockBox = new BlockBox(

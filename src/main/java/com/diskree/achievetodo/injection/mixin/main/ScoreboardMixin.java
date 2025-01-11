@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.List;
+import java.util.Set;
 
 @Mixin(Scoreboard.class)
 public class ScoreboardMixin {
@@ -58,7 +59,7 @@ public class ScoreboardMixin {
                         AchieveToDoMod.getServer().setObtainedCount(serverPlayer, score);
                     }
                 } else if (scoreHolder instanceof ServerPlayerEntity serverPlayer) {
-                    List<TrackedScoreType> progressTypes = TrackedScoreType.findByObjectiveName(objectiveName);
+                    Set<TrackedScoreType> progressTypes = TrackedScoreType.findByObjectiveName(objectiveName);
                     if (progressTypes != null) {
                         for (TrackedScoreType progressType : progressTypes) {
                             AchieveToDoMod.getServer().setScore(

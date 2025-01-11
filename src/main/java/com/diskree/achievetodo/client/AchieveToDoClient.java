@@ -33,8 +33,8 @@ public class AchieveToDoClient implements ClientModInitializer {
     private static Map<AbilityType, Integer> abilitiesConfiguration;
     private static int obtainedAdvancementsCount = Integer.MIN_VALUE;
 
-    private static final Map<LandmarkType, List<DimensionalBlockBox>> lockedLandmarkBlockBoxes = new HashMap<>();
-    private static List<LockedLandmarkBox> lockedLandmarksBoxes = new ArrayList<>();
+    private static final Map<LandmarkType, Set<DimensionalBlockBox>> lockedLandmarkBlockBoxes = new HashMap<>();
+    private static List<LockedLandmarkBox> lockedLandmarkBoxes = new ArrayList<>();
 
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
     private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
@@ -62,7 +62,7 @@ public class AchieveToDoClient implements ClientModInitializer {
     }
 
     public static List<LockedLandmarkBox> getLockedLandmarkBoxes() {
-        return lockedLandmarksBoxes;
+        return lockedLandmarkBoxes;
     }
 
     public static int getTrackedNearbyEntitiesCount(TrackedNearbyEntitiesType type) {
@@ -73,7 +73,7 @@ public class AchieveToDoClient implements ClientModInitializer {
         int radius = type.getRadius();
         Vec3d playerPos = player.getPos();
         Box area = new Box(playerPos, playerPos).expand(radius);
-        List<EntityType<?>> trackedEntities = type.getEntities();
+        Set<EntityType<?>> trackedEntities = type.getEntities();
         boolean isBabySeparated = type.isBabySeparated();
         Map<EntityType<?>, Map<Boolean, Boolean>> trackedMap = new HashMap<>();
         for (EntityType<?> entityType : trackedEntities) {
@@ -120,7 +120,7 @@ public class AchieveToDoClient implements ClientModInitializer {
             abilitiesConfiguration = null;
             obtainedAdvancementsCount = Integer.MIN_VALUE;
             lockedLandmarkBlockBoxes.clear();
-            lockedLandmarksBoxes.clear();
+            lockedLandmarkBoxes.clear();
             trackedScores.clear();
             trackedStats.clear();
         });
@@ -131,7 +131,7 @@ public class AchieveToDoClient implements ClientModInitializer {
             context.client().execute(() -> {
                 abilitiesConfiguration = payload.abilitiesConfiguration();
                 abilityRows.clear();
-                calculateLockedLandmarksBoxes();
+                calculateLockedLandmarkBoxes();
             })
         );
         ClientPlayNetworking.registerGlobalReceiver(SyncObtainedAdvancementsCountPayload.ID, (payload, context) ->
@@ -144,13 +144,13 @@ public class AchieveToDoClient implements ClientModInitializer {
                     LandmarkType landmarkType = entry.getKey();
                     if (payload.isLocked()) {
                         if (lockedLandmarkBlockBoxes
-                            .computeIfAbsent(landmarkType, k -> new ArrayList<>())
+                            .computeIfAbsent(landmarkType, k -> new HashSet<>())
                             .addAll(entry.getValue())
                         ) {
                             isChanged = true;
                         }
                     } else {
-                        List<DimensionalBlockBox> dimensionalBoxes = lockedLandmarkBlockBoxes.get(landmarkType);
+                        Set<DimensionalBlockBox> dimensionalBoxes = lockedLandmarkBlockBoxes.get(landmarkType);
                         if (dimensionalBoxes != null && dimensionalBoxes.removeAll(entry.getValue())) {
                             isChanged = true;
                             if (dimensionalBoxes.isEmpty()) {
@@ -160,7 +160,7 @@ public class AchieveToDoClient implements ClientModInitializer {
                     }
                 }
                 if (isChanged) {
-                    calculateLockedLandmarksBoxes();
+                    calculateLockedLandmarkBoxes();
                 }
             })
         );
@@ -173,16 +173,16 @@ public class AchieveToDoClient implements ClientModInitializer {
                     }
                 }
                 if (isChanged) {
-                    calculateLockedLandmarksBoxes();
+                    calculateLockedLandmarkBoxes();
                 }
             })
         );
         ClientPlayNetworking.registerGlobalReceiver(SyncResizedLandmarkPayload.ID, (payload, context) ->
             context.client().execute(() -> {
-                List<DimensionalBlockBox> dimensionalBlockBoxes = lockedLandmarkBlockBoxes.get(payload.landmarkType());
+                Set<DimensionalBlockBox> dimensionalBlockBoxes = lockedLandmarkBlockBoxes.get(payload.landmarkType());
                 if (dimensionalBlockBoxes.remove(payload.oldDimensionalBlockBox())) {
                     dimensionalBlockBoxes.add(payload.newDimensionalBlockBox());
-                    calculateLockedLandmarksBoxes();
+                    calculateLockedLandmarkBoxes();
                 }
             })
         );
@@ -194,7 +194,7 @@ public class AchieveToDoClient implements ClientModInitializer {
         );
     }
 
-    private void calculateLockedLandmarksBoxes() {
+    private void calculateLockedLandmarkBoxes() {
         if (abilitiesConfiguration == null) {
             return;
         }
@@ -243,7 +243,7 @@ public class AchieveToDoClient implements ClientModInitializer {
             }
             return Integer.compare(landmarkType.ordinal(), otherLandmarkType.ordinal());
         });
-        lockedLandmarksBoxes = result;
+        lockedLandmarkBoxes = result;
     }
 
     public static boolean isAbilityLocked(AbilityType ability) {
@@ -279,7 +279,7 @@ public class AchieveToDoClient implements ClientModInitializer {
     }
 
     public static boolean isInLockedLandmark(DimensionType dimensionType, Box targetBox) {
-        for (LockedLandmarkBox lockedLandmarksBox : lockedLandmarksBoxes) {
+        for (LockedLandmarkBox lockedLandmarksBox : lockedLandmarkBoxes) {
             if (lockedLandmarksBox.dimensionType() == dimensionType && lockedLandmarksBox.box().intersects(targetBox)) {
                 return isAbilityLocked(AbilityType.findByLandmarkType(lockedLandmarksBox.landmarkType()), false);
             }

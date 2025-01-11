@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
+import java.util.Set;
 
 @Mixin(StatHandler.class)
 public class StatHandlerMixin {
@@ -22,7 +22,7 @@ public class StatHandlerMixin {
     )
     private void trackStatChange(PlayerEntity player, Stat<?> stat, int value, CallbackInfo ci) {
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            List<TrackedStatType> trackedStatTypes = TrackedStatType.findByStat(stat);
+            Set<TrackedStatType> trackedStatTypes = TrackedStatType.findByStat(stat);
             if (trackedStatTypes != null) {
                 for (TrackedStatType trackedStatType : trackedStatTypes) {
                     AchieveToDoMod.getServer().setStat(serverPlayer, trackedStatType, value);

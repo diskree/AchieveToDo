@@ -10,10 +10,10 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public enum TrackedStatType {
 
@@ -382,7 +382,7 @@ public enum TrackedStatType {
         false
     );
 
-    public static final Map<Stat<?>, List<TrackedStatType>> STATS = new HashMap<>();
+    public static final Map<Stat<?>, Set<TrackedStatType>> STATS = new HashMap<>();
 
     private final String advancementId;
     private final Stat<?> stat;
@@ -392,7 +392,7 @@ public enum TrackedStatType {
     static {
         for (TrackedStatType type : values()) {
             STATS
-                .computeIfAbsent(type.stat, k -> new ArrayList<>())
+                .computeIfAbsent(type.stat, k -> new HashSet<>())
                 .add(type);
         }
     }
@@ -404,7 +404,7 @@ public enum TrackedStatType {
         this.isPercentage = isPercentage;
     }
 
-    public static @Nullable List<TrackedStatType> findByStat(Stat<?> stat) {
+    public static @Nullable Set<TrackedStatType> findByStat(Stat<?> stat) {
         return STATS.get(stat);
     }
 

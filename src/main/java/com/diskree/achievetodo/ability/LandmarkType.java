@@ -10,8 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum LandmarkType {
 
@@ -96,7 +97,7 @@ public enum LandmarkType {
 
     public static final HashMap<Feature<?>, LandmarkType> FEATURES = new HashMap<>();
 
-    private final List<RegistryKey<Structure>> structureRegistryKeys;
+    private final Set<RegistryKey<Structure>> structureRegistryKeys;
     private final Feature<?> feature;
 
     static {
@@ -109,14 +110,14 @@ public enum LandmarkType {
 
     @SafeVarargs
     LandmarkType(RegistryKey<Structure>... structures) {
-        this(null, Arrays.stream(structures).toList());
+        this(null, Arrays.stream(structures).collect(Collectors.toUnmodifiableSet()));
     }
 
     LandmarkType(Feature<?> feature) {
         this(feature, null);
     }
 
-    LandmarkType(Feature<?> feature, List<RegistryKey<Structure>> structureRegistryKeys) {
+    LandmarkType(Feature<?> feature, Set<RegistryKey<Structure>> structureRegistryKeys) {
         this.structureRegistryKeys = structureRegistryKeys;
         this.feature = feature;
     }
@@ -129,7 +130,7 @@ public enum LandmarkType {
         return feature != null;
     }
 
-    public List<RegistryKey<Structure>> getStructureRegistryKeys() {
+    public Set<RegistryKey<Structure>> getStructureRegistryKeys() {
         return structureRegistryKeys;
     }
 

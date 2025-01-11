@@ -13,21 +13,21 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Mixin(Chunk.class)
 public abstract class ChunkMixin implements ChunkExtension {
 
     @Unique
-    private Map<LandmarkType, List<DimensionalBlockBox>> featureLandmarks;
+    private Map<LandmarkType, Set<DimensionalBlockBox>> featureLandmarks;
 
     @Override
     public void achievetodo$setFeatureLandmarks(
         @NotNull ServerWorld world,
-        Map<LandmarkType, List<DimensionalBlockBox>> featureLandmarks
+        Map<LandmarkType, Set<DimensionalBlockBox>> featureLandmarks
     ) {
         this.featureLandmarks = featureLandmarks;
         if (featureLandmarks != null) {
@@ -37,7 +37,7 @@ public abstract class ChunkMixin implements ChunkExtension {
     }
 
     @Override
-    public Map<LandmarkType, List<DimensionalBlockBox>> achievetodo$getFeatureLandmarks() {
+    public Map<LandmarkType, Set<DimensionalBlockBox>> achievetodo$getFeatureLandmarks() {
         return featureLandmarks;
     }
 
@@ -51,12 +51,12 @@ public abstract class ChunkMixin implements ChunkExtension {
             featureLandmarks = new HashMap<>();
         }
         featureLandmarks
-            .computeIfAbsent(featureLandmarkType, k -> new ArrayList<>())
+            .computeIfAbsent(featureLandmarkType, k -> new HashSet<>())
             .add(dimensionalBlockBox);
         AchieveToDoMod.getServer().onLandmarksLoadedStatusChanged(
             world,
             pos,
-            Map.of(featureLandmarkType, List.of(dimensionalBlockBox)),
+            Map.of(featureLandmarkType, Set.of(dimensionalBlockBox)),
             true
         );
         markNeedsSaving();

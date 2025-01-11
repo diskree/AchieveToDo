@@ -1,6 +1,5 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.AchieveToDoMod;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.util.Identifier;
