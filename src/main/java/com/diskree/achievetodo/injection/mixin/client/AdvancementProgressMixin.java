@@ -96,7 +96,7 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressExt
             target = "Lnet/minecraft/advancement/AdvancementRequirements;getLength()I"
         )
     )
-    public int overrideRequiredAdvancementsCount(
+    public int overrideRequiredCount(
         AdvancementRequirements requirements,
         Operation<Integer> original
     ) {
@@ -122,10 +122,10 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressExt
     )
     public void overrideProgressPercentage(CallbackInfoReturnable<Float> cir) {
         if (ability != null) {
-            int requiredAdvancementsCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
-            if (requiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
+            int requiredCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
+            if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 cir.setReturnValue(0.0f);
-            } else if (requiredAdvancementsCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
+            } else if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
                 cir.setReturnValue(1.0f);
             }
         } else if (!isDone()) {
@@ -147,23 +147,28 @@ public abstract class AdvancementProgressMixin implements AdvancementProgressExt
         cancellable = true
     )
     public void overrideProgressText(CallbackInfoReturnable<Text> cir) {
-        if (ability != null && AchieveToDoClient.getRequiredAdvancementsCount(ability) <= 0) {
-            cir.setReturnValue(null);
-        } else {
-            boolean isScore = trackedScoreType != null && trackedScoreType.isPercentage();
-            boolean isStat = trackedStatType != null && trackedStatType.isPercentage();
-            if (!isScore && !isStat) {
+        if (ability != null) {
+            int requiredCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
+            if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG ||
+                requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG
+            ) {
+                cir.setReturnValue(null);
                 return;
             }
-            int completionPercent;
-            if (isDone()) {
-                completionPercent = 100;
-            } else if (isScore) {
-                completionPercent = AchieveToDoClient.getTrackedScore(trackedScoreType);
-            } else {
-                completionPercent = AchieveToDoClient.getTrackedStat(trackedStatType);
-            }
-            cir.setReturnValue(Text.translatable("mco.upload.percent", completionPercent));
         }
+        boolean isScore = trackedScoreType != null && trackedScoreType.isPercentage();
+        boolean isStat = trackedStatType != null && trackedStatType.isPercentage();
+        if (!isScore && !isStat) {
+            return;
+        }
+        int completionPercent;
+        if (isDone()) {
+            completionPercent = 100;
+        } else if (isScore) {
+            completionPercent = AchieveToDoClient.getTrackedScore(trackedScoreType);
+        } else {
+            completionPercent = AchieveToDoClient.getTrackedStat(trackedStatType);
+        }
+        cir.setReturnValue(Text.translatable("mco.upload.percent", completionPercent));
     }
 }

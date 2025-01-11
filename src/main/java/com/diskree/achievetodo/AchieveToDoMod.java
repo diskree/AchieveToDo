@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -35,6 +36,10 @@ public class AchieveToDoMod implements ModInitializer {
 
     public static AchieveToDoServer getServer() {
         return server;
+    }
+
+    public static @NotNull Identifier getIdentifier(String path) {
+        return Identifier.of(BuildConfig.MOD_ID, path);
     }
 
     public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability) {
@@ -97,8 +102,8 @@ public class AchieveToDoMod implements ModInitializer {
             SyncAbilitiesConfigurationPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
-            SyncAdvancementsCountPayload.ID,
-            SyncAdvancementsCountPayload.CODEC
+            SyncObtainedAdvancementsCountPayload.ID,
+            SyncObtainedAdvancementsCountPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
             SyncLockedLandmarksPayload.ID,
@@ -115,5 +120,4 @@ public class AchieveToDoMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
     }
-
 }

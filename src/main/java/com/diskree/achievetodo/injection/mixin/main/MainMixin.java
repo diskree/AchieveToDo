@@ -1,6 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.client.Utils;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.server.Constants;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -42,10 +43,10 @@ public class MainMixin {
         String configName = serverPropertiesHandler.getString(Constants.ConfigKey.SERVER_CONFIG_PROPERTY_NAME, "");
         if (TextUtils.isEmpty(configName)) {
             throw new IllegalStateException(
-                "You must set " + Constants.ConfigKey.SERVER_CONFIG_PROPERTY_NAME + " with selected configuration in " +
-                    "your `server.properties` file! " +
-                    "Check out the `Server installation` section in the " +
-                    "mod description: https://modrinth.com/mod/" + BuildConfig.MOD_ID
+                "You must set " + Constants.ConfigKey.SERVER_CONFIG_PROPERTY_NAME +
+                    " with selected configuration in your `server.properties` file! " +
+                    "Check out the `Server-side setup` section in the mod description: " +
+                    Utils.buildModrinthModUrl(BuildConfig.MOD_ID)
             );
         }
         LevelInfo levelInfo = original.call(

@@ -50,12 +50,12 @@ public class ScoreboardMixin {
                             for (String playerName : team.getPlayerList()) {
                                 ServerPlayerEntity serverPlayer = playerManager.getPlayer(playerName);
                                 if (serverPlayer != null) {
-                                    AchieveToDoMod.getServer().setObtainedAdvancementsCount(serverPlayer, score);
+                                    AchieveToDoMod.getServer().setObtainedCount(serverPlayer, score);
                                 }
                             }
                         }
                     } else if (scoreHolder instanceof ServerPlayerEntity serverPlayer) {
-                        AchieveToDoMod.getServer().setObtainedAdvancementsCount(serverPlayer, score);
+                        AchieveToDoMod.getServer().setObtainedCount(serverPlayer, score);
                     }
                 } else if (scoreHolder instanceof ServerPlayerEntity serverPlayer) {
                     List<TrackedScoreType> progressTypes = TrackedScoreType.findByObjectiveName(objectiveName);

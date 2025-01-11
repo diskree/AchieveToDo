@@ -1,17 +1,16 @@
 package com.diskree.achievetodo.networking.c2s;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public record DemystifyAbilityPayload(@NotNull AbilityType ability) implements CustomPayload {
 
     public static final Id<DemystifyAbilityPayload> ID =
-        new CustomPayload.Id<>(Identifier.of(BuildConfig.MOD_ID, "demystify_ability"));
+        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("demystify_ability"));
 
     public static final PacketCodec<PacketByteBuf, DemystifyAbilityPayload> CODEC =
         CustomPayload.codecOf(DemystifyAbilityPayload::write, DemystifyAbilityPayload::new);

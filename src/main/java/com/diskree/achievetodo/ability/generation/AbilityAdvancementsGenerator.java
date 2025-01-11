@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.ability.generation;
 
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.client.AchieveToDoClient;
@@ -45,7 +46,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
     }
 
     private static @NotNull Identifier buildAdvancementId(String suffix) {
-        return Identifier.of(BuildConfig.MOD_ID, ABILITY_PATH_PREFIX + suffix);
+        return AchieveToDoMod.getIdentifier(ABILITY_PATH_PREFIX + suffix);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             .display(
                 Items.BARRIER,
                 Text.literal(BuildConfig.MOD_NAME),
-                AchieveToDoClient.translateModKey("description"),
+                AchieveToDoClient.translate("description"),
                 Identifier.ofVanilla("textures/block/" + Registries.BLOCK.getId(TAB_BACKGROUND).getPath() + ".png"),
                 AdvancementFrame.TASK,
                 false,
@@ -69,15 +70,15 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
             .build(buildAdvancementId("root"));
         consumer.accept(rootAdvancement);
 
-        for (AbilityType ability : AbilityType.values()) {
-            Identifier advancementId = buildAdvancementId(ability);
+        for (AbilityType abilityType : AbilityType.values()) {
+            Identifier advancementId = buildAdvancementId(abilityType);
             consumer.accept(Advancement.Builder
                 .createUntelemetered()
                 .parent(rootAdvancement)
                 .display(
-                    ability.getIcon(),
-                    ability.getTitle(),
-                    ability.getDescription(),
+                    abilityType.getIcon(),
+                    abilityType.getTitle(),
+                    abilityType.getDescription(),
                     null,
                     AdvancementFrame.TASK,
                     true,
@@ -86,7 +87,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
                 )
                 .rewards(AdvancementRewards.Builder.function(advancementId))
                 .criterion(
-                    DEMYSTIFIED_CRITERION_PREFIX + ability.getName(),
+                    DEMYSTIFIED_CRITERION_PREFIX + abilityType.getName(),
                     Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions())
                 )
                 .criterion(

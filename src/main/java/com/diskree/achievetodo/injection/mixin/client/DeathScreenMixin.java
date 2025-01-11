@@ -27,7 +27,7 @@ public class DeathScreenMixin {
             target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;"
         )
     )
-    private @NotNull MutableText setAdvancementsCountInsteadScoreInHardcore(
+    private @NotNull MutableText showObtainedCountInsteadScoreInHardcore(
         String key,
         Object[] args,
         @NotNull Operation<MutableText> original

@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -21,7 +21,7 @@ public class AdvancementToastMixin {
 
     @Unique
     private static final Identifier ABILITY_UNLOCKED_NOTIFICATION_BACKGROUND_TEXTURE =
-        Identifier.of(BuildConfig.MOD_ID, "ability_unlocked_notification_background");
+        AchieveToDoMod.getIdentifier("ability_unlocked_notification_background");
 
     @Unique
     private static final int ABILITY_UNLOCKED_NOTIFICATION_TITLE_COLOR = Colors.BLACK;

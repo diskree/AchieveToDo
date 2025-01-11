@@ -99,11 +99,11 @@ public class WorldCreationTab extends GridScreenTab {
         CyclingButtonWidget<Boolean> cooperativeModeButton = CyclingButtonWidget
             .onOffBuilder()
             .tooltip(value ->
-                Tooltip.of(AchieveToDoClient.translateModKey("world_creation_tab.cooperative_mode.tooltip"))
+                Tooltip.of(AchieveToDoClient.translate("world_creation_tab.cooperative_mode.tooltip"))
             )
             .build(
                 0, 0, 150, 20,
-                AchieveToDoClient.translateModKey("world_creation_tab.cooperative_mode"),
+                AchieveToDoClient.translate("world_creation_tab.cooperative_mode"),
                 (button, value) -> worldCreatorExtension.achievetodo$setCooperativeModeEnabled(value)
             );
         cooperativeModeButton.setValue(worldCreatorExtension.achievetodo$isCooperativeModeEnabled());
@@ -111,26 +111,26 @@ public class WorldCreationTab extends GridScreenTab {
 
         GridWidget.Adder rewardsTitleContainer = new GridWidget().createAdder(1);
         rewardsTitleContainer.add(new TextWidget(
-            AchieveToDoClient.translateModKey("world_creation_tab.rewards.title")
+            AchieveToDoClient.translate("world_creation_tab.rewards.title")
                 .formatted(DesignCodePalette.TEXT_COLOR),
             screen.client.textRenderer
         ));
         WorldScreenOptionGrid.Builder rewardsSectionBuilder = WorldScreenOptionGrid.builder(130);
         rewardsSectionBuilder.add(
-            AchieveToDoClient.translateModKey("world_creation_tab.rewards.items"),
+            AchieveToDoClient.translate("world_creation_tab.rewards.items"),
             worldCreatorExtension::achievetodo$isItemRewardsEnabled,
             worldCreatorExtension::achievetodo$setItemRewardsEnabled
-        ).tooltip(AchieveToDoClient.translateModKey("world_creation_tab.rewards.items.tooltip"));
+        ).tooltip(AchieveToDoClient.translate("world_creation_tab.rewards.items.tooltip"));
         rewardsSectionBuilder.add(
-            AchieveToDoClient.translateModKey("world_creation_tab.rewards.experience"),
+            AchieveToDoClient.translate("world_creation_tab.rewards.experience"),
             worldCreatorExtension::achievetodo$isExperienceRewardsEnabled,
             worldCreatorExtension::achievetodo$setExperienceRewardsEnabled
-        ).tooltip(AchieveToDoClient.translateModKey("world_creation_tab.rewards.experience.tooltip"));
+        ).tooltip(AchieveToDoClient.translate("world_creation_tab.rewards.experience.tooltip"));
         rewardsSectionBuilder.add(
-            AchieveToDoClient.translateModKey("world_creation_tab.rewards.trophy"),
+            AchieveToDoClient.translate("world_creation_tab.rewards.trophy"),
             worldCreatorExtension::achievetodo$isTrophyRewardsEnabled,
             worldCreatorExtension::achievetodo$setTrophyRewardsEnabled
-        ).tooltip(AchieveToDoClient.translateModKey("world_creation_tab.rewards.trophy.tooltip"));
+        ).tooltip(AchieveToDoClient.translate("world_creation_tab.rewards.trophy.tooltip"));
         rewardsContainer = new GridWidget();
         rewardsContainer.add(rewardsTitleContainer.getGridWidget(), 0, 0, grid.copyPositioner());
         rewardsSection = rewardsSectionBuilder.build();
@@ -139,26 +139,26 @@ public class WorldCreationTab extends GridScreenTab {
 
         GridWidget.Adder customGenerationTitleContainer = new GridWidget().createAdder(1);
         customGenerationTitleContainer.add(new TextWidget(
-            AchieveToDoClient.translateModKey("world_creation_tab.generation.title")
+            AchieveToDoClient.translate("world_creation_tab.generation.title")
                 .formatted(DesignCodePalette.TEXT_COLOR),
             screen.client.textRenderer
         ));
         WorldScreenOptionGrid.Builder customGenerationSectionBuilder = WorldScreenOptionGrid.builder(130);
         customGenerationSectionBuilder.add(
-            AchieveToDoClient.translateModKey("world_creation_tab.generation.overworld"),
+            AchieveToDoClient.translate("world_creation_tab.generation.overworld"),
             worldCreatorExtension::achievetodo$isTerralithEnabled,
             worldCreatorExtension::achievetodo$setTerralithEnabled
-        ).tooltip(AchieveToDoClient.translateModKey("world_creation_tab.generation.overworld.tooltip"));
+        ).tooltip(AchieveToDoClient.translate("world_creation_tab.generation.overworld.tooltip"));
         customGenerationSectionBuilder.add(
-            AchieveToDoClient.translateModKey("world_creation_tab.generation.nether"),
+            AchieveToDoClient.translate("world_creation_tab.generation.nether"),
             worldCreatorExtension::achievetodo$isAmplifiedNetherEnabled,
             worldCreatorExtension::achievetodo$setAmplifiedNetherEnabled
-        ).tooltip(AchieveToDoClient.translateModKey("world_creation_tab.generation.nether.tooltip"));
+        ).tooltip(AchieveToDoClient.translate("world_creation_tab.generation.nether.tooltip"));
         customGenerationSectionBuilder.add(
-            AchieveToDoClient.translateModKey("world_creation_tab.generation.end"),
+            AchieveToDoClient.translate("world_creation_tab.generation.end"),
             worldCreatorExtension::achievetodo$isNullscapeEnabled,
             worldCreatorExtension::achievetodo$setNullscapeEnabled
-        ).tooltip(AchieveToDoClient.translateModKey("world_creation_tab.generation.end.tooltip"));
+        ).tooltip(AchieveToDoClient.translate("world_creation_tab.generation.end.tooltip"));
         customGenerationContainer = new GridWidget();
         customGenerationContainer.add(customGenerationTitleContainer.getGridWidget(), 0, 0, grid.copyPositioner());
         customGenerationSection = customGenerationSectionBuilder.build();
@@ -247,7 +247,7 @@ public class WorldCreationTab extends GridScreenTab {
 
         public Text getTooltipText() {
             return builtInMode != null ? builtInMode.getTooltipText()
-                : AchieveToDoClient.translateModKey("world_creation_tab.progression.custom.tooltip");
+                : AchieveToDoClient.translate("world_creation_tab.progression.custom.tooltip");
         }
 
         public String getConfigName() {

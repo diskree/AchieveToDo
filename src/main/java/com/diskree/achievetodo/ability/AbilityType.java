@@ -191,7 +191,7 @@ public enum AbilityType {
     private final AbilityUnlockedToastType unlockToastType;
     private final Item item;
     private final Block block;
-    private final FoodComponent food;
+    private final FoodComponent foodComponent;
     private final ToolMaterial toolMaterial;
     private final ArmorMaterial equipmentMaterial;
     private final Class<? extends Portal> portal;
@@ -206,8 +206,8 @@ public enum AbilityType {
         this(unlockToastType, hierarchyLayerType, null, null, block, null, null, null, null, null);
     }
 
-    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, FoodComponent food) {
-        this(unlockToastType, hierarchyLayerType, null, food, null, null, null, null, null, null);
+    AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, FoodComponent foodComponent) {
+        this(unlockToastType, hierarchyLayerType, null, foodComponent, null, null, null, null, null, null);
     }
 
     AbilityType(AbilityUnlockedToastType unlockToastType, AbilitiesHierarchyLayerType hierarchyLayerType, ToolMaterial toolMaterial) {
@@ -234,7 +234,7 @@ public enum AbilityType {
         AbilityUnlockedToastType unlockToastType,
         AbilitiesHierarchyLayerType hierarchyLayerType,
         Item item,
-        FoodComponent food,
+        FoodComponent foodComponent,
         Block block,
         ToolMaterial toolMaterial,
         ArmorMaterial equipmentMaterial,
@@ -245,7 +245,7 @@ public enum AbilityType {
         this.hierarchyLayerType = hierarchyLayerType;
         this.unlockToastType = unlockToastType;
         this.item = item;
-        this.food = food;
+        this.foodComponent = foodComponent;
         this.block = block;
         this.toolMaterial = toolMaterial;
         this.equipmentMaterial = equipmentMaterial;
@@ -268,18 +268,18 @@ public enum AbilityType {
 
     public Text buildUnlockProgressMessage(int leftCount) {
         return buildLockedMessagePrefix()
-            .append(AchieveToDoClient.translateModKey("ability.left_to_unlock", leftCount))
+            .append(AchieveToDoClient.translate("ability.left_to_unlock", leftCount))
             .formatted(DesignCodePalette.TEXT_COLOR);
     }
 
     public Text buildPermanentlyLockedMessage() {
         return buildLockedMessagePrefix()
-            .append(AchieveToDoClient.translateModKey("ability.permanently_locked"))
+            .append(AchieveToDoClient.translate("ability.permanently_locked"))
             .formatted(Formatting.RED);
     }
 
     private MutableText buildLockedMessagePrefix() {
-        return AchieveToDoClient.translateModKey("ability." + getName() + ".locked_message")
+        return AchieveToDoClient.translate("ability." + getName() + ".locked_message")
             .append("." + (FabricLoader.getInstance().isModLoaded("multilineactionbar") ? "\n" : " "));
     }
 
@@ -294,9 +294,9 @@ public enum AbilityType {
         if (block != null) {
             return block.asItem();
         }
-        if (food != null) {
+        if (foodComponent != null) {
             return Registries.ITEM.stream()
-                .filter(item -> item.getComponents().get(DataComponentTypes.FOOD) == food)
+                .filter(item -> item.getComponents().get(DataComponentTypes.FOOD) == foodComponent)
                 .findFirst()
                 .orElseThrow();
         }
@@ -366,11 +366,11 @@ public enum AbilityType {
     }
 
     public @NotNull Text getTitle() {
-        return AchieveToDoClient.translateModKey("ability." + getName() + ".name");
+        return AchieveToDoClient.translate("ability." + getName() + ".name");
     }
 
     public @NotNull Text getDescription() {
-        return AchieveToDoClient.translateModKey("ability." + getName() + ".description");
+        return AchieveToDoClient.translate("ability." + getName() + ".description");
     }
 
     public int getChaosPriority() {
@@ -441,9 +441,9 @@ public enum AbilityType {
         if (TextUtils.isEmpty(name)) {
             return null;
         }
-        for (AbilityType ability : values()) {
-            if (ability.name().equalsIgnoreCase(name)) {
-                return ability;
+        for (AbilityType abilityType : values()) {
+            if (abilityType.name().equalsIgnoreCase(name)) {
+                return abilityType;
             }
         }
         return null;
@@ -476,9 +476,9 @@ public enum AbilityType {
         if (foodComponent == null) {
             return null;
         }
-        for (AbilityType ability : values()) {
-            if (foodComponent == ability.food) {
-                return ability;
+        for (AbilityType abilityType : values()) {
+            if (foodComponent == abilityType.foodComponent) {
+                return abilityType;
             }
         }
         return null;
@@ -488,9 +488,9 @@ public enum AbilityType {
         if (toolMaterial == null) {
             return null;
         }
-        for (AbilityType ability : values()) {
-            if (toolMaterial == ability.toolMaterial) {
-                return ability;
+        for (AbilityType abilityType : values()) {
+            if (toolMaterial == abilityType.toolMaterial) {
+                return abilityType;
             }
         }
         return null;
@@ -507,9 +507,9 @@ public enum AbilityType {
             return EQUIP_ELYTRA;
         }
         if (item instanceof ArmorItemExtension armorItemExtension) {
-            for (AbilityType ability : values()) {
-                if (armorItemExtension.achievetodo$getMaterial() == ability.equipmentMaterial) {
-                    return ability;
+            for (AbilityType abilityType : values()) {
+                if (armorItemExtension.achievetodo$getMaterial() == abilityType.equipmentMaterial) {
+                    return abilityType;
                 }
             }
         }
@@ -520,9 +520,9 @@ public enum AbilityType {
         if (portal == null) {
             return null;
         }
-        for (AbilityType ability : values()) {
-            if (portal.getClass() == ability.portal) {
-                return ability;
+        for (AbilityType abilityType : values()) {
+            if (portal.getClass() == abilityType.portal) {
+                return abilityType;
             }
         }
         return null;
@@ -532,9 +532,9 @@ public enum AbilityType {
         if (profession == null) {
             return null;
         }
-        for (AbilityType ability : values()) {
-            if (profession == ability.villager) {
-                return ability;
+        for (AbilityType abilityType : values()) {
+            if (profession == abilityType.villager) {
+                return abilityType;
             }
         }
         return null;
@@ -544,9 +544,9 @@ public enum AbilityType {
         if (landmarkType == null) {
             return null;
         }
-        for (AbilityType ability : values()) {
-            if (landmarkType == ability.landmarkType) {
-                return ability;
+        for (AbilityType abilityType : values()) {
+            if (landmarkType == abilityType.landmarkType) {
+                return abilityType;
             }
         }
         return null;

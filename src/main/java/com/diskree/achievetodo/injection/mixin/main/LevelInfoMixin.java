@@ -21,10 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Mixin(LevelInfo.class)
 public abstract class LevelInfoMixin implements LevelInfoExtension {
@@ -45,7 +43,7 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
     @Override
     public Map<AbilityType, Integer> achievetodo$getAbilitiesConfiguration(long seed) {
         if (TextUtils.isEmpty(configName)) {
-            throw new IllegalStateException("Cannot read configuration name from the level.dat!");
+            throw new IllegalStateException("Configuration name missing from level.dat!");
         }
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve(BuildConfig.MOD_ID);
         if (!Files.exists(configDir)) {
@@ -89,17 +87,17 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
                     case HARD -> Progressions.getHardProgression();
                     case CHAOS -> ChaosProgressionGenerator.generateChaosProgression(seed);
                 };
-                for (AbilityType ability : AbilityType.values()) {
-                    Integer requiredAdvancementsCount = progression.get(ability);
-                    if (requiredAdvancementsCount == null) {
-                        throw new RuntimeException("Ability " + ability + " is not exist in selected progression: "
-                            + progressionModeType);
+                for (AbilityType abilityType : AbilityType.values()) {
+                    Integer requiredCount = progression.get(abilityType);
+                    if (requiredCount == null) {
+                        throw new RuntimeException("Ability " + abilityType +
+                            " is missing in progression mode: " + progressionModeType.getName());
                     }
-                    abilitiesConfiguration.put(ability, requiredAdvancementsCount);
+                    abilitiesConfiguration.put(abilityType, requiredCount);
                     configTomlContents
-                        .append(ability.getName())
+                        .append(abilityType.getName())
                         .append(" = ")
-                        .append(requiredAdvancementsCount)
+                        .append(requiredCount)
                         .append("\n");
                 }
                 try {
@@ -123,17 +121,17 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
             }
         }
         for (String abilityName : abilitiesMap.keySet()) {
-            AbilityType ability = AbilityType.findByName(abilityName);
-            if (ability != null) {
-                int requiredAdvancementsCount = Math.toIntExact(((Long) abilitiesMap.get(abilityName)));
-                if (requiredAdvancementsCount > Constants.TOTAL_ADVANCEMENTS_COUNT) {
-                    requiredAdvancementsCount = Constants.TOTAL_ADVANCEMENTS_COUNT;
+            AbilityType abilityType = AbilityType.findByName(abilityName);
+            if (abilityType != null) {
+                int requiredCount = Math.toIntExact(((Long) abilitiesMap.get(abilityName)));
+                if (requiredCount > Constants.TOTAL_ADVANCEMENTS_COUNT) {
+                    requiredCount = Constants.TOTAL_ADVANCEMENTS_COUNT;
                 }
-                abilitiesConfiguration.put(ability, requiredAdvancementsCount);
+                abilitiesConfiguration.put(abilityType, requiredCount);
             }
         }
-        for (AbilityType ability : AbilityType.values()) {
-            abilitiesConfiguration.putIfAbsent(ability, 0);
+        for (AbilityType abilityType : AbilityType.values()) {
+            abilitiesConfiguration.putIfAbsent(abilityType, 0);
         }
         return abilitiesConfiguration;
     }
@@ -142,7 +140,10 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
         method = "fromDynamic",
         at = @At("RETURN")
     )
-    private static LevelInfo readConfigName(LevelInfo levelInfo, @Local(argsOnly = true) Dynamic<?> dynamic) {
+    private static LevelInfo readConfigName(
+        LevelInfo levelInfo,
+        @Local(argsOnly = true) Dynamic<?> dynamic
+    ) {
         if (levelInfo instanceof LevelInfoExtension levelInfoExtension) {
             levelInfoExtension.achievetodo$setConfigName(dynamic.get(Constants.NbtKey.LEVEL_CONFIG_NAME).asString(""));
         }

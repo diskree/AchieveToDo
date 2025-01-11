@@ -1,13 +1,12 @@
 package com.diskree.achievetodo.networking.s2c;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.DimensionType;
 import com.diskree.achievetodo.ability.DimensionalBlockBox;
 import com.diskree.achievetodo.ability.LandmarkType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +17,7 @@ public record SyncResizedLandmarkPayload(
 ) implements CustomPayload {
 
     public static final Id<SyncResizedLandmarkPayload> ID =
-        new Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_resized_landmark"));
+        new Id<>(AchieveToDoMod.getIdentifier("sync_resized_landmark"));
 
     public static final PacketCodec<PacketByteBuf, SyncResizedLandmarkPayload> CODEC =
         CustomPayload.codecOf(SyncResizedLandmarkPayload::write, SyncResizedLandmarkPayload::new);

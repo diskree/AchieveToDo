@@ -62,12 +62,12 @@ public class ExternalPackDownloader extends ConfirmScreen {
     ) {
         super(
             null,
-            AchieveToDoClient.translateModKey("downloader.title_prefix")
+            AchieveToDoClient.translate("downloader.title_prefix")
                 .append(
                     Text.literal(pack.getTitle())
                         .formatted(pack.getColor(), Formatting.ITALIC)
                 ),
-            AchieveToDoClient.translateModKey(
+            AchieveToDoClient.translate(
                     isOutdatedVersion ? "downloader.reason.outdated" : pack.getReasonKey()
                 )
                 .append(ScreenTexts.LINE_BREAK)
@@ -76,7 +76,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
                 .append(ScreenTexts.LINE_BREAK)
                 .append(ScreenTexts.LINE_BREAK)
                 .append(
-                    AchieveToDoClient.translateModKey(
+                    AchieveToDoClient.translate(
                         pack.isInGameDownloadSupported() ? "downloader.automatically_info" : "downloader.manually_info"
                     ).formatted(DesignCodePalette.TEXT_COLOR)
                 )
@@ -101,7 +101,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
 
         downloadButton = addDrawableChild(
             ButtonWidget.builder(
-                    AchieveToDoClient.translateModKey("downloader.download"),
+                    AchieveToDoClient.translate("downloader.download"),
                     button -> {
                         if (inGameDownloadSupported) {
                             backButton.setMessage(ScreenTexts.CANCEL);
@@ -113,7 +113,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
                     }
                 )
                 .tooltip(inGameDownloadSupported ? null :
-                    Tooltip.of(AchieveToDoClient.translateModKey("downloader.download.tooltip"))
+                    Tooltip.of(AchieveToDoClient.translate("downloader.download.tooltip"))
                 )
                 .dimensions(
                     selectFileButtonX - BUTTON_MARGIN - BUTTON_WIDTH,
@@ -127,7 +127,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
         if (!inGameDownloadSupported) {
             addDrawableChild(
                 ButtonWidget.builder(
-                        AchieveToDoClient.translateModKey("downloader.select_file"),
+                        AchieveToDoClient.translate("downloader.select_file"),
                         button -> {
                             try (MemoryStack stack = MemoryStack.stackPush()) {
                                 PointerBuffer filters = stack.mallocPointer(1);
@@ -135,7 +135,7 @@ public class ExternalPackDownloader extends ConfirmScreen {
 
                                 @SuppressWarnings("DataFlowIssue")
                                 String selectedFilePath = TinyFileDialogs.tinyfd_openFileDialog(
-                                    AchieveToDoClient.translateModKey("downloader.select_file").getString(),
+                                    AchieveToDoClient.translate("downloader.select_file").getString(),
                                     System.getProperty("user.home"),
                                     filters,
                                     null,
@@ -169,10 +169,10 @@ public class ExternalPackDownloader extends ConfirmScreen {
 
         addDrawableChild(
             ButtonWidget.builder(
-                    AchieveToDoClient.translateModKey("downloader.learn_more"),
+                    AchieveToDoClient.translate("downloader.learn_more"),
                     button -> Util.getOperatingSystem().open(externalPack.getPageUrl())
                 )
-                .tooltip(Tooltip.of(AchieveToDoClient.translateModKey("downloader.learn_more.tooltip")))
+                .tooltip(Tooltip.of(AchieveToDoClient.translate("downloader.learn_more.tooltip")))
                 .dimensions(
                     selectFileButtonX + BUTTON_WIDTH + BUTTON_MARGIN,
                     y + BUTTON_HEIGHT + BUTTON_MARGIN,

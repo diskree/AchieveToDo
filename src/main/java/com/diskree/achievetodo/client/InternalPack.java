@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.client;
 
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.BuildConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +22,7 @@ public enum InternalPack {
     BACAP_COOPERATIVE_MODE;
 
     public @NotNull String getDatapackName() {
-        return Identifier.of(BuildConfig.MOD_ID, getName()).toString();
+        return AchieveToDoMod.getIdentifier(getName()).toString();
     }
 
     private @NotNull String getName() {

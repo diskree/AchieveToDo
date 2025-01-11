@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.client.gui;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,11 +37,11 @@ public enum AdvancementsTab {
     CHALLENGES;
 
     public @NotNull Identifier getLockedTabId() {
-        return Identifier.of(BuildConfig.MOD_ID + "_locked_tab", getName() + "/root");
+        return AchieveToDoMod.getIdentifier("locked_tab_" + getName() + "/root");
     }
 
     public @NotNull Text getLockedTabTooltipText() {
-        return AchieveToDoClient.translateModKey("locked_tab_tooltip." + getName())
+        return AchieveToDoClient.translate("locked_tab_tooltip." + getName())
             .formatted(Formatting.ITALIC)
             .formatted(Formatting.GRAY);
     }

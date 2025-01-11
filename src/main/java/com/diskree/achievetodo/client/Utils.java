@@ -49,4 +49,8 @@ public class Utils {
         int maxZ = (int) Math.ceil(box.maxZ) - 1;
         return new BlockBox(minX, minY, minZ, maxX, maxY, maxZ);
     }
+
+    public static @NotNull String buildModrinthModUrl(String slug) {
+        return "https://modrinth.com/mod/" + slug;
+    }
 }

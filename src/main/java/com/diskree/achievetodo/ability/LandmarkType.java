@@ -100,9 +100,9 @@ public enum LandmarkType {
     private final Feature<?> feature;
 
     static {
-        for (LandmarkType landmark : values()) {
-            if (landmark.isFeature()) {
-                FEATURES.put(landmark.getFeature(), landmark);
+        for (LandmarkType landmarkType : values()) {
+            if (landmarkType.isFeature()) {
+                FEATURES.put(landmarkType.getFeature(), landmarkType);
             }
         }
     }

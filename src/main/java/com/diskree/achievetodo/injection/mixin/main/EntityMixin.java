@@ -78,22 +78,22 @@ public class EntityMixin {
         }
         World currentWorld = enderPearl != null ? enderPearl.getWorld() : teleportEntity.getWorld();
         RegistryKey<World> currentWorldRegistryKey = currentWorld.getRegistryKey();
-        AbilityType ability = AbilityType.findPortalTeleportAbility(portal);
-        if (currentWorldRegistryKey == World.NETHER && ability == AbilityType.ENTER_NETHER) {
+        AbilityType abilityType = AbilityType.findPortalTeleportAbility(portal);
+        if (currentWorldRegistryKey == World.NETHER && abilityType == AbilityType.ENTER_NETHER) {
             return;
         }
         if (currentWorldRegistryKey == World.END) {
-            if (ability == AbilityType.ENTER_END) {
+            if (abilityType == AbilityType.ENTER_END) {
                 return;
             }
-            if (ability == AbilityType.TELEPORT_OUTER_ISLANDS && !isEndGatewayOnCentralIsland(pos)) {
+            if (abilityType == AbilityType.TELEPORT_OUTER_ISLANDS && !isEndGatewayOnCentralIsland(pos)) {
                 return;
             }
         }
 
         if (teleportEntity instanceof PlayerEntity playerEntity) {
             if (AchieveToDoMod.isTargetInLockedLandmark(playerEntity, currentWorld, pos) ||
-                AchieveToDoMod.isAbilityLocked(playerEntity, ability)
+                AchieveToDoMod.isAbilityLocked(playerEntity, abilityType)
             ) {
                 if (enderPearl != null) {
                     enderPearl.remove(Entity.RemovalReason.DISCARDED);
@@ -106,14 +106,14 @@ public class EntityMixin {
             return;
         }
         if (teleportEntity.getControllingPassenger() instanceof PlayerEntity controllingPlayer &&
-            AchieveToDoMod.isAbilityLocked(controllingPlayer, ability)
+            AchieveToDoMod.isAbilityLocked(controllingPlayer, abilityType)
         ) {
             ci.cancel();
             return;
         }
         for (Entity passengerEntity : teleportEntity.getPassengerList()) {
             if (passengerEntity instanceof PlayerEntity passenger &&
-                AchieveToDoMod.isAbilityLocked(passenger, ability)
+                AchieveToDoMod.isAbilityLocked(passenger, abilityType)
             ) {
                 passenger.stopRiding();
             }

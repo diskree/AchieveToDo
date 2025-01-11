@@ -48,8 +48,8 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
 
     @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     private void createFunctions(DataWriter dataWriter) throws IOException {
-        for (AbilityType ability : AbilityType.values()) {
-            String function = buildFunction(ability);
+        for (AbilityType abilityType : AbilityType.values()) {
+            String function = buildFunction(abilityType);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             HashingOutputStream hashingOutputStream = new HashingOutputStream(Hashing.sha1(), byteArrayOutputStream);
             try (BufferedWriter bufferedWriter = new BufferedWriter(
@@ -59,7 +59,7 @@ public class AbilityUnlockMessagesGenerator implements DataProvider {
             }
             Path functionsPath = dataOutput
                 .getResolver(DataOutput.OutputType.DATA_PACK, "function")
-                .resolve(AbilityAdvancementsGenerator.buildAdvancementId(ability), "mcfunction");
+                .resolve(AbilityAdvancementsGenerator.buildAdvancementId(abilityType), "mcfunction");
             dataWriter.write(functionsPath, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
         }
     }

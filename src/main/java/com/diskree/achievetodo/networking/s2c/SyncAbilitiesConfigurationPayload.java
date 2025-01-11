@@ -1,11 +1,10 @@
 package com.diskree.achievetodo.networking.s2c;
 
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
-import com.diskree.achievetodo.BuildConfig;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -16,7 +15,7 @@ public record SyncAbilitiesConfigurationPayload(
 ) implements CustomPayload {
 
     public static final Id<SyncAbilitiesConfigurationPayload> ID =
-        new CustomPayload.Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_abilities_configuration"));
+        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("sync_abilities_configuration"));
 
     public static final PacketCodec<PacketByteBuf, SyncAbilitiesConfigurationPayload> CODEC =
         CustomPayload.codecOf(SyncAbilitiesConfigurationPayload::write, SyncAbilitiesConfigurationPayload::new);

@@ -1,6 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.client.AchieveToDoClient;
+import com.diskree.achievetodo.client.Utils;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.ContextChain;
@@ -16,6 +17,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Locale;
 
 @Mixin(CommandManager.class)
 public class CommandManagerMixin {
@@ -37,18 +40,19 @@ public class CommandManagerMixin {
         @NotNull CallbackInfoReturnable<ContextChain<ServerCommandSource>> cir,
         @Local @NotNull CommandSyntaxException commandSyntaxException
     ) {
-        if (command.startsWith("advancementssearch ")) {
+        String advancementsSearchModName = "AdvancementsSearch";
+        if (command.startsWith(advancementsSearchModName.toLowerCase(Locale.ROOT) + " ")) {
             ServerPlayerEntity player = source.getPlayer();
             if (player != null) {
                 player.sendMessage(
-                    AchieveToDoClient.translateModKey("suggest_install_advancements_search_mod")
-                        .append(Text.literal("AdvancementsSearch").styled(style ->
-                            style
-                                .withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/advancementssearch")
-                                )
-                                .withUnderline(true)
-                                .withColor(Formatting.GOLD)
+                    AchieveToDoClient.translate("suggest_install_advancements_search_mod")
+                        .append(Text.literal(advancementsSearchModName).styled(style -> style
+                            .withClickEvent(new ClickEvent(
+                                ClickEvent.Action.OPEN_URL,
+                                Utils.buildModrinthModUrl(advancementsSearchModName))
+                            )
+                            .withUnderline(true)
+                            .withColor(Formatting.GOLD)
                         ))
                 );
             }

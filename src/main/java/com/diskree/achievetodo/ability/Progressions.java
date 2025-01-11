@@ -93,10 +93,10 @@ public class Progressions {
         int spacing,
         AbilityType @NotNull ... abilityTypes
     ) {
-        int requiredAdvancementsCount = config.isEmpty() ? 0 : Collections.max(config.values());
+        int requiredCount = config.isEmpty() ? 0 : Collections.max(config.values());
         for (AbilityType abilityType : abilityTypes) {
-            requiredAdvancementsCount += spacing;
-            config.put(abilityType, requiredAdvancementsCount);
+            requiredCount += spacing;
+            config.put(abilityType, requiredCount);
         }
     }
 }

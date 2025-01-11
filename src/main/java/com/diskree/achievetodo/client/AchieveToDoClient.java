@@ -30,10 +30,12 @@ import java.util.stream.Collectors;
 
 public class AchieveToDoClient implements ClientModInitializer {
 
-    private static Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
+    private static Map<AbilityType, Integer> abilitiesConfiguration;
     private static int obtainedAdvancementsCount = Integer.MIN_VALUE;
+
     private static final Map<LandmarkType, List<DimensionalBlockBox>> lockedLandmarkBlockBoxes = new HashMap<>();
     private static List<LockedLandmarkBox> lockedLandmarksBoxes = new ArrayList<>();
+
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
     private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
 
@@ -44,7 +46,7 @@ public class AchieveToDoClient implements ClientModInitializer {
     }
 
     public static boolean isNotReady() {
-        return abilitiesConfiguration.isEmpty() || obtainedAdvancementsCount == Integer.MIN_VALUE;
+        return abilitiesConfiguration == null || obtainedAdvancementsCount == Integer.MIN_VALUE;
     }
 
     public static int getObtainedAdvancementsCount() {
@@ -106,8 +108,8 @@ public class AchieveToDoClient implements ClientModInitializer {
         return entitiesCount;
     }
 
-    public static @NotNull MutableText translateModKey(String key, Object... args) {
-        return Text.translatable(BuildConfig.MOD_ID + "." + key, args);
+    public static @NotNull MutableText translate(String keySuffix, Object... args) {
+        return Text.translatable(BuildConfig.MOD_ID + "." + keySuffix, args);
     }
 
     @Override
@@ -132,7 +134,7 @@ public class AchieveToDoClient implements ClientModInitializer {
                 calculateLockedLandmarksBoxes();
             })
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncAdvancementsCountPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(SyncObtainedAdvancementsCountPayload.ID, (payload, context) ->
             context.client().execute(() -> obtainedAdvancementsCount = payload.count())
         );
         ClientPlayNetworking.registerGlobalReceiver(SyncLockedLandmarksPayload.ID, (payload, context) ->
@@ -165,8 +167,8 @@ public class AchieveToDoClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(SyncLandmarkTypesUnlockedPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 boolean isChanged = false;
-                for (LandmarkType landmark : payload.landmarks()) {
-                    if (lockedLandmarkBlockBoxes.remove(landmark) != null) {
+                for (LandmarkType landmarkType : payload.landmarks()) {
+                    if (lockedLandmarkBlockBoxes.remove(landmarkType) != null) {
                         isChanged = true;
                     }
                 }
@@ -221,21 +223,21 @@ public class AchieveToDoClient implements ClientModInitializer {
             AbilityType abilityType = AbilityType.findByLandmarkType(landmarkType);
             AbilityType otherAbilityType = AbilityType.findByLandmarkType(otherLandmarkType);
 
-            int requiredAdvancementsCount = abilitiesConfiguration.get(abilityType);
-            int otherRequiredAdvancementsCount = abilitiesConfiguration.get(otherAbilityType);
-            if (requiredAdvancementsCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
-                requiredAdvancementsCount = Integer.MIN_VALUE;
+            int requiredCount = abilitiesConfiguration.get(abilityType);
+            int otherRequiredCount = abilitiesConfiguration.get(otherAbilityType);
+            if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
+                requiredCount = Integer.MIN_VALUE;
             }
-            if (otherRequiredAdvancementsCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
-                otherRequiredAdvancementsCount = Integer.MIN_VALUE;
+            if (otherRequiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
+                otherRequiredCount = Integer.MIN_VALUE;
             }
-            if (requiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
-                requiredAdvancementsCount = Integer.MAX_VALUE;
+            if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
+                requiredCount = Integer.MAX_VALUE;
             }
-            if (otherRequiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
-                otherRequiredAdvancementsCount = Integer.MAX_VALUE;
+            if (otherRequiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
+                otherRequiredCount = Integer.MAX_VALUE;
             }
-            compared = Integer.compare(otherRequiredAdvancementsCount, requiredAdvancementsCount);
+            compared = Integer.compare(otherRequiredCount, requiredCount);
             if (compared != 0) {
                 return compared;
             }
@@ -256,19 +258,19 @@ public class AchieveToDoClient implements ClientModInitializer {
         if (isNotReady()) {
             return true;
         }
-        int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
-        if (requiredAdvancementsCount == 0 ||
-            requiredAdvancementsCount > 0 && obtainedAdvancementsCount >= requiredAdvancementsCount
+        int requiredCount = abilitiesConfiguration.get(ability);
+        if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG ||
+            requiredCount != Constants.Progression.PERMANENTLY_LOCKED_FLAG && obtainedAdvancementsCount >= requiredCount
         ) {
             return false;
         }
         if (!checkOnly) {
             Text lockedMessageText;
-            if (requiredAdvancementsCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
+            if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 lockedMessageText = ability.buildPermanentlyLockedMessage();
             } else {
-                int leftAdvancementsCount = requiredAdvancementsCount - obtainedAdvancementsCount;
-                lockedMessageText = ability.buildUnlockProgressMessage(leftAdvancementsCount);
+                int leftCount = requiredCount - obtainedAdvancementsCount;
+                lockedMessageText = ability.buildUnlockProgressMessage(leftCount);
             }
             player.sendMessage(lockedMessageText, true);
             ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
@@ -293,14 +295,14 @@ public class AchieveToDoClient implements ClientModInitializer {
             Map<AbilitiesHierarchyLayerType, List<AbilityType>> abilitiesByCategory = Arrays
                 .stream(AbilityType.values())
                 .sorted(Comparator.comparingInt((AbilityType ability) -> {
-                        int requiredAdvancementsCount = abilitiesConfiguration.get(ability);
-                        if (requiredAdvancementsCount == 0) {
+                        int requiredCount = abilitiesConfiguration.get(ability);
+                        if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
                             return 0;
                         }
-                        if (requiredAdvancementsCount > 0) {
-                            return 1;
+                        if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
+                            return 2;
                         }
-                        return 2;
+                        return 1;
                     })
                     .thenComparingInt(abilitiesConfiguration::get)
                     .thenComparing(Enum::ordinal))

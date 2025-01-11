@@ -1,17 +1,16 @@
 package com.diskree.achievetodo.networking.s2c;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.tracking.TrackedStatType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public record SyncStatPayload(TrackedStatType statType, int progress) implements CustomPayload {
 
     public static final Id<SyncStatPayload> ID =
-        new Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_stat"));
+        new Id<>(AchieveToDoMod.getIdentifier("sync_stat"));
 
     public static final PacketCodec<PacketByteBuf, SyncStatPayload> CODEC =
         CustomPayload.codecOf(SyncStatPayload::write, SyncStatPayload::new);

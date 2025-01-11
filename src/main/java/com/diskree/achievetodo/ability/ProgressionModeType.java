@@ -43,13 +43,13 @@ public enum ProgressionModeType {
 
     public @NotNull Text getDisplayedText() {
         if (this == CHAOS) {
-            return AchieveToDoClient.translateModKey("world_creation_tab.progression.chaos");
+            return AchieveToDoClient.translate("world_creation_tab.progression.chaos");
         }
         return Text.translatable("options.difficulty." + getName());
     }
 
     public @NotNull Text getTooltipText() {
-        return AchieveToDoClient.translateModKey("world_creation_tab.progression." + getName() + ".tooltip");
+        return AchieveToDoClient.translate("world_creation_tab.progression." + getName() + ".tooltip");
     }
 
     public @NotNull String getName() {

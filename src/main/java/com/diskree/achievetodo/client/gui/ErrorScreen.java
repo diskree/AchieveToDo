@@ -14,9 +14,9 @@ public class ErrorScreen extends NoticeScreen {
     public ErrorScreen(Screen parent, String messageKey) {
         super(
             () -> MinecraftClient.getInstance().setScreen(parent),
-            AchieveToDoClient.translateModKey("error.title")
+            AchieveToDoClient.translate("error.title")
                 .formatted(Formatting.RED),
-            AchieveToDoClient.translateModKey(messageKey)
+            AchieveToDoClient.translate(messageKey)
         );
     }
 }

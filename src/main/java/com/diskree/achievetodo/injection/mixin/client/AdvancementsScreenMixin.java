@@ -1,6 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.client.gui.AdvancementsTab;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -33,7 +33,7 @@ import java.util.Optional;
 public abstract class AdvancementsScreenMixin extends Screen {
 
     @Unique
-    private final Identifier LOCKED_TAB_ICON = Identifier.of(BuildConfig.MOD_ID, "locked_tab_icon");
+    private final Identifier LOCKED_TAB_ICON = AchieveToDoMod.getIdentifier("locked_tab_icon");
 
     @Shadow
     @Final

@@ -1,17 +1,16 @@
 package com.diskree.achievetodo.networking.s2c;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public record SyncScorePayload(TrackedScoreType progressType, int progress) implements CustomPayload {
 
     public static final Id<SyncScorePayload> ID =
-        new Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_score"));
+        new Id<>(AchieveToDoMod.getIdentifier("sync_score"));
 
     public static final PacketCodec<PacketByteBuf, SyncScorePayload> CODEC =
         CustomPayload.codecOf(SyncScorePayload::write, SyncScorePayload::new);

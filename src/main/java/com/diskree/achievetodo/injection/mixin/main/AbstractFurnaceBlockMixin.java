@@ -38,13 +38,13 @@ public class AbstractFurnaceBlockMixin {
             return;
         }
         AbstractFurnaceBlock abstractFurnaceBlock = (AbstractFurnaceBlock) (Object) this;
-        AbilityType ability = switch (abstractFurnaceBlock) {
+        AbilityType abilityType = switch (abstractFurnaceBlock) {
             case FurnaceBlock ignored -> AbilityType.OPEN_FURNACE;
             case SmokerBlock ignored -> AbilityType.OPEN_SMOKER;
             case BlastFurnaceBlock ignored -> AbilityType.OPEN_BLAST_FURNACE;
             default -> null;
         };
-        if (AchieveToDoMod.isAbilityLocked(player, ability)) {
+        if (AchieveToDoMod.isAbilityLocked(player, abilityType)) {
             cir.setReturnValue(ActionResult.PASS);
         }
     }

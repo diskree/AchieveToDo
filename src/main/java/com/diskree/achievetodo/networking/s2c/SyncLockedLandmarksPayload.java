@@ -1,13 +1,12 @@
 package com.diskree.achievetodo.networking.s2c;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.DimensionType;
 import com.diskree.achievetodo.ability.DimensionalBlockBox;
 import com.diskree.achievetodo.ability.LandmarkType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +21,7 @@ public record SyncLockedLandmarksPayload(
 ) implements CustomPayload {
 
     public static final CustomPayload.Id<SyncLockedLandmarksPayload> ID =
-        new CustomPayload.Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_locked_landmarks"));
+        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("sync_locked_landmarks"));
 
     public static final PacketCodec<PacketByteBuf, SyncLockedLandmarksPayload> CODEC =
         CustomPayload.codecOf(SyncLockedLandmarksPayload::write, SyncLockedLandmarksPayload::new);
@@ -63,7 +62,7 @@ public record SyncLockedLandmarksPayload(
         int mapSize = buf.readInt();
         Map<LandmarkType, List<DimensionalBlockBox>> map = new HashMap<>(mapSize);
         for (int mapIndex = 0; mapIndex < mapSize; mapIndex++) {
-            LandmarkType landmark = buf.readEnumConstant(LandmarkType.class);
+            LandmarkType landmarkType = buf.readEnumConstant(LandmarkType.class);
             int listSize = buf.readInt();
             List<DimensionalBlockBox> dimensionalBlockBoxes = new ArrayList<>(listSize);
             for (int listIndex = 0; listIndex < listSize; listIndex++) {
@@ -78,7 +77,7 @@ public record SyncLockedLandmarksPayload(
                 );
                 dimensionalBlockBoxes.add(new DimensionalBlockBox(dimension, blockBox));
             }
-            map.put(landmark, dimensionalBlockBoxes);
+            map.put(landmarkType, dimensionalBlockBoxes);
         }
         return map;
     }

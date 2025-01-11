@@ -97,17 +97,17 @@ public abstract class AdvancementTabMixin {
         AdvancementDisplay display,
         @NotNull Operation<AdvancementWidget> original
     ) {
-        AbilityType ability = null;
+        AbilityType abilityType = null;
         boolean isFirstInRow = false;
         boolean shouldSkipVanillaBehavior = false;
         if (AdvancementsTab.findByAdvancement(root) == AdvancementsTab.ABILITIES) {
-            ability = AbilityType.findByAdvancement(advancement);
-            if (ability != null) {
+            abilityType = AbilityType.findByAdvancement(advancement);
+            if (abilityType != null) {
                 List<List<AbilityType>> rows = AchieveToDoClient.getAbilityRows();
                 if (rows != null) {
                     for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
                         List<AbilityType> row = rows.get(rowIndex);
-                        if (ability == row.getFirst()) {
+                        if (abilityType == row.getFirst()) {
                             isFirstInRow = true;
                             display.setPos(display.getX(), rowIndex);
                             break;
@@ -116,7 +116,7 @@ public abstract class AdvancementTabMixin {
                     if (!isFirstInRow) {
                         for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
                             List<AbilityType> row = rows.get(rowIndex);
-                            int columnIndex = row.indexOf(ability);
+                            int columnIndex = row.indexOf(abilityType);
                             if (columnIndex != -1) {
                                 display.setPos(columnIndex + 1, rowIndex);
                                 break;
@@ -128,9 +128,9 @@ public abstract class AdvancementTabMixin {
             }
         }
         AdvancementWidget advancementWidget = original.call(tab, client, advancement, display);
-        if (ability != null) {
+        if (abilityType != null) {
             if (isFirstInRow || shouldSkipVanillaBehavior) {
-                pendingAbilityWidgets.put(ability, advancementWidget);
+                pendingAbilityWidgets.put(abilityType, advancementWidget);
             }
             if (pendingAbilityWidgets.size() == AbilityType.values().length) {
                 List<List<AbilityType>> rows = AchieveToDoClient.getAbilityRows();

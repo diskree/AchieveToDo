@@ -1,11 +1,10 @@
 package com.diskree.achievetodo.networking.s2c;
 
-import com.diskree.achievetodo.BuildConfig;
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.LandmarkType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import java.util.List;
 public record SyncLandmarkTypesUnlockedPayload(List<LandmarkType> landmarks) implements CustomPayload {
 
     public static final Id<SyncLandmarkTypesUnlockedPayload> ID =
-        new Id<>(Identifier.of(BuildConfig.MOD_ID, "sync_landmark_types_unlocked"));
+        new Id<>(AchieveToDoMod.getIdentifier("sync_landmark_types_unlocked"));
 
     public static final PacketCodec<PacketByteBuf, SyncLandmarkTypesUnlockedPayload> CODEC =
         CustomPayload.codecOf(SyncLandmarkTypesUnlockedPayload::write, SyncLandmarkTypesUnlockedPayload::new);
@@ -25,8 +24,8 @@ public record SyncLandmarkTypesUnlockedPayload(List<LandmarkType> landmarks) imp
 
     private void write(@NotNull PacketByteBuf buf) {
         buf.writeInt(landmarks.size());
-        for (LandmarkType landmark : landmarks) {
-            buf.writeEnumConstant(landmark);
+        for (LandmarkType landmarkType : landmarks) {
+            buf.writeEnumConstant(landmarkType);
         }
     }
 

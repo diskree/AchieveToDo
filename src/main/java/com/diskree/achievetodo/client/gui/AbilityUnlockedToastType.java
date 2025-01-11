@@ -20,7 +20,7 @@ public enum AbilityUnlockedToastType {
     LANDMARK;
 
     public @NotNull Text getToastTitle() {
-        return AchieveToDoClient.translateModKey("ability_unlocked_toast." + getName())
+        return AchieveToDoClient.translate("ability_unlocked_toast." + getName())
             .append("!");
     }
 

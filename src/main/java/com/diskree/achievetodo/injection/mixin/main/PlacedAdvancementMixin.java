@@ -85,17 +85,6 @@ public abstract class PlacedAdvancementMixin {
             Identifier advancementId = advancementEntry.id();
             if (customChildrenOrderMap.containsKey(advancementId.toString())) {
                 List<String> customChildrenIds = customChildrenOrderMap.get(advancementId.toString());
-                List<String> realChildrenIds = children.stream()
-                    .map(child -> child.getAdvancementEntry().id().toString())
-                    .toList();
-                for (String realChildId : realChildrenIds) {
-                    if (!customChildrenIds.contains(realChildId)) {
-                        AchieveToDoMod.logger.error("Child ID '{}' is missing in customChildrenIds for parent '{}'",
-                            realChildId, advancementId
-                        );
-                        return;
-                    }
-                }
                 sortedChildren.sort(Comparator.comparingInt(child ->
                     customChildrenIds.indexOf(child.getAdvancementEntry().id().toString())
                 ));

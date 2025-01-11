@@ -38,7 +38,7 @@ public class MinecraftClientMixin {
             if (AchieveToDoClient.isNotReady()) {
                 if (player != null) {
                     player.sendMessage(
-                        AchieveToDoClient.translateModKey("error.not_ready_yet")
+                        AchieveToDoClient.translate("error.not_ready_yet")
                             .formatted(Formatting.RED),
                         true
                     );
