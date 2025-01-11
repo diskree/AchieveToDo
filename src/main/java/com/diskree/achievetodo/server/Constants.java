@@ -31,11 +31,12 @@ public class Constants {
         public static final String SERVER_CONFIG_PROPERTY_NAME = BuildConfig.MOD_ID + "-" + "configName";
 
         public static final String VERSION = "version";
-        public static final String ABILITIES_TABLE = "abilities";
+        public static final String ABILITY_TABLE = "abilities";
     }
 
     public static class FileExtension {
         public static final String TOML = ".toml";
+        public static final String JSON = ".json";
         public static final String ZIP = ".zip";
     }
 }

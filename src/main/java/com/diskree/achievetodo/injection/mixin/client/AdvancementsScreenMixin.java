@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.client.gui.AdvancementsTab;
+import com.diskree.achievetodo.client.gui.AdvancementsTabType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -33,7 +33,8 @@ import java.util.Optional;
 public abstract class AdvancementsScreenMixin extends Screen {
 
     @Unique
-    private final Identifier LOCKED_TAB_ICON = AchieveToDoMod.getIdentifier("locked_tab_icon");
+    private final Identifier ADVANCEMENTS_TAB_MYSTIFIED_MASK_TEXTURE =
+        AchieveToDoMod.getIdentifier("advancements_tab_mystified_mask");
 
     @Shadow
     @Final
@@ -42,8 +43,12 @@ public abstract class AdvancementsScreenMixin extends Screen {
     @Unique
     private boolean isLockedTab(@NotNull AdvancementTab tab) {
         Identifier advancementId = tab.getRoot().getAdvancementEntry().id();
-        AdvancementsTab advancementsTab = AdvancementsTab.findByAdvancement(advancementId);
-        return advancementsTab != null && advancementsTab.getLockedTabId().equals(advancementId);
+        for (AdvancementsTabType advancementsTabType : AdvancementsTabType.values()) {
+            if (advancementsTabType != null && advancementsTabType.getMystifiedTabId().equals(advancementId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public AdvancementsScreenMixin() {
@@ -63,10 +68,10 @@ public abstract class AdvancementsScreenMixin extends Screen {
             return;
         }
         AdvancementsScreen advancementsScreen = (AdvancementsScreen) (Object) this;
-        for (AdvancementsTab tab : AdvancementsTab.values()) {
+        for (AdvancementsTabType advancementsTabType : AdvancementsTabType.values()) {
             AdvancementDisplay advancementDisplay = new AdvancementDisplay(
                 new ItemStack(Items.AIR),
-                tab.getLockedTabTooltipText(),
+                advancementsTabType.getMystifiedTabTooltipText(),
                 Text.empty(),
                 Optional.empty(),
                 AdvancementFrame.TASK,
@@ -78,7 +83,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
                 Advancement.Builder
                     .createUntelemetered()
                     .display(advancementDisplay)
-                    .build(tab.getLockedTabId()),
+                    .build(advancementsTabType.getMystifiedTabId()),
                 null
             );
             tabs.put(
@@ -86,8 +91,8 @@ public abstract class AdvancementsScreenMixin extends Screen {
                 new AdvancementTab(
                     client,
                     advancementsScreen,
-                    tab.getPosition(),
-                    tab.getOrder(),
+                    advancementsTabType.getPosition(),
+                    advancementsTabType.getOrder(),
                     placedAdvancement,
                     advancementDisplay
                 )
@@ -100,10 +105,10 @@ public abstract class AdvancementsScreenMixin extends Screen {
         at = @At(value = "HEAD")
     )
     public void removeLockedTab(@NotNull PlacedAdvancement root, CallbackInfo ci) {
-        AdvancementsTab tab = AdvancementsTab.findByAdvancement(root);
+        AdvancementsTabType tab = AdvancementsTabType.findByAdvancement(root);
         AdvancementEntry lockedRoot = null;
         for (AdvancementEntry advancementEntry : tabs.keySet()) {
-            if (tab != null && tab.getLockedTabId().equals(advancementEntry.id())) {
+            if (tab != null && tab.getMystifiedTabId().equals(advancementEntry.id())) {
                 lockedRoot = advancementEntry;
                 break;
             }
@@ -125,7 +130,7 @@ public abstract class AdvancementsScreenMixin extends Screen {
         @NotNull Operation<Collection<AdvancementTab>> original
     ) {
         return original.call(tabs).stream().filter(tab ->
-            AdvancementsTab.findByAdvancement(tab.getRoot()) == AdvancementsTab.ABILITIES
+            AdvancementsTabType.findByAdvancement(tab.getRoot()) == AdvancementsTabType.ABILITIES
         ).toList();
     }
 
@@ -187,7 +192,14 @@ public abstract class AdvancementsScreenMixin extends Screen {
                     maskX += 6;
                     maskY += 5;
             }
-            context.drawGuiTexture(RenderLayer::getGuiTextured, LOCKED_TAB_ICON, maskX, maskY, 16, 16);
+            context.drawGuiTexture(
+                RenderLayer::getGuiTextured,
+                ADVANCEMENTS_TAB_MYSTIFIED_MASK_TEXTURE,
+                maskX,
+                maskY,
+                16,
+                16
+            );
         }
         original.call(tab, context, x, y, selected);
         if (isLockedTab) {

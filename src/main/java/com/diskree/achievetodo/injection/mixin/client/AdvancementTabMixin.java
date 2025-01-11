@@ -3,7 +3,7 @@ package com.diskree.achievetodo.injection.mixin.client;
 import com.diskree.achievetodo.ability.AbilitiesHierarchyLayerType;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
-import com.diskree.achievetodo.client.gui.AdvancementsTab;
+import com.diskree.achievetodo.client.gui.AdvancementsTabType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.advancement.AdvancementDisplay;
@@ -61,12 +61,12 @@ public abstract class AdvancementTabMixin {
             cir.setReturnValue(null);
             return;
         }
-        AdvancementsTab tab = AdvancementsTab.findByAdvancement(root);
+        AdvancementsTabType tab = AdvancementsTabType.findByAdvancement(root);
         if (tab == null) {
             cir.setReturnValue(null);
             return;
         }
-        if (tab == AdvancementsTab.ABILITIES) {
+        if (tab == AdvancementsTabType.ABILITIES) {
             int childrenCount = 0;
             for (AbilitiesHierarchyLayerType layerType : AbilitiesHierarchyLayerType.values()) {
                 childrenCount += layerType.getRowsCount();
@@ -100,7 +100,7 @@ public abstract class AdvancementTabMixin {
         AbilityType abilityType = null;
         boolean isFirstInRow = false;
         boolean shouldSkipVanillaBehavior = false;
-        if (AdvancementsTab.findByAdvancement(root) == AdvancementsTab.ABILITIES) {
+        if (AdvancementsTabType.findByAdvancement(root) == AdvancementsTabType.ABILITIES) {
             abilityType = AbilityType.findByAdvancement(advancement);
             if (abilityType != null) {
                 List<List<AbilityType>> rows = AchieveToDoClient.getAbilityRows();

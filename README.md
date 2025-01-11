@@ -36,3 +36,8 @@ This same process applies to any locked ability—from opening your inventory to
 
 - This is my first large-scale Minecraft modding project, and it wouldn't have been possible without [Cavinator1](https://modrinth.com/user/Cavinator1)'s [BlazeandCave's Advancements Pack](https://modrinth.com/datapack/blazeandcaves-advancements-pack), which was a huge source of inspiration.
 - I also want to thank the [Stardust Labs](https://modrinth.com/organization/stardust-labs) team for providing the world generation features for all three dimensions.
+
+## Third-Party Libraries
+
+- **Gson (by Google)** — Licensed under the **Apache License 2.0**. A copy of this license is included in the mod’s JAR (LICENSE_gson).
+- **toml4j** — Licensed under the **MIT** License. A copy of this license is included in the mod’s JAR (LICENSE_toml4j).

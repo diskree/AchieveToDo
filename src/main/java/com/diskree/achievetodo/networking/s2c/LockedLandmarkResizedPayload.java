@@ -10,19 +10,19 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.BlockBox;
 import org.jetbrains.annotations.NotNull;
 
-public record SyncResizedLandmarkPayload(
+public record LockedLandmarkResizedPayload(
     LandmarkType landmarkType,
     DimensionalBlockBox oldDimensionalBlockBox,
     DimensionalBlockBox newDimensionalBlockBox
 ) implements CustomPayload {
 
-    public static final Id<SyncResizedLandmarkPayload> ID =
-        new Id<>(AchieveToDoMod.getIdentifier("sync_resized_landmark"));
+    public static final Id<LockedLandmarkResizedPayload> ID =
+        new Id<>(AchieveToDoMod.getIdentifier(LockedLandmarkResizedPayload.class.getName()));
 
-    public static final PacketCodec<PacketByteBuf, SyncResizedLandmarkPayload> CODEC =
-        CustomPayload.codecOf(SyncResizedLandmarkPayload::write, SyncResizedLandmarkPayload::new);
+    public static final PacketCodec<PacketByteBuf, LockedLandmarkResizedPayload> CODEC =
+        CustomPayload.codecOf(LockedLandmarkResizedPayload::write, LockedLandmarkResizedPayload::new);
 
-    private SyncResizedLandmarkPayload(@NotNull PacketByteBuf buf) {
+    private LockedLandmarkResizedPayload(@NotNull PacketByteBuf buf) {
         this(
             buf.readEnumConstant(LandmarkType.class),
             new DimensionalBlockBox(

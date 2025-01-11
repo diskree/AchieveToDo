@@ -12,10 +12,14 @@ import com.diskree.achievetodo.client.Utils;
 import com.diskree.achievetodo.injection.extension.main.ChunkExtension;
 import com.diskree.achievetodo.injection.extension.main.LevelInfoExtension;
 import com.diskree.achievetodo.injection.extension.main.StructureStartExtension;
-import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
+import com.diskree.achievetodo.networking.c2s.DemystifyAbilityTypePayload;
+import com.diskree.achievetodo.networking.c2s.DemystifyRandomAdvancementCriterionPayload;
 import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import com.diskree.achievetodo.tracking.TrackedStatType;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -25,8 +29,10 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.PlayerAdvancementTracker;
 import net.minecraft.scoreboard.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -34,15 +40,28 @@ import net.minecraft.stat.ServerStatHandler;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class AchieveToDoServer implements ServerModInitializer {
+
+    public AdvancementsMode currentAdvancementsMode;
+    public ScoreboardObjective currentScoreboardObjective;
+    public ScoreboardDisplaySlot currentScoreboardDisplaySlot;
+
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private Map<AbilityType, Integer> abilitiesConfiguration;
     private final Map<UUID, Integer> obtainedAdvancementsCountByPlayers = new Object2IntOpenHashMap<>();
@@ -50,16 +69,11 @@ public class AchieveToDoServer implements ServerModInitializer {
     private final Map<ChunkPos, Map<LandmarkType, Set<DimensionalBlockBox>>> landmarksByChunks = new HashMap<>();
     private final Map<LandmarkType, Set<UUID>> playersByLockedLandmarkTypes = new HashMap<>();
 
-    private final EnumMap<TrackedScoreType, Map<UUID, Integer>> trackedScores =
-        new EnumMap<>(TrackedScoreType.class);
-    private final EnumMap<TrackedStatType, Map<UUID, Integer>> trackedStats =
-        new EnumMap<>(TrackedStatType.class);
+    private final Map<TrackedScoreType, Map<UUID, Integer>> trackedScores = new HashMap<>();
+    private final Map<TrackedStatType, Map<UUID, Integer>> trackedStats = new HashMap<>();
 
     private final Map<Identifier, Set<String>> criteriaByAdvancementIds = new HashMap<>();
-
-    public AdvancementsMode currentAdvancementsMode;
-    public ScoreboardObjective currentScoreboardObjective;
-    public ScoreboardDisplaySlot currentScoreboardDisplaySlot;
+    private final Map<UUID, Map<Identifier, Set<String>>> demystifiedCriteriaByPlayers = new HashMap<>();
 
     public void prepareScoreboard(ServerScoreboard scoreboard) {
         AdvancementsMode oldAdvancementsMode = currentAdvancementsMode;
@@ -158,12 +172,12 @@ public class AchieveToDoServer implements ServerModInitializer {
                 }
             }
         }
-        ServerPlayNetworking.send(player, new SyncObtainedAdvancementsCountPayload(obtainedCount));
+        ServerPlayNetworking.send(player, new ObtainedAdvancementsCountChangedPayload(obtainedCount));
         if (unlockedLandmarks != null) {
-            ServerPlayNetworking.send(player, new SyncLandmarkTypesUnlockedPayload(unlockedLandmarks));
+            ServerPlayNetworking.send(player, new NotifyLandmarkTypesUnlockedPayload(unlockedLandmarks));
         }
         if (lockedLandmarks != null) {
-            ServerPlayNetworking.send(player, new SyncLockedLandmarksPayload(lockedLandmarks, true));
+            ServerPlayNetworking.send(player, new LandmarksLockedStatusChangedPayload(lockedLandmarks, true));
         }
     }
 
@@ -172,10 +186,11 @@ public class AchieveToDoServer implements ServerModInitializer {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / progressType.getFinalValue())));
         }
         var progressByPlayers = trackedScores.computeIfAbsent(progressType, k -> new HashMap<>());
-        Integer currentProgress = progressByPlayers.get(player.getUuid());
+        UUID playerUuid = player.getUuid();
+        Integer currentProgress = progressByPlayers.get(playerUuid);
         if (currentProgress == null || !currentProgress.equals(progress)) {
-            progressByPlayers.put(player.getUuid(), progress);
-            ServerPlayNetworking.send(player, new SyncScorePayload(progressType, progress));
+            progressByPlayers.put(playerUuid, progress);
+            ServerPlayNetworking.send(player, new NotifyScoreProgressChangedPayload(progressType, progress));
         }
     }
 
@@ -184,10 +199,11 @@ public class AchieveToDoServer implements ServerModInitializer {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / statType.getFinalValue())));
         }
         var progressByPlayers = trackedStats.computeIfAbsent(statType, k -> new HashMap<>());
-        Integer currentProgress = progressByPlayers.get(player.getUuid());
+        UUID playerUuid = player.getUuid();
+        Integer currentProgress = progressByPlayers.get(playerUuid);
         if (currentProgress == null || !currentProgress.equals(progress)) {
-            progressByPlayers.put(player.getUuid(), progress);
-            ServerPlayNetworking.send(player, new SyncStatPayload(statType, progress));
+            progressByPlayers.put(playerUuid, progress);
+            ServerPlayNetworking.send(player, new NotifyStatProgressChangedPayload(statType, progress));
         }
     }
 
@@ -314,7 +330,7 @@ public class AchieveToDoServer implements ServerModInitializer {
                     .computeIfAbsent(landmarkType, k -> new HashSet<>())
                     .addAll(landmarks.get(landmarkType));
             }
-            ServerPlayNetworking.send(player, new SyncLockedLandmarksPayload(landmarksToSync, isLoaded));
+            ServerPlayNetworking.send(player, new LandmarksLockedStatusChangedPayload(landmarksToSync, isLoaded));
         }
     }
 
@@ -347,7 +363,7 @@ public class AchieveToDoServer implements ServerModInitializer {
             if (player == null) {
                 continue;
             }
-            ServerPlayNetworking.send(player, new SyncResizedLandmarkPayload(
+            ServerPlayNetworking.send(player, new LockedLandmarkResizedPayload(
                 landmarkType,
                 oldDimensionalBlockBox,
                 newDimensionalBlockBox
@@ -366,17 +382,19 @@ public class AchieveToDoServer implements ServerModInitializer {
                     server.getSaveProperties().getGeneratorOptions().getSeed()
                 );
             }
-        });
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, serverResourceManager, success) -> {
-            prepareScoreboard(server.getScoreboard());
             criteriaByAdvancementIds.clear();
-            for (AdvancementEntry advancement : server.getAdvancementLoader().getAdvancements()) {
-                criteriaByAdvancementIds.put(advancement.id(), advancement.value().criteria().keySet());
+            for (AdvancementEntry advancementEntry : server.getAdvancementLoader().getAdvancements()) {
+                if (!AchieveToDoMod.isTrackableAdvancement(advancementEntry)) {
+                    continue;
+                }
+                for (List<String> requirement : advancementEntry.value().requirements().requirements()) {
+                    if (!requirement.isEmpty()) {
+                        criteriaByAdvancementIds
+                            .computeIfAbsent(advancementEntry.id(), k -> new HashSet<>())
+                            .add(Collections.min(requirement));
+                    }
+                }
             }
-            if (criteriaByAdvancementIds.isEmpty()) {
-                throw new IllegalStateException("No advancements loaded");
-            }
-            System.out.println(criteriaByAdvancementIds);
         });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             abilitiesConfiguration = null;
@@ -388,6 +406,9 @@ public class AchieveToDoServer implements ServerModInitializer {
             currentAdvancementsMode = null;
             currentScoreboardObjective = null;
             currentScoreboardDisplaySlot = null;
+            for (UUID playerUuid : demystifiedCriteriaByPlayers.keySet()) {
+                savePlayerDemystifiedCriteria(server, playerUuid);
+            }
         });
 
         ServerChunkEvents.CHUNK_LOAD.register((world, chunk) -> onChunkLoadedStatusChanged(world, chunk, true));
@@ -396,10 +417,10 @@ public class AchieveToDoServer implements ServerModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.player;
             if (isNotReady()) {
-                player.networkHandler.disconnect(Text.of("AchieveToDo is not ready yet"));
+                player.networkHandler.disconnect(Text.literal(BuildConfig.MOD_NAME + " is not ready!"));
                 return;
             }
-            ServerPlayNetworking.send(player, new SyncAbilitiesConfigurationPayload(abilitiesConfiguration));
+            ServerPlayNetworking.send(player, new AbilitiesConfigurationLoadedPayload(abilitiesConfiguration));
             updateObtainedCount(server.getScoreboard(), player);
             ScoreHolder scoreHolder = ScoreHolder.fromName(player.getNameForScoreboard());
             Scoreboard scoreboard = player.getScoreboard();
@@ -421,23 +442,60 @@ public class AchieveToDoServer implements ServerModInitializer {
                     setStat(player, trackedStatType, statValue);
                 }
             }
+            Path demystifiedCriteriaDirectory = server.getSavePath(WorldSavePath.ROOT)
+                .resolve(BuildConfig.MOD_ID)
+                .resolve("demystified_criteria");
+            if (!Files.exists(demystifiedCriteriaDirectory)) {
+                try {
+                    Files.createDirectories(demystifiedCriteriaDirectory);
+                } catch (IOException e) {
+                    throw new RuntimeException("Creating directory", e);
+                }
+            }
+            UUID playerUuid = player.getUuid();
+            Path playerFile = demystifiedCriteriaDirectory.resolve(
+                playerUuid.toString() + Constants.FileExtension.JSON
+            );
+            if (Files.exists(playerFile)) {
+                Map<Identifier, Set<String>> demystifiedCriteria = null;
+                try (Reader reader = Files.newBufferedReader(playerFile, StandardCharsets.UTF_8)) {
+                    //@formatter:off
+                    Map<String, Set<String>> rawMap = gson.fromJson(reader, new TypeToken<>() {}.getType());
+                    //@formatter:on
+                    demystifiedCriteria = new HashMap<>();
+                    for (var entry : rawMap.entrySet()) {
+                        demystifiedCriteria.put(Identifier.of(entry.getKey()), new HashSet<>(entry.getValue()));
+                    }
+                } catch (IOException exception) {
+                    player.networkHandler.disconnect(Text.literal(exception.getMessage()));
+                    AchieveToDoMod.logger.error("Error reading demystified criteria for player {}",
+                        playerUuid,
+                        exception
+                    );
+                }
+                if (demystifiedCriteria != null && !demystifiedCriteria.isEmpty()) {
+                    demystifiedCriteriaByPlayers.put(playerUuid, demystifiedCriteria);
+                    ServerPlayNetworking.send(player, new DemystifiedCriteriaLoadedPayload(demystifiedCriteria));
+                }
+            }
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             UUID playerUuid = handler.player.getUuid();
             obtainedAdvancementsCountByPlayers.remove(playerUuid);
+            for (Set<UUID> players : playersByLockedLandmarkTypes.values()) {
+                players.remove(playerUuid);
+            }
             for (Map<UUID, Integer> players : trackedScores.values()) {
                 players.remove(playerUuid);
             }
             for (Map<UUID, Integer> players : trackedStats.values()) {
                 players.remove(playerUuid);
             }
-            for (Set<UUID> players : playersByLockedLandmarkTypes.values()) {
-                players.remove(playerUuid);
-            }
+            savePlayerDemystifiedCriteria(server, playerUuid);
         });
     }
 
-    private static void registerInternalDataPacks() {
+    private void registerInternalDataPacks() {
         FabricLoader.getInstance().getModContainer(BuildConfig.MOD_ID).ifPresent(modContainer -> {
             for (InternalPack internalPack : InternalPack.values()) {
                 ResourceManagerHelper.registerBuiltinResourcePack(
@@ -450,8 +508,13 @@ public class AchieveToDoServer implements ServerModInitializer {
     }
 
     private void registerPayloads() {
-        ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
+        ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityTypePayload.ID, (payload, context) ->
             context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
+        );
+        ServerPlayNetworking.registerGlobalReceiver(DemystifyRandomAdvancementCriterionPayload.ID, (payload, context) ->
+            context.player().server.execute(() ->
+                demystifyRandomAdvancementCriterion(context.player(), payload.advancementId())
+            )
         );
     }
 
@@ -528,7 +591,7 @@ public class AchieveToDoServer implements ServerModInitializer {
             .get(AbilityAdvancementsGenerator.buildAdvancementId(ability));
         player.getAdvancementTracker().grantCriterion(
             advancement,
-            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getName()
+            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX
         );
     }
 
@@ -542,6 +605,83 @@ public class AchieveToDoServer implements ServerModInitializer {
             for (String criterion : advancementTracker.getProgress(advancement).getUnobtainedCriteria()) {
                 advancementTracker.grantCriterion(advancement, criterion);
             }
+        }
+    }
+
+    private void demystifyRandomAdvancementCriterion(
+        @NotNull ServerPlayerEntity player,
+        @NotNull Identifier advancementId
+    ) {
+        if (player.experienceLevel < 1) {
+            return;
+        }
+        MinecraftServer server = player.server;
+        AdvancementEntry advancement = server.getAdvancementLoader().get(advancementId);
+        if (advancement == null) {
+            return;
+        }
+        UUID playerUuid = player.getUuid();
+        Set<String> criterionNames = criteriaByAdvancementIds.get(advancementId);
+        if (criterionNames == null) {
+            return;
+        }
+        Set<String> demystifiedCriterionNames = demystifiedCriteriaByPlayers
+            .computeIfAbsent(playerUuid, k -> new HashMap<>())
+            .computeIfAbsent(advancementId, k -> new HashSet<>());
+        Set<String> mystifiedCriterionNames = new HashSet<>(criterionNames);
+        mystifiedCriterionNames.removeAll(demystifiedCriterionNames);
+
+        AdvancementProgress progress = player.getAdvancementTracker().getProgress(advancement);
+        List<String> unobtainedCriteria = new ArrayList<>();
+        for (String criterionName : mystifiedCriterionNames) {
+            if (!progress.isCriterionObtained(criterionName)) {
+                unobtainedCriteria.add(criterionName);
+            }
+        }
+        if (unobtainedCriteria.isEmpty()) {
+            return;
+        }
+        String criterionNameToDemystify = unobtainedCriteria.get(
+            player.getRandom().nextBetween(0, unobtainedCriteria.size())
+        );
+        ServerPlayNetworking.send(player, new NotifyAdvancementCriterionDemystifiedPayload(
+            advancementId,
+            criterionNameToDemystify
+        ));
+        player.addExperienceLevels(-1);
+        demystifiedCriterionNames.add(criterionNameToDemystify);
+    }
+
+    private void savePlayerDemystifiedCriteria(MinecraftServer server, UUID playerUuid) {
+        Map<Identifier, Set<String>> demystifiedCriteria = demystifiedCriteriaByPlayers.remove(playerUuid);
+        if (demystifiedCriteria == null) {
+            return;
+        }
+        Path demystifiedCriteriaDirectory = server.getSavePath(WorldSavePath.ROOT)
+            .resolve(BuildConfig.MOD_ID)
+            .resolve("demystified_criteria");
+        if (!Files.exists(demystifiedCriteriaDirectory)) {
+            try {
+                Files.createDirectories(demystifiedCriteriaDirectory);
+            } catch (IOException e) {
+                throw new RuntimeException("Creating directory", e);
+            }
+        }
+        Path playerFile = demystifiedCriteriaDirectory.resolve(
+            playerUuid.toString() + Constants.FileExtension.JSON
+        );
+        try (Writer writer = Files.newBufferedWriter(playerFile, StandardCharsets.UTF_8)) {
+            Map<String, Set<String>> rawMap = new HashMap<>();
+            for (var entry : demystifiedCriteria.entrySet()) {
+                rawMap.put(entry.getKey().toString(), entry.getValue());
+            }
+            gson.toJson(rawMap, writer);
+        } catch (IOException exception) {
+            AchieveToDoMod.logger.error("Error saving demystified criteria for player {}. Data:\n{}",
+                playerUuid,
+                gson.toJson(demystifiedCriteria),
+                exception
+            );
         }
     }
 }

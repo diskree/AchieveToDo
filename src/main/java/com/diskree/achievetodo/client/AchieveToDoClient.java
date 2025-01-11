@@ -3,7 +3,7 @@ package com.diskree.achievetodo.client;
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.*;
 import com.diskree.achievetodo.client.gui.LockedLandmarkBox;
-import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
+import com.diskree.achievetodo.networking.c2s.DemystifyAbilityTypePayload;
 import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.server.Constants;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -39,6 +40,8 @@ public class AchieveToDoClient implements ClientModInitializer {
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
     private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
 
+    private static Map<Identifier, Set<String>> demystifiedCriteria = new HashMap<>();
+
     private static final List<List<AbilityType>> abilityRows = new ArrayList<>();
 
     public static int getRequiredAdvancementsCount(AbilityType ability) {
@@ -46,7 +49,8 @@ public class AchieveToDoClient implements ClientModInitializer {
     }
 
     public static boolean isNotReady() {
-        return abilitiesConfiguration == null || obtainedAdvancementsCount == Integer.MIN_VALUE;
+        return abilitiesConfiguration == null ||
+            obtainedAdvancementsCount == Integer.MIN_VALUE;
     }
 
     public static int getObtainedAdvancementsCount() {
@@ -127,17 +131,18 @@ public class AchieveToDoClient implements ClientModInitializer {
     }
 
     private void registerPayloads() {
-        ClientPlayNetworking.registerGlobalReceiver(SyncAbilitiesConfigurationPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(AbilitiesConfigurationLoadedPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 abilitiesConfiguration = payload.abilitiesConfiguration();
                 abilityRows.clear();
+                getAbilityRows();
                 calculateLockedLandmarkBoxes();
             })
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncObtainedAdvancementsCountPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(ObtainedAdvancementsCountChangedPayload.ID, (payload, context) ->
             context.client().execute(() -> obtainedAdvancementsCount = payload.count())
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncLockedLandmarksPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(LandmarksLockedStatusChangedPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 boolean isChanged = false;
                 for (var entry : payload.landmarks().entrySet()) {
@@ -164,10 +169,10 @@ public class AchieveToDoClient implements ClientModInitializer {
                 }
             })
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncLandmarkTypesUnlockedPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(NotifyLandmarkTypesUnlockedPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 boolean isChanged = false;
-                for (LandmarkType landmarkType : payload.landmarks()) {
+                for (LandmarkType landmarkType : payload.landmarkTypes()) {
                     if (lockedLandmarkBlockBoxes.remove(landmarkType) != null) {
                         isChanged = true;
                     }
@@ -177,7 +182,7 @@ public class AchieveToDoClient implements ClientModInitializer {
                 }
             })
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncResizedLandmarkPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(LockedLandmarkResizedPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 Set<DimensionalBlockBox> dimensionalBlockBoxes = lockedLandmarkBlockBoxes.get(payload.landmarkType());
                 if (dimensionalBlockBoxes.remove(payload.oldDimensionalBlockBox())) {
@@ -186,11 +191,22 @@ public class AchieveToDoClient implements ClientModInitializer {
                 }
             })
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncScorePayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(NotifyScoreProgressChangedPayload.ID, (payload, context) ->
             context.client().execute(() -> trackedScores.put(payload.progressType(), payload.progress()))
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncStatPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(NotifyStatProgressChangedPayload.ID, (payload, context) ->
             context.client().execute(() -> trackedStats.put(payload.statType(), payload.progress()))
+        );
+        ClientPlayNetworking.registerGlobalReceiver(
+            DemystifiedCriteriaLoadedPayload.ID,
+            (payload, context) -> context.client().execute(() -> demystifiedCriteria = payload.demystifiedCriteria())
+        );
+        ClientPlayNetworking.registerGlobalReceiver(
+            NotifyAdvancementCriterionDemystifiedPayload.ID,
+            (payload, context) -> context.client().execute(() -> demystifiedCriteria
+                .computeIfAbsent(payload.advancementId(), k -> new HashSet<>())
+                .add(payload.criterionName())
+            )
         );
     }
 
@@ -273,7 +289,7 @@ public class AchieveToDoClient implements ClientModInitializer {
                 lockedMessageText = ability.buildUnlockProgressMessage(leftCount);
             }
             player.sendMessage(lockedMessageText, true);
-            ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
+            ClientPlayNetworking.send(new DemystifyAbilityTypePayload(ability));
         }
         return true;
     }

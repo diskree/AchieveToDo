@@ -63,9 +63,10 @@ public class WorldCreationTab extends GridScreenTab {
                 defaultProgressionProgressionConfig = progressionConfig;
             }
         }
-        Path configDir = FabricLoader.getInstance().getConfigDir().resolve(BuildConfig.MOD_ID);
-        if (Files.exists(configDir)) {
-            try (Stream<Path> stream = Files.list(configDir)) {
+        Path abilityConfigurationsDirectory = FabricLoader.getInstance().getConfigDir()
+            .resolve(BuildConfig.MOD_ID).resolve("ability_configurations");
+        if (Files.exists(abilityConfigurationsDirectory)) {
+            try (Stream<Path> stream = Files.list(abilityConfigurationsDirectory)) {
                 stream
                     .filter(Files::isRegularFile)
                     .filter(path -> path.toString().endsWith(Constants.FileExtension.TOML))

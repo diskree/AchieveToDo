@@ -7,15 +7,15 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
-public record DemystifyAbilityPayload(@NotNull AbilityType ability) implements CustomPayload {
+public record DemystifyAbilityTypePayload(@NotNull AbilityType ability) implements CustomPayload {
 
-    public static final Id<DemystifyAbilityPayload> ID =
-        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("demystify_ability"));
+    public static final Id<DemystifyAbilityTypePayload> ID =
+        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier(DemystifyAbilityTypePayload.class.getName()));
 
-    public static final PacketCodec<PacketByteBuf, DemystifyAbilityPayload> CODEC =
-        CustomPayload.codecOf(DemystifyAbilityPayload::write, DemystifyAbilityPayload::new);
+    public static final PacketCodec<PacketByteBuf, DemystifyAbilityTypePayload> CODEC =
+        CustomPayload.codecOf(DemystifyAbilityTypePayload::write, DemystifyAbilityTypePayload::new);
 
-    private DemystifyAbilityPayload(@NotNull PacketByteBuf buf) {
+    private DemystifyAbilityTypePayload(@NotNull PacketByteBuf buf) {
         this(buf.readEnumConstant(AbilityType.class));
     }
 

@@ -10,21 +10,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-public record SyncLandmarkTypesUnlockedPayload(Set<LandmarkType> landmarks) implements CustomPayload {
+public record NotifyLandmarkTypesUnlockedPayload(Set<LandmarkType> landmarkTypes) implements CustomPayload {
 
-    public static final Id<SyncLandmarkTypesUnlockedPayload> ID =
-        new Id<>(AchieveToDoMod.getIdentifier("sync_landmark_types_unlocked"));
+    public static final Id<NotifyLandmarkTypesUnlockedPayload> ID =
+        new Id<>(AchieveToDoMod.getIdentifier(NotifyLandmarkTypesUnlockedPayload.class.getName()));
 
-    public static final PacketCodec<PacketByteBuf, SyncLandmarkTypesUnlockedPayload> CODEC =
-        CustomPayload.codecOf(SyncLandmarkTypesUnlockedPayload::write, SyncLandmarkTypesUnlockedPayload::new);
+    public static final PacketCodec<PacketByteBuf, NotifyLandmarkTypesUnlockedPayload> CODEC =
+        CustomPayload.codecOf(NotifyLandmarkTypesUnlockedPayload::write, NotifyLandmarkTypesUnlockedPayload::new);
 
-    private SyncLandmarkTypesUnlockedPayload(@NotNull PacketByteBuf buf) {
+    private NotifyLandmarkTypesUnlockedPayload(@NotNull PacketByteBuf buf) {
         this(readList(buf));
     }
 
     private void write(@NotNull PacketByteBuf buf) {
-        buf.writeInt(landmarks.size());
-        for (LandmarkType landmarkType : landmarks) {
+        buf.writeInt(landmarkTypes.size());
+        for (LandmarkType landmarkType : landmarkTypes) {
             buf.writeEnumConstant(landmarkType);
         }
     }
