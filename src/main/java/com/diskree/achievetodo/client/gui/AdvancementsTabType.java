@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
-public enum AdvancementsTab {
+public enum AdvancementsTabType {
 
     ABILITIES,
     BACAP,
@@ -36,12 +36,12 @@ public enum AdvancementsTab {
     END,
     CHALLENGES;
 
-    public @NotNull Identifier getLockedTabId() {
+    public @NotNull Identifier getMystifiedTabId() {
         return AchieveToDoMod.getIdentifier("locked_tab_" + getName() + "/root");
     }
 
-    public @NotNull Text getLockedTabTooltipText() {
-        return AchieveToDoClient.translate("locked_tab_tooltip." + getName())
+    public @NotNull Text getMystifiedTabTooltipText() {
+        return AchieveToDoClient.translate("advancements_tab_mystified_tooltip." + getName())
             .formatted(Formatting.ITALIC)
             .formatted(Formatting.GRAY);
     }
@@ -50,14 +50,14 @@ public enum AdvancementsTab {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    public static @Nullable AdvancementsTab findByAdvancement(@NotNull PlacedAdvancement advancement) {
+    public static @Nullable AdvancementsTabType findByAdvancement(@NotNull PlacedAdvancement advancement) {
         return findByAdvancement(advancement.getAdvancementEntry().id());
     }
 
-    public static @Nullable AdvancementsTab findByAdvancement(@NotNull Identifier advancementId) {
+    public static @Nullable AdvancementsTabType findByAdvancement(@NotNull Identifier advancementId) {
         String[] pathSlices = advancementId.getPath().split("/");
         if (pathSlices.length == 2) {
-            for (AdvancementsTab tabType : values()) {
+            for (AdvancementsTabType tabType : values()) {
                 if (tabType.name().equalsIgnoreCase(pathSlices[0])) {
                     return tabType;
                 }
@@ -88,7 +88,7 @@ public enum AdvancementsTab {
     public int getOrder() {
         int order = 0;
         AdvancementTabType position = getPosition();
-        for (AdvancementsTab tab : AdvancementsTab.values()) {
+        for (AdvancementsTabType tab : AdvancementsTabType.values()) {
             if (tab.getPosition() == position) {
                 if (tab == this) {
                     break;

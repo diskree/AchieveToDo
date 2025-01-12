@@ -7,45 +7,46 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
+
+import static net.minecraft.network.packet.CustomPayload.codecOf;
 
 public record SyncAbilitiesConfigurationPayload(
     @NotNull Map<AbilityType, Integer> abilitiesConfiguration
 ) implements CustomPayload {
 
-    public static final Id<SyncAbilitiesConfigurationPayload> ID =
-        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("sync_abilities_configuration"));
+    public static final Id<SyncAbilitiesConfigurationPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
+        SyncAbilitiesConfigurationPayload.class.getName()
+    ));
 
-    public static final PacketCodec<PacketByteBuf, SyncAbilitiesConfigurationPayload> CODEC =
-        CustomPayload.codecOf(SyncAbilitiesConfigurationPayload::write, SyncAbilitiesConfigurationPayload::new);
-
-    private SyncAbilitiesConfigurationPayload(@NotNull PacketByteBuf buf) {
-        this(readMap(buf));
-    }
-
-    private void write(@NotNull PacketByteBuf buf) {
-        buf.writeInt(abilitiesConfiguration.size());
-        for (var entry : abilitiesConfiguration.entrySet()) {
-            buf.writeEnumConstant(entry.getKey());
-            buf.writeInt(entry.getValue());
-        }
-    }
+    public static final PacketCodec<PacketByteBuf, SyncAbilitiesConfigurationPayload> CODEC = codecOf(
+        SyncAbilitiesConfigurationPayload::encode,
+        SyncAbilitiesConfigurationPayload::decode
+    );
 
     @Override
     public Id<? extends CustomPayload> getId() {
         return ID;
     }
 
-    private static @NotNull Map<AbilityType, Integer> readMap(@NotNull PacketByteBuf buf) {
-        Map<AbilityType, Integer> map = new EnumMap<>(AbilityType.class);
-        int size = buf.readInt();
-        for (int i = 0; i < size; i++) {
-            map.put(
-                buf.readEnumConstant(AbilityType.class),
-                buf.readInt()
-            );
+    private void encode(@NotNull PacketByteBuf buf) {
+        int abilityTypesSize = abilitiesConfiguration.size();
+        buf.writeInt(abilityTypesSize);
+        for (var entry : abilitiesConfiguration.entrySet()) {
+            buf.writeEnumConstant(entry.getKey());
+            buf.writeInt(entry.getValue());
         }
-        return map;
+    }
+
+    private static @NotNull SyncAbilitiesConfigurationPayload decode(@NotNull PacketByteBuf buf) {
+        Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
+        int abilityTypesSize = buf.readInt();
+        for (int i = 0; i < abilityTypesSize; i++) {
+            AbilityType abilityType = buf.readEnumConstant(AbilityType.class);
+            int requiredCount = buf.readInt();
+            abilitiesConfiguration.put(abilityType, requiredCount);
+        }
+        return new SyncAbilitiesConfigurationPayload(abilitiesConfiguration);
     }
 }

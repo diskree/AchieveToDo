@@ -15,7 +15,7 @@ import com.diskree.achievetodo.injection.extension.main.StructureStartExtension;
 import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
-import com.diskree.achievetodo.tracking.TrackedStatType;
+import com.diskree.achievetodo.tracking.TrackedStatisticsDataType;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -52,8 +52,8 @@ public class AchieveToDoServer implements ServerModInitializer {
 
     private final EnumMap<TrackedScoreType, Map<UUID, Integer>> trackedScores =
         new EnumMap<>(TrackedScoreType.class);
-    private final EnumMap<TrackedStatType, Map<UUID, Integer>> trackedStats =
-        new EnumMap<>(TrackedStatType.class);
+    private final EnumMap<TrackedStatisticsDataType, Map<UUID, Integer>> trackedStats =
+        new EnumMap<>(TrackedStatisticsDataType.class);
 
     private final Map<Identifier, Set<String>> criteriaByAdvancementIds = new HashMap<>();
 
@@ -112,11 +112,11 @@ public class AchieveToDoServer implements ServerModInitializer {
         UUID playerUuid = player.getUuid();
         int oldCount = obtainedAdvancementsCountByPlayers.getOrDefault(playerUuid, Integer.MIN_VALUE);
         obtainedAdvancementsCountByPlayers.put(playerUuid, obtainedCount);
-        Set<LandmarkType> unlockedLandmarks = null;
+        Set<LandmarkType> unlockedLandmarkTypes = null;
         Map<LandmarkType, Set<DimensionalBlockBox>> lockedLandmarks = null;
 
-        for (AbilityType ability : AbilityType.values()) {
-            int requiredCount = abilitiesConfiguration.get(ability);
+        for (AbilityType abilityType : AbilityType.values()) {
+            int requiredCount = abilitiesConfiguration.get(abilityType);
             if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG ||
                 requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG
             ) {
@@ -130,8 +130,8 @@ public class AchieveToDoServer implements ServerModInitializer {
             } else {
                 continue;
             }
-            setAbilityLocked(player, ability, isLock);
-            LandmarkType landmarkType = ability.getLandmarkType();
+            setAbilityLocked(player, abilityType, isLock);
+            LandmarkType landmarkType = abilityType.getLandmarkType();
             if (landmarkType != null) {
                 if (isLock) {
                     playersByLockedLandmarkTypes
@@ -151,19 +151,19 @@ public class AchieveToDoServer implements ServerModInitializer {
                     if (players != null && players.remove(playerUuid) && players.isEmpty()) {
                         playersByLockedLandmarkTypes.remove(landmarkType);
                     }
-                    if (unlockedLandmarks == null) {
-                        unlockedLandmarks = new HashSet<>();
+                    if (unlockedLandmarkTypes == null) {
+                        unlockedLandmarkTypes = new HashSet<>();
                     }
-                    unlockedLandmarks.add(landmarkType);
+                    unlockedLandmarkTypes.add(landmarkType);
                 }
             }
         }
         ServerPlayNetworking.send(player, new SyncObtainedAdvancementsCountPayload(obtainedCount));
-        if (unlockedLandmarks != null) {
-            ServerPlayNetworking.send(player, new SyncLandmarkTypesUnlockedPayload(unlockedLandmarks));
+        if (unlockedLandmarkTypes != null) {
+            ServerPlayNetworking.send(player, new LandmarkTypesUnlockedPayload(unlockedLandmarkTypes));
         }
         if (lockedLandmarks != null) {
-            ServerPlayNetworking.send(player, new SyncLockedLandmarksPayload(lockedLandmarks, true));
+            ServerPlayNetworking.send(player, new LandmarksLockedStatusChangedPayload(lockedLandmarks, true));
         }
     }
 
@@ -175,11 +175,11 @@ public class AchieveToDoServer implements ServerModInitializer {
         Integer currentProgress = progressByPlayers.get(player.getUuid());
         if (currentProgress == null || !currentProgress.equals(progress)) {
             progressByPlayers.put(player.getUuid(), progress);
-            ServerPlayNetworking.send(player, new SyncScorePayload(progressType, progress));
+            ServerPlayNetworking.send(player, new ScoreProgressChangedPayload(progressType, progress));
         }
     }
 
-    public void setStat(@NotNull ServerPlayerEntity player, @NotNull TrackedStatType statType, int progress) {
+    public void setStat(@NotNull ServerPlayerEntity player, @NotNull TrackedStatisticsDataType statType, int progress) {
         if (statType.isPercentage()) {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / statType.getFinalValue())));
         }
@@ -187,7 +187,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         Integer currentProgress = progressByPlayers.get(player.getUuid());
         if (currentProgress == null || !currentProgress.equals(progress)) {
             progressByPlayers.put(player.getUuid(), progress);
-            ServerPlayNetworking.send(player, new SyncStatPayload(statType, progress));
+            ServerPlayNetworking.send(player, new StatisticsDataProgressChangedPayload(statType, progress));
         }
     }
 
@@ -198,36 +198,22 @@ public class AchieveToDoServer implements ServerModInitializer {
             currentScoreboardDisplaySlot == null;
     }
 
-    public boolean isAbilityLocked(@NotNull ServerPlayerEntity player, AbilityType ability) {
-        return isAbilityLocked(player, ability, false);
-    }
-
-    public boolean isAbilityLocked(@NotNull ServerPlayerEntity player, AbilityType ability, boolean checkOnly) {
-        if (ability == null || player.isCreative() || player.isSpectator()) {
+    public boolean isAbilityLocked(@NotNull ServerPlayerEntity player, AbilityType abilityType) {
+        if (abilityType == null || player.isCreative() || player.isSpectator()) {
             return false;
         }
         if (isNotReady()) {
             return true;
         }
-        int obtainedCount = obtainedAdvancementsCountByPlayers.get(player.getUuid());
-        int requiredCount = abilitiesConfiguration.get(ability);
-        if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG ||
-            requiredCount != Constants.Progression.PERMANENTLY_LOCKED_FLAG && obtainedCount >= requiredCount
-        ) {
+        int requiredCount = abilitiesConfiguration.get(abilityType);
+        if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
             return false;
         }
-        if (!checkOnly) {
-            Text lockedMessageText;
-            if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
-                lockedMessageText = ability.buildPermanentlyLockedMessage();
-            } else {
-                int leftCount = requiredCount - obtainedCount;
-                lockedMessageText = ability.buildUnlockProgressMessage(leftCount);
-            }
-            player.sendMessage(lockedMessageText, true);
-            demystifyAbility(player, ability);
+        if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
+            return true;
         }
-        return true;
+        int obtainedCount = obtainedAdvancementsCountByPlayers.getOrDefault(player.getUuid(), Integer.MIN_VALUE);
+        return obtainedCount < requiredCount;
     }
 
     public boolean isInLockedLandmark(@NotNull ServerPlayerEntity player, DimensionType dimensionType, Box box) {
@@ -235,7 +221,8 @@ public class AchieveToDoServer implements ServerModInitializer {
         for (var entry : playersByLockedLandmarkTypes.entrySet()) {
             if (entry.getValue().contains(player.getUuid())) {
                 LandmarkType landmarkType = entry.getKey();
-                for (Map<LandmarkType, Set<DimensionalBlockBox>> landmarks : landmarksByChunks.values()) {
+                for (var landmarks2 : landmarksByChunks.entrySet()) {
+                    var landmarks = landmarks2.getValue();
                     Set<DimensionalBlockBox> dimensionalBlockBoxes = landmarks.get(landmarkType);
                     if (dimensionalBlockBoxes != null) {
                         for (DimensionalBlockBox dimensionalBlockBox : dimensionalBlockBoxes) {
@@ -258,12 +245,20 @@ public class AchieveToDoServer implements ServerModInitializer {
         Map<LandmarkType, Set<DimensionalBlockBox>> landmarks,
         boolean isLoaded
     ) {
+        if (isNotReady()) {
+            return;
+        }
         boolean isChanged = false;
         if (isLoaded) {
             var chunkMap = landmarksByChunks.computeIfAbsent(chunkPos, k -> new HashMap<>());
             for (var entry : landmarks.entrySet()) {
+                LandmarkType landmarkType = entry.getKey();
+                AbilityType abilityType = AbilityType.findByLandmarkType(landmarkType);
+                if (abilitiesConfiguration.get(abilityType) == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
+                    continue;
+                }
                 if (chunkMap
-                    .computeIfAbsent(entry.getKey(), k -> new HashSet<>())
+                    .computeIfAbsent(landmarkType, k -> new HashSet<>())
                     .addAll(entry.getValue())
                 ) {
                     isChanged = true;
@@ -314,7 +309,7 @@ public class AchieveToDoServer implements ServerModInitializer {
                     .computeIfAbsent(landmarkType, k -> new HashSet<>())
                     .addAll(landmarks.get(landmarkType));
             }
-            ServerPlayNetworking.send(player, new SyncLockedLandmarksPayload(landmarksToSync, isLoaded));
+            ServerPlayNetworking.send(player, new LandmarksLockedStatusChangedPayload(landmarksToSync, isLoaded));
         }
     }
 
@@ -347,10 +342,11 @@ public class AchieveToDoServer implements ServerModInitializer {
             if (player == null) {
                 continue;
             }
-            ServerPlayNetworking.send(player, new SyncResizedLandmarkPayload(
+            ServerPlayNetworking.send(player, new LockedLandmarkResizedPayload(
                 landmarkType,
-                oldDimensionalBlockBox,
-                newDimensionalBlockBox
+                oldDimensionalBlockBox.dimensionType(),
+                oldDimensionalBlockBox.blockBox(),
+                newDimensionalBlockBox.blockBox()
             ));
         }
     }
@@ -359,8 +355,7 @@ public class AchieveToDoServer implements ServerModInitializer {
     public void onInitializeServer() {
         registerInternalDataPacks();
         registerPayloads();
-
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             if (server.getSaveProperties().getLevelInfo() instanceof LevelInfoExtension levelInfoExtension) {
                 abilitiesConfiguration = levelInfoExtension.achievetodo$getAbilitiesConfiguration(
                     server.getSaveProperties().getGeneratorOptions().getSeed()
@@ -376,7 +371,6 @@ public class AchieveToDoServer implements ServerModInitializer {
             if (criteriaByAdvancementIds.isEmpty()) {
                 throw new IllegalStateException("No advancements loaded");
             }
-            System.out.println(criteriaByAdvancementIds);
         });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             abilitiesConfiguration = null;
@@ -396,7 +390,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.player;
             if (isNotReady()) {
-                player.networkHandler.disconnect(Text.of("AchieveToDo is not ready yet"));
+                player.networkHandler.disconnect(Text.literal(BuildConfig.MOD_NAME + " is not ready yet"));
                 return;
             }
             ServerPlayNetworking.send(player, new SyncAbilitiesConfigurationPayload(abilitiesConfiguration));
@@ -415,10 +409,10 @@ public class AchieveToDoServer implements ServerModInitializer {
                 }
             }
             ServerStatHandler serverStatHandler = player.getStatHandler();
-            for (var entry : TrackedStatType.STATS.entrySet()) {
+            for (var entry : TrackedStatisticsDataType.STATISTICS_DATA.entrySet()) {
                 int statValue = serverStatHandler.getStat(entry.getKey());
-                for (TrackedStatType trackedStatType : entry.getValue()) {
-                    setStat(player, trackedStatType, statValue);
+                for (TrackedStatisticsDataType trackedStatisticsDataType : entry.getValue()) {
+                    setStat(player, trackedStatisticsDataType, statValue);
                 }
             }
         });
@@ -451,7 +445,7 @@ public class AchieveToDoServer implements ServerModInitializer {
 
     private void registerPayloads() {
         ServerPlayNetworking.registerGlobalReceiver(DemystifyAbilityPayload.ID, (payload, context) ->
-            context.player().server.execute(() -> demystifyAbility(context.player(), payload.ability()))
+            context.player().server.execute(() -> demystifyAbility(context.player(), payload.abilityType()))
         );
     }
 
@@ -528,7 +522,7 @@ public class AchieveToDoServer implements ServerModInitializer {
             .get(AbilityAdvancementsGenerator.buildAdvancementId(ability));
         player.getAdvancementTracker().grantCriterion(
             advancement,
-            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getName()
+            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION
         );
     }
 
@@ -539,9 +533,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         if (isLocked) {
             advancementTracker.revokeCriterion(advancement, AbilityAdvancementsGenerator.UNLOCKED_CRITERION);
         } else {
-            for (String criterion : advancementTracker.getProgress(advancement).getUnobtainedCriteria()) {
-                advancementTracker.grantCriterion(advancement, criterion);
-            }
+            advancementTracker.grantCriterion(advancement, AbilityAdvancementsGenerator.UNLOCKED_CRITERION);
         }
     }
 }

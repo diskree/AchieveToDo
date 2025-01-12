@@ -42,18 +42,15 @@ public class AchieveToDoMod implements ModInitializer {
         return Identifier.of(BuildConfig.MOD_ID, path);
     }
 
-    public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability) {
-        return isAbilityLocked(player, ability, false);
+    public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType abilityType) {
+        return isAbilityLocked(player, abilityType, false);
     }
 
-    public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType ability, boolean checkOnly) {
+    public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType abilityType, boolean checkOnly) {
         if (player.getWorld().isClient) {
-            return AchieveToDoClient.isAbilityLocked(ability, checkOnly);
+            return AchieveToDoClient.isAbilityLocked(abilityType, checkOnly);
         }
-        if (player instanceof ServerPlayerEntity serverPlayer) {
-            return server.isAbilityLocked(serverPlayer, ability, checkOnly);
-        }
-        return true;
+        return player instanceof ServerPlayerEntity serverPlayer && server.isAbilityLocked(serverPlayer, abilityType);
     }
 
     public static boolean isTargetInLockedLandmark(@NotNull PlayerEntity actor, @NotNull Entity target) {
@@ -95,7 +92,10 @@ public class AchieveToDoMod implements ModInitializer {
     }
 
     private static void registerPayloads() {
-        PayloadTypeRegistry.playC2S().register(DemystifyAbilityPayload.ID, DemystifyAbilityPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(
+            DemystifyAbilityPayload.ID,
+            DemystifyAbilityPayload.CODEC
+        );
 
         PayloadTypeRegistry.playS2C().register(
             SyncAbilitiesConfigurationPayload.ID,
@@ -106,18 +106,24 @@ public class AchieveToDoMod implements ModInitializer {
             SyncObtainedAdvancementsCountPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
-            SyncLockedLandmarksPayload.ID,
-            SyncLockedLandmarksPayload.CODEC
+            LandmarksLockedStatusChangedPayload.ID,
+            LandmarksLockedStatusChangedPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
-            SyncLandmarkTypesUnlockedPayload.ID,
-            SyncLandmarkTypesUnlockedPayload.CODEC
+            LandmarkTypesUnlockedPayload.ID,
+            LandmarkTypesUnlockedPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
-            SyncResizedLandmarkPayload.ID,
-            SyncResizedLandmarkPayload.CODEC
+            LockedLandmarkResizedPayload.ID,
+            LockedLandmarkResizedPayload.CODEC
         );
-        PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(
+            ScoreProgressChangedPayload.ID,
+            ScoreProgressChangedPayload.CODEC
+        );
+        PayloadTypeRegistry.playS2C().register(
+            StatisticsDataProgressChangedPayload.ID,
+            StatisticsDataProgressChangedPayload.CODEC
+        );
     }
 }

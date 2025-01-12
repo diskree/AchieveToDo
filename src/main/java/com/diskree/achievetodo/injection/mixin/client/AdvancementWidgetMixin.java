@@ -7,7 +7,7 @@ import com.diskree.achievetodo.client.AchieveToDoClient;
 import com.diskree.achievetodo.server.Constants;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
-import com.diskree.achievetodo.tracking.TrackedStatType;
+import com.diskree.achievetodo.tracking.TrackedStatisticsDataType;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -52,24 +52,24 @@ public class AdvancementWidgetMixin {
     private TrackedNearbyEntitiesType trackedNearbyEntitiesType;
 
     @Unique
-    private TrackedStatType trackedStatType;
+    private TrackedStatisticsDataType trackedStatisticsDataType;
 
     @Unique
-    private AbilityType ability;
+    private AbilityType abilityType;
 
     @Unique
     private boolean shouldRenderMystifiedMask() {
-        if (progress == null || ability == null || !AchieveToDoClient.isAbilityLocked(ability, true)) {
+        if (progress == null || abilityType == null || !AchieveToDoClient.isAbilityLocked(abilityType, true)) {
             return false;
         }
-        int requiredCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
+        int requiredCount = AchieveToDoClient.getRequiredAdvancementsCount(abilityType);
         if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG ||
             requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG
         ) {
             return false;
         }
         CriterionProgress demystifiedCriterionProgress = progress.getCriterionProgress(
-            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getName()
+            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION
         );
         return demystifiedCriterionProgress != null && !demystifiedCriterionProgress.isObtained();
     }
@@ -101,9 +101,9 @@ public class AdvancementWidgetMixin {
         if (trackedScoreType == null) {
             trackedNearbyEntitiesType = TrackedNearbyEntitiesType.findByAdvancement(advancementId);
             if (trackedNearbyEntitiesType == null) {
-                trackedStatType = TrackedStatType.findByAdvancement(advancementId);
-                if (trackedStatType == null) {
-                    ability = AbilityType.findByAdvancement(advancementId);
+                trackedStatisticsDataType = TrackedStatisticsDataType.findByAdvancement(advancementId);
+                if (trackedStatisticsDataType == null) {
+                    abilityType = AbilityType.findByAdvancement(advancementId);
                 }
             }
         }
@@ -118,8 +118,8 @@ public class AdvancementWidgetMixin {
     )
     private MutableText appendSpecialFlagInfoToDescription(Text text, @NotNull Operation<MutableText> original) {
         MutableText originalText = original.call(text);
-        if (ability != null) {
-            int requiredCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
+        if (abilityType != null) {
+            int requiredCount = AchieveToDoClient.getRequiredAdvancementsCount(abilityType);
             boolean isInitiallyUnlocked = requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG;
             boolean isPermanentlyLocked = requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG;
             if (isInitiallyUnlocked || isPermanentlyLocked) {
@@ -150,11 +150,11 @@ public class AdvancementWidgetMixin {
         if (trackedNearbyEntitiesType != null) {
             return trackedNearbyEntitiesType.getEntitiesCount();
         }
-        if (trackedStatType != null) {
-            return trackedStatType.getFinalValue();
+        if (trackedStatisticsDataType != null) {
+            return trackedStatisticsDataType.getFinalValue();
         }
-        if (ability != null) {
-            return AchieveToDoClient.getRequiredAdvancementsCount(ability);
+        if (abilityType != null) {
+            return AchieveToDoClient.getRequiredAdvancementsCount(abilityType);
         }
         return original.call(requirements);
     }
@@ -165,8 +165,8 @@ public class AdvancementWidgetMixin {
         cancellable = true
     )
     public void overrideProgressTextWidth(CallbackInfoReturnable<Integer> cir) {
-        if (ability != null) {
-            int requiredCount = AchieveToDoClient.getRequiredAdvancementsCount(ability);
+        if (abilityType != null) {
+            int requiredCount = AchieveToDoClient.getRequiredAdvancementsCount(abilityType);
             if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG ||
                 requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG
             ) {
@@ -175,7 +175,7 @@ public class AdvancementWidgetMixin {
             }
         }
         if (trackedScoreType != null && trackedScoreType.isPercentage() ||
-            trackedStatType != null && trackedStatType.isPercentage()
+            trackedStatisticsDataType != null && trackedStatisticsDataType.isPercentage()
         ) {
             cir.setReturnValue(8 + client.textRenderer.getWidth(Text.translatable("mco.upload.percent", 100)));
         }

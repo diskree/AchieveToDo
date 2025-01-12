@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public enum TrackedStatType {
+public enum TrackedStatisticsDataType {
 
     ICEOLOGER_SHOULDVE_WON(
         "blazeandcave:animal/iceologer_shouldve_won",
@@ -382,34 +382,40 @@ public enum TrackedStatType {
         false
     );
 
-    public static final Map<Stat<?>, Set<TrackedStatType>> STATS = new HashMap<>();
+    public static final Map<Stat<?>, Set<TrackedStatisticsDataType>> STATISTICS_DATA = new HashMap<>();
 
     private final String advancementId;
-    private final Stat<?> stat;
+    private final Stat<?> statisticsData;
     private final int finalValue;
     private final boolean isPercentage;
 
     static {
-        for (TrackedStatType type : values()) {
-            STATS
-                .computeIfAbsent(type.stat, k -> new HashSet<>())
+        for (TrackedStatisticsDataType type : values()) {
+            STATISTICS_DATA
+                .computeIfAbsent(type.statisticsData, k -> new HashSet<>())
                 .add(type);
         }
     }
 
-    <T> TrackedStatType(String advancementId, @NotNull StatType<T> type, T key, int finalValue, boolean isPercentage) {
+    <T> TrackedStatisticsDataType(
+        String advancementId,
+        @NotNull StatType<T> type,
+        T key,
+        int finalValue,
+        boolean isPercentage
+    ) {
         this.advancementId = advancementId;
-        this.stat = type.getOrCreateStat(key);
+        this.statisticsData = type.getOrCreateStat(key);
         this.finalValue = finalValue;
         this.isPercentage = isPercentage;
     }
 
-    public static @Nullable Set<TrackedStatType> findByStat(Stat<?> stat) {
-        return STATS.get(stat);
+    public static @Nullable Set<TrackedStatisticsDataType> findByStat(Stat<?> stat) {
+        return STATISTICS_DATA.get(stat);
     }
 
-    public static @Nullable TrackedStatType findByAdvancement(@NotNull Identifier advancementId) {
-        for (TrackedStatType type : TrackedStatType.values()) {
+    public static @Nullable TrackedStatisticsDataType findByAdvancement(@NotNull Identifier advancementId) {
+        for (TrackedStatisticsDataType type : TrackedStatisticsDataType.values()) {
             if (advancementId.toString().equals(type.advancementId)) {
                 return type;
             }

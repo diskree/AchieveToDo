@@ -6,24 +6,32 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
-public record SyncObtainedAdvancementsCountPayload(int count) implements CustomPayload {
+import static net.minecraft.network.packet.CustomPayload.codecOf;
 
-    public static final Id<SyncObtainedAdvancementsCountPayload> ID =
-        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("sync_obtained_advancements_count"));
+public record SyncObtainedAdvancementsCountPayload(
+    int obtainedAdvancementsCount
+) implements CustomPayload {
 
-    public static final PacketCodec<PacketByteBuf, SyncObtainedAdvancementsCountPayload> CODEC =
-        CustomPayload.codecOf(SyncObtainedAdvancementsCountPayload::write, SyncObtainedAdvancementsCountPayload::new);
+    public static final Id<SyncObtainedAdvancementsCountPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
+        SyncObtainedAdvancementsCountPayload.class.getName()
+    ));
 
-    private SyncObtainedAdvancementsCountPayload(@NotNull PacketByteBuf buf) {
-        this(buf.readInt());
-    }
-
-    private void write(@NotNull PacketByteBuf buf) {
-        buf.writeInt(count);
-    }
+    public static final PacketCodec<PacketByteBuf, SyncObtainedAdvancementsCountPayload> CODEC = codecOf(
+        SyncObtainedAdvancementsCountPayload::encode,
+        SyncObtainedAdvancementsCountPayload::decode
+    );
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Id<?> getId() {
         return ID;
+    }
+
+    private void encode(@NotNull PacketByteBuf buf) {
+        buf.writeInt(obtainedAdvancementsCount);
+    }
+
+    private static @NotNull SyncObtainedAdvancementsCountPayload decode(@NotNull PacketByteBuf buf) {
+        int obtainedAdvancementsCount = buf.readInt();
+        return new SyncObtainedAdvancementsCountPayload(obtainedAdvancementsCount);
     }
 }

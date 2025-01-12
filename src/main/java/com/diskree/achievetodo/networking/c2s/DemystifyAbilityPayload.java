@@ -7,24 +7,32 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
-public record DemystifyAbilityPayload(@NotNull AbilityType ability) implements CustomPayload {
+import static net.minecraft.network.packet.CustomPayload.codecOf;
 
-    public static final Id<DemystifyAbilityPayload> ID =
-        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("demystify_ability"));
+public record DemystifyAbilityPayload(
+    @NotNull AbilityType abilityType
+) implements CustomPayload {
 
-    public static final PacketCodec<PacketByteBuf, DemystifyAbilityPayload> CODEC =
-        CustomPayload.codecOf(DemystifyAbilityPayload::write, DemystifyAbilityPayload::new);
+    public static final Id<DemystifyAbilityPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
+        DemystifyAbilityPayload.class.getName()
+    ));
 
-    private DemystifyAbilityPayload(@NotNull PacketByteBuf buf) {
-        this(buf.readEnumConstant(AbilityType.class));
-    }
-
-    private void write(@NotNull PacketByteBuf buf) {
-        buf.writeEnumConstant(ability);
-    }
+    public static final PacketCodec<PacketByteBuf, DemystifyAbilityPayload> CODEC = codecOf(
+        DemystifyAbilityPayload::encode,
+        DemystifyAbilityPayload::decode
+    );
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Id<?> getId() {
         return ID;
+    }
+
+    private void encode(@NotNull PacketByteBuf buf) {
+        buf.writeEnumConstant(abilityType);
+    }
+
+    private static @NotNull DemystifyAbilityPayload decode(@NotNull PacketByteBuf buf) {
+        AbilityType abilityType = buf.readEnumConstant(AbilityType.class);
+        return new DemystifyAbilityPayload(abilityType);
     }
 }

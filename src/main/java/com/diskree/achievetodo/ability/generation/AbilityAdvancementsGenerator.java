@@ -27,8 +27,8 @@ import java.util.function.Consumer;
 
 public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
 
-    public static final String DEMYSTIFIED_CRITERION_PREFIX = BuildConfig.MOD_ID + "_" + "demystified" + "_";
-    public static final String UNLOCKED_CRITERION = BuildConfig.MOD_ID + "_" + "unlocked";
+    public static final String DEMYSTIFIED_CRITERION = "demystified";
+    public static final String UNLOCKED_CRITERION = "unlocked";
 
     public static final String ABILITY_PATH_PREFIX = "abilities/";
 
@@ -87,7 +87,7 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
                 )
                 .rewards(AdvancementRewards.Builder.function(advancementId))
                 .criterion(
-                    DEMYSTIFIED_CRITERION_PREFIX + abilityType.getName(),
+                    DEMYSTIFIED_CRITERION,
                     Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions())
                 )
                 .criterion(

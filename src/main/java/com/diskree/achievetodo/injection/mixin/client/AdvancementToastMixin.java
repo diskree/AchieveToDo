@@ -30,14 +30,14 @@ public class AdvancementToastMixin {
     private static final int ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR = 0x725e3c;
 
     @Unique
-    private @Nullable AbilityType ability;
+    private @Nullable AbilityType abilityType;
 
     @Inject(
         method = "<init>",
         at = @At(value = "TAIL")
     )
     private void findAbility(AdvancementEntry advancement, CallbackInfo ci) {
-        ability = AbilityType.findByAdvancement(advancement);
+        abilityType = AbilityType.findByAdvancement(advancement);
     }
 
     @ModifyArg(
@@ -50,7 +50,7 @@ public class AdvancementToastMixin {
         index = 1
     )
     private Identifier setCustomBackgroundTextureForAbilityUnlockedNotification(Identifier original) {
-        return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_BACKGROUND_TEXTURE : original;
+        return abilityType != null ? ABILITY_UNLOCKED_NOTIFICATION_BACKGROUND_TEXTURE : original;
     }
 
     @ModifyArg(
@@ -62,7 +62,7 @@ public class AdvancementToastMixin {
         index = 1
     )
     private Text setCustomTitleForAbilityUnlockedNotification(Text original) {
-        return ability != null ? ability.getUnlockToastType().getToastTitle() : original;
+        return abilityType != null ? abilityType.getUnlockToastType().getToastTitle() : original;
     }
 
     @ModifyVariable(
@@ -71,7 +71,7 @@ public class AdvancementToastMixin {
         ordinal = 0
     )
     private int setCustomTitleColorForAbilityUnlockedNotification(int original) {
-        return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_TITLE_COLOR : original;
+        return abilityType != null ? ABILITY_UNLOCKED_NOTIFICATION_TITLE_COLOR : original;
     }
 
     @ModifyArg(
@@ -84,7 +84,7 @@ public class AdvancementToastMixin {
         index = 4
     )
     private int setCustomSubtitleColorForAbilityUnlockedNotification(int original) {
-        return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR : original;
+        return abilityType != null ? ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR : original;
     }
 
     @ModifyConstant(
@@ -92,7 +92,7 @@ public class AdvancementToastMixin {
         constant = @Constant(intValue = 16777215)
     )
     private int setCustomTwoLineSubtitleColorForAbilityUnlockedNotification(int original) {
-        return ability != null ? ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR : original;
+        return abilityType != null ? ABILITY_UNLOCKED_NOTIFICATION_SUBTITLE_COLOR : original;
     }
 
     @Inject(
@@ -104,7 +104,7 @@ public class AdvancementToastMixin {
         )
     )
     private void playAbilityUnlockedSound(ToastManager manager, long time, CallbackInfo ci) {
-        if (ability != null) {
+        if (abilityType != null) {
             manager.getClient().getSoundManager().play(
                 PositionedSoundInstance.master(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.8f, 0.2f)
             );

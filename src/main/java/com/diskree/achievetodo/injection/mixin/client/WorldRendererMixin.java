@@ -41,7 +41,7 @@ public abstract class WorldRendererMixin {
     private LockedLandmarkBox lastLockedLandmarkBox = null;
 
     @Unique
-    private float fadeInsideLockedLandmarkAlpha = 0.0f;
+    private float fadeInsideLockedLandmarkAlpha;
 
     @Unique
     private void renderLockedLandmarkBorderFloor(
@@ -168,9 +168,6 @@ public abstract class WorldRendererMixin {
                 continue;
             }
             Box box = lockedLandmarkBox.box();
-            if (!box.contains(cameraPos)) {
-                continue;
-            }
 
             float minX = (float) box.minX;
             float minY = (float) box.minY;
@@ -178,6 +175,30 @@ public abstract class WorldRendererMixin {
             float maxX = (float) box.maxX;
             float maxY = (float) box.maxY;
             float maxZ = (float) box.maxZ;
+
+            float boxPadding;
+            if (box.getLengthX() > 1.0f && box.getLengthY() > 1.0f && box.getLengthZ() > 1.0f) {
+                boxPadding = 0.5f;
+            } else {
+                boxPadding = 0.001f;
+            }
+
+            minX += boxPadding;
+            maxX -= boxPadding;
+            minY += boxPadding;
+            maxY -= boxPadding;
+            minZ += boxPadding;
+            maxZ -= boxPadding;
+
+            double cameraX = cameraPos.x;
+            double cameraY = cameraPos.y;
+            double cameraZ = cameraPos.z;
+            if (cameraX < minX || cameraX >= maxX ||
+                cameraY < minY || cameraY >= maxY ||
+                cameraZ < minZ || cameraZ >= maxZ
+            ) {
+                continue;
+            }
 
             boolean isFloorVisible = frustum.intersectAab(minX, minY, minZ, maxX, minY, maxZ) < 0;
             boolean isRoofVisible = frustum.intersectAab(minX, maxY, minZ, maxX, maxY, maxZ) < 0;
@@ -196,14 +217,23 @@ public abstract class WorldRendererMixin {
                 continue;
             }
 
-            minX -= (float) cameraPos.x;
-            minY -= (float) cameraPos.y;
-            minZ -= (float) cameraPos.z;
-            maxX -= (float) cameraPos.x;
-            maxY -= (float) cameraPos.y;
-            maxZ -= (float) cameraPos.z;
+            minX -= (float) cameraX;
+            maxX -= (float) cameraX;
+            minY -= (float) cameraY;
+            maxY -= (float) cameraY;
+            minZ -= (float) cameraZ;
+            maxZ -= (float) cameraZ;
 
             foundBox = lockedLandmarkBox;
+            if (foundBox.equals(lastLockedLandmarkBox)) {
+                fadeInsideLockedLandmarkAlpha += ENTER_LOCKED_LANDMARK_BORDER_FADE_ALPHA_SPEED * tickDelta;
+                if (fadeInsideLockedLandmarkAlpha > 1.0f) {
+                    fadeInsideLockedLandmarkAlpha = 1.0f;
+                }
+            } else {
+                fadeInsideLockedLandmarkAlpha = 0.0f;
+            }
+
             RenderSystem.setShaderTexture(0, LOCKED_LANDMARK_BORDER_TEXTURE);
             RenderLayer renderLayer = RenderLayer.getWorldBorder(MinecraftClient.isFabulousGraphicsOrBetter());
             renderLayer.startDrawing();
@@ -328,16 +358,7 @@ public abstract class WorldRendererMixin {
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             break;
         }
-        if (foundBox != null) {
-            if (foundBox.equals(lastLockedLandmarkBox)) {
-                fadeInsideLockedLandmarkAlpha += ENTER_LOCKED_LANDMARK_BORDER_FADE_ALPHA_SPEED * tickDelta;
-                if (fadeInsideLockedLandmarkAlpha > 1.0f) {
-                    fadeInsideLockedLandmarkAlpha = 1.0f;
-                }
-            } else {
-                fadeInsideLockedLandmarkAlpha = 0.0f;
-            }
-        } else {
+        if (foundBox == null) {
             fadeInsideLockedLandmarkAlpha = 0.0f;
         }
         lastLockedLandmarkBox = foundBox;

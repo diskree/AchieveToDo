@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.tracking.TrackedStatType;
+import com.diskree.achievetodo.tracking.TrackedStatisticsDataType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stat;
@@ -22,10 +22,10 @@ public class StatHandlerMixin {
     )
     private void trackStatChange(PlayerEntity player, Stat<?> stat, int value, CallbackInfo ci) {
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            Set<TrackedStatType> trackedStatTypes = TrackedStatType.findByStat(stat);
-            if (trackedStatTypes != null) {
-                for (TrackedStatType trackedStatType : trackedStatTypes) {
-                    AchieveToDoMod.getServer().setStat(serverPlayer, trackedStatType, value);
+            Set<TrackedStatisticsDataType> trackedStatisticsDataTypes = TrackedStatisticsDataType.findByStat(stat);
+            if (trackedStatisticsDataTypes != null) {
+                for (TrackedStatisticsDataType trackedStatisticsDataType : trackedStatisticsDataTypes) {
+                    AchieveToDoMod.getServer().setStat(serverPlayer, trackedStatisticsDataType, value);
                 }
             }
         }

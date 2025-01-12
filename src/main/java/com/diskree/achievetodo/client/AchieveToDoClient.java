@@ -8,7 +8,7 @@ import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.server.Constants;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
-import com.diskree.achievetodo.tracking.TrackedStatType;
+import com.diskree.achievetodo.tracking.TrackedStatisticsDataType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -37,7 +37,7 @@ public class AchieveToDoClient implements ClientModInitializer {
     private static List<LockedLandmarkBox> lockedLandmarkBoxes = new ArrayList<>();
 
     private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
-    private static final Map<TrackedStatType, Integer> trackedStats = new HashMap<>();
+    private static final Map<TrackedStatisticsDataType, Integer> trackedStatisticsData = new HashMap<>();
 
     private static final List<List<AbilityType>> abilityRows = new ArrayList<>();
 
@@ -57,8 +57,8 @@ public class AchieveToDoClient implements ClientModInitializer {
         return trackedScores.getOrDefault(progressType, 0);
     }
 
-    public static int getTrackedStat(@NotNull TrackedStatType statType) {
-        return trackedStats.getOrDefault(statType, 0);
+    public static int getTrackedStatisticsData(@NotNull TrackedStatisticsDataType statType) {
+        return trackedStatisticsData.getOrDefault(statType, 0);
     }
 
     public static List<LockedLandmarkBox> getLockedLandmarkBoxes() {
@@ -122,7 +122,7 @@ public class AchieveToDoClient implements ClientModInitializer {
             lockedLandmarkBlockBoxes.clear();
             lockedLandmarkBoxes.clear();
             trackedScores.clear();
-            trackedStats.clear();
+            trackedStatisticsData.clear();
         });
     }
 
@@ -135,9 +135,9 @@ public class AchieveToDoClient implements ClientModInitializer {
             })
         );
         ClientPlayNetworking.registerGlobalReceiver(SyncObtainedAdvancementsCountPayload.ID, (payload, context) ->
-            context.client().execute(() -> obtainedAdvancementsCount = payload.count())
+            context.client().execute(() -> obtainedAdvancementsCount = payload.obtainedAdvancementsCount())
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncLockedLandmarksPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(LandmarksLockedStatusChangedPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 boolean isChanged = false;
                 for (var entry : payload.landmarks().entrySet()) {
@@ -164,10 +164,10 @@ public class AchieveToDoClient implements ClientModInitializer {
                 }
             })
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncLandmarkTypesUnlockedPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(LandmarkTypesUnlockedPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 boolean isChanged = false;
-                for (LandmarkType landmarkType : payload.landmarks()) {
+                for (LandmarkType landmarkType : payload.unlockedLandmarkTypes()) {
                     if (lockedLandmarkBlockBoxes.remove(landmarkType) != null) {
                         isChanged = true;
                     }
@@ -177,20 +177,24 @@ public class AchieveToDoClient implements ClientModInitializer {
                 }
             })
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncResizedLandmarkPayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(LockedLandmarkResizedPayload.ID, (payload, context) ->
             context.client().execute(() -> {
                 Set<DimensionalBlockBox> dimensionalBlockBoxes = lockedLandmarkBlockBoxes.get(payload.landmarkType());
-                if (dimensionalBlockBoxes.remove(payload.oldDimensionalBlockBox())) {
-                    dimensionalBlockBoxes.add(payload.newDimensionalBlockBox());
+                DimensionType dimensionType = payload.dimensionType();
+                if (dimensionalBlockBoxes.remove(new DimensionalBlockBox(dimensionType, payload.oldBlockBox()))) {
+                    dimensionalBlockBoxes.add(new DimensionalBlockBox(dimensionType, payload.newBlockBox()));
                     calculateLockedLandmarkBoxes();
                 }
             })
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncScorePayload.ID, (payload, context) ->
+        ClientPlayNetworking.registerGlobalReceiver(ScoreProgressChangedPayload.ID, (payload, context) ->
             context.client().execute(() -> trackedScores.put(payload.progressType(), payload.progress()))
         );
-        ClientPlayNetworking.registerGlobalReceiver(SyncStatPayload.ID, (payload, context) ->
-            context.client().execute(() -> trackedStats.put(payload.statType(), payload.progress()))
+        ClientPlayNetworking.registerGlobalReceiver(StatisticsDataProgressChangedPayload.ID, (payload, context) ->
+            context.client().execute(() -> trackedStatisticsData.put(
+                payload.trackedStatisticsDataType(),
+                payload.newProgress()
+            ))
         );
     }
 
@@ -202,6 +206,7 @@ public class AchieveToDoClient implements ClientModInitializer {
         for (var entry : lockedLandmarkBlockBoxes.entrySet()) {
             LandmarkType landmarkType = entry.getKey();
             for (DimensionalBlockBox dimensionalBlockBox : entry.getValue()) {
+
                 result.add(new LockedLandmarkBox(
                     landmarkType,
                     dimensionalBlockBox.dimensionType(),
@@ -210,14 +215,13 @@ public class AchieveToDoClient implements ClientModInitializer {
             }
         }
         result.sort((lockedLandmarkBox, otherLockedLandmarkBox) -> {
-            Box box = lockedLandmarkBox.box();
-            Box otherBox = otherLockedLandmarkBox.box();
-            double volume = box.getLengthX() * box.getLengthY() * box.getLengthZ();
-            double otherVolume = otherBox.getLengthX() * otherBox.getLengthY() * otherBox.getLengthZ();
-            int compared = Double.compare(otherVolume, volume);
-            if (compared != 0) {
-                return compared;
+            DimensionType dimensionType = lockedLandmarkBox.dimensionType();
+            DimensionType otherDimensionType = otherLockedLandmarkBox.dimensionType();
+            int dimensionTypeComparison = dimensionType.compareTo(otherDimensionType);
+            if (dimensionTypeComparison != 0) {
+                return dimensionTypeComparison;
             }
+
             LandmarkType landmarkType = lockedLandmarkBox.landmarkType();
             LandmarkType otherLandmarkType = otherLockedLandmarkBox.landmarkType();
             AbilityType abilityType = AbilityType.findByLandmarkType(landmarkType);
@@ -225,23 +229,17 @@ public class AchieveToDoClient implements ClientModInitializer {
 
             int requiredCount = abilitiesConfiguration.get(abilityType);
             int otherRequiredCount = abilitiesConfiguration.get(otherAbilityType);
-            if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
-                requiredCount = Integer.MIN_VALUE;
-            }
-            if (otherRequiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
-                otherRequiredCount = Integer.MIN_VALUE;
-            }
             if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 requiredCount = Integer.MAX_VALUE;
             }
             if (otherRequiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
                 otherRequiredCount = Integer.MAX_VALUE;
             }
-            compared = Integer.compare(otherRequiredCount, requiredCount);
-            if (compared != 0) {
-                return compared;
+            int requiredCountComparison = Integer.compare(otherRequiredCount, requiredCount);
+            if (requiredCountComparison != 0) {
+                return requiredCountComparison;
             }
-            return Integer.compare(landmarkType.ordinal(), otherLandmarkType.ordinal());
+            return Integer.compare(otherLandmarkType.ordinal(), landmarkType.ordinal());
         });
         lockedLandmarkBoxes = result;
     }
@@ -250,30 +248,33 @@ public class AchieveToDoClient implements ClientModInitializer {
         return isAbilityLocked(ability, false);
     }
 
-    public static boolean isAbilityLocked(AbilityType ability, boolean checkOnly) {
+    public static boolean isAbilityLocked(AbilityType abilityType, boolean checkOnly) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (ability == null || player == null || player.isCreative() || player.isSpectator()) {
+        if (abilityType == null || player == null || player.isCreative() || player.isSpectator()) {
             return false;
         }
         if (isNotReady()) {
             return true;
         }
-        int requiredCount = abilitiesConfiguration.get(ability);
-        if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG ||
-            requiredCount != Constants.Progression.PERMANENTLY_LOCKED_FLAG && obtainedAdvancementsCount >= requiredCount
+        int requiredCount = abilitiesConfiguration.get(abilityType);
+        if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
+            return false;
+        }
+        if (requiredCount != Constants.Progression.PERMANENTLY_LOCKED_FLAG &&
+            obtainedAdvancementsCount >= requiredCount
         ) {
             return false;
         }
         if (!checkOnly) {
             Text lockedMessageText;
             if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
-                lockedMessageText = ability.buildPermanentlyLockedMessage();
+                lockedMessageText = abilityType.buildPermanentlyLockedMessage();
             } else {
                 int leftCount = requiredCount - obtainedAdvancementsCount;
-                lockedMessageText = ability.buildUnlockProgressMessage(leftCount);
+                lockedMessageText = abilityType.buildUnlockProgressMessage(leftCount);
             }
             player.sendMessage(lockedMessageText, true);
-            ClientPlayNetworking.send(new DemystifyAbilityPayload(ability));
+            ClientPlayNetworking.send(new DemystifyAbilityPayload(abilityType));
         }
         return true;
     }

@@ -29,8 +29,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 @Mixin(StructureStart.class)
 public class StructureStartMixin implements StructureStartExtension {
@@ -40,6 +41,9 @@ public class StructureStartMixin implements StructureStartExtension {
 
     @Unique
     private BlockBox landmarkBlockBox;
+
+    @Unique
+    private BlockBox initialLandmarkBlockBox;
 
     @Override
     public void achievetodo$setLandmarkType(LandmarkType landmarkType) {
@@ -152,7 +156,18 @@ public class StructureStartMixin implements StructureStartExtension {
             DimensionType dimensionType = DimensionType.findByWorld(serverWorld.getRegistryKey());
             if (dimensionType != null && world instanceof LandmarkGenerationTracker landmarkGenerationTracker) {
                 landmarkGenerationTracker.achievetodo$setLandmarkGenerationTrackingEnabled(true);
-                landmarkGenerationTracker.achievetodo$setLandmarkBlockBox(landmarkBlockBox);
+                if (landmarkBlockBox != null) {
+                    landmarkGenerationTracker.achievetodo$setLandmarkBlockBox(new BlockBox(
+                        landmarkBlockBox.getMinX(),
+                        landmarkBlockBox.getMinY(),
+                        landmarkBlockBox.getMinZ(),
+                        landmarkBlockBox.getMaxX(),
+                        landmarkBlockBox.getMaxY(),
+                        landmarkBlockBox.getMaxZ()
+                    ));
+                } else {
+                    landmarkGenerationTracker.achievetodo$setLandmarkBlockBox(null);
+                }
             }
         }
     }
@@ -179,22 +194,31 @@ public class StructureStartMixin implements StructureStartExtension {
             if (newLandmarkBlockBox != null) {
                 ServerWorld serverWorld = world.toServerWorld();
                 DimensionType dimensionType = DimensionType.findByWorld(serverWorld.getRegistryKey());
-                DimensionalBlockBox newDimensionalBlockBox = new DimensionalBlockBox(dimensionType, newLandmarkBlockBox);
+                DimensionalBlockBox newDimensionalBlockBox = new DimensionalBlockBox(
+                    dimensionType,
+                    newLandmarkBlockBox
+                );
                 if (landmarkBlockBox == null) {
                     AchieveToDoMod.getServer().onLandmarksLoadedStatusChanged(
                         serverWorld,
                         pos,
-                        Map.of(landmarkType, List.of(newDimensionalBlockBox)),
+                        Map.of(landmarkType, Set.of(newDimensionalBlockBox)),
                         true
                     );
                 } else {
-                    AchieveToDoMod.getServer().onLandmarkResized(
-                        serverWorld,
-                        pos,
-                        landmarkType,
-                        new DimensionalBlockBox(dimensionType, landmarkBlockBox),
-                        new DimensionalBlockBox(dimensionType, newLandmarkBlockBox)
+                    DimensionalBlockBox oldDimensionalBlockBox = new DimensionalBlockBox(
+                        dimensionType,
+                        landmarkBlockBox
                     );
+                    if (!newLandmarkBlockBox.equals(landmarkBlockBox)) {
+                        AchieveToDoMod.getServer().onLandmarkResized(
+                            serverWorld,
+                            pos,
+                            landmarkType,
+                            oldDimensionalBlockBox,
+                            newDimensionalBlockBox
+                        );
+                    }
                 }
                 landmarkBlockBox = newLandmarkBlockBox;
             }
