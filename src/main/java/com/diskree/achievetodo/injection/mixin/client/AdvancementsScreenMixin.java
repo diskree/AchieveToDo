@@ -2,7 +2,6 @@ package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.client.gui.AdvancementsTabType;
-import com.diskree.achievetodo.injection.extension.client.AdvancementsScreenExtension;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -11,7 +10,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.advancement.AdvancementTab;
 import net.minecraft.client.gui.screen.advancement.AdvancementTabType;
-import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.ItemStack;
@@ -26,28 +24,21 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 @Mixin(AdvancementsScreen.class)
-public abstract class AdvancementsScreenMixin extends Screen implements AdvancementsScreenExtension {
+public abstract class AdvancementsScreenMixin extends Screen {
 
     @Unique
     private final Identifier ADVANCEMENTS_TAB_MYSTIFIED_MASK_TEXTURE =
         AchieveToDoMod.getIdentifier("advancements_tab_mystified_mask");
 
-    @Unique
-    private AdvancementWidget focusedAdvancementWidget;
-
-    @Unique
-    private boolean isFocusedAdvancementClicked;
-
-    @Unique
-    private Identifier activeAdvancementId;
+    @Shadow
+    @Final
+    private Map<AdvancementEntry, AdvancementTab> tabs;
 
     @Unique
     private boolean isLockedTab(@NotNull AdvancementTab tab) {
@@ -63,38 +54,6 @@ public abstract class AdvancementsScreenMixin extends Screen implements Advancem
     public AdvancementsScreenMixin() {
         super(null);
     }
-
-    @Override
-    public void achievetodo$setFocusedAdvancementWidget(AdvancementWidget focusedAdvancementWidget) {
-        this.focusedAdvancementWidget = focusedAdvancementWidget;
-    }
-
-    @Override
-    public void achievetodo$onMouseReleased(int button) {
-        if (activeAdvancementId == null &&
-            isFocusedAdvancementClicked &&
-            focusedAdvancementWidget != null &&
-            button == MouseEvent.NOBUTTON
-        ) {
-            activeAdvancementId = focusedAdvancementWidget.advancement.getAdvancementEntry().id();
-            focusedAdvancementWidget = null;
-            isFocusedAdvancementClicked = false;
-        }
-    }
-
-    @Override
-    public Identifier achievetodo$getActiveAdvancementId() {
-        return activeAdvancementId;
-    }
-
-    @Override
-    public void achievetodo$setActiveAdvancementId(Identifier advancementId) {
-        activeAdvancementId = advancementId;
-    }
-
-    @Shadow
-    @Final
-    private Map<AdvancementEntry, AdvancementTab> tabs;
 
     @Inject(
         method = "init",
@@ -247,57 +206,6 @@ public abstract class AdvancementsScreenMixin extends Screen implements Advancem
             context.draw();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.disableBlend();
-        }
-    }
-
-    @Inject(
-        method = "mouseScrolled",
-        at = @At(value = "HEAD")
-    )
-    private void resetFocusedAdvancementOnScroll(
-        double mouseX,
-        double mouseY,
-        double horizontalAmount,
-        double verticalAmount,
-        CallbackInfoReturnable<Boolean> cir
-    ) {
-        if (focusedAdvancementWidget != null) {
-            isFocusedAdvancementClicked = false;
-        }
-    }
-
-    @Inject(
-        method = "mouseDragged",
-        at = @At(value = "HEAD")
-    )
-    private void resetFocusedAdvancementOnDrag(
-        double mouseX,
-        double mouseY,
-        int button,
-        double deltaX,
-        double deltaY,
-        CallbackInfoReturnable<Boolean> cir
-    ) {
-        if (focusedAdvancementWidget != null) {
-            isFocusedAdvancementClicked = false;
-        }
-    }
-
-    @Inject(
-        method = "mouseClicked",
-        at = @At(value = "HEAD")
-    )
-    public void mouseClickedInject(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        isFocusedAdvancementClicked = focusedAdvancementWidget != null && button == MouseEvent.NOBUTTON;
-    }
-
-    @Inject(
-        method = "selectTab",
-        at = @At(value = "HEAD")
-    )
-    public void closeAdvancementInfo(AdvancementEntry advancement, CallbackInfo ci) {
-        if (activeAdvancementId != null) {
-            activeAdvancementId = null;
         }
     }
 }
