@@ -15,18 +15,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public record LandmarksLockedStatusChangedPayload(
+public record SyncLockedLandmarksPayload(
     @NotNull Map<LandmarkType, Set<DimensionalBlockBox>> landmarks,
     boolean isLocked
 ) implements CustomPayload {
 
-    public static final CustomPayload.Id<LandmarksLockedStatusChangedPayload> ID =
-        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier(LandmarksLockedStatusChangedPayload.class.getName()));
+    public static final CustomPayload.Id<SyncLockedLandmarksPayload> ID =
+        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("sync_locked_landmarks"));
 
-    public static final PacketCodec<PacketByteBuf, LandmarksLockedStatusChangedPayload> CODEC =
-        CustomPayload.codecOf(LandmarksLockedStatusChangedPayload::write, LandmarksLockedStatusChangedPayload::new);
+    public static final PacketCodec<PacketByteBuf, SyncLockedLandmarksPayload> CODEC =
+        CustomPayload.codecOf(SyncLockedLandmarksPayload::write, SyncLockedLandmarksPayload::new);
 
-    private LandmarksLockedStatusChangedPayload(@NotNull PacketByteBuf buf) {
+    private SyncLockedLandmarksPayload(@NotNull PacketByteBuf buf) {
         this(
             readMap(buf),
             buf.readBoolean()

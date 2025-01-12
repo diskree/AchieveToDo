@@ -29,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Mixin(StructureStart.class)
 public class StructureStartMixin implements StructureStartExtension {
@@ -184,7 +184,7 @@ public class StructureStartMixin implements StructureStartExtension {
                     AchieveToDoMod.getServer().onLandmarksLoadedStatusChanged(
                         serverWorld,
                         pos,
-                        Map.of(landmarkType, Set.of(newDimensionalBlockBox)),
+                        Map.of(landmarkType, List.of(newDimensionalBlockBox)),
                         true
                     );
                 } else {

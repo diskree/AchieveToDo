@@ -4,7 +4,6 @@ import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.gui.screen.advancement.AdvancementTabType;
 import net.minecraft.text.Text;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
-public enum AdvancementsTabType {
+public enum AdvancementsTab {
 
     ABILITIES,
     BACAP,
@@ -37,12 +36,12 @@ public enum AdvancementsTabType {
     END,
     CHALLENGES;
 
-    public @NotNull Identifier getMystifiedTabId() {
-        return AchieveToDoMod.getIdentifier("mystified_tab_" + getName() + "/root");
+    public @NotNull Identifier getLockedTabId() {
+        return AchieveToDoMod.getIdentifier("locked_tab_" + getName() + "/root");
     }
 
-    public @NotNull Text getMystifiedTabTooltipText() {
-        return AchieveToDoClient.translate("advancements_tab_mystified_tooltip." + getName())
+    public @NotNull Text getLockedTabTooltipText() {
+        return AchieveToDoClient.translate("locked_tab_tooltip." + getName())
             .formatted(Formatting.ITALIC)
             .formatted(Formatting.GRAY);
     }
@@ -51,18 +50,14 @@ public enum AdvancementsTabType {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    public static @Nullable AdvancementsTabType findByAdvancement(@NotNull PlacedAdvancement advancement) {
-        return findByAdvancement(advancement.getAdvancementEntry());
+    public static @Nullable AdvancementsTab findByAdvancement(@NotNull PlacedAdvancement advancement) {
+        return findByAdvancement(advancement.getAdvancementEntry().id());
     }
 
-    public static @Nullable AdvancementsTabType findByAdvancement(@NotNull AdvancementEntry advancement) {
-        return findByAdvancement(advancement.id());
-    }
-
-    public static @Nullable AdvancementsTabType findByAdvancement(@NotNull Identifier advancementId) {
+    public static @Nullable AdvancementsTab findByAdvancement(@NotNull Identifier advancementId) {
         String[] pathSlices = advancementId.getPath().split("/");
         if (pathSlices.length == 2) {
-            for (AdvancementsTabType tabType : values()) {
+            for (AdvancementsTab tabType : values()) {
                 if (tabType.name().equalsIgnoreCase(pathSlices[0])) {
                     return tabType;
                 }
@@ -93,9 +88,9 @@ public enum AdvancementsTabType {
     public int getOrder() {
         int order = 0;
         AdvancementTabType position = getPosition();
-        for (AdvancementsTabType advancementsTabType : AdvancementsTabType.values()) {
-            if (advancementsTabType.getPosition() == position) {
-                if (advancementsTabType == this) {
+        for (AdvancementsTab tab : AdvancementsTab.values()) {
+            if (tab.getPosition() == position) {
+                if (tab == this) {
                     break;
                 }
                 order++;

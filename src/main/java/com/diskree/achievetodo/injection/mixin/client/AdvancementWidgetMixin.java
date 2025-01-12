@@ -69,7 +69,7 @@ public class AdvancementWidgetMixin {
             return false;
         }
         CriterionProgress demystifiedCriterionProgress = progress.getCriterionProgress(
-            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX
+            AbilityAdvancementsGenerator.DEMYSTIFIED_CRITERION_PREFIX + ability.getName()
         );
         return demystifiedCriterionProgress != null && !demystifiedCriterionProgress.isObtained();
     }

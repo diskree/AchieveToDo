@@ -3,16 +3,11 @@ package com.diskree.achievetodo;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.ability.DimensionType;
 import com.diskree.achievetodo.client.AchieveToDoClient;
-import com.diskree.achievetodo.client.gui.AdvancementsTabType;
-import com.diskree.achievetodo.networking.c2s.DemystifyAbilityTypePayload;
-import com.diskree.achievetodo.networking.c2s.DemystifyRandomAdvancementCriterionPayload;
+import com.diskree.achievetodo.networking.c2s.DemystifyAbilityPayload;
 import com.diskree.achievetodo.networking.s2c.*;
 import com.diskree.achievetodo.server.AchieveToDoServer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementDisplay;
-import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -25,18 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 public class AchieveToDoMod implements ModInitializer {
 
     public static Logger logger = LoggerFactory.getLogger(BuildConfig.MOD_NAME);
 
-    private static final List<String> TRACKER_BLACK_LIST = List.of(
-        "blazeandcave:redstone/take_notes",
-        "blazeandcave:nether/this_ones_mine",
-        "blazeandcave:challenges/riddle_me_this",
-        "blazeandcave:challenges/were_in_the_endgame_now"
-    );
     private static AchieveToDoServer server;
 
     @Override
@@ -107,66 +94,30 @@ public class AchieveToDoMod implements ModInitializer {
         return true;
     }
 
-    public static boolean isTrackableAdvancement(@NotNull AdvancementEntry advancementEntry) {
-        Advancement advancement = advancementEntry.value();
-        AdvancementDisplay display = advancement.display().orElse(null);
-        if (advancement.isRoot() ||
-            display == null ||
-            display.isHidden() ||
-            advancement.requirements().requirements().size() <= 1 ||
-            TRACKER_BLACK_LIST.contains(advancementEntry.id().toString())
-        ) {
-            return false;
-        }
-        AdvancementsTabType tab = AdvancementsTabType.findByAdvancement(advancementEntry);
-        return tab != null && tab != AdvancementsTabType.ABILITIES && tab != AdvancementsTabType.BACAP;
-    }
-
     private static void registerPayloads() {
-        PayloadTypeRegistry.playC2S().register(
-            DemystifyAbilityTypePayload.ID,
-            DemystifyAbilityTypePayload.CODEC
-        );
-        PayloadTypeRegistry.playC2S().register(
-            DemystifyRandomAdvancementCriterionPayload.ID,
-            DemystifyRandomAdvancementCriterionPayload.CODEC
-        );
+        PayloadTypeRegistry.playC2S().register(DemystifyAbilityPayload.ID, DemystifyAbilityPayload.CODEC);
 
         PayloadTypeRegistry.playS2C().register(
-            AbilitiesConfigurationLoadedPayload.ID,
-            AbilitiesConfigurationLoadedPayload.CODEC
+            SyncAbilitiesConfigurationPayload.ID,
+            SyncAbilitiesConfigurationPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
-            ObtainedAdvancementsCountChangedPayload.ID,
-            ObtainedAdvancementsCountChangedPayload.CODEC
+            SyncObtainedAdvancementsCountPayload.ID,
+            SyncObtainedAdvancementsCountPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
-            LandmarksLockedStatusChangedPayload.ID,
-            LandmarksLockedStatusChangedPayload.CODEC
+            SyncLockedLandmarksPayload.ID,
+            SyncLockedLandmarksPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
-            NotifyLandmarkTypesUnlockedPayload.ID,
-            NotifyLandmarkTypesUnlockedPayload.CODEC
+            SyncLandmarkTypesUnlockedPayload.ID,
+            SyncLandmarkTypesUnlockedPayload.CODEC
         );
         PayloadTypeRegistry.playS2C().register(
-            LockedLandmarkResizedPayload.ID,
-            LockedLandmarkResizedPayload.CODEC
+            SyncResizedLandmarkPayload.ID,
+            SyncResizedLandmarkPayload.CODEC
         );
-        PayloadTypeRegistry.playS2C().register(
-            NotifyScoreProgressChangedPayload.ID,
-            NotifyScoreProgressChangedPayload.CODEC
-        );
-        PayloadTypeRegistry.playS2C().register(
-            NotifyStatProgressChangedPayload.ID,
-            NotifyStatProgressChangedPayload.CODEC
-        );
-        PayloadTypeRegistry.playS2C().register(
-            DemystifiedCriteriaLoadedPayload.ID,
-            DemystifiedCriteriaLoadedPayload.CODEC
-        );
-        PayloadTypeRegistry.playS2C().register(
-            NotifyAdvancementCriterionDemystifiedPayload.ID,
-            NotifyAdvancementCriterionDemystifiedPayload.CODEC
-        );
+        PayloadTypeRegistry.playS2C().register(SyncScorePayload.ID, SyncScorePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(SyncStatPayload.ID, SyncStatPayload.CODEC);
     }
 }

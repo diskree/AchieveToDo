@@ -7,20 +7,20 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
-public record AbilitiesConfigurationLoadedPayload(
+public record SyncAbilitiesConfigurationPayload(
     @NotNull Map<AbilityType, Integer> abilitiesConfiguration
 ) implements CustomPayload {
 
-    public static final Id<AbilitiesConfigurationLoadedPayload> ID =
-        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier(AbilitiesConfigurationLoadedPayload.class.getName()));
+    public static final Id<SyncAbilitiesConfigurationPayload> ID =
+        new CustomPayload.Id<>(AchieveToDoMod.getIdentifier("sync_abilities_configuration"));
 
-    public static final PacketCodec<PacketByteBuf, AbilitiesConfigurationLoadedPayload> CODEC =
-        CustomPayload.codecOf(AbilitiesConfigurationLoadedPayload::write, AbilitiesConfigurationLoadedPayload::new);
+    public static final PacketCodec<PacketByteBuf, SyncAbilitiesConfigurationPayload> CODEC =
+        CustomPayload.codecOf(SyncAbilitiesConfigurationPayload::write, SyncAbilitiesConfigurationPayload::new);
 
-    private AbilitiesConfigurationLoadedPayload(@NotNull PacketByteBuf buf) {
+    private SyncAbilitiesConfigurationPayload(@NotNull PacketByteBuf buf) {
         this(readMap(buf));
     }
 
@@ -38,8 +38,8 @@ public record AbilitiesConfigurationLoadedPayload(
     }
 
     private static @NotNull Map<AbilityType, Integer> readMap(@NotNull PacketByteBuf buf) {
+        Map<AbilityType, Integer> map = new EnumMap<>(AbilityType.class);
         int size = buf.readInt();
-        Map<AbilityType, Integer> map = new HashMap<>(size);
         for (int i = 0; i < size; i++) {
             map.put(
                 buf.readEnumConstant(AbilityType.class),

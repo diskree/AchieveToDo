@@ -1,12 +1,15 @@
 package com.diskree.achievetodo.ability.generation;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.AbilityType;
+import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
-import net.minecraft.advancement.*;
+import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.AdvancementFrame;
+import net.minecraft.advancement.AdvancementRewards;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.advancement.criterion.TickCriterion;
@@ -24,8 +27,8 @@ import java.util.function.Consumer;
 
 public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
 
-    public static final String DEMYSTIFIED_CRITERION_PREFIX = "demystified";
-    public static final String UNLOCKED_CRITERION = "unlocked";
+    public static final String DEMYSTIFIED_CRITERION_PREFIX = BuildConfig.MOD_ID + "_" + "demystified" + "_";
+    public static final String UNLOCKED_CRITERION = BuildConfig.MOD_ID + "_" + "unlocked";
 
     public static final String ABILITY_PATH_PREFIX = "abilities/";
 
@@ -84,14 +87,13 @@ public class AbilityAdvancementsGenerator extends FabricAdvancementProvider {
                 )
                 .rewards(AdvancementRewards.Builder.function(advancementId))
                 .criterion(
-                    DEMYSTIFIED_CRITERION_PREFIX,
+                    DEMYSTIFIED_CRITERION_PREFIX + abilityType.getName(),
                     Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions())
                 )
                 .criterion(
                     UNLOCKED_CRITERION,
                     Criteria.IMPOSSIBLE.create(new ImpossibleCriterion.Conditions())
                 )
-                .criteriaMerger(AdvancementRequirements.CriterionMerger.AND)
                 .build(advancementId)
             );
         }

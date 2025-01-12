@@ -7,15 +7,15 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
-public record NotifyStatProgressChangedPayload(TrackedStatType statType, int progress) implements CustomPayload {
+public record SyncStatPayload(TrackedStatType statType, int progress) implements CustomPayload {
 
-    public static final Id<NotifyStatProgressChangedPayload> ID =
-        new Id<>(AchieveToDoMod.getIdentifier(NotifyStatProgressChangedPayload.class.getName()));
+    public static final Id<SyncStatPayload> ID =
+        new Id<>(AchieveToDoMod.getIdentifier("sync_stat"));
 
-    public static final PacketCodec<PacketByteBuf, NotifyStatProgressChangedPayload> CODEC =
-        CustomPayload.codecOf(NotifyStatProgressChangedPayload::write, NotifyStatProgressChangedPayload::new);
+    public static final PacketCodec<PacketByteBuf, SyncStatPayload> CODEC =
+        CustomPayload.codecOf(SyncStatPayload::write, SyncStatPayload::new);
 
-    private NotifyStatProgressChangedPayload(@NotNull PacketByteBuf buf) {
+    private SyncStatPayload(@NotNull PacketByteBuf buf) {
         this(
             buf.readEnumConstant(TrackedStatType.class),
             buf.readInt()

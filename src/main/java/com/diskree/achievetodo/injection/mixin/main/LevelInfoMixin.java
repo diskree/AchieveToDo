@@ -43,15 +43,14 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
     @Override
     public Map<AbilityType, Integer> achievetodo$getAbilitiesConfiguration(long seed) {
         if (TextUtils.isEmpty(configName)) {
-            throw new IllegalStateException("Config name missing from level.dat!");
+            throw new IllegalStateException("Configuration name missing from level.dat!");
         }
-        Path abilityConfigurationsDirectory = FabricLoader.getInstance().getConfigDir()
-            .resolve(BuildConfig.MOD_ID).resolve("ability_configurations");
-        if (!Files.exists(abilityConfigurationsDirectory)) {
+        Path configDir = FabricLoader.getInstance().getConfigDir().resolve(BuildConfig.MOD_ID);
+        if (!Files.exists(configDir)) {
             try {
-                Files.createDirectories(abilityConfigurationsDirectory);
+                Files.createDirectories(configDir);
             } catch (IOException e) {
-                throw new RuntimeException("Creating directory", e);
+                throw new RuntimeException("Creating config directory", e);
             }
         }
         ProgressionModeType progressionModeType = ProgressionModeType.findByName(configName);
@@ -59,17 +58,17 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
         if (progressionModeType == ProgressionModeType.CHAOS) {
             fileName += "_" + seed;
         }
-        Path abilityConfigurationFile = abilityConfigurationsDirectory.resolve(fileName + Constants.FileExtension.TOML);
+        Path configFile = configDir.resolve(fileName + Constants.FileExtension.TOML);
         Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
         Map<String, Object> abilitiesMap = null;
         if (progressionModeType != null) {
-            if (Files.exists(abilityConfigurationFile)) {
+            if (Files.exists(configFile)) {
                 try {
-                    Toml abilityConfiguration = new Toml().read(abilityConfigurationFile.toFile());
-                    if (abilityConfiguration.getLong(Constants.ConfigKey.VERSION) >= progressionModeType.getVersion()) {
-                        Toml abilityTable = abilityConfiguration.getTable(Constants.ConfigKey.ABILITY_TABLE);
-                        if (abilityTable != null) {
-                            abilitiesMap = abilityTable.toMap();
+                    Toml configToml = new Toml().read(configFile.toFile());
+                    if (configToml.getLong(Constants.ConfigKey.VERSION) >= progressionModeType.getVersion()) {
+                        Toml abilitiesTable = configToml.getTable(Constants.ConfigKey.ABILITIES_TABLE);
+                        if (abilitiesTable != null) {
+                            abilitiesMap = abilitiesTable.toMap();
                         }
                     }
                 } catch (Exception ignored) {
@@ -80,7 +79,7 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
                     .append(Constants.ConfigKey.VERSION + " = ")
                     .append(progressionModeType.getVersion())
                     .append("\n\n")
-                    .append("[" + Constants.ConfigKey.ABILITY_TABLE + "]")
+                    .append("[" + Constants.ConfigKey.ABILITIES_TABLE + "]")
                     .append("\n");
                 Map<AbilityType, Integer> progression = switch (progressionModeType) {
                     case EASY -> Progressions.getEasyProgression();
@@ -102,20 +101,20 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
                         .append("\n");
                 }
                 try {
-                    Files.writeString(abilityConfigurationFile, configTomlContents.toString());
+                    Files.writeString(configFile, configTomlContents.toString());
                 } catch (IOException e) {
                     throw new RuntimeException("Creating config", e);
                 }
                 return abilitiesConfiguration;
             }
         } else {
-            if (!Files.exists(abilityConfigurationFile)) {
-                throw new IllegalArgumentException("Config " + abilityConfigurationFile + " not found!");
+            if (!Files.exists(configFile)) {
+                throw new IllegalArgumentException("Config " + configFile + " not found!");
             }
             try {
                 abilitiesMap = new Toml()
-                    .read(abilityConfigurationFile.toFile())
-                    .getTable(Constants.ConfigKey.ABILITY_TABLE)
+                    .read(configFile.toFile())
+                    .getTable(Constants.ConfigKey.ABILITIES_TABLE)
                     .toMap();
             } catch (Exception e) {
                 throw new RuntimeException("Reading config", e);
