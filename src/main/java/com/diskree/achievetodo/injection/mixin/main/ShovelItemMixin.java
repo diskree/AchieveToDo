@@ -2,15 +2,11 @@ package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
-import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.ShovelItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -48,19 +44,11 @@ public class ShovelItemMixin {
         ),
         cancellable = true
     )
-    public void lockFlattenUsage(
-        ItemUsageContext context,
-        CallbackInfoReturnable<ActionResult> cir,
-        @Local PlayerEntity player,
-        @Local World world,
-        @Local BlockPos blockPos
-    ) {
-        if (player != null) {
-            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) ||
-                AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
-            ) {
-                cir.setReturnValue(ActionResult.PASS);
-            }
+    public void lockFlattenUsage(@NotNull ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(context) ||
+            AchieveToDoMod.isAbilityLocked(context.getPlayer(), AbilityType.findToolMaterialUsageAbility(material))
+        ) {
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 
@@ -75,17 +63,12 @@ public class ShovelItemMixin {
     )
     public void lockCampfireExtinguishUsage(
         @NotNull ItemUsageContext context,
-        CallbackInfoReturnable<ActionResult> cir,
-        @Local PlayerEntity player,
-        @Local World world,
-        @Local BlockPos blockPos
+        CallbackInfoReturnable<ActionResult> cir
     ) {
-        if (player != null) {
-            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) ||
-                AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
-            ) {
-                cir.setReturnValue(ActionResult.PASS);
-            }
+        if (AchieveToDoMod.isTargetInLockedLandmark(context) ||
+            AchieveToDoMod.isAbilityLocked(context.getPlayer(), AbilityType.findToolMaterialUsageAbility(material))
+        ) {
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

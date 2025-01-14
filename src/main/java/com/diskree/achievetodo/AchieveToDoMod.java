@@ -10,13 +10,14 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,53 +43,61 @@ public class AchieveToDoMod implements ModInitializer {
         return Identifier.of(BuildConfig.MOD_ID, path);
     }
 
-    public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType abilityType) {
+    public static boolean isAbilityLocked(@Nullable PlayerEntity player, @Nullable AbilityType abilityType) {
         return isAbilityLocked(player, abilityType, false);
     }
 
-    public static boolean isAbilityLocked(@NotNull PlayerEntity player, AbilityType abilityType, boolean checkOnly) {
+    public static boolean isAbilityLocked(
+        @Nullable PlayerEntity player,
+        @Nullable AbilityType abilityType,
+        boolean checkOnly
+    ) {
+        if (player == null || abilityType == null) {
+            return false;
+        }
         if (player.getWorld().isClient) {
             return AchieveToDoClient.isAbilityLocked(abilityType, checkOnly);
         }
-        return player instanceof ServerPlayerEntity serverPlayer && server.isAbilityLocked(serverPlayer, abilityType);
+        return player instanceof ServerPlayerEntity serverPlayer &&
+            server != null &&
+            server.isAbilityLocked(serverPlayer, abilityType);
     }
 
-    public static boolean isTargetInLockedLandmark(@NotNull PlayerEntity actor, @NotNull Entity target) {
+    public static boolean isTargetInLockedLandmark(@Nullable PlayerEntity actor, @NotNull Entity target) {
         return isTargetInLockedLandmark(actor, target.getWorld(), target.getBoundingBox());
     }
 
-    public static boolean isTargetInLockedLandmark(
-        @NotNull PlayerEntity actor,
-        World targetWorld,
-        BlockPos targetBlockPos
-    ) {
-        return isTargetInLockedLandmark(actor, targetWorld, new BlockBox(targetBlockPos));
+    public static boolean isTargetInLockedLandmark(@NotNull ItemUsageContext context) {
+        return isTargetInLockedLandmark(context.getPlayer(), context.getWorld(), context.getBlockPos());
     }
 
     public static boolean isTargetInLockedLandmark(
-        @NotNull PlayerEntity actor,
-        World targetWorld,
-        BlockBox targetBlockBox
-    ) {
-        return isTargetInLockedLandmark(actor, targetWorld, Box.from(targetBlockBox));
-    }
-
-    public static boolean isTargetInLockedLandmark(
-        @NotNull PlayerEntity actor,
+        @Nullable PlayerEntity actor,
         @NotNull World targetWorld,
-        Box targetBox
+        @NotNull BlockPos targetBlockPos
     ) {
+        return isTargetInLockedLandmark(actor, targetWorld, new Box(targetBlockPos));
+    }
+
+    public static boolean isTargetInLockedLandmark(
+        @Nullable PlayerEntity actor,
+        @NotNull World targetWorld,
+        @NotNull Box targetBox
+    ) {
+        if (actor == null) {
+            return false;
+        }
         DimensionType targetDimensionType = DimensionType.findByWorld(targetWorld.getRegistryKey());
         if (targetDimensionType == null) {
             return false;
         }
         if (actor.getWorld().isClient) {
-            return AchieveToDoClient.isInLockedLandmark(targetDimensionType, targetBox);
+            return AchieveToDoClient.isTargetInLockedLandmark(targetDimensionType, targetBox);
         }
-        if (actor instanceof ServerPlayerEntity serverPlayer) {
-            return server.isInLockedLandmark(serverPlayer, targetDimensionType, targetBox);
+        if (server != null && actor instanceof ServerPlayerEntity serverPlayer) {
+            return server.isTargetInLockedLandmark(serverPlayer, targetDimensionType, targetBox);
         }
-        return true;
+        return false;
     }
 
     private static void registerPayloads() {
@@ -124,6 +133,10 @@ public class AchieveToDoMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(
             StatisticsDataProgressChangedPayload.ID,
             StatisticsDataProgressChangedPayload.CODEC
+        );
+        PayloadTypeRegistry.playS2C().register(
+            CheckTargetInLockedLandmarkPayload.ID,
+            CheckTargetInLockedLandmarkPayload.CODEC
         );
     }
 }

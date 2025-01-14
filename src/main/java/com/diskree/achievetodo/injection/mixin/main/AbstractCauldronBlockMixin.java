@@ -47,7 +47,7 @@ public class AbstractCauldronBlockMixin {
             if (AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) ||
                 AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_CAULDRON)
             ) {
-                return ActionResult.CONSUME;
+                return ActionResult.SUCCESS;
             }
         }
         return original.call(behavior, blockState, world, blockPos, player, hand, itemStack);

@@ -61,7 +61,7 @@ public abstract class GameRendererMixin {
             blackOverlayAlpha = 1.0f;
             drawBlackOverlay(stack);
         } else if (blackOverlayAlpha > 0) {
-            blackOverlayAlpha = Math.max(blackOverlayAlpha - 0.02f * tickDelta, 0);
+            blackOverlayAlpha = Math.max(0, blackOverlayAlpha - 0.02f * tickDelta);
             if (blackOverlayAlpha == 0) {
                 updateWorldIcon();
             } else {

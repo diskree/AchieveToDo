@@ -37,7 +37,7 @@ public class AnvilBlockMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
             AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_ANVIL)
         ) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

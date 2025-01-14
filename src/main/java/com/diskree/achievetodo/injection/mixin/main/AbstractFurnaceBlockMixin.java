@@ -34,7 +34,7 @@ public class AbstractFurnaceBlockMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos)) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
             return;
         }
         AbstractFurnaceBlock abstractFurnaceBlock = (AbstractFurnaceBlock) (Object) this;
@@ -45,7 +45,7 @@ public class AbstractFurnaceBlockMixin {
             default -> null;
         };
         if (AchieveToDoMod.isAbilityLocked(player, abilityType)) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

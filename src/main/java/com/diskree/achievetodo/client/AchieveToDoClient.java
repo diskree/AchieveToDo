@@ -9,6 +9,7 @@ import com.diskree.achievetodo.server.Constants;
 import com.diskree.achievetodo.tracking.TrackedNearbyEntitiesType;
 import com.diskree.achievetodo.tracking.TrackedScoreType;
 import com.diskree.achievetodo.tracking.TrackedStatisticsDataType;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -36,8 +37,8 @@ public class AchieveToDoClient implements ClientModInitializer {
     private static final Map<LandmarkType, Set<DimensionalBlockBox>> lockedLandmarkBlockBoxes = new HashMap<>();
     private static List<LockedLandmarkBox> lockedLandmarkBoxes = new ArrayList<>();
 
-    private static final Map<TrackedScoreType, Integer> trackedScores = new HashMap<>();
-    private static final Map<TrackedStatisticsDataType, Integer> trackedStatisticsData = new HashMap<>();
+    private static final Map<TrackedScoreType, Integer> trackedScores = new Object2IntOpenHashMap<>();
+    private static final Map<TrackedStatisticsDataType, Integer> trackedStatisticsData = new Object2IntOpenHashMap<>();
 
     private static final List<List<AbilityType>> abilityRows = new ArrayList<>();
 
@@ -196,6 +197,9 @@ public class AchieveToDoClient implements ClientModInitializer {
                 payload.newProgress()
             ))
         );
+        ClientPlayNetworking.registerGlobalReceiver(CheckTargetInLockedLandmarkPayload.ID, (payload, context) ->
+            context.client().execute(() -> isTargetInLockedLandmark(payload.targetDimensionType(), payload.targetBox()))
+        );
     }
 
     private void calculateLockedLandmarkBoxes() {
@@ -244,13 +248,13 @@ public class AchieveToDoClient implements ClientModInitializer {
         lockedLandmarkBoxes = result;
     }
 
-    public static boolean isAbilityLocked(AbilityType ability) {
+    public static boolean isAbilityLocked(@NotNull AbilityType ability) {
         return isAbilityLocked(ability, false);
     }
 
-    public static boolean isAbilityLocked(AbilityType abilityType, boolean checkOnly) {
+    public static boolean isAbilityLocked(@NotNull AbilityType abilityType, boolean checkOnly) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (abilityType == null || player == null || player.isCreative() || player.isSpectator()) {
+        if (player == null || player.isCreative() || player.isSpectator()) {
             return false;
         }
         if (isNotReady()) {
@@ -279,10 +283,15 @@ public class AchieveToDoClient implements ClientModInitializer {
         return true;
     }
 
-    public static boolean isInLockedLandmark(DimensionType dimensionType, Box targetBox) {
+    public static boolean isTargetInLockedLandmark(@NotNull DimensionType targetDimensionType, @NotNull Box targetBox) {
         for (LockedLandmarkBox lockedLandmarksBox : lockedLandmarkBoxes) {
-            if (lockedLandmarksBox.dimensionType() == dimensionType && lockedLandmarksBox.box().intersects(targetBox)) {
-                return isAbilityLocked(AbilityType.findByLandmarkType(lockedLandmarksBox.landmarkType()), false);
+            if (lockedLandmarksBox.dimensionType() == targetDimensionType &&
+                lockedLandmarksBox.box().intersects(targetBox)
+            ) {
+                AbilityType abilityType = AbilityType.findByLandmarkType(lockedLandmarksBox.landmarkType());
+                if (abilityType != null) {
+                    return isAbilityLocked(abilityType, false);
+                }
             }
         }
         return false;

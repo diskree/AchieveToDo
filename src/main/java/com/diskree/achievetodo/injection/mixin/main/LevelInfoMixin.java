@@ -11,6 +11,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.moandjiezana.toml.Toml;
 import com.mojang.serialization.Dynamic;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.level.LevelInfo;
 import org.apache.http.util.TextUtils;
@@ -59,7 +60,7 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
             fileName += "_" + seed;
         }
         Path configFile = configDir.resolve(fileName + Constants.FileExtension.TOML);
-        Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
+        Map<AbilityType, Integer> abilitiesConfiguration = new Object2IntOpenHashMap<>();
         Map<String, Object> abilitiesMap = null;
         if (progressionModeType != null) {
             if (Files.exists(configFile)) {

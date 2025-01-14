@@ -27,10 +27,7 @@ public class EnderEyeItemMixin {
         cancellable = true
     )
     public void lockEnderEye(@NotNull ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-        PlayerEntity player = context.getPlayer();
-        if (player != null &&
-            AchieveToDoMod.isTargetInLockedLandmark(player, context.getWorld(), context.getBlockPos())
-        ) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(context)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
     }

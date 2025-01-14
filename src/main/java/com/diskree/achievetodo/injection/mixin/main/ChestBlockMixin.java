@@ -37,7 +37,7 @@ public class ChestBlockMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
             AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_CHEST)
         ) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

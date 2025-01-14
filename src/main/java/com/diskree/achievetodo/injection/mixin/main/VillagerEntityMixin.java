@@ -36,10 +36,11 @@ public abstract class VillagerEntityMixin {
             return true;
         }
         VillagerEntity villagerEntity = (VillagerEntity) (Object) this;
-        return AchieveToDoMod.isTargetInLockedLandmark(player, villagerEntity) ||
-            AchieveToDoMod.isAbilityLocked(
-                player,
-                AbilityType.findVillagerTradeAbility(getVillagerData().getProfession())
-            );
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, villagerEntity) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.findTradeAbility(getVillagerData().getProfession()))
+        ) {
+            return true;
+        }
+        return false;
     }
 }

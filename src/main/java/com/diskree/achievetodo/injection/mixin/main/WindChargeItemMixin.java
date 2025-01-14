@@ -23,14 +23,9 @@ public class WindChargeItemMixin {
         ),
         cancellable = true
     )
-    public void lockWindCharge(
-        World world,
-        PlayerEntity player,
-        Hand hand,
-        CallbackInfoReturnable<ActionResult> cir
-    ) {
+    public void lockWindCharge(World world, PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (AchieveToDoMod.isAbilityLocked(player, AbilityType.THROW_WIND_CHARGE)) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
-import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.AchieveToDoMod;
+import com.diskree.achievetodo.ability.AbilityType;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -32,11 +32,8 @@ public class VaultSharedDataMixin {
         @NotNull Operation<Stream<UUID>> original,
         @Local(argsOnly = true) ServerWorld world
     ) {
-        return original.call(stream, predicate).filter(
-            uuid -> {
-                PlayerEntity player = world.getPlayerByUuid(uuid);
-                return player != null && !AchieveToDoMod.isAbilityLocked(player, AbilityType.UNLOCK_VAULT, true);
-            }
+        return original.call(stream, predicate).filter(uuid ->
+            !AchieveToDoMod.isAbilityLocked(world.getPlayerByUuid(uuid), AbilityType.UNLOCK_VAULT, true)
         );
     }
 }

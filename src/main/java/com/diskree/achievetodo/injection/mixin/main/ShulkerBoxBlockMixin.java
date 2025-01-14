@@ -39,7 +39,11 @@ public class ShulkerBoxBlockMixin {
         if (entity.getAnimationStage() != ShulkerBoxBlockEntity.AnimationStage.CLOSED) {
             return true;
         }
-        return AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_SHULKER_BOX);
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_SHULKER_BOX)
+        ) {
+            return false;
+        }
+        return true;
     }
 }

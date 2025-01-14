@@ -10,10 +10,10 @@ import java.util.Locale;
 
 public enum ProgressionModeType {
 
-    CHAOS(1),
-    HARD(1),
+    EASY(1),
     NORMAL(1),
-    EASY(1);
+    HARD(1),
+    CHAOS(1);
 
     private final int version;
 
@@ -22,7 +22,7 @@ public enum ProgressionModeType {
     }
 
     public static ProgressionModeType getDefaultMode() {
-        return CHAOS;
+        return NORMAL;
     }
 
     public static @Nullable ProgressionModeType findByName(String name) {

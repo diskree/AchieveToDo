@@ -8,11 +8,9 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ShearsItem;
+import net.minecraft.item.*;
 import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -49,7 +47,7 @@ public class PlayerEntityMixin {
             ordinal = 0
         )
     )
-    public boolean lockBlockBreaking(
+    public boolean lockBlockBreak(
         boolean original,
         @Local(argsOnly = true) World world,
         @Local(argsOnly = true) @NotNull BlockPos pos
@@ -129,15 +127,25 @@ public class PlayerEntityMixin {
         }
     }
 
-    @Inject(
+    @ModifyReturnValue(
         method = "canPlaceOn",
-        at = @At(value = "HEAD"),
-        cancellable = true
+        at = @At(value = "RETURN", ordinal = 0)
     )
-    public void lockBlockPlace(BlockPos pos, Direction facing, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        PlayerEntity player = (PlayerEntity) (Object) this;
-        if (AchieveToDoMod.isTargetInLockedLandmark(player, player.getWorld(), pos)) {
-            cir.setReturnValue(false);
+    public boolean lockDecorationItemPlace(
+        boolean original,
+        @Local(argsOnly = true) BlockPos blockPos,
+        @Local(argsOnly = true) Direction facing,
+        @Local(argsOnly = true) ItemStack stack
+    ) {
+        if (!original) {
+            return false;
         }
+        if (stack.getItem() instanceof DecorationItem) {
+            PlayerEntity player = (PlayerEntity) (Object) this;
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, player.getWorld(), blockPos)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

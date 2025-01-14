@@ -37,7 +37,7 @@ public class BrewingStandBlockMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
             AchieveToDoMod.isAbilityLocked(player, AbilityType.OPEN_BREWING_STAND)
         ) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

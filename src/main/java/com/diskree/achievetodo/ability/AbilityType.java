@@ -528,7 +528,7 @@ public enum AbilityType {
         return null;
     }
 
-    public static @Nullable AbilityType findVillagerTradeAbility(VillagerProfession profession) {
+    public static @Nullable AbilityType findTradeAbility(VillagerProfession profession) {
         if (profession == null) {
             return null;
         }

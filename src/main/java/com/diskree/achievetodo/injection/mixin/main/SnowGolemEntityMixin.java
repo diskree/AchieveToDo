@@ -28,7 +28,7 @@ public class SnowGolemEntityMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, snowGolemEntity) ||
             AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
         ) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

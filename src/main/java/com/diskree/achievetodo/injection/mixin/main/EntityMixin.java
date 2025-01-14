@@ -2,10 +2,13 @@ package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Portal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.EnderPearlEntity;
+import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -20,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public class EntityMixin {
+public abstract class EntityMixin {
 
     @Unique
     private boolean isEndGatewayOnCentralIsland(@NotNull BlockPos pos) {
@@ -59,6 +62,47 @@ public class EntityMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, entity)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
+    }
+
+    @Inject(
+        method = "interact",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/entity/Leashable;detachLeash()V",
+            shift = At.Shift.BEFORE
+        ),
+        cancellable = true
+    )
+    public void lockLeashDetach(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+        Entity entity = (Entity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, entity)) {
+            cir.setReturnValue(ActionResult.FAIL);
+        }
+    }
+
+    @ModifyReturnValue(
+        method = "canAddPassenger",
+        at = @At(value = "TAIL")
+    )
+    public boolean lockMinecart(
+        boolean original,
+        @Local(argsOnly = true, ordinal = 1) Entity passenger
+    ) {
+        if (!original) {
+            return false;
+        }
+        Entity entity = (Entity) (Object) this;
+        if (passenger instanceof PlayerEntity player) {
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, entity)) {
+                return false;
+            }
+            if (entity instanceof MinecartEntity &&
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.GET_INTO_MINECART)
+            ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Inject(

@@ -27,7 +27,7 @@ public class SpyglassItemMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SPYGLASS)) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.CONSUME);
         }
     }
 }

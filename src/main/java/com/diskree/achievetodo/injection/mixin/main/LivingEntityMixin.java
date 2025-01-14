@@ -37,10 +37,11 @@ public class LivingEntityMixin {
     public void lockSprint(boolean sprinting, CallbackInfo ci) {
         if (sprinting) {
             LivingEntity livingEntity = (LivingEntity) (Object) this;
-            if (livingEntity instanceof PlayerEntity player &&
-                AchieveToDoMod.isAbilityLocked(player, player.isSubmergedInWater() ? AbilityType.SWIM : AbilityType.SPRINT)
-            ) {
-                ci.cancel();
+            if (livingEntity instanceof PlayerEntity player) {
+                AbilityType abilityType = player.isSubmergedInWater() ? AbilityType.SWIM : AbilityType.SPRINT;
+                if (AchieveToDoMod.isAbilityLocked(player, abilityType)) {
+                    ci.cancel();
+                }
             }
         }
     }

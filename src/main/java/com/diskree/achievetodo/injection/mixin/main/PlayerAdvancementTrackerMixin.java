@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerAdvancementTracker.class)
-public class PlayerAdvancementManagerMixin {
+public class PlayerAdvancementTrackerMixin {
 
     @Inject(
         method = "initProgress",

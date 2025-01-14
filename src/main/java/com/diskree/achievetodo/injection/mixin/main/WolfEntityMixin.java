@@ -28,7 +28,7 @@ public class WolfEntityMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, wolfEntity) ||
             AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
         ) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

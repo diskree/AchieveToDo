@@ -44,8 +44,8 @@ public class MainMixin {
         if (TextUtils.isEmpty(configName)) {
             throw new IllegalStateException(
                 "You must set " + Constants.ConfigKey.SERVER_CONFIG_PROPERTY_NAME +
-                    " with selected configuration in your `server.properties` file! " +
-                    "Check out the `Server-side setup` section in the mod description: " +
+                    " with selected configuration in your `server.properties` file!" +
+                    " Check out the `Server-side setup` section in the mod description: " +
                     Utils.buildModrinthModUrl(BuildConfig.MOD_ID)
             );
         }

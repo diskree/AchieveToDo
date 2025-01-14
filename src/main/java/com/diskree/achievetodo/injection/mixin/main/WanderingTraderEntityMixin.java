@@ -17,8 +17,9 @@ public abstract class WanderingTraderEntityMixin {
     @Inject(
         method = "interactMob",
         at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/world/World;isClient:Z"
+            value = "INVOKE",
+            target = "Lnet/minecraft/entity/passive/WanderingTraderEntity;getOffers()Lnet/minecraft/village/TradeOfferList;",
+            shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
@@ -27,7 +28,7 @@ public abstract class WanderingTraderEntityMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, wanderingTraderEntity) ||
             AchieveToDoMod.isAbilityLocked(player, AbilityType.TRADE_WITH_WANDERING_TRADER)
         ) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

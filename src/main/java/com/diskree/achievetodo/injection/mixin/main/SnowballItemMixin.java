@@ -27,7 +27,7 @@ public class SnowballItemMixin {
         CallbackInfoReturnable<ActionResult> cir
     ) {
         if (AchieveToDoMod.isAbilityLocked(player, AbilityType.THROW_SNOWBALL)) {
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

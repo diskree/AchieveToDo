@@ -55,12 +55,10 @@ public class AxeItemMixin {
         BlockState state,
         CallbackInfoReturnable<Optional<BlockState>> cir
     ) {
-        if (player != null) {
-            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
-                AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
-            ) {
-                cir.setReturnValue(Optional.empty());
-            }
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
+        ) {
+            cir.setReturnValue(Optional.empty());
         }
     }
 }

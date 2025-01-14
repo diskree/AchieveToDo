@@ -55,12 +55,12 @@ public class WorldCreationTab extends GridScreenTab {
         GridWidget.Adder rootContainer = grid.setColumnSpacing(10).setRowSpacing(8).createAdder(2);
 
         List<ProgressionConfig> progressionConfigs = new ArrayList<>();
-        ProgressionConfig defaultProgressionProgressionConfig = null;
+        ProgressionConfig defaultProgressionConfig = null;
         for (ProgressionModeType progressionModeType : ProgressionModeType.values()) {
             ProgressionConfig progressionConfig = ProgressionConfig.fromProgressionMode(progressionModeType);
             progressionConfigs.add(progressionConfig);
             if (progressionModeType == ProgressionModeType.getDefaultMode()) {
-                defaultProgressionProgressionConfig = progressionConfig;
+                defaultProgressionConfig = progressionConfig;
             }
         }
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve(BuildConfig.MOD_ID);
@@ -86,7 +86,7 @@ public class WorldCreationTab extends GridScreenTab {
                 Text.translatable("options.difficulty"),
                 (button, progressionConfig) -> worldCreatorExtension.achievetodo$setConfigName(progressionConfig.getConfigName())
             );
-        configSelector.setValue(defaultProgressionProgressionConfig);
+        configSelector.setValue(defaultProgressionConfig);
         for (ProgressionConfig progressionConfig : progressionConfigs) {
             if (progressionConfig.getConfigName().equals(worldCreatorExtension.achievetodo$getConfigName())) {
                 configSelector.setValue(progressionConfig);

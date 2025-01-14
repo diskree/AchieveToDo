@@ -41,7 +41,7 @@ public class ComposterBlockMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
             AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_COMPOSTER)
         ) {
-            cir.setReturnValue(ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION);
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
     }
 }

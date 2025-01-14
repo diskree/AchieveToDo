@@ -50,16 +50,12 @@ public class HoeItemMixin {
     public void lockHoe(
         ItemUsageContext context,
         CallbackInfoReturnable<ActionResult> cir,
-        @Local PlayerEntity player,
-        @Local World world,
-        @Local BlockPos pos
+        @Local PlayerEntity player
     ) {
-        if (player != null) {
-            if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
-                AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
-            ) {
-                cir.setReturnValue(ActionResult.PASS);
-            }
+        if (AchieveToDoMod.isTargetInLockedLandmark(context) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.findToolMaterialUsageAbility(material))
+        ) {
+            cir.setReturnValue(ActionResult.PASS);
         }
     }
 }

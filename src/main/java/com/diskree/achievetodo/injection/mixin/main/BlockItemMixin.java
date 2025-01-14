@@ -1,7 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.util.ActionResult;
@@ -23,11 +22,8 @@ public class BlockItemMixin {
         ),
         cancellable = true
     )
-    private void lockBlockPlacing(@NotNull ItemPlacementContext context, CallbackInfoReturnable<ActionResult> cir) {
-        PlayerEntity player = context.getPlayer();
-        if (player != null &&
-            AchieveToDoMod.isTargetInLockedLandmark(player, context.getWorld(), context.getBlockPos())
-        ) {
+    private void lockBlockPlace(@NotNull ItemPlacementContext context, CallbackInfoReturnable<ActionResult> cir) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(context)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
     }

@@ -40,7 +40,9 @@ public class BucketItemMixin {
         BlockHitResult hitResult,
         CallbackInfoReturnable<Boolean> cir
     ) {
-        if (player != null && AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)) {
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)
+        ) {
             cir.setReturnValue(false);
         }
     }
@@ -61,9 +63,8 @@ public class BucketItemMixin {
         BlockHitResult hitResult,
         CallbackInfoReturnable<Boolean> cir
     ) {
-        if (fluid == Fluids.WATER &&
-            player != null &&
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos) ||
+            fluid == Fluids.WATER && AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_WATER_BUCKET)
         ) {
             cir.setReturnValue(false);
         }

@@ -50,10 +50,8 @@ public class AchieveToDoServer implements ServerModInitializer {
     private final Map<ChunkPos, Map<LandmarkType, Set<DimensionalBlockBox>>> landmarksByChunks = new HashMap<>();
     private final Map<LandmarkType, Set<UUID>> playersByLockedLandmarkTypes = new HashMap<>();
 
-    private final EnumMap<TrackedScoreType, Map<UUID, Integer>> trackedScores =
-        new EnumMap<>(TrackedScoreType.class);
-    private final EnumMap<TrackedStatisticsDataType, Map<UUID, Integer>> trackedStats =
-        new EnumMap<>(TrackedStatisticsDataType.class);
+    private final Map<TrackedScoreType, Map<UUID, Integer>> trackedScores = new HashMap<>();
+    private final Map<TrackedStatisticsDataType, Map<UUID, Integer>> trackedStats = new HashMap<>();
 
     private final Map<Identifier, Set<String>> criteriaByAdvancementIds = new HashMap<>();
 
@@ -171,7 +169,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         if (progressType.isPercentage()) {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / progressType.getFinalValue())));
         }
-        var progressByPlayers = trackedScores.computeIfAbsent(progressType, k -> new HashMap<>());
+        var progressByPlayers = trackedScores.computeIfAbsent(progressType, k -> new Object2IntOpenHashMap<>());
         Integer currentProgress = progressByPlayers.get(player.getUuid());
         if (currentProgress == null || !currentProgress.equals(progress)) {
             progressByPlayers.put(player.getUuid(), progress);
@@ -183,7 +181,7 @@ public class AchieveToDoServer implements ServerModInitializer {
         if (statType.isPercentage()) {
             progress = Math.max(0, Math.min(100, (int) ((progress * 100.0) / statType.getFinalValue())));
         }
-        var progressByPlayers = trackedStats.computeIfAbsent(statType, k -> new HashMap<>());
+        var progressByPlayers = trackedStats.computeIfAbsent(statType, k -> new Object2IntOpenHashMap<>());
         Integer currentProgress = progressByPlayers.get(player.getUuid());
         if (currentProgress == null || !currentProgress.equals(progress)) {
             progressByPlayers.put(player.getUuid(), progress);
@@ -198,38 +196,69 @@ public class AchieveToDoServer implements ServerModInitializer {
             currentScoreboardDisplaySlot == null;
     }
 
-    public boolean isAbilityLocked(@NotNull ServerPlayerEntity player, AbilityType abilityType) {
-        if (abilityType == null || player.isCreative() || player.isSpectator()) {
+    public boolean isAbilityLocked(@NotNull ServerPlayerEntity player, @NotNull AbilityType abilityType) {
+        return isAbilityLocked(player, abilityType, false);
+    }
+
+    public boolean isAbilityLocked(
+        @NotNull ServerPlayerEntity player,
+        @NotNull AbilityType abilityType,
+        boolean checkOnly
+    ) {
+        if (player.isCreative() || player.isSpectator()) {
             return false;
         }
         if (isNotReady()) {
             return true;
         }
+        int obtainedCount = obtainedAdvancementsCountByPlayers.getOrDefault(player.getUuid(), Integer.MIN_VALUE);
         int requiredCount = abilitiesConfiguration.get(abilityType);
-        if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG) {
+        if (requiredCount == Constants.Progression.INITIALLY_UNLOCKED_FLAG ||
+            requiredCount != Constants.Progression.PERMANENTLY_LOCKED_FLAG && obtainedCount >= requiredCount
+        ) {
             return false;
         }
-        if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
-            return true;
+        if (!checkOnly) {
+            Text lockedMessageText;
+            if (requiredCount == Constants.Progression.PERMANENTLY_LOCKED_FLAG) {
+                lockedMessageText = abilityType.buildPermanentlyLockedMessage();
+            } else {
+                int leftCount = requiredCount - obtainedCount;
+                lockedMessageText = abilityType.buildUnlockProgressMessage(leftCount);
+            }
+            player.sendMessage(lockedMessageText, true);
+            demystifyAbility(player, abilityType);
         }
-        int obtainedCount = obtainedAdvancementsCountByPlayers.getOrDefault(player.getUuid(), Integer.MIN_VALUE);
-        return obtainedCount < requiredCount;
+        return true;
     }
 
-    public boolean isInLockedLandmark(@NotNull ServerPlayerEntity player, DimensionType dimensionType, Box box) {
-        BlockBox blockBox = Utils.toBlockBox(box);
+    public boolean isTargetInLockedLandmark(
+        @NotNull ServerPlayerEntity actor,
+        @NotNull DimensionType targetDimensionType,
+        @NotNull Box targetBox
+    ) {
+        BlockBox targetBlockBox = Utils.toBlockBox(targetBox);
         for (var entry : playersByLockedLandmarkTypes.entrySet()) {
-            if (entry.getValue().contains(player.getUuid())) {
+            if (entry.getValue().contains(actor.getUuid())) {
                 LandmarkType landmarkType = entry.getKey();
-                for (var landmarks2 : landmarksByChunks.entrySet()) {
-                    var landmarks = landmarks2.getValue();
+                for (Map<LandmarkType, Set<DimensionalBlockBox>> landmarks : landmarksByChunks.values()) {
                     Set<DimensionalBlockBox> dimensionalBlockBoxes = landmarks.get(landmarkType);
                     if (dimensionalBlockBoxes != null) {
                         for (DimensionalBlockBox dimensionalBlockBox : dimensionalBlockBoxes) {
-                            if (dimensionalBlockBox.dimensionType() == dimensionType &&
-                                dimensionalBlockBox.blockBox().intersects(blockBox)
+                            if (dimensionalBlockBox.dimensionType() == targetDimensionType &&
+                                dimensionalBlockBox.blockBox().intersects(targetBlockBox)
                             ) {
-                                return isAbilityLocked(player, AbilityType.findByLandmarkType(landmarkType));
+                                AbilityType abilityType = AbilityType.findByLandmarkType(landmarkType);
+                                if (abilityType != null) {
+                                    boolean isAbilityLocked = isAbilityLocked(actor, abilityType, true);
+                                    if (isAbilityLocked) {
+                                        ServerPlayNetworking.send(actor, new CheckTargetInLockedLandmarkPayload(
+                                            targetDimensionType,
+                                            targetBox
+                                        ));
+                                    }
+                                    return isAbilityLocked;
+                                }
                             }
                         }
                     }
@@ -242,7 +271,7 @@ public class AchieveToDoServer implements ServerModInitializer {
     public void onLandmarksLoadedStatusChanged(
         @NotNull ServerWorld world,
         @NotNull ChunkPos chunkPos,
-        Map<LandmarkType, Set<DimensionalBlockBox>> landmarks,
+        @NotNull Map<LandmarkType, Set<DimensionalBlockBox>> landmarks,
         boolean isLoaded
     ) {
         if (isNotReady()) {

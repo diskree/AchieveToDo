@@ -2,12 +2,12 @@ package com.diskree.achievetodo.networking.s2c;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static net.minecraft.network.packet.CustomPayload.codecOf;
@@ -40,7 +40,7 @@ public record SyncAbilitiesConfigurationPayload(
     }
 
     private static @NotNull SyncAbilitiesConfigurationPayload decode(@NotNull PacketByteBuf buf) {
-        Map<AbilityType, Integer> abilitiesConfiguration = new HashMap<>();
+        Map<AbilityType, Integer> abilitiesConfiguration = new Object2IntOpenHashMap<>();
         int abilityTypesSize = buf.readInt();
         for (int i = 0; i < abilityTypesSize; i++) {
             AbilityType abilityType = buf.readEnumConstant(AbilityType.class);

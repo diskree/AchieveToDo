@@ -17,14 +17,20 @@ public class AbstractBoatEntityMixin {
         method = "canAddPassenger",
         at = @At("TAIL")
     )
-    private boolean lockBoat(boolean original, @Local(argsOnly = true) Entity passenger) {
-        AbstractBoatEntity boatEntity = (AbstractBoatEntity) (Object) this;
+    private boolean lockBoat(
+        boolean original,
+        @Local(argsOnly = true) Entity passenger
+    ) {
         if (!original) {
             return false;
         }
         if (passenger instanceof PlayerEntity player) {
-            return !AchieveToDoMod.isTargetInLockedLandmark(player, boatEntity) &&
-                !AchieveToDoMod.isAbilityLocked(player, AbilityType.GET_INTO_BOAT);
+            AbstractBoatEntity boatEntity = (AbstractBoatEntity) (Object) this;
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, boatEntity) ||
+                AchieveToDoMod.isAbilityLocked(player, AbilityType.GET_INTO_BOAT)
+            ) {
+                return false;
+            }
         }
         return true;
     }

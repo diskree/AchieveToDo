@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 @Mixin(StructureStart.class)
@@ -41,9 +40,6 @@ public class StructureStartMixin implements StructureStartExtension {
 
     @Unique
     private BlockBox landmarkBlockBox;
-
-    @Unique
-    private BlockBox initialLandmarkBlockBox;
 
     @Override
     public void achievetodo$setLandmarkType(LandmarkType landmarkType) {
@@ -189,7 +185,7 @@ public class StructureStartMixin implements StructureStartExtension {
         ChunkPos chunkPos,
         CallbackInfo ci
     ) {
-        if (world instanceof LandmarkGenerationTracker landmarkGenerationTracker) {
+        if (landmarkType != null && world instanceof LandmarkGenerationTracker landmarkGenerationTracker) {
             BlockBox newLandmarkBlockBox = landmarkGenerationTracker.achievetodo$getLandmarkBlockBox();
             if (newLandmarkBlockBox != null) {
                 ServerWorld serverWorld = world.toServerWorld();

@@ -6,11 +6,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EndCrystalItem;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,16 +27,15 @@ public class EndCrystalItemMixin {
     public boolean lockEndCrystal(
         List<Entity> entities,
         @NotNull Operation<Boolean> original,
-        @Local(argsOnly = true) ItemUsageContext context,
-        @Local World world,
-        @Local(ordinal = 0) BlockPos blockPos
+        @Local(argsOnly = true) ItemUsageContext context
     ) {
         if (!original.call(entities)) {
             return false;
         }
-        if (context.getPlayer() instanceof PlayerEntity player) {
-            return !AchieveToDoMod.isTargetInLockedLandmark(player, world, blockPos) &&
-                !AchieveToDoMod.isAbilityLocked(player, AbilityType.PLACE_END_CRYSTAL);
+        if (AchieveToDoMod.isTargetInLockedLandmark(context) ||
+            AchieveToDoMod.isAbilityLocked(context.getPlayer(), AbilityType.PLACE_END_CRYSTAL)
+        ) {
+            return false;
         }
         return true;
     }
