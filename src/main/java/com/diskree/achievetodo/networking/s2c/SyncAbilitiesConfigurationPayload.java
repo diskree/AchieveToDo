@@ -8,6 +8,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
 import java.util.Map;
 
 import static net.minecraft.network.packet.CustomPayload.codecOf;
@@ -17,7 +18,7 @@ public record SyncAbilitiesConfigurationPayload(
 ) implements CustomPayload {
 
     public static final Id<SyncAbilitiesConfigurationPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
-        SyncAbilitiesConfigurationPayload.class.getName()
+        SyncAbilitiesConfigurationPayload.class.getName().toLowerCase(Locale.ROOT)
     ));
 
     public static final PacketCodec<PacketByteBuf, SyncAbilitiesConfigurationPayload> CODEC = codecOf(

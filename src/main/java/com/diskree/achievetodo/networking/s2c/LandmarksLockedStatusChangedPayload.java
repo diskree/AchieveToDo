@@ -10,10 +10,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.BlockBox;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static net.minecraft.network.packet.CustomPayload.codecOf;
 
@@ -23,7 +20,7 @@ public record LandmarksLockedStatusChangedPayload(
 ) implements CustomPayload {
 
     public static final Id<LandmarksLockedStatusChangedPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
-        LandmarksLockedStatusChangedPayload.class.getName()
+        LandmarksLockedStatusChangedPayload.class.getName().toLowerCase(Locale.ROOT)
     ));
 
     public static final PacketCodec<PacketByteBuf, LandmarksLockedStatusChangedPayload> CODEC = codecOf(

@@ -9,6 +9,8 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.BlockBox;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 import static net.minecraft.network.packet.CustomPayload.codecOf;
 
 public record LockedLandmarkResizedPayload(
@@ -19,7 +21,7 @@ public record LockedLandmarkResizedPayload(
 ) implements CustomPayload {
 
     public static final Id<LockedLandmarkResizedPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
-        LockedLandmarkResizedPayload.class.getName()
+        LockedLandmarkResizedPayload.class.getName().toLowerCase(Locale.ROOT)
     ));
 
     public static final PacketCodec<PacketByteBuf, LockedLandmarkResizedPayload> CODEC = codecOf(

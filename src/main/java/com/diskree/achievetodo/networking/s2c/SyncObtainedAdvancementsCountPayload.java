@@ -6,6 +6,8 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 import static net.minecraft.network.packet.CustomPayload.codecOf;
 
 public record SyncObtainedAdvancementsCountPayload(
@@ -13,7 +15,7 @@ public record SyncObtainedAdvancementsCountPayload(
 ) implements CustomPayload {
 
     public static final Id<SyncObtainedAdvancementsCountPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
-        SyncObtainedAdvancementsCountPayload.class.getName()
+        SyncObtainedAdvancementsCountPayload.class.getName().toLowerCase(Locale.ROOT)
     ));
 
     public static final PacketCodec<PacketByteBuf, SyncObtainedAdvancementsCountPayload> CODEC = codecOf(

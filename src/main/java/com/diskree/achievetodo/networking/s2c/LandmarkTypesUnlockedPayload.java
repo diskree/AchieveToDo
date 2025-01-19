@@ -8,6 +8,7 @@ import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import static net.minecraft.network.packet.CustomPayload.codecOf;
@@ -17,7 +18,7 @@ public record LandmarkTypesUnlockedPayload(
 ) implements CustomPayload {
 
     public static final Id<LandmarkTypesUnlockedPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
-        LandmarkTypesUnlockedPayload.class.getName()
+        LandmarkTypesUnlockedPayload.class.getName().toLowerCase(Locale.ROOT)
     ));
 
     public static final PacketCodec<PacketByteBuf, LandmarkTypesUnlockedPayload> CODEC = codecOf(

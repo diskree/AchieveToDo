@@ -7,6 +7,8 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 import static net.minecraft.network.packet.CustomPayload.codecOf;
 
 public record DemystifyAbilityPayload(
@@ -14,7 +16,7 @@ public record DemystifyAbilityPayload(
 ) implements CustomPayload {
 
     public static final Id<DemystifyAbilityPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
-        DemystifyAbilityPayload.class.getName()
+        DemystifyAbilityPayload.class.getName().toLowerCase(Locale.ROOT).toLowerCase(Locale.ROOT)
     ));
 
     public static final PacketCodec<PacketByteBuf, DemystifyAbilityPayload> CODEC = codecOf(

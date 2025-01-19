@@ -7,6 +7,8 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 import static net.minecraft.network.packet.CustomPayload.codecOf;
 
 public record StatisticsDataProgressChangedPayload(
@@ -15,7 +17,7 @@ public record StatisticsDataProgressChangedPayload(
 ) implements CustomPayload {
 
     public static final Id<StatisticsDataProgressChangedPayload> ID = new Id<>(AchieveToDoMod.getIdentifier(
-        StatisticsDataProgressChangedPayload.class.getName()
+        StatisticsDataProgressChangedPayload.class.getName().toLowerCase(Locale.ROOT)
     ));
 
     public static final PacketCodec<PacketByteBuf, StatisticsDataProgressChangedPayload> CODEC = codecOf(
