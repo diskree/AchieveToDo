@@ -8,7 +8,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.Unit;
@@ -39,7 +38,6 @@ public class PlayerEntityMixin {
         }
     }
 
-    @SuppressWarnings("RedundantIfStatement")
     @ModifyReturnValue(
         method = "isBlockBreakingRestricted",
         at = @At(
@@ -56,9 +54,6 @@ public class PlayerEntityMixin {
         if (AchieveToDoMod.isTargetInLockedLandmark(player, world, pos)) {
             return true;
         }
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.BREAK_BLOCKS, true)) {
-            return AchieveToDoMod.isAbilityLocked(player, AbilityType.BREAK_BLOCKS);
-        }
         if (pos.getY() < 0 && AchieveToDoMod.isAbilityLocked(player, AbilityType.BREAK_BLOCKS_IN_NEGATIVE_Y)) {
             return true;
         }
@@ -68,14 +63,16 @@ public class PlayerEntityMixin {
         Item item = player.getMainHandStack().getItem();
         if (item instanceof SwordItemExtension swordItemExtension &&
             AchieveToDoMod.isAbilityLocked(
-                player, AbilityType.findToolMaterialUsageAbility(swordItemExtension.achievetodo$getMaterial())
+                player,
+                AbilityType.findToolMaterialUsageAbility(swordItemExtension.achievetodo$getMaterial())
             )
         ) {
             return true;
         }
-        if (item instanceof MiningToolItemExtension toolItem &&
+        if (item instanceof MiningToolItemExtension miningToolItemExtension &&
             AchieveToDoMod.isAbilityLocked(
-                player, AbilityType.findToolMaterialUsageAbility(toolItem.achievetodo$getMaterial())
+                player,
+                AbilityType.findToolMaterialUsageAbility(miningToolItemExtension.achievetodo$getMaterial())
             )
         ) {
             return true;
