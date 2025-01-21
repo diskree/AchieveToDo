@@ -37,7 +37,6 @@
     "main.ChorusFlowerBlockMixin",
     "main.ChunkMixin",
     "main.ChunkRegionMixin",
-    "main.ClientPlayerEntityMixin",
     "main.CommandManagerMixin",
     "main.ComposterBlockMixin",
     "main.ConsumableComponentMixin",
@@ -132,6 +131,7 @@
     "client.PunchTreeTutorialStepHandlerMixin",
     "client.WorldCreatorMixin",
     "client.WorldListWidgetMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.ClientPlayerEntityMixin"
   ]
 }

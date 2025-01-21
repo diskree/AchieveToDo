@@ -1,5 +1,6 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
+import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.BuildConfig;
 import com.diskree.achievetodo.ability.AbilityType;
 import com.diskree.achievetodo.ability.ChaosProgressionGenerator;
@@ -14,7 +15,6 @@ import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.level.LevelInfo;
-import org.apache.http.util.TextUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(LevelInfo.class)
@@ -43,9 +42,10 @@ public abstract class LevelInfoMixin implements LevelInfoExtension {
 
     @Override
     public Map<AbilityType, Integer> achievetodo$getAbilitiesConfiguration(long seed) {
-        if (TextUtils.isEmpty(configName)) {
-            throw new IllegalStateException("Configuration name missing from level.dat!");
+        if (configName == null || configName.isEmpty()) {
+            throw new IllegalStateException("Abilities configuration name missing from level.dat!");
         }
+        AchieveToDoMod.logger.info("Loading '{}' abilities configuration...", configName);
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve(BuildConfig.MOD_ID);
         if (!Files.exists(configDir)) {
             try {

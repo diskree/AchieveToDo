@@ -53,8 +53,6 @@ public class AchieveToDoServer implements ServerModInitializer {
     private final Map<TrackedScoreType, Map<UUID, Integer>> trackedScores = new HashMap<>();
     private final Map<TrackedStatisticsDataType, Map<UUID, Integer>> trackedStats = new HashMap<>();
 
-    private final Map<Identifier, Set<String>> criteriaByAdvancementIds = new HashMap<>();
-
     public AdvancementsMode currentAdvancementsMode;
     public ScoreboardObjective currentScoreboardObjective;
     public ScoreboardDisplaySlot currentScoreboardDisplaySlot;
@@ -87,9 +85,10 @@ public class AchieveToDoServer implements ServerModInitializer {
             currentScoreboardObjective == null ||
             currentScoreboardDisplaySlot == null
         ) {
-            AchieveToDoMod.logger.error("Can't find advancements counter in scoreboard! " +
-                "Please check that BACAP datapack is installed " +
-                "or enable advancements counter in the sidebar, tab list or below player names."
+            AchieveToDoMod.logger.error(
+                "Can't find scoreboard objective with advancements counter! " +
+                    "Please check that BACAP datapack is installed " +
+                    "and enable advancements counter in the sidebar, tab list or below player names."
             );
             return;
         }
@@ -97,6 +96,12 @@ public class AchieveToDoServer implements ServerModInitializer {
             currentScoreboardObjective != oldScoreboardObjective ||
             currentScoreboardDisplaySlot != oldScoreboardDisplaySlot
         ) {
+            AchieveToDoMod.logger.info(
+                "Scoreboard objective with advancements counter found: advancements mode = {}, objective name = {}, display slot = {}",
+                currentAdvancementsMode,
+                currentScoreboardObjective.getName(),
+                currentScoreboardDisplaySlot
+            );
             for (ServerPlayerEntity serverPlayer : scoreboard.server.getPlayerManager().getPlayerList()) {
                 updateObtainedCount(scoreboard, serverPlayer);
             }
@@ -389,16 +394,7 @@ public class AchieveToDoServer implements ServerModInitializer {
                 abilitiesConfiguration = levelInfoExtension.achievetodo$getAbilitiesConfiguration(
                     server.getSaveProperties().getGeneratorOptions().getSeed()
                 );
-            }
-        });
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, serverResourceManager, success) -> {
-            prepareScoreboard(server.getScoreboard());
-            criteriaByAdvancementIds.clear();
-            for (AdvancementEntry advancement : server.getAdvancementLoader().getAdvancements()) {
-                criteriaByAdvancementIds.put(advancement.id(), advancement.value().criteria().keySet());
-            }
-            if (criteriaByAdvancementIds.isEmpty()) {
-                throw new IllegalStateException("No advancements loaded");
+                AchieveToDoMod.logger.info("Abilities configuration loaded");
             }
         });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {

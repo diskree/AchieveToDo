@@ -1,4 +1,4 @@
-package com.diskree.achievetodo.injection.mixin.main;
+package com.diskree.achievetodo.injection.mixin.client;
 
 import com.diskree.achievetodo.AchieveToDoMod;
 import com.diskree.achievetodo.ability.AbilityType;

@@ -25,7 +25,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.poi.PointOfInterestType;
-import org.apache.http.util.TextUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -438,7 +437,7 @@ public enum AbilityType {
     }
 
     public static @Nullable AbilityType findByName(String name) {
-        if (TextUtils.isEmpty(name)) {
+        if (name == null || name.isEmpty()) {
             return null;
         }
         for (AbilityType abilityType : values()) {

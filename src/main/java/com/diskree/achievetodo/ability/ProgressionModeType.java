@@ -2,7 +2,6 @@ package com.diskree.achievetodo.ability;
 
 import com.diskree.achievetodo.client.AchieveToDoClient;
 import net.minecraft.text.Text;
-import org.apache.http.util.TextUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +25,7 @@ public enum ProgressionModeType {
     }
 
     public static @Nullable ProgressionModeType findByName(String name) {
-        if (TextUtils.isEmpty(name)) {
+        if (name == null || name.isEmpty()) {
             return null;
         }
         for (ProgressionModeType progressionModeType : values()) {

@@ -4,7 +4,6 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
-import org.apache.http.util.TextUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,7 +142,7 @@ public enum LandmarkType {
     }
 
     public static @Nullable LandmarkType findByName(String name) {
-        if (TextUtils.isEmpty(name)) {
+        if (name == null || name.isEmpty()) {
             return null;
         }
         for (LandmarkType landmarkType : values()) {

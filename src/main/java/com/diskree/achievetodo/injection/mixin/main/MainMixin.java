@@ -14,7 +14,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.level.LevelInfo;
-import org.apache.http.util.TextUtils;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,7 +40,7 @@ public class MainMixin {
         @Local @NotNull ServerPropertiesHandler serverPropertiesHandler
     ) {
         String configName = serverPropertiesHandler.getString(Constants.ConfigKey.SERVER_CONFIG_PROPERTY_NAME, "");
-        if (TextUtils.isEmpty(configName)) {
+        if (configName == null || configName.isEmpty()) {
             throw new IllegalStateException(
                 "You must set " + Constants.ConfigKey.SERVER_CONFIG_PROPERTY_NAME +
                     " with selected configuration in your `server.properties` file!" +
