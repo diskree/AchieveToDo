@@ -373,6 +373,9 @@ public enum AbilityType {
     }
 
     public int getChaosPriority() {
+        if (this == OPEN_CRAFTING_TABLE) {
+            return 100;
+        }
         if (this == INTERACT_INSIDE_FORTRESS ||
             this == INTERACT_INSIDE_STRONGHOLD ||
             this == USE_ENDER_EYE ||
@@ -384,7 +387,6 @@ public enum AbilityType {
         if (this == OPEN_BEACON ||
             this == OPEN_ENDER_CHEST ||
             this == OPEN_SMITHING_TABLE ||
-            this == OPEN_CRAFTING_TABLE ||
             this == OPEN_ANVIL ||
             this == OPEN_STONECUTTER
         ) {
