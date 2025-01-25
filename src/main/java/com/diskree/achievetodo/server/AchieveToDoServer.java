@@ -558,7 +558,9 @@ public class AchieveToDoServer implements ServerModInitializer {
         if (isLocked) {
             advancementTracker.revokeCriterion(advancement, AbilityAdvancementsGenerator.UNLOCKED_CRITERION);
         } else {
-            advancementTracker.grantCriterion(advancement, AbilityAdvancementsGenerator.UNLOCKED_CRITERION);
+            for (String criterion : advancementTracker.getProgress(advancement).getUnobtainedCriteria()) {
+                advancementTracker.grantCriterion(advancement, criterion);
+            }
         }
     }
 }
