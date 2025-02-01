@@ -40,7 +40,7 @@ public class AbstractCauldronBlockMixin {
         BlockPos blockPos,
         PlayerEntity player,
         Hand hand,
-        ItemStack itemStack,
+        ItemStack stack,
         Operation<ActionResult> original
     ) {
         if (behavior != ((Object2ObjectOpenHashMap<?, ?>) behaviorMap.map()).defaultReturnValue()) {
@@ -50,6 +50,6 @@ public class AbstractCauldronBlockMixin {
                 return ActionResult.SUCCESS;
             }
         }
-        return original.call(behavior, blockState, world, blockPos, player, hand, itemStack);
+        return original.call(behavior, blockState, world, blockPos, player, hand, stack);
     }
 }

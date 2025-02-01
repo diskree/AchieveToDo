@@ -1,8 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.ability.AbilityType;
-import net.minecraft.entity.mob.BoggedEntity;
+import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -11,23 +10,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BoggedEntity.class)
-public class BoggedEntityMixin {
+@Mixin(OcelotEntity.class)
+public class OcelotEntityMixin {
 
     @Inject(
         method = "interactMob",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/entity/mob/BoggedEntity;getWorld()Lnet/minecraft/world/World;",
+            target = "Lnet/minecraft/entity/passive/OcelotEntity;eat(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
-    public void lockShears(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        BoggedEntity boggedEntity = (BoggedEntity) (Object) this;
-        if (AchieveToDoMod.isTargetInLockedLandmark(player, boggedEntity) ||
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
-        ) {
+    public void lockInteract1(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+        OcelotEntity ocelotEntity = (OcelotEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, ocelotEntity)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
     }

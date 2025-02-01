@@ -1,8 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.ability.AbilityType;
-import net.minecraft.entity.passive.SnowGolemEntity;
+import net.minecraft.entity.passive.TadpoleEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -11,23 +10,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(SnowGolemEntity.class)
-public class SnowGolemEntityMixin {
+@Mixin(TadpoleEntity.class)
+public class TadpoleEntityMixin {
 
     @Inject(
         method = "interactMob",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/entity/passive/SnowGolemEntity;getWorld()Lnet/minecraft/world/World;",
+            target = "Lnet/minecraft/entity/passive/TadpoleEntity;eatSlimeBall(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;)V",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
     public void lockInteract1(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        SnowGolemEntity snowGolemEntity = (SnowGolemEntity) (Object) this;
-        if (AchieveToDoMod.isTargetInLockedLandmark(player, snowGolemEntity) ||
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
-        ) {
+        TadpoleEntity tadpoleEntity = (TadpoleEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, tadpoleEntity)) {
             cir.setReturnValue(ActionResult.SUCCESS);
         }
     }

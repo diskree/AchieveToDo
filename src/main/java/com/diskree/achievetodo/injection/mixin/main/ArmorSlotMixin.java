@@ -52,12 +52,12 @@ public class ArmorSlotMixin {
         ArmorSlot armorSlot,
         PlayerEntity player,
         @NotNull Operation<Boolean> original,
-        @Local @NotNull ItemStack itemStack
+        @Local @NotNull ItemStack stack
     ) {
         if (!original.call(armorSlot, player)) {
             return false;
         }
-        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(itemStack.getItem()))) {
+        if (AchieveToDoMod.isAbilityLocked(player, AbilityType.findEquipmentEquipAbility(stack.getItem()))) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
                 serverPlayer.closeHandledScreen();
             }

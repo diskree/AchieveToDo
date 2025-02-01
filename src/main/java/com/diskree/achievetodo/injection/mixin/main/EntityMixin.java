@@ -92,11 +92,8 @@ public abstract class EntityMixin {
             return false;
         }
         Entity entity = (Entity) (Object) this;
-        if (passenger instanceof PlayerEntity player) {
-            if (AchieveToDoMod.isTargetInLockedLandmark(player, entity)) {
-                return false;
-            }
-            if (entity instanceof MinecartEntity &&
+        if (passenger instanceof PlayerEntity player && entity instanceof MinecartEntity) {
+            if (AchieveToDoMod.isTargetInLockedLandmark(player, entity) ||
                 AchieveToDoMod.isAbilityLocked(player, AbilityType.GET_INTO_MINECART)
             ) {
                 return false;

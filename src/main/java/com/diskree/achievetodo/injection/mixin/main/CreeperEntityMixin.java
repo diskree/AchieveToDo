@@ -31,15 +31,13 @@ public class CreeperEntityMixin {
         PlayerEntity player,
         Hand hand,
         CallbackInfoReturnable<ActionResult> cir,
-        @Local @NotNull ItemStack itemStack
+        @Local @NotNull ItemStack stack
     ) {
-        if (itemStack.isOf(Items.FLINT_AND_STEEL)) {
-            CreeperEntity creeperEntity = (CreeperEntity) (Object) this;
-            if (AchieveToDoMod.isTargetInLockedLandmark(player, creeperEntity) ||
-                AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL)
-            ) {
-                cir.setReturnValue(ActionResult.PASS);
-            }
+        CreeperEntity creeperEntity = (CreeperEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, creeperEntity) ||
+            stack.isOf(Items.FLINT_AND_STEEL) && AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_FLINT_AND_STEEL)
+        ) {
+            cir.setReturnValue(ActionResult.FAIL);
         }
     }
 }

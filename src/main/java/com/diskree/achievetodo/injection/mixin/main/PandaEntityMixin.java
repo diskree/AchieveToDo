@@ -1,8 +1,7 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.ability.AbilityType;
-import net.minecraft.entity.passive.MooshroomEntity;
+import net.minecraft.entity.passive.PandaEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -11,22 +10,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(MooshroomEntity.class)
-public class MooshroomEntityMixin {
+@Mixin(PandaEntity.class)
+public class PandaEntityMixin {
 
     @Inject(
         method = "interactMob",
         at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/entity/passive/MooshroomEntity;stewEffects:Lnet/minecraft/component/type/SuspiciousStewEffectsComponent;",
+            value = "INVOKE",
+            target = "Lnet/minecraft/entity/passive/PandaEntity;eat(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V",
             shift = At.Shift.BEFORE,
             ordinal = 0
         ),
         cancellable = true
     )
     public void lockInteract1(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        MooshroomEntity mooshroomEntity = (MooshroomEntity) (Object) this;
-        if (AchieveToDoMod.isTargetInLockedLandmark(player, mooshroomEntity)) {
+        PandaEntity pandaEntity = (PandaEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, pandaEntity)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
     }
@@ -35,18 +34,16 @@ public class MooshroomEntityMixin {
         method = "interactMob",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/entity/passive/MooshroomEntity;getWorld()Lnet/minecraft/world/World;",
+            target = "Lnet/minecraft/entity/passive/PandaEntity;eat(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V",
             shift = At.Shift.BEFORE,
-            ordinal = 0
+            ordinal = 1
         ),
         cancellable = true
     )
     public void lockInteract2(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        MooshroomEntity mooshroomEntity = (MooshroomEntity) (Object) this;
-        if (AchieveToDoMod.isTargetInLockedLandmark(player, mooshroomEntity) ||
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
-        ) {
-            cir.setReturnValue(ActionResult.PASS);
+        PandaEntity pandaEntity = (PandaEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, pandaEntity)) {
+            cir.setReturnValue(ActionResult.FAIL);
         }
     }
 
@@ -54,15 +51,15 @@ public class MooshroomEntityMixin {
         method = "interactMob",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/item/ItemStack;decrementUnlessCreative(ILnet/minecraft/entity/LivingEntity;)V",
+            target = "Lnet/minecraft/entity/passive/PandaEntity;stop()V",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
     public void lockInteract3(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        MooshroomEntity mooshroomEntity = (MooshroomEntity) (Object) this;
-        if (AchieveToDoMod.isTargetInLockedLandmark(player, mooshroomEntity)) {
-            cir.setReturnValue(ActionResult.PASS);
+        PandaEntity pandaEntity = (PandaEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, pandaEntity)) {
+            cir.setReturnValue(ActionResult.FAIL);
         }
     }
 }

@@ -1,9 +1,8 @@
 package com.diskree.achievetodo.injection.mixin.main;
 
 import com.diskree.achievetodo.AchieveToDoMod;
-import com.diskree.achievetodo.ability.AbilityType;
-import net.minecraft.entity.mob.BoggedEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.vehicle.FurnaceMinecartEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,23 +10,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BoggedEntity.class)
-public class BoggedEntityMixin {
+@Mixin(FurnaceMinecartEntity.class)
+public class FurnaceMinecartEntityMixin {
 
     @Inject(
-        method = "interactMob",
+        method = "interact",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/entity/mob/BoggedEntity;getWorld()Lnet/minecraft/world/World;",
+            target = "Lnet/minecraft/item/ItemStack;decrementUnlessCreative(ILnet/minecraft/entity/LivingEntity;)V",
             shift = At.Shift.BEFORE
         ),
         cancellable = true
     )
-    public void lockShears(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        BoggedEntity boggedEntity = (BoggedEntity) (Object) this;
-        if (AchieveToDoMod.isTargetInLockedLandmark(player, boggedEntity) ||
-            AchieveToDoMod.isAbilityLocked(player, AbilityType.USE_SHEARS)
-        ) {
+    public void lockFurnaceMinecart(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+        FurnaceMinecartEntity furnaceMinecartEntity = (FurnaceMinecartEntity) (Object) this;
+        if (AchieveToDoMod.isTargetInLockedLandmark(player, furnaceMinecartEntity)) {
             cir.setReturnValue(ActionResult.FAIL);
         }
     }
